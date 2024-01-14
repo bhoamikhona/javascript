@@ -4,8 +4,9 @@
 
 ## Sections
 
-- Section 01: Introduction
+- [Section 01](./Section%2001): Introduction
 - [Section 02](./Section%2002): JavaScript Fundamentals - Part 01
+- [Section 03](./Section%2003): JavaScript Fundamentals - Part 02
 
 ## Author
 
