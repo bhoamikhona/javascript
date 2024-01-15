@@ -18,6 +18,10 @@
   - [Introduction to Objects](#introduction-to-objects)
   - [Dot vs. Bracket Notation](#dot-vs-bracket-notation)
   - [Object Methods](#object-methods)
+  - [Iteration: The for Loop](#iteration-the-for-loop)
+  - [Looping Arrays, Breaking, and Continuing](#looping-arrays-breaking-and-continuing)
+  - [Looping Backwards and Loops in Loops](#looping-backwards-and-loops-in-loops)
+  - [The While Loop](#the-while-loop)
 - [Author](#author)
 
 ## Lessons Learned
@@ -184,6 +188,33 @@ const v = "Hi! I'm a strict mode script!";
 - Any function that is attached to an object is called a method.
 - In every method (function attached to an object), JavaScript gives us access to a special variable called `this`.
 - The `this` keyword is equal to the object on which the method is called. In other words, it is equal to the object calling the method.
+
+### Iteration: The for Loop
+
+- Loops are a fundamental aspect of every programming language, because they allow us to automate repetitive tasks.
+- `for` loop
+
+### Looping Arrays, Breaking, and Continuing
+
+- Looping through arrays
+- `continue` - The `continue` statement terminates execution of the statements in the current iteration of the current loop, and continues execution of the loop with the next iteration.
+- `break` - The `break` statement terminates the current loop or `switch` statement and transfers program control to the statement following the terminated statement.
+
+### Looping Backwards and Loops in Loops
+
+- Looping over an array, backwards
+- Nested loops
+
+### The While Loop
+
+- The `while` statement creates a loop that executes a specified statement as long as the test condition evaluates to true.
+- The condition is evaluated before executing the statement.
+- `for` loop vs. `while` loop
+- The `while` loop is more versatile than the `for` loop. It can be used in a larger variety of situations.
+- That's because it does not really need a counter. All that `while` loop really needs is a condition which needs to stay `true` for it to keep running. That condition can be any condition, it doesn't need to be related to any counter at all.
+- `Math.random()`
+- `Math.trunc()`
+- In conclusion, when you need a counter or when you know how many iterations are going to be there, use the `for` loop. When you don't need the counter or don't know how many iterations are going to happen, use the `while` loop.
 
 ## Author
 

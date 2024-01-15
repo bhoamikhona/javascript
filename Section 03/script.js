@@ -317,7 +317,7 @@ console.log(ages);
 /********************** FUNDAMENTALS ASSIGNMENT 05 **********************/
 /************************************************************************/
 
-const populations = [1428, 333, 67, 68];
+let populations = [1428, 333, 67, 68];
 
 console.log(populations.length === 4);
 
@@ -656,3 +656,217 @@ if (john.bmi > mark.bmi) {
 } else {
   console.log(`Mark's BMI (${mark.bmi}) is higher than John's (${john.bmi})!`);
 }
+
+/***********************************************************************/
+/*********************** ITERATION: THE FOR LOOP ***********************/
+/***********************************************************************/
+/* 
+// traditional
+console.log(`Lifting weights repetition 1 🏋️‍♀️`);
+console.log(`Lifting weights repetition 2 🏋️‍♀️`);
+console.log(`Lifting weights repetition 3 🏋️‍♀️`);
+console.log(`Lifting weights repetition 4 🏋️‍♀️`);
+console.log(`Lifting weights repetition 5 🏋️‍♀️`);
+console.log(`Lifting weights repetition 6 🏋️‍♀️`);
+console.log(`Lifting weights repetition 7 🏋️‍♀️`);
+console.log(`Lifting weights repetition 8 🏋️‍♀️`);
+console.log(`Lifting weights repetition 9 🏋️‍♀️`);
+console.log(`Lifting weights repetition 10 🏋️‍♀️`);
+
+// for loop keeps running while condition is TRUE
+for (let rep = 1; rep < 11; rep++) {
+  console.log(`Lifting weights repetition ${rep} 🏋️‍♀️ `);
+}
+ */
+/************************************************************************/
+/********************** FUNDAMENTALS ASSIGNMENT 10 **********************/
+/************************************************************************/
+
+for (let i = 1; i < 51; i++) {
+  console.log(`Voter number ${i} is currently voting`);
+}
+
+/************************************************************************/
+/*************** LOOPING ARRAYS, BREAKING, AND CONTINUING ***************/
+/************************************************************************/
+/* 
+const bhoamiArray = [
+  "Bhoami",
+  "Khona",
+  2037 - 1995,
+  "Web Developer",
+  ["Michael", "Peter", "Steven"],
+  true,
+];
+
+// traditional
+console.log(bhoamiArray[0]);
+console.log(bhoamiArray[1]);
+console.log(bhoamiArray[2]);
+
+const types = [];
+
+// looping through an array with for-loop
+for (let i = 0; i < bhoamiArray.length; i++) {
+  // reading from an array
+  console.log(bhoamiArray[i], typeof bhoamiArray[i]);
+
+  // filling an array
+  // types[i] = typeof bhoamiArray[i];
+  types.push(typeof bhoamiArray[i]);
+}
+
+console.log(types);
+
+const years = [1991, 2007, 1969, 2020];
+const ages = [];
+
+for (let i = 0; i < years.length; i++) {
+  ages.push(2037 - years[i]);
+}
+
+console.log(ages);
+
+///// continue and break /////
+
+// prints strings only
+for (let i = 0; i < bhoamiArray.length; i++) {
+  if (typeof bhoamiArray[i] !== "string") continue;
+  else console.log(bhoamiArray[i]);
+}
+
+// break with number
+for (let i = 0; i < bhoamiArray.length; i++) {
+  if (typeof bhoamiArray[i] === "number") break;
+  else console.log(bhoamiArray[i]);
+}
+ */
+/************************************************************************/
+/********************** FUNDAMENTALS ASSIGNMENT 11 **********************/
+/************************************************************************/
+
+populations = [1428, 333, 67, 68];
+
+const percentages2 = [];
+
+for (let i = 0; i < populations.length; i++) {
+  percentages2.push(percentageOfWorld1(populations[i]));
+}
+
+console.log(percentages);
+console.log(percentages2);
+
+/************************************************************************/
+/***************** LOOPING BACKWARDS AND LOOPS IN LOOPS *****************/
+/************************************************************************/
+/* 
+const bhoami = [
+  "Bhoami",
+  "Khona",
+  2037 - 1995,
+  "Web Developer",
+  ["Michael", "Peter", "Steven"],
+];
+
+// looping backwards over an array
+for (let i = bhoami.length - 1; i >= 0; i--) {
+  console.log(i, bhoami[i]);
+}
+
+// nested loops
+for (let exercise = 1; exercise <= 3; exercise++) {
+  console.log(`----- Starting Exercise #${exercise} -----`);
+  for (let rep = 1; rep < 6; rep++) {
+    console.log(`Exercise ${exercise}: Lifting weights repetition ${rep} 🏋️‍♀️`);
+  }
+}
+ */
+/************************************************************************/
+/********************** FUNDAMENTALS ASSIGNMENT 12 **********************/
+/************************************************************************/
+
+const listOfNeighbours = [
+  ["Canada", "Mexico"],
+  ["Spain"],
+  ["Norway", "Sweden", "Russia"],
+];
+
+for (let i = 0; i < listOfNeighbours.length; i++) {
+  for (let j = 0; j < listOfNeighbours[i].length; j++) {
+    console.log(`Neighbour: ${listOfNeighbours[i][j]}`);
+  }
+}
+
+/************************************************************************/
+/**************************** THE WHILE LOOP ****************************/
+/************************************************************************/
+/* 
+// for loop
+console.log(`----- FOR LOOP -----`);
+for (let rep = 1; rep <= 10; rep++) {
+  console.log(`Lifting weights repetition ${rep} 🏋️‍♀️`);
+}
+
+// while loop
+console.log(`----- WHILE LOOP -----`);
+let rep = 1;
+while (rep <= 10) {
+  console.log(`Lifting weights repetition ${rep} 🏋️‍♀️`);
+  rep++;
+}
+
+let dice = Math.trunc(Math.random() * 6) + 1;
+console.log(dice);
+
+while (dice !== 6) {
+  console.log(`You rolled a ${dice}`);
+  dice = Math.trunc(Math.random() * 6) + 1;
+  if (dice === 6) console.log(`Loop is about to end...`);
+}
+ */
+
+/************************************************************************/
+/********************** FUNDAMENTALS ASSIGNMENT 13 **********************/
+/************************************************************************/
+
+populations = [1428, 333, 67, 68];
+
+const percentages3 = [];
+
+let i = 0;
+
+while (i < populations.length) {
+  percentages3.push(percentageOfWorld1(populations[i]));
+  i++;
+}
+
+console.log(percentages3);
+
+/***********************************************************************/
+/************************* CODING CHALLENGE 04 *************************/
+/***********************************************************************/
+
+const newBills = [22, 295, 176, 440, 37, 105, 10, 1100, 86, 52];
+
+const newTips = [];
+const totals = [];
+
+for (let i = 0; i < bills.length; i++) {
+  newTips.push(calcTip(bills[i]));
+  totals.push(bills[i] + tips[i]);
+}
+
+console.log(newTips);
+console.log(totals);
+
+const calcAvg = function (arr) {
+  let sum = 0;
+  for (let i = 0; i < arr.length; i++) {
+    sum += arr[i];
+  }
+
+  const avg = sum / arr.length;
+  return avg;
+};
+
+console.log(calcAvg(totals));
