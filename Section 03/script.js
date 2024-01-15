@@ -424,3 +424,235 @@ console.log(tips);
 
 const total = [bills[0] + tips[0], bills[1] + tips[1], bills[2] + tips[2]];
 console.log(total);
+
+/***********************************************************************/
+/*********************** INTRODUCTION TO OBJECTS ***********************/
+/***********************************************************************/
+/* 
+// array
+const bhoamiArray = [
+  "bhoami",
+  "khona",
+  2037 - 1995,
+  "web developer",
+  ["michael", "peter", "steven"],
+];
+
+// object
+// creating an object with object literal syntax
+const bhoamiObj = {
+  firstName: "bhoami",
+  lastName: "khona",
+  age: 2037 - 1995,
+  job: "web developer",
+  friends: ["michael", "peter", "steven"],
+};
+ */
+
+/************************************************************************/
+/********************** FUNDAMENTALS ASSIGNMENT 07 **********************/
+/************************************************************************/
+
+let myCountry = {
+  country: "India",
+  capital: "New Delhi",
+  language: "Hindi",
+  population: 1428,
+  neighbours: [
+    `Afghanistan`,
+    `Bangladesh`,
+    `Bhutan`,
+    `China`,
+    `Maldives`,
+    `Myanmar`,
+    `Nepal`,
+    `Pakistan`,
+    `Lanka`,
+  ],
+};
+
+/************************************************************************/
+/*********************** DOT VS. BRACKET NOTATION ***********************/
+/************************************************************************/
+/* 
+const bhoami = {
+  firstName: "bhoami",
+  lastName: "khona",
+  age: 2037 - 1995,
+  job: "web developer",
+  friends: ["michael", "peter", "steven"],
+};
+
+console.log(bhoami);
+
+// getting an object property using dot notation
+console.log(bhoami.lastName);
+
+// getting an object property using bracket notation
+console.log(bhoami["lastName"]);
+
+// getting a property using expressions
+const nameKey = "Name";
+console.log(bhoami["first" + nameKey]);
+console.log(bhoami["last" + nameKey]);
+
+// cannot get properties with dot notation - when using an expression
+// console.log(bhoami."first" + nameKey); // error
+
+// const interestedIn = prompt(
+//   `What do you want to know about Bhoami? Choose between firstName, lastName, age, job, and friends`
+// );
+
+const interestedIn = "job";
+
+// we get undefined here because bhoami does not have a property called interestedIn
+console.log(bhoami.interestedIn); // undefined
+
+// to remedy this, instead of using dot notation, we need to use brackets notation.
+// because then we can put any expression in it and so, it will accept a variable name and JS will replace that variable name with its value.
+console.log(bhoami[interestedIn]); // this works
+
+if (bhoami[interestedIn]) {
+  console.log(bhoami[interestedIn]);
+} else {
+  console.log(`Wrong request, try again.`);
+}
+
+// Adding new properties to an object using dot and brackets notation:
+
+bhoami.location = "India";
+bhoami["github"] = "@bhoamikhona";
+console.log(bhoami);
+
+// Challenge
+// "Bhoami has 3 friends, and her best friend is called Michael"
+console.log(
+  `${bhoami.firstName} has ${bhoami.friends.length} friends, and her best friend is called ${bhoami.friends[0]}`
+);
+ */
+/************************************************************************/
+/********************** FUNDAMENTALS ASSIGNMENT 08 **********************/
+/************************************************************************/
+
+console.log(
+  `${myCountry.country} has ${myCountry.population} million ${myCountry.language}-speaking people, ${myCountry.neighbours.length} neighbouring countries and a capital called ${myCountry.capital}.`
+);
+
+myCountry.population += 2;
+console.log(myCountry.population);
+myCountry["population"] -= 2;
+console.log(myCountry.population);
+
+/************************************************************************/
+/**************************** OBJECT METHODS ****************************/
+/************************************************************************/
+/* 
+// Adding functions inside objects
+const bhoami = {
+  firstName: "bhoami",
+  lastName: "khona",
+  birthYear: 1995,
+  job: "web developer",
+  friends: ["michael", "peter", "steven"],
+  hasDriversLicense: true,
+  // calcAge: function (birthYear) {
+  //   return 2037 - birthYear;
+  // },
+
+  // calcAge: function () {
+  //   console.log(this); // `this` points to the object that is calling it
+  //   return 2037 - this.birthYear;
+  // },
+
+  calcAge: function () {
+    this.age = 2037 - this.birthYear; // creating a new property called age in bhoami object
+    return this.age;
+  },
+
+  // challenge
+  getSummary: function () {
+    return `${this.firstName} is a ${this.age} year old ${
+      this.job
+    }, and she has ${this.hasDriversLicense ? "a" : "no"} driver's license.`;
+  },
+};
+
+// console.log(bhoami.calcAge(1995)); // calling the function using dot notation
+// console.log(bhoami["calcAge"](1995)); // calling the function using bracket notation
+
+// the object bhoami is calling the calcAge() method so, in the method, `this` will point to the object bhoami.
+console.log(bhoami.calcAge());
+
+console.log(bhoami.age);
+
+// Challenge
+// "Bhoami is a 42 year old web developer, and she has a/no driver's license"
+console.log(bhoami.getSummary());
+ */
+/************************************************************************/
+/********************** FUNDAMENTALS ASSIGNMENT 09 **********************/
+/************************************************************************/
+
+myCountry = {
+  country: "India",
+  capital: "New Delhi",
+  language: "Hindi",
+  population: 1428,
+  neighbours: [
+    `Afghanistan`,
+    `Bangladesh`,
+    `Bhutan`,
+    `China`,
+    `Maldives`,
+    `Myanmar`,
+    `Nepal`,
+    `Pakistan`,
+    `Lanka`,
+  ],
+  describe: function () {
+    console.log(
+      `${this.country} has ${this.population} million ${this.language}-speaking people, ${this.neighbours.length} neighbouring countries and a capital called ${this.capital}.`
+    );
+  },
+  checkIsIsland: function () {
+    this.isIsland = this.neighbours.length ? true : false;
+    return this.isIsland;
+  },
+};
+
+myCountry.describe();
+console.log(myCountry.checkIsIsland());
+console.log(myCountry.isIsland);
+
+/***********************************************************************/
+/************************* CODING CHALLENGE 03 *************************/
+/***********************************************************************/
+
+const mark = {
+  fullName: "Mark Miller",
+  mass: 78,
+  height: 1.69,
+  calcBMI: function () {
+    this.bmi = this.mass / this.height ** 2;
+    return this.bmi;
+  },
+};
+
+const john = {
+  fullName: "John Smith",
+  mass: 92,
+  height: 1.95,
+  calcBMI: function () {
+    this.bmi = this.mass / (this.height * this.height);
+    return this.bmi;
+  },
+};
+
+john.calcBMI();
+mark.calcBMI();
+
+if (john.bmi > mark.bmi) {
+  console.log(`John's BMI (${john.bmi}) is higher than Mark's (${mark.bmi})!`);
+} else {
+  console.log(`Mark's BMI (${mark.bmi}) is higher than John's (${john.bmi})!`);
+}

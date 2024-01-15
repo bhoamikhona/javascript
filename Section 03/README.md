@@ -15,6 +15,9 @@
     - [Anatomy of a Function](#anatomy-of-a-function)
   - [Introduction to Arrays](#introduction-to-arrays)
   - [Basic Array Operations (Methods)](#basic-array-operations-methods)
+  - [Introduction to Objects](#introduction-to-objects)
+  - [Dot vs. Bracket Notation](#dot-vs-bracket-notation)
+  - [Object Methods](#object-methods)
 - [Author](#author)
 
 ## Lessons Learned
@@ -140,6 +143,47 @@ const v = "Hi! I'm a strict mode script!";
 - `indexOf()` - Returns the first index at which a given element can be found in the array, or -1 if it is not present.
 - `includes()` - Determines whether an array includes a certain value among its entries, returning `true` or `false` as appropriate.
   - `includes()` uses strict equality
+
+### Introduction to Objects
+
+- In arrays, we don't have a way to given each of its elements a name i.e. we cannot reference array elements via names, we reference them via their index numbers.
+- To solve that problem, we have another data structure in JS called Objects.
+- In objects we define key-value pairs. So, we can give each of the values a name.
+- The key is similar to variable name which is followed by a colon and then a value.
+- Value can be of any type that we want.
+- Values can be expressions.
+- Keys are also called properties.
+- Objects are the most fundamental concept in whole of JS. So, there are many ways of creating objects.
+  - Object literal syntax
+- The order of key-value pairs in objects do not matter when we want to retrieve something from it, unlike arrays.
+- This means that we should use arrays for ordered data and objects for unstructured data.
+- We should also use objects for the data that we actually want to name, and then retrieve from the object, using that name.
+
+### Dot vs. Bracket Notation
+
+- Retrieve data from objects
+  - Dot Notation
+  - Bracket Notation
+- Change data from objects
+  - Dot Notation
+  - Bracket Notation
+- The difference between the dot and bracket notation is that within the square brackets, we could put any expression that we'd like.
+- In dot notation, however, it has to be the exact property name that is declared inside the object.
+- When should we use the dot notation and when should we use brackets notation?
+  - When we need to first compute the property name, then use the brackets notation.
+  - In any other case, just use the dot notation, which looks a lot cleaner and it's also easier to use.
+- When we try to access a property that does not exist in an object, we get `undefined`.
+
+### Object Methods
+
+- In JS, functions are just another type of value.
+- So, if a function is just a value then that means that we can create a key value pair in which the value is a function.
+- This means that we can add functions to objects.
+- To add a function as a key-value pair in an object, we write the function name as the key which is followed by a colon.
+- After the colon, we use the `function` keyword along with a set of parentheses (for parameters) and then a code block - Just like a function expression. This works because the expression produces a value.
+- Any function that is attached to an object is called a method.
+- In every method (function attached to an object), JavaScript gives us access to a special variable called `this`.
+- The `this` keyword is equal to the object on which the method is called. In other words, it is equal to the object calling the method.
 
 ## Author
 
