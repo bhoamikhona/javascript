@@ -13,6 +13,8 @@
   - [Reviewing Functions](#reviewing-functions)
     - [Recap](#recap)
     - [Anatomy of a Function](#anatomy-of-a-function)
+  - [Introduction to Arrays](#introduction-to-arrays)
+  - [Basic Array Operations (Methods)](#basic-array-operations-methods)
 - [Author](#author)
 
 ## Lessons Learned
@@ -106,6 +108,38 @@ const v = "Hi! I'm a strict mode script!";
 #### Anatomy of a Function
 
 - ![image](https://github.com/bhoamikhona/javascript/assets/50435319/3aea229c-fbad-43eb-9fdb-833549efb237)
+
+### Introduction to Arrays
+
+- Array is a data structure that allows us to bundle multiple values together in a big "container".
+- Creating a new array
+  - using literal syntax
+  - using `Array()` function
+- Retrieving items from an array
+- Getting an array's length
+  - `length` property
+- Getting the last element of an array using `length` property
+- Mutate elements in an array
+- Variable declared with `const` cannot be changed but, we can still change the element inside an array which is declared using `const`.
+  - This is because only primitive values are immutable but, arrays are not primitive so, we can change the elements inside it.
+  - It works this way because of the way that JS stores things in memory.
+  - We will learn more about it in [Section 08](../Section%2008).
+  - All you need to know for now is that you can mutate elements inside an array even if it was declared using `const`.
+  - What you cannot do is to completely replace the array itself if you've declared it using `const`.
+- An array can hold different values of different types, all at the same time.
+- In each array element position, JS expects an expression so, we can even have expressions in an array as those expressions will eventually be replaced by their resulting values.
+  - Same is true for variables
+- We can also have another array nested inside of an array.
+
+### Basic Array Operations (Methods)
+
+- `push()` - Adds the specified element to the end of an array and returns the new length of the array.
+- `unshift()` - Adds the specified element in the beginning of an array and returns the new length of the array.
+- `pop()` - Removes the last element of the array and returns the removed element.
+- `shift()` - Removes the first element of the array and returns the removed element.
+- `indexOf()` - Returns the first index at which a given element can be found in the array, or -1 if it is not present.
+- `includes()` - Determines whether an array includes a certain value among its entries, returning `true` or `false` as appropriate.
+  - `includes()` uses strict equality
 
 ## Author
 

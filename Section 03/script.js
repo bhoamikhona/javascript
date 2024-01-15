@@ -246,3 +246,181 @@ const checkWinner = function (avgDolphins, avgKoalas) {
 
 checkWinner(avgDolphins1, avgKoalas1);
 checkWinner(avgDolphins2, avgKoalas2);
+
+/************************************************************************/
+/************************ INTRODUCTION TO ARRAYS ************************/
+/************************************************************************/
+/* 
+// traditional
+const friend1 = "Michael";
+const friend2 = "Steven";
+const friend3 = "Peter";
+
+// creating an array using literal syntax
+const friends = ["Michael", "Steven", "Peter"];
+console.log(friends);
+
+// creating an array using Array() function
+const y = new Array(1991, 1984, 2008, 2020);
+
+// retrieving items from an array
+console.log(friends[0]);
+console.log(friends[2]);
+
+// getting number of elements in an array
+console.log(friends.length);
+
+// getting last element of an array
+// can access elements with expression in the square brackets e.g.:
+console.log(friends[friends.length - 1]);
+
+// mutate elements in an array
+friends[2] = "Jack";
+
+console.log(friends);
+
+// cannot replace entire array if it was declared using const but, you can mutate values inside it.
+// friends = ['Bob', 'Alice']; // error
+
+// arrays can hold different values of different types
+// In each array element position, JS expects an expression so, we can even have expressions in an array as those expressions will eventually be replaced by their resulting values.
+// Same is true for variables
+// We can also have another array nested inside of an array
+const firstName = "bhoami";
+const bhoami = [firstName, "khona", 2037 - 1995, friends];
+
+console.log(bhoami); // ['bhoami', 'khona', 42, Array(3)]
+console.log(bhoami.length); // 4
+
+// Exercise
+const calcAge = function (birthYear) {
+  return 2037 - birthYear;
+};
+
+const years = [1990, 1967, 2002, 2010, 2018];
+
+const age1 = calcAge(years[0]);
+const age2 = calcAge(years[1]);
+const age3 = calcAge(years[years.length - 1]);
+
+console.log(age1, age2, age3);
+
+const ages = [
+  calcAge(years[0]),
+  calcAge(years[1]),
+  calcAge(years[years.length - 1]),
+];
+
+console.log(ages);
+ */
+/************************************************************************/
+/********************** FUNDAMENTALS ASSIGNMENT 05 **********************/
+/************************************************************************/
+
+const populations = [1428, 333, 67, 68];
+
+console.log(populations.length === 4);
+
+const percentages = [
+  percentageOfWorld1(populations[0]),
+  percentageOfWorld1(populations[1]),
+  percentageOfWorld1(populations[2]),
+  percentageOfWorld1(populations[3]),
+];
+
+console.log(percentages);
+
+/************************************************************************/
+/******************* BASIC ARRAY OPERATIONS (METHODS) *******************/
+/************************************************************************/
+/* 
+const friends = ["Michael", "Steven", "Peter"];
+
+// push() adds the specified element to the end of an array and returns the new length of the array
+const newLength = friends.push("Jay");
+
+console.log(friends);
+console.log(newLength);
+
+// unshift() adds the specified element in the beginning of an array and returns the new length of the array.
+friends.unshift("John");
+console.log(friends);
+
+// pop() removes the last of the array and returns the removed element
+friends.pop();
+const popped = friends.pop();
+console.log(friends);
+console.log(popped);
+
+// shift() removes the first element of the array and returns the removed element
+friends.shift();
+console.log(friends);
+
+// indexOf() returns the first index at which a given element can be found in the array, or -1 if it is not present.
+console.log(friends.indexOf("Steven"));
+console.log(friends.indexOf("Bob"));
+
+// includes() determines whether an array includes a certain value among its entries, returning `true` or `false` as appropriate.
+console.log(friends.includes("Steven"));
+console.log(friends.includes("Bob"));
+
+// includes() uses strict equality
+friends.push(23);
+console.log(friends.includes(23)); // true
+console.log(friends.includes("23")); // false
+
+if (friends.includes("Peter")) {
+  console.log(`You have a friend called Peter.`);
+}
+ */
+
+/************************************************************************/
+/********************** FUNDAMENTALS ASSIGNMENT 06 **********************/
+/************************************************************************/
+
+const neighbours = [
+  `Afghanistan`,
+  `Bangladesh`,
+  `Bhutan`,
+  `China`,
+  `Maldives`,
+  `Myanmar`,
+  `Nepal`,
+  `Pakistan`,
+  `Lanka`,
+];
+
+console.log(neighbours);
+
+neighbours.push(`Utopia`);
+console.log(neighbours);
+
+neighbours.pop();
+console.log(neighbours);
+
+if (!neighbours.includes(`Germany`)) {
+  console.log(`Probably not a central European country :D`);
+}
+
+const index = neighbours.indexOf(`Lanka`);
+neighbours[index] = `Sri Lanka`;
+console.log(neighbours);
+
+/***********************************************************************/
+/************************* CODING CHALLENGE 02 *************************/
+/***********************************************************************/
+
+const calcTip = function (bill) {
+  const percent = bill >= 50 && bill <= 300 ? 15 : 20;
+  return bill * (percent / 100);
+};
+
+console.log(calcTip(100));
+
+const bills = [125, 555, 44];
+
+const tips = [calcTip(bills[0]), calcTip(bills[1]), calcTip(bills[2])];
+console.log(tips);
+
+const total = [bills[0] + tips[0], bills[1] + tips[1], bills[2] + tips[2]];
+console.log(total);
