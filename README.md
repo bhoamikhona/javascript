@@ -9,6 +9,7 @@
 - [Section 03](./Section%2003): JavaScript Fundamentals - Part 02
 - [Section 04](./Section%2004): How to Navigate this Course
 - [Section 05](./Section%2005): Developer Skills & Editor Setup
+- [Section 06](./Section%2006): HTML & CSS Crash Course
 
 ## Author
 
