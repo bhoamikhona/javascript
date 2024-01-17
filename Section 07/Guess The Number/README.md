@@ -4,7 +4,7 @@
 
 **About:** The goal of this project is to simply guess a secret number which is between 1 and 20. There will be an input field where we can type a number and then check if the number is equal to the secret number or not. If the number is guessed is higher than the secret number, we get the feedback "Too High", if the guessed number is lower than the secret number, we get the feedback "Too Low", and if it is equal to the secret number, we get the feedback "Correct Number". We start with the score of 20 and for each wrong guess, we lose a point. A highscore will be maintained throughout all games. If we press "Again!" button, the entire game will be reset except for highscore and we can start playing again.
 
-- [Live Website](./index.html)
+- [Live Website](https://bhoamikhona.github.io/javascript/Section%2007/Guess%20The%20Number/index.html)
 
 ## Table of Contents
 

@@ -14,7 +14,7 @@
 
 ## Projects
 
-- [Guess The Number](./Section%2007/Guess%20The%20Number/index.html)
+- [Guess The Number](https://bhoamikhona.github.io/javascript/Section%2007/Guess%20The%20Number/index.html)
 
 ## Author
 
