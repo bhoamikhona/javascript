@@ -68,6 +68,8 @@
 
 ## Demo
 
+![guess-the-number-demo](https://github.com/bhoamikhona/javascript/assets/50435319/78784eb0-9d6b-47e6-a6b8-cbc6cdb5113c)
+
 ## Author
 
 - [@bhoamikhona](https://github.com/bhoamikhona)
