@@ -10,6 +10,7 @@
 - [Section 04](./Section%2004): How to Navigate this Course
 - [Section 05](./Section%2005): Developer Skills & Editor Setup
 - [Section 06](./Section%2006): HTML & CSS Crash Course
+- [Section 07](./Section%2007): JavaScript in the Browser: DOM and Events Fundamentals
 
 ## Author
 
