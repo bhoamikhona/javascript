@@ -12,6 +12,10 @@
 - [Section 06](./Section%2006): HTML & CSS Crash Course
 - [Section 07](./Section%2007): JavaScript in the Browser: DOM and Events Fundamentals
 
+## Projects
+
+- [Guess The Number](./Section%2007/Guess%20The%20Number/index.html)
+
 ## Author
 
 - [@bhoamikhona](https://github.com/bhoamikhona)
