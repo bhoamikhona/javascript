@@ -4,7 +4,7 @@
 
 **About:** In this small project, we are going to build our first UI component, modal window. Modal window is simply a window which gets overlaid over the rest of the webpage. To close the modal window, we have either the close button on the window or we can click anywhere outside the window. We can also close the modal window by hitting the esc key on the keyboard. This is an easy project but, it is very useful to learn classes. Classes is an important topic because, manipulating classes is the main way in which we manipulate webpages.
 
-- [Live Website]()
+- [Live Website](https://bhoamikhona.github.io/javascript/Section%2007/Modal%20Window/index.html)
 
 ## Table of Contents
 

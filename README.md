@@ -15,6 +15,7 @@
 ## Projects
 
 - [Guess The Number](https://bhoamikhona.github.io/javascript/Section%2007/Guess%20The%20Number/index.html)
+- [Modal Window](https://bhoamikhona.github.io/javascript/Section%2007/Modal%20Window/index.html)
 
 ## Author
 
