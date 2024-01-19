@@ -35,7 +35,7 @@
 **About:** In this project, we are going to take everything we've learned from the first two projects, and build a game. This is a two-player game. The idea is that players take turns to roll a dice as many times as they wish, adding all roll results to a running total but, losing their gained score for the turn if they roll a 1.
 [Learn More](<https://en.wikipedia.org/wiki/Pig_(dice_game)>)
 
-- [Live Website]()
+- [Live Website](https://bhoamikhona.github.io/javascript/Section%2007/The%20Pig%20Game/index.html)
 - [GitHub Repository](./The%20Pig%20Game)
 
 ## Lessons Learned
