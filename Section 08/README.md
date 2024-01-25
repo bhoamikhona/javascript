@@ -22,6 +22,10 @@
       - [Just-in-Time Compilation](#just-in-time-compilation)
     - [Modern Just-in-Time Compilation of JavaScript](#modern-just-in-time-compilation-of-javascript)
     - [The Bigger Picture: JavaScript Runtime](#the-bigger-picture-javascript-runtime)
+  - [Execution Contexts and The Call Stack](#execution-contexts-and-the-call-stack)
+    - [What is an Execution Context?](#what-is-an-execution-context)
+    - [Execution Context in Detail](#execution-context-in-detail)
+    - [The Call Stack](#the-call-stack)
 - [Author](#author)
 
 ## Lessons Learned
@@ -239,6 +243,121 @@
 - Details don't matter here, it is just important to know that different JavaScript runtimes do exist.
 - That is all we needed to know about JavaScript engines and runtimes.
 - In the next lesson, we will learn how JavaScript is executed in the call stack.
+
+### Execution Contexts and The Call Stack
+
+- In this lesson, let's answer the question: How is JavaScript code executed?
+- We already know that it happens in a call stack in the engine, but let's dig a bit deeper now.
+
+#### What is an Execution Context?
+
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/c7cea1a4-4109-47c9-8458-aa8544eb31e1)
+- Let's start by supposing that our code was just finished compiling.
+- The code is now ready to be executed.
+- What happens then, is that a so-called <ins>global execution context</ins> is created for the top-level code.
+- Top-level code is basically code that is not inside any function.
+- In the beginning only the code that is outside of functions will be executed.
+- This makes sense because functions should only be executed when they are called.
+- We saw this happening in our [Pig Game](../Section%2007/The%20Pig%20Game) project where we had an init() function which initialized our entire project but, in order to actually initialize the game the first time that the page loaded, we needed to call that function immediately in our top-level code.
+- We can also see what a top-level code is in the example in the image above.
+- In the example, the 'name' variable decalration is clearly a top-level code.
+- Therefore, it will be executed in the global execution context.
+- Next, we have two functions - one expression and one declaration.
+- These functions will also be declared so that they can be called later.
+- But the code inside the functions will only be executed when the functions are called.
+- So, we know that a global execution context is created for top-level code but, what exactly is an execution context?
+- An execution context is an abstract concept but, we can define it as an environment in which a piece of JavaScript is executed.
+- It is like a box that stores all the necessary information (such as local variables or arguments passed into a function) for some code to be executed.
+- JavaScript code always runs inside an execution context.
+- In any JavaScript project, no matter how large it is, there is only ever one global execution context, and it is where the top-level code will execute.
+- Now that we have an environment where the top-level code can be executed, it finally is exected.
+- There is not a lot to say about the execution itself, it is just the computer CPU processing the machine code that it received.
+- Once the top-level code is finished executing, functions finally start to execute as well. Here is how that works:
+  - For each and every function call, a new execution context will be created containing all the information that is necessary to run exactly that function.
+  - The same goes for methods as well since they are just functions that are attached to an object.
+  - All these execution contexts together, make up the call stack in the JavaScript engine.
+  - When all the functions are done executing, the engine will basically keep waiting for more callback functions to arrive so that it can execute those. For example, a callback function associated with a click event (Remember that it is the event loop who provides these new callback functions).
+- We know now what an execution context is but, we don't really know what it is made of just yet.
+- So, what is inside of an execution context?
+
+#### Execution Context in Detail
+
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/83c3d2da-989f-4701-b3f0-a14ce01a2687)
+- The first thing that is inside of any execution context is a so-called <ins>variable environment</ins>.
+- In this variable environment, all our variables and function declarations are stored and there is also a special `arguments` object.
+- This `arguments` object contains, as the name suggests, all the arguments that were passed into the functions that the current execution context belongs to.
+  - Remember that each function gets its own execution context as soon as the function is called.
+- Basically, all the variables that are somehow declared inside a function, will end up in it variable environment.
+- However, a function can also access variables outside of the function.
+  - We have already seen it in action throughout this course, especially in the project of the [previous section](../Section%2007).
+- This works because of something called the scope chain.
+- We will learn all about scoping and the scope chain later in this section.
+- For now, all you need to know is that the scope chain basically consists of references to variables that are located outside of the current function.
+- To keep track of the scope chain, it is stored in each execution context.
+- Finally, each execution context also gets access to a special variable called the `this` keyword.
+  - There is a special lesson, just about the `this` keyword - later in this section.
+- The content of the execution context viz variable environment, scope chain, and `this` keyword is generated in a so-called <ins>creation phase</ins> which happens right before execution.
+- One final but very important detail that we need to keep in mid is that execution contexts belonging to arrow functions do not get their own `arguments` object and nor do they get their own `this` keyword.
+- Basically, arrow functions do not have the `arguments` object and the `this` keyword.
+- Instead, they can use the `arguments` object and the `this` keyword from their closest regular function parent.
+- This is an extremely important detail to remember about arrow functions and we will come back to it later.
+- These are the things that are necessary to run each function as well as the code in the top-level.
+- Behind the scenes, it is actually even more complex but, we are fine like this.
+- Now let's try to simulate the creation phase for the code example in the image above:
+  - We will get one global execution context and one for each function - one for the first() function and another one for the second() function.
+  - In the global context, we have the 'name' variable declaration, the first() and the second() function declarations, as well as the 'x' variable declaration.
+    - The value of 'x' is marked unknown here because the value of 'x' is the result of the first() function that we didn't run yet.
+    - We will simulate it soon.
+  - For the functions, the variable environmnet will literally contain all the code of a particular function.
+  - Technically, non of the values actually become known during the creation phase, but only in the execution phase.
+  - So, this is not 100% accurate but, it is just to illustrate how these execution contexts work.
+  - In the first() function, we have 'a' variable set to 1 and the 'b' variable requires a function call in order to become known.
+  - The second() function contains the variable 'c' set to 2 and since it is a regular function (i.e. not an arrow function), it also has the `arguments` object.
+    - This `arguments` object is an array, which contains all the arguments that were passed into the function when it was called.
+  - In this example, this might seem simple but, imagine if there are 100s of execution contexts for 100s of functions. How will the engine keep track of the order in which functions were called? and how will it know where it currently is in the execution?
+  - That's where the call stack finally comes in.
+
+#### The Call Stack
+
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/c6351a00-c7b8-493d-9297-36669250ac6b)
+- Remember that the call stack together with the memory heap, makes up the JavaScript engine itself.
+- What is call stack?
+  - It is basically a place where execution contexts get stacked on top of each other, in order to keep track of where we are in the program's execution.
+  - The execution context that is at the top of the stack is the one that is currently running.
+  - Once it is finished running, it will be removed from the stack and the execution context will go to the one that was below it (now at the top of the stack).
+- Let's now walk through the example code in the image above to understand how the class stack works.
+  - ![the-call-stack-and-execution-context](https://github.com/bhoamikhona/javascript/assets/50435319/aa1fee38-d785-4650-b28b-5392def6101d)
+  - Once the code is compiled, top-level code will start execution, and a global execution context will be created for the top-level code.
+  - This global execution context will be then put in the callstack and it is now at the top of the call stack. Since this context is at the top of the stack, it is the one that is currently being executed.
+  - At the top level code, we first have 'name' variable declaration and then the first() and second() functions are declared.
+  - But then, in the last line is where things start to get interesting. We declared the 'x' variable with the value that is going to be returned from calling the first() function. So, let's actually call that function.
+  - What happens immediately when a function is called? It get it's own execution context so that it can run the code that is inside its body.
+  - What happens to the context? It is put in the call stack, on the top of the current context. So, the execution context of the first() function will be at the top of the stack.
+  - Inside the first() function execution context, we have yet another simple variable declaration of 'a'. This variable 'a' will be defined in the current execution context, not in the gloabl execution context.
+  - In the next line, we have yet another function call to second() function.
+  - We will call that function and move there. Once the function is called, a new execution context will be created for second() function and that execution context will be placed on the top of the stack, making it the new, current execution context.
+  - It is important to note here that the execution of the first() function has been paused.
+  - We are running the second() function now and in the meantime, no other function is being executed.
+  - The first() function stopped at the point where the second() function was called and it will only continue as soon as the second() function returns.
+  - It has to work this way because JavaScript has only one thread of exection. So, it can only do one thing at a time.
+  - Moving to the `return` statement in the second() function, the function will finish its execution. So, what does that mean for the call stack?
+  - It basically means that the function's execution context will be popped off the stack and disappear from the computer's memory.
+  - At least that's what you need to know for now because, actually the popped off execution context might keep living in the memory (more on this later).
+  - What happens next, is that the previous execution context will now be back to being the active exection context again.
+  - So, in the code, we will be back to where the second() was called from inside the first() function.
+  - Hope that by now you start to see how the call stack really keeps track of the order of execution.
+  - Without the call stack, how would the engine know which function was being executed before? It wouldn't know where to go back to.
+  - That's the beauty of the call stack. It makes this process almost effortless.
+  - You can think of the callstack being like a map for the JavaScritp engine because, the call stack ensures that the order of execution never gets lost.
+  - So, we returned from the second() function, back to the first() function. Then we have a calculation with variable 'a' and then it returns the variable 'a'.
+  - Here, the same thing happens as before. The current execution context gets popped off the stack, and the previous context is now the current context where the code is executed.
+  - In this case, we are back to the global execution context and the line of code where the first function was first called.
+  - Here the returned value is finally assigned to variable 'x' and the execution is finished.
+  - Now the program will stay in this state forever until it is eventually actually finished, and that happens when we close the browser tab or the browser window.
+  - Only when the program is really finished like this, is when the global execution context is also popped off the stack.
+  - This is, in a nutshell hwo the call stack works.
+- Hopefully, it makes sense now that we say that JavaScript runs inside the call stack. In fact, it is more accurate to say that code runs inside of execution contexts that are in the stack.
+- Next up, we will learn more about the variable environment and how variables are created.
 
 ## Author
 
