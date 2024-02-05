@@ -4,38 +4,46 @@
 
 ## Table of Contents
 
-- [Lessons Learned](#lessons-learned)
-  - [A High-Level Overview of JavaScript](#a-high-level-overview-of-javascript)
-    - [High-Level](#high-level)
-    - [Garbage-Collected](#garbage-collected)
-    - [Interpreted or Just-in-Time Compiled](#interpreted-or-just-in-time-compiled)
-    - [Multi-Paradigm](#multi-paradigm)
-    - [Prototype-Based Object-Oriented](#prototype-based-object-oriented)
-    - [First-Class Functions](#first-class-functions)
-    - [Dynamic](#dynamic)
-    - [Single-Threaded and Non-Blocking Event Loop](#single-threaded-and-non-blocking-event-loop)
-  - [The JavaScript Engine and Runtime](#the-javascript-engine-and-runtime)
-    - [What is a JavaScript Engine?](#what-is-a-javascript-engine)
-    - [Computer Science Sidenote: Compilation vs. Interpretation](#computer-science-sidenote-compilation-vs-interpretation)
-      - [Compilation](#compilation)
-      - [Interpretation](#interpretation)
-      - [Just-in-Time Compilation](#just-in-time-compilation)
-    - [Modern Just-in-Time Compilation of JavaScript](#modern-just-in-time-compilation-of-javascript)
-    - [The Bigger Picture: JavaScript Runtime](#the-bigger-picture-javascript-runtime)
-  - [Execution Contexts and The Call Stack](#execution-contexts-and-the-call-stack)
-    - [What is an Execution Context?](#what-is-an-execution-context)
-    - [Execution Context in Detail](#execution-context-in-detail)
-    - [The Call Stack](#the-call-stack)
-  - [Scope and The Scope Chain](#scope-and-the-scope-chain)
-    - [Scoping and Scope in JavaScript: Concepts](#scoping-and-scope-in-javascript-concepts)
-    - [The 3 Types of Scope](#the-3-types-of-scope)
-      - [Global Scope](#global-scope)
-      - [Function Scope](#function-scope)
-      - [Block Scope (ES6)](#block-scope-es6)
-    - [The Scope Chain](#the-scope-chain)
-    - [Scope Chain vs. Call Stack](#scope-chain-vs-call-stack)
-    - [Summary](#summary)
-- [Author](#author)
+- [Section 08: How JavaScript Works Behind the Scenes](#section-08-how-javascript-works-behind-the-scenes)
+  - [Table of Contents](#table-of-contents)
+  - [Lessons Learned](#lessons-learned)
+    - [A High-Level Overview of JavaScript](#a-high-level-overview-of-javascript)
+      - [High-Level](#high-level)
+      - [Garbage-Collected](#garbage-collected)
+      - [Interpreted or Just-in-Time Compiled](#interpreted-or-just-in-time-compiled)
+      - [Multi-Paradigm](#multi-paradigm)
+      - [Prototype-Based Object-Oriented](#prototype-based-object-oriented)
+      - [First-Class Functions](#first-class-functions)
+      - [Dynamic](#dynamic)
+      - [Single-Threaded and Non-Blocking Event Loop](#single-threaded-and-non-blocking-event-loop)
+    - [The JavaScript Engine and Runtime](#the-javascript-engine-and-runtime)
+      - [What is a JavaScript Engine?](#what-is-a-javascript-engine)
+      - [Computer Science Sidenote: Compilation vs. Interpretation](#computer-science-sidenote-compilation-vs-interpretation)
+        - [Compilation](#compilation)
+        - [Interpretation](#interpretation)
+        - [Just-in-Time Compilation](#just-in-time-compilation)
+      - [Modern Just-in-Time Compilation of JavaScript](#modern-just-in-time-compilation-of-javascript)
+      - [The Bigger Picture: JavaScript Runtime](#the-bigger-picture-javascript-runtime)
+    - [Execution Contexts and The Call Stack](#execution-contexts-and-the-call-stack)
+      - [What is an Execution Context?](#what-is-an-execution-context)
+      - [Execution Context in Detail](#execution-context-in-detail)
+      - [The Call Stack](#the-call-stack)
+    - [Scope and The Scope Chain](#scope-and-the-scope-chain)
+      - [The 3 Types of Scope](#the-3-types-of-scope)
+        - [Global Scope](#global-scope)
+        - [Function Scope](#function-scope)
+        - [Block Scope (ES6)](#block-scope-es6)
+      - [The Scope Chain](#the-scope-chain)
+      - [Scope Chain vs. Call Stack](#scope-chain-vs-call-stack)
+      - [Summary](#summary)
+    - [Variable Environment: Hoisting and The TDZ](#variable-environment-hoisting-and-the-tdz)
+      - [Hoisting in JavaScript](#hoisting-in-javascript)
+        - [Hoisting: Function Declarations](#hoisting-function-declarations)
+        - [Hoisting: var](#hoisting-var)
+        - [Hoisting: let and const](#hoisting-let-and-const)
+        - [Hoisting: Function Declarations and Arrow Functions](#hoisting-function-declarations-and-arrow-functions)
+      - [Temporal Dead Zone, Let and Const](#temporal-dead-zone-let-and-const)
+  - [Author](#author)
 
 ## Lessons Learned
 
@@ -614,6 +622,96 @@ function third() {
 - The scope chain is a one-way street: a scope will never, ever have access to the variables of an inner scope.
 - The scope chain in a certain scope is equal to adding together all the variable environments of all the parent scopes.
 - The scope chain has nothing to do with the order in which function were called. It does not affect the scope chain at all.
+
+### Variable Environment: Hoisting and The TDZ
+
+- The next topic that we need to talk about is a very misunderstood concept in JavaScript and that is hoisting.
+
+#### Hoisting in JavaScript
+
+- We learned that an execution context always contains 3 parts:
+  - A variable environment
+  - The scope chain
+  - The `this` keyword.
+- We already learned about the scope chain so now, it is time to take a closer look at the variable environment and in particular at how variables are actually created in JavaScript.
+- In JavaScript, we have a mechanism called <ins>hoisting</ins>.
+- Hoisting basically makes some type of variables accessible or let's say usable in the code before they are actually declared in the code.
+- Many people say that the variables are magically lifted or moved to the top of their scope, for example, to the top of a function; and that actually is what hoisting looks like on the surface.
+- But, behind the scenes, that is in fact not what happens.
+- Instead, behind the scenes, the code is basically scanned for variable declarations before it is executed.
+- This happens during the so-called <ins>creation phase</ins> of the execution context that we talked about before.
+- Then, for each variable that is found in the code, a new property is created in a variable environment object. That's how hoisting really works.
+- Now, hoisting does not work the same for all variable types.
+- So, let's analyze the way hoisting works for function declarations, variables defined with `var`, variables defined with `let`, or `const`, function expressions and arrow functions.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/b73ab724-5d57-4e96-a331-d7c295b1cf8b)
+
+##### Hoisting: Function Declarations
+
+- Function Declarations are actually hoisted and the initial values in the variable environment is set the actual functions.
+- In practice, this means that we can use function declarations before they are actually declared in the code, again, because they are stored in the variable environment object, even before the code starts executing.
+- It was mentioned before, in the course, that function declarations work this way but, now you know why - it is because of hoisting.
+
+##### Hoisting: var
+
+- Next, variables declared with `var` are also hoisted, but hoisting works in a different way here.
+- Unlike functions, when we try to access a `var` variable before it is declared in a code, we don't get the declared value but, we get `undefined`.
+- This is a really weird behavior for beginners.
+- You might expect that you'd simply get an error when using a variable before declaring it OR to get the actual value but, not `undefined`; because getting `undefined` is really just weird and it is not very helpful either.
+- Also, this behavior is a common source of bugs in JavaScript. So, this is one of the main reasons why in modern JavaScript, we almost never use `var`.
+
+##### Hoisting: let and const
+
+- On the other hand, `let` and `const` variables are not hoisted. They technically are hoisted but their value is basically set to `uninitialized`.
+- So, there is no value to work with at all. Therefore, in practice, it is as if there was no hoisting happening at all.
+- Instead, we say that these variables are placed in a so-called <ins>Temporal Dead Zone (TDZ)</ins> which makes it so that we cannot acess the variables between the beginning of the scope to the place where the variables are declared.
+- As a consequence, if we attempted to use a `let` or a `const` variable, before it is declared, we get an error.
+- Also, keep in mind that `let` and `const` are block scoped. So, they exist only in the block in which they were created.
+- All of these factors together are the reason why `let` and `const` were first introduced to the language, and also why we use them now instead of `var` in modern JavaScript.
+
+##### Hoisting: Function Declarations and Arrow Functions
+
+- What about Function expressions and arrow functions? How does hoisting work for them?
+- It depends if they were created using `var` or `const` or `let`. Because, keep in mind that these functions are simply variables. So, they behave the exact same way as variables in regard to hoisting.
+- This means that a function expression or an arrow function created with `var` is hoisted to `undefined`. But, if they are created with `let` or `const`, it is not usable before it is declared in the code because of TDZ - Just like normal variables.
+- This is the reason why we cannot use function expressions and arrow functions before we write them in the code, unline function declarations.
+
+#### Temporal Dead Zone, Let and Const
+
+- Let's take a detailed look at the Temporal Dead Zone (TDZ).
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/fff737e0-8653-4297-979e-23280c03ff5f)
+- In the example above (in the image), we are going to look at the 'job' variable.
+- It is a `const` variable so, it is scope only to the `if` block and it is going to be accessible starting from the line where it is defined.
+- Why? Because there is the Temporal Dead Zone for the 'job' variable.
+- It is basically the region of the scope in which is the variable is defined, but can't be used in any way.
+- So, it is as if the variable didn't even exist.
+- If we still tried to access the variable while in the TDZ like we actually do in the first the line of the `if` block, then we get a reference error which says that we cannot access 'job' before initialization - exactly as we learned in the last slide.
+- However, if we tried to access a variable that was actually never even created, like in the last line of the `if` block, where we are trying to print the value of 'x' - then we get a different error which says that 'x' is not defined at all.
+- This means that the 'job' is in fact in TDZ where it is un-initialized but the engine knows that it will eventually be initialized because it already read the code before and se teh 'job' variable in the variable environment un-initialized.
+- Then when the execution reached the line where the variable is declared, it is removed from the TDZ and it is then safe to use.
+- RECAP:
+  - Each and every `let` and `const` variable get their own TDZ that starts at the beginning of the scope until the line where it is defined.
+  - The variable is only safe to use after the TDZ.
+- What is the need for JS to have a TDZ?
+  - ![image](https://github.com/bhoamikhona/javascript/assets/50435319/0c19bafc-8e2b-425f-8038-f53230307fb5)
+  - The main reason that the TDZ was introduced in ES6 is that the behavior that we learned about earlier, and TDZ makes it way easier to avoid and catch errors.
+  - Using a variable that is set to `undefined` before it is actually declared can cause serious bugs which might be hard to find.
+  - Access variables before declaration is bad practice and should be avoided.
+  - The best way to avoid it is by simply getting an error when we attempt to do so - that's exactly what a TDZ does.
+  - A second and smaller reason why the TDZ exist is to make `const` variables actually work the way that they are supposed to.
+  - As you know, we cannot re-assign `const` variables. So, it will not be possible to set them to `undefined` first and then assign their real value later.
+  - `const` should never be re-assigned so, it is only assigned when execution actually reaches the declaration.
+  - This makes it impossible to use the `const` variable before.
+- If hoisting creates so many problems, why does it exist in the first place?
+  - ![image](https://github.com/bhoamikhona/javascript/assets/50435319/561445ee-e84c-4940-96ff-e15d8663788c)
+  - The creator of JS basically implemented hoisting so that we can use function declarations before we declare them.
+  - Because this is important for some programming techniques, such as mutual recursion.
+  - Some people also thing that it makes code a lot more readable.
+  - Now, the fact that it also works for `var` declarations is because that was the only way hoisting could be implemented at the time.
+  - So, the hoising of `var` variables is basically just a byproduct of hoisting functions.
+  - It probably seemed like a good idea to simply set variables to `undefined`, which in hindsight is really not that great.
+  - But we need to remember that JS was never intended to become the huge programming language that it is today.
+  - Also, we cnanot remove that feature from the language now.
+  - So, we just use `let` and `const` to work around it.
 
 ## Author
 
