@@ -43,6 +43,14 @@
         - [Hoisting: let and const](#hoisting-let-and-const)
         - [Hoisting: Function Declarations and Arrow Functions](#hoisting-function-declarations-and-arrow-functions)
       - [Temporal Dead Zone, Let and Const](#temporal-dead-zone-let-and-const)
+    - [Hoisting and TDZ in Practice](#hoisting-and-tdz-in-practice)
+    - [The this Keyword](#the-this-keyword)
+      - [How the this Keyword Works](#how-the-this-keyword-works)
+        - [Calling A Function As A Method](#calling-a-function-as-a-method)
+        - [Simple Function Calls](#simple-function-calls)
+        - [Arrow Functions](#arrow-functions)
+        - [Event Listener Function Call](#event-listener-function-call)
+    - [The this Keyword in Practice](#the-this-keyword-in-practice)
   - [Author](#author)
 
 ## Lessons Learned
@@ -712,6 +720,95 @@ function third() {
   - But we need to remember that JS was never intended to become the huge programming language that it is today.
   - Also, we cnanot remove that feature from the language now.
   - So, we just use `let` and `const` to work around it.
+
+### Hoisting and TDZ in Practice
+
+- what are these best practices? What is the conclusion of all this?
+  - First, don't use `var` variables. Use `const` most of the time to declare variables and `let` if you really need to change the variable later.
+  - Also, to write clean code, you should delcare your variables at the top of each scope. That will just make your code at least look a little bit better.
+  - Finally, always declare all your functions first and use them only after the declaration. This applies to all types of functions, even function declarations, which are hoisted.
+- Another peculiar thing (difference) between `var`, `let`, and `const:
+
+```javascript
+var x = 1;
+let y = 2;
+const z = 3;
+
+console.log(x === window.x); // true
+console.log(x === window.y); // false
+console.log(x === window.z); // false
+```
+
+- After typing the above example in the script file, now if you look at the window object in the chrome developer tools, you will find a property of x which is set to 1 in it.
+- However, you won't find y or z there - that's because they were declared with let or const
+- So variables created by using let or const, do not create properties on the window object
+
+### The this Keyword
+
+- The `this` keyword is an extremely important concept to understand in JavaScript; and many beginners find it especially difficult. However, it is not that hard if you know how the `this` keyword actually works.
+
+#### How the this Keyword Works
+
+- The `this` keyword or `this` variable is basically a special variable that is created for every execution context and therefore any function.
+- In fact, we learned before that it is one of the 3 components of any execution context, along with the variable environment and scope chain that we already learned about before.
+- In general terms, the `this` keyword, will always take the value of the owner of the function in which, the `this` keyword is used.
+- We also say that it points to the owner of that function. This might seem very abstract but, we will see what that means in a second.
+- For now, what is really important to understand is that the value of the `this` keyword is not static. So, it is not always the same. It depends on how the function is actually called; and its value is only assigned when the function is actually called.
+- So, it is very different from a normal value, in this regard.
+- If we set, for example, 'x' to 5 then 'x' will always be 5 but, the `this` keyword depends on the way in which a function is called.
+- But, what does that actually mean?
+- Let'a analyze the 4 different ways in which a function can be called:
+
+##### Calling A Function As A Method
+
+- The first way to call a function is as a method. So, a function attached to an object.
+- When we call a method, the `this` keyword inside that method will simply point to the object on which the method is called, or in other words, it points to the object that is calling the method.
+- Let's illustrate this with a simple example:
+
+```javascript
+const bhoami = {
+  name: 'Bhoami',
+  year: 1995,
+  calcAge: function () {
+    return 2037 - this.year;
+  },
+};
+
+bhoami.calcAge(); // 42
+```
+
+- According to what we just learned, the value of the `this` keyword should be 'Bhoami' because that is the object that is calling the method in the last line of the code.
+- So then, on 'bhoami', we can access all the properties that it has has. So, `this.year` will become 1995, because that's the value of `bhoami.year`.
+- So, in this case, writing `bhoami.year` will have the exact same effect as writing `this.year`.
+- But, using the `this` keyword is a way better solution, for many reasons that we will get into throughout the course.
+- We will play around with this example a bit more in the next lesson - where we will see the `this` keyword in practice.
+
+##### Simple Function Calls
+
+- Another way we call functions is by simply calling them as normal functions i.e. not as method (not attached to any object).
+- In this case, the `this` keyword will simply be `undefined`. However, that is only valid for strict mode.
+- If you are not in strict mode, this will actually point to the global object, which in case of the browser is the window object. This can be very problematic so, this is yet another very good reason to always use the strict mode.
+
+##### Arrow Functions
+
+- While arrow functions are not exactly a way of calling functions, it is an important kind of function that we need to consider, because, remember that arrow functions do not get their own `this` keyword. Instead, if you use the `this` keyword in an arrow function, it will simply be the `this` keyword of its parent function and in technical terms, this is called the <ins>lexical `this` keyword</ins> because it simply gets picked up from the outer lexical scope of the arrow function.
+  - Never, ever forget this very important property of arrow functions - it is one of the common causes of bugs.
+
+##### Event Listener Function Call
+
+- If the function is called as an event listener, then the `this` keyword will always point to the DOM element that the handler function is attached to.
+
+- The `this` keyword is usually a big source of confusion for beginners but, if you know these rules, then it shall become a lot simpler.
+- To make it even simpler, it is also important to know what the `this` keyword is not.
+- `this` will never point to the function in which we are using it.
+- Also, the `this` keyword will never point to the variable environment of the function.
+- These are two pretty common misconceptions and so that's why they needed to be addressed here.
+- The rules that we learned in this lesson are all we need to know.
+- There are other ways in which we can call a function, for example, using the `new` keyword or the `call()`, `apply()`, or `bind()` methods but, we don't know what any of those are so, we will talk about `this` keyword regarding them when we learn about them.
+
+### The this Keyword in Practice
+
+- Method Borrowing (Look at the [script](./script.js) file for more info)
 
 ## Author
 
