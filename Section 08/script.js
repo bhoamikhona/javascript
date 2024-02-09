@@ -253,7 +253,7 @@ const bhoami = {
   year: 1995,
   calcAge: function () {
     console.log(this);
-    console.log(2037 - this.year);
+    // console.log(2037 - this.year);
   },
 };
 
@@ -303,3 +303,257 @@ const f = bhoami.calcAge; // now f is equal to the calcAge() function
 console.log(f);
 
 f(); // since no object is calling this function, the `this` keyword is undefine*
+
+/***********************************************************************/
+/**************** REGULAR FUNCTIONS VS. ARROW FUNCTIONS ****************/
+/***********************************************************************/
+
+console.log(
+  `/**************** REGULAR FUNCTIONS VS. ARROW FUNCTIONS ****************/`
+);
+
+/**
+ * Let's now learn some of the pitfalls of the `this` keyword related to
+ * regular functions and arrow functions.
+ *
+ * This way, we can learn when we should use and avoid each of them.
+ *
+ * To start, let's get back to the `bhoami` object from before, and we
+ * will add a firstName property to it.
+ *
+ * We will also add another method to it, which will be an arrow function.
+ */
+
+let bhoamiObj = {
+  firstName: 'Bhoami',
+  year: 1995,
+  calcAge: function () {
+    console.log(this);
+    console.log(2037 - this.year);
+  },
+
+  greet: () => console.log(`Hey ${this.firstName}`),
+};
+
+/**
+ * The reason why it is undefined is because an arrow function does not
+ * get its own `this` keyword. It simply uses the `this` keyword from
+ * its parent's scope.
+ *
+ * The parent scope of this greet() method is the global scope (which in
+ * the case of a browser is the window object).
+ *
+ * Since in the window object, there is no property that is called
+ * firstName, it returns undefined.
+ *
+ * NOTE: When we try to access a property that does not exist, on a
+ * certain object, we do not get an error. We get undefined.
+ * NOTE: This behavior can get dangerous when we use `var` to define
+ * variables, since `var` actually does create properties on the global
+ * object, as we learned in one of the previous lessons. Hence, this is
+ * another reason why we shouldn't use `var`.
+ *
+ * NOTE: The curly braces of bhoamiObj is not a code block, it is simply
+ * the way we define an object. Everything inside the bhoamiObj is in the
+ * global scope still - which includes the greet() method.
+ */
+bhoamiObj.greet(); // Hey undefined
+
+/**
+ * A big takeaway from this example is that as a best practice, you
+ * should never ever use an arrow function as a method.
+ *
+ * This is even true if you are not even using the `this` keyword in a
+ * particular method.
+ *
+ * Because if you have this rule of never using an arrow function as a
+ * method, then you never have to think about which type of function you
+ * should use.
+ *
+ * You will always just use a normal function expression, and that way,
+ * you will prevent this kind of mistakes from happening.
+ */
+
+/**
+ * Another pitfall of the `this` keyword is when we have a function inside
+ * of a method.
+ *
+ * It is a pretty common thing to happen. So, let's take a look at an
+ * example for that.
+ */
+
+bhoamiObj = {
+  firstName: 'Bhoami',
+  year: 1995,
+  calcAge: function () {
+    // console.log(this);
+    console.log(2037 - this.year);
+
+    const isMillenial = function () {
+      console.log(this);
+      // console.log(this.year >= 1981 && this.year <= 1996);
+    };
+    isMillenial();
+  },
+
+  greet: () => console.log(`Hey ${this.firstName}`),
+};
+
+bhoamiObj.greet();
+/**
+ * When we call calcAge(), we get the error: "Cannot read property year
+ * of undefined"
+ *
+ * This means that the `this` keyword is `undefined`. Why is that?
+ *
+ * When we call isMillenial(), it is just a regular function call, even
+ * though it happens inside of a method; and the rule says that inside a
+ * regular function call, the `this` keyword must be `undefined`.
+ * Therefore, we get undefined.
+ *
+ * So, it is just as if the function was outside of the calcAge() method.
+ * So, if we take the isMillenial() function out of the calcAge() method,
+ * we will get the same result.
+ *
+ * Some people think that this is a bug in JavaScript but, it really
+ * isn't. It is just how the `this` keyword works.
+ *
+ * It is a clear rule that a regular function call has the `this` keyword
+ * set to undefined.
+ */
+bhoamiObj.calcAge();
+
+/**
+ * There are two solutions to this problem.
+ *
+ * The first solution is to use an extra variable that we usually call
+ * "self", we declare it outside the function and set its value to `this`.
+ */
+
+bhoamiObj = {
+  firstName: 'Bhoami',
+  year: 1995,
+  calcAge: function () {
+    // console.log(this);
+    console.log(2037 - this.year);
+
+    const self = this; // self or that
+    const isMillenial = function () {
+      console.log(self);
+      console.log(self.year >= 1981 && self.year <= 1996);
+    };
+    isMillenial();
+  },
+
+  greet: () => console.log(`Hey ${this.firstName}`),
+};
+
+bhoamiObj.greet();
+
+/**
+ * Now, through the scope chain, `self` will be equal to `this` which
+ * is outside of the isMillenial() function.
+ *
+ * This was kind of the pre-ES6 solution. You might find it in some
+ * older code bases.
+ *
+ * Now in ES6, we have a more modern and a better solution, and that
+ * solution is to use an arrow function.
+ *
+ * This works because an arrow function does not get its own `this`
+ * keyword and it uses the `this` keyword of its parent's scope.
+ */
+
+bhoamiObj = {
+  firstName: 'Bhoami',
+  year: 1995,
+  calcAge: function () {
+    // console.log(this);
+    console.log(2037 - this.year);
+
+    // Solution 01 (PRE-ES6)
+    // const self = this; // self or that
+    // const isMillenial = function () {
+    //   console.log(self);
+    //   console.log(self.year >= 1981 && self.year <= 1996);
+    // };
+
+    // Solution 02 (POST-ES6)
+    const isMillenial = () => {
+      console.log(this);
+      console.log(this.year >= 1981 && this.year <= 1996);
+    };
+    isMillenial();
+  },
+
+  greet: () => console.log(`Hey ${this.firstName}`),
+};
+
+bhoamiObj.greet();
+bhoamiObj.calcAge();
+
+/**
+ * So, this shows why it is important to know how each of the different
+ * type of functions work in regards to the `this` keyword; because,
+ * you can really use them according to your specific needs.
+ */
+
+///// Arguments Keyword /////
+
+/**
+ * Just like the `this` keyword, the `arguments` keyword is only
+ * available in regular functions.
+ */
+
+const addExpr = function (a, b) {
+  // We get an array of all the arguments that we pass into the function
+  console.log(arguments);
+  return a + b;
+};
+
+const addArrow = (a, b) => a + b;
+
+/**
+ * This can be useful when we need a function to accept more parameters
+ * than we actually specified.
+ *
+ * That is something that we never did before.
+ *
+ * Up until this point, we have only ever specified exactly the arguments
+ * that we have defined in the function.
+ *
+ * But, it is completely legal to add more parameters.
+ *
+ * They will not have a name because we didn't name them but, they will
+ * exist. Example:
+ */
+
+addExpr(2, 3, 4, 5, 6); // we can see them when we log the arguments array when we call the function.
+
+/**
+ * So, they do exist and we can therefore use them in the functions.
+ *
+ * For example, we can use a for-loop and loop over the `arguments` array.
+ *
+ * However, our point here is that the arrow functions do not get an
+ * `arguments` keyword.
+ */
+
+const addArrow1 = (a, b) => {
+  // console.log(arguments); // Error: arguments is not defined
+  return a + b;
+};
+
+addArrow1(2, 3);
+
+/**
+ * This was just to show you that the arguments keyword exists but, that
+ * it only exists in regular functions.
+ *
+ * Anyway, the `arguments` keyword is not that important in JS anymore
+ * because now we have a more modern way of dealing with multiple
+ * parameters.
+ *
+ * However, it is still important that you are aware that the `arguments`
+ * keyword exists.
+ */

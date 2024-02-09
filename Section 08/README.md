@@ -51,6 +51,7 @@
         - [Arrow Functions](#arrow-functions)
         - [Event Listener Function Call](#event-listener-function-call)
     - [The this Keyword in Practice](#the-this-keyword-in-practice)
+    - [Regular Functions vs. Arrow Functions](#regular-functions-vs-arrow-functions)
   - [Author](#author)
 
 ## Lessons Learned
@@ -797,7 +798,6 @@ bhoami.calcAge(); // 42
 ##### Event Listener Function Call
 
 - If the function is called as an event listener, then the `this` keyword will always point to the DOM element that the handler function is attached to.
-
 - The `this` keyword is usually a big source of confusion for beginners but, if you know these rules, then it shall become a lot simpler.
 - To make it even simpler, it is also important to know what the `this` keyword is not.
 - `this` will never point to the function in which we are using it.
@@ -809,6 +809,19 @@ bhoami.calcAge(); // 42
 ### The this Keyword in Practice
 
 - Method Borrowing (Look at the [script](./script.js) file for more info)
+
+### Regular Functions vs. Arrow Functions
+
+- Read more about this in the [script](./script.js) file.
+- You should never, ever use an arrow function as a method. This is true even when you are not even using `this` keywrod. This is because, if you have the rule of never using an arrow function as a method, then you never have to think about which type of function you should use.
+- You will always just use a normal function expression, and that way, you will then prevent the kind of errors we talked about in the [script](./script.js) file.
+- In a regular function call, the `this` keyword is set to `undefined`, even if the function is nested inside of a method.
+- There are two solutions to this problem.
+  - Pre-ES6 Solution: The first solution is to use an extra variable that we usually call "self", we declare it outside the function and set its value to `this`.
+  - ES-6 Solution: Use an arrow function as it uses the `this` keyword of its parent's scope.
+- `arguments` keyword
+  - Just like the `this` keyword, the `arguments` keyword is only available in regular functions.
+  - Look at the [script](./script.js) file to know more about it.
 
 ## Author
 
