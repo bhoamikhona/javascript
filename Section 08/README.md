@@ -52,6 +52,8 @@
         - [Event Listener Function Call](#event-listener-function-call)
     - [The this Keyword in Practice](#the-this-keyword-in-practice)
     - [Regular Functions vs. Arrow Functions](#regular-functions-vs-arrow-functions)
+    - [Primitives vs. Objects (Primitive vs. Reference Types)](#primitives-vs-objects-primitive-vs-reference-types)
+      - [How Javascript Works Behind The Scenes Topics Covered In Later Sections](#how-javascript-works-behind-the-scenes-topics-covered-in-later-sections)
   - [Author](#author)
 
 ## Lessons Learned
@@ -822,6 +824,142 @@ bhoami.calcAge(); // 42
 - `arguments` keyword
   - Just like the `this` keyword, the `arguments` keyword is only available in regular functions.
   - Look at the [script](./script.js) file to know more about it.
+
+### Primitives vs. Objects (Primitive vs. Reference Types)
+
+- As we move towards the end of this section, we need to learn about the big difference between the way primitive types and objects are stored in memory.
+- This is actually a very practical aspect and one that causes a lot of confusion in beginners.
+- Let's start by writing some code this time to understand what the confusion is, so that we can then learn how it all works behind the scenes.
+
+```javascript
+let age = 30;
+let oldAge = age;
+age = 31;
+
+console.log(age); // 31
+console.log(oldAge); // 30
+```
+
+- In the log we will see that age will be equal to 31 and oldAge will be equal to 31.
+- So, changing the value of age did not affect the value in oldAge.
+
+```javascript
+const me = {
+  name: 'Bhoami',
+  age: 28,
+};
+```
+
+- Let's say that I have a friend, whose name is also Bhoami. So, instead of creating a new object, I will simply copy the 'me' object over to the 'friend' object, just the way we set 'oldAge' equal to 'age'.
+
+```javascript
+const me = {
+  name: 'Bhoami',
+  age: 28,
+};
+
+const friend = me;
+```
+
+- Now the name in both the objects are the same. But, let's say that the ages are different so, let's try to change the age of my friend.
+
+```javascript
+const me = {
+  name: 'Bhoami',
+  age: 28,
+};
+
+const friend = me;
+friend.age = 30;
+
+console.log('me', me);
+console.log('friend', friend);
+```
+
+- Now if we look in the console, we will find that both, my age and my friend's age is now 30.
+- This is a bit strange because all we did was ot change the age of the friend. Nowhere did we say `me.age = 30`.
+- This is the source of confusion.
+- So now, let's find out why it works this way.
+- Before we can understand the code that we just wrote, we need to review some basics.
+- First, we need to remember about JavaScript's primitive data types, which are Number, String, Boolean, undefined, null, symbol, and BigInt.
+- Then everything else are basically objects.
+- Objects created with object literal, arrays, and even functions are all objects.
+- When we are talking about memory and memory management, it is usual to call primitives, primitive types and objects, reference types because of the different way in which they are stored in memory.
+- Next, we need to remember about the JavaScript engine.
+- The engine has 2 components: the call stack where functions are executed and the heap where objects are stored in the memory.
+- So, all of our objects aka reference types will get stored in the memory heap.
+- NOTE: We mentioned this when we first talked about engine, but now we will finally learn how that actually works.
+- On the other hand, primitives or primitive types are stored in the call stack i.e. the primitive types are stored in the execution contexts in which they are declared.
+- For the sake of simplicity, let's ignore that for now and say that primitive types are stored in the call stack because that's where execution context run.
+- How does all that actually work? And why did our example behaved in the weird way?
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/a3210a76-153d-43e9-a799-d199fa18314f)
+- Here (image above) we have the two code examples from earlier, as well as the engine with call stack and heap.
+- Let's start by looking at the primitive values example.
+- When we declare a variable like `let age = 30` what actually happens inside the JavaScript engine and the computer's memory?
+- First, JavaScript will create a so-called unique identifier with the variable name.
+- Then a piece of memory will be allocated with a certain address, so 0001 in this example, and finally, the value will be stored in the memory at the specified address.
+- So in this case, the value 30 will be specified at memory address 0001.
+- Remember, all this happens in a call stack where primitive values are stored.
+- What's extremely important to understand here is that the identifier actually points to the address and not to the value itself.
+- So we would say that the 'age' variable is equal to 30, but in fact, age is equal to the memory address 0001, which hold the value of 30.
+- This subtle distiction is very important to keep in mind.
+- In the next line, we declare 'oldAge' to be equal to 'age'.
+- Knowing that a variable actually hold a memory address, what should 'oldAge' look like?
+- It will simply point to the same memory address as the 'age' variable.
+- So, it will look like that 'oldAge' is simply 30 as well.
+- In the next line, we set 'age' to 31 so, what will happen then?
+- The value at address 0001 will certainly not become 31 because that will change 'oldAge' as well, since they both point to the same address. So, that would make no sense at all.
+- Also, the value at a certain memory address is immutable, or in other words, it cannot be changed.
+- So, instead what's going to happen here is that a new piece of memory is allocated, and the 'age' identifier now simply points to the new address, which is holding the new value of 31.
+- That's why when we log both of the variables to the console at the end, the both return exactly the values that we expect.
+- Now, with reference values, things work a bit differently, which is the reason why, our example gave us the unexpected, weird behavior earlier in practice.
+- So, what is the origin of this weird, unexpected result?
+- When a new object is created such as the 'me' object, it is stored in the heap, and just like before, it has a memory address and then the value itself.
+- In the case of reference values, like the 'me' object, the 'me' identifier does not actually point directly to the newly created memory address in the heap (in our case D30F).
+- Instead, it will point to a new piece of memory that's created in the stack.
+- This new piece of memory will then point to the object that's in the heap by using the memory address as its value.
+- This new piece of memory will then point to the object that is in the heap by using the memory address as its value.
+- In other words, the piece of memory in the call stack has a reference to the piece of memory in the heap, which hold our 'me' object.
+- That's the reason why we call objects reference types in this context.
+- Again, when we declare a variable as an object, an identifier is created, which points to a piece of memory in the stack, which in turn points to a piece of memory in the heap, and that is where the object is actually stored.
+- It works this way because objects might be too large to be stored in the stack.
+- Instead, they are stored in the ehap, which is like an almost unlimited memory pool.
+- And the stack just keeps a reference to where the object is actually stored in the heap so that it can find it whenever necessary.
+- Moving on in the code, we create a new variable called 'friend' and we set it equal to the 'me' object.
+- So, what will happen here?
+- Just like with primitive values, the 'friend' identifier will point to the exact same memory address as the 'me' identifier.
+- And again, that address contains the reference, which then points to the object itself.
+- And like this, the 'friend' object is now essentially the exact same as the 'me' object.
+- So, here comes the interesting part. Because now, we are going to change a property in the 'friend' object by setting `friend.age = 27`.
+- What happens then is that the object is found in the heap, and the 30 is changed to 27.
+- NOTE: Even though we defined the 'friend' variable as a constant, we can actually still manipulate the object without problems.
+- When we think about it, it makes sense. This is because we are not actually changing the value in the memory for the 'friend' identifier. It is still D30F (the reference to the object).
+- All we did was to change the value in the heap, and that is not a problem.
+- So, it is a misconception that all variables declared with `const` are immutable.
+- In fact, that is only true for primitive values, but not for reference values.
+- So, keep that in mind, whenever you are working with `const`.
+- Anyway, as we log the 'friend' variable to the console, we get the 'age' of 27, just as we said it before.
+- But then, when we log the 'me' object, we get that weird behavior that we could previously not explain and not understand.
+- But, with everything that we have learned in this lesson, it actually makes sense now that in the 'me' object, the 'age' is also 27 now, even though we did not change `me.age = 27` directly.
+- The reason for this (as we can see in the image above) is the fact that 'me' and 'friend' actually point to the exact same object in the memory heap.
+- So, whenever we change something in one of those objects, it will always be reflected in 'friend' and 'me', both.
+- So, they both are just two different identifiers pointing to the exact same value.
+- Once again, that value is the memory address D30F which points to the reference in the memory heap.
+- One important implication of this is that whenever you thing that you are copying an object, you are really just creating a new variable that points to the exact same object.
+- This has huge implications for the way JavaScript works in practice.
+- We will see that in the next lesson and throughout the course.
+- There are ways around this, as we will learn later but, in general, this is how reference values work in JavaScript.
+- Make sure to really understand this, as well as the implications that this behavior has, even if it means that you have to re-watch this lesson.
+- Once you really understand what happened here, in this example, let's understand primitive values and reference values even better, in practice, in next lesson.
+
+#### How Javascript Works Behind The Scenes Topics Covered In Later Sections
+
+- Prototypal Inheritance
+  - Covered in [Section 14](../Section%2014): Object-Oriented Programming (OOP) with Javascript
+- Event Loop
+  - Covered in [Section 16](../Section%2016): Asynchronous Javascript - Promises, Async/Await, and AJAX
+- How the DOM Really Works
+  - Covered in [Section 13](../Section%2013): Advanced DOM and Events
 
 ## Author
 
