@@ -557,3 +557,206 @@ addArrow1(2, 3);
  * However, it is still important that you are aware that the `arguments`
  * keyword exists.
  */
+
+/************************************************************************/
+/****************** PRIMITIVES VS. OBJECTS IN PRACTICE ******************/
+/************************************************************************/
+
+console.log(
+  `/****************** PRIMITIVES VS. OBJECTS IN PRACTICE ******************/`
+);
+
+// primitive types
+let lastName = 'Williams';
+let oldLastName = lastName;
+lastName = 'Davis';
+
+console.log(lastName, oldLastName);
+
+// reference types
+const jessica = {
+  firstName: 'Jessica',
+  lastName: 'Williams',
+  age: 27,
+};
+
+const marriedJessica = jessica;
+marriedJessica.lastName = 'Davis';
+
+console.log(`Before Marriage: ${jessica.lastName}`);
+console.log(`After Marriage: ${marriedJessica.lastName}`);
+
+/**
+ * Both the objects, jessica and marriedJessica have their lastName
+ * changed to Davis even though we only changed the lastName in
+ * marriedJessica.
+ *
+ * This happened because when we attempted to copy the original jessica
+ * object, it did in-fact NOT create a new object in the heap.
+ *
+ * It is simply, just another variable in the stack, which holds the
+ * reference to the original object.
+ *
+ * So, both of the variables viz jessica and marriedJessica simply point
+ * to the exact same memory address in the heap.
+ *
+ * This is because in the stack, they both hold the same memory address
+ * reference.
+ *
+ * Therefore, it makes sense that if we change a property on
+ * marriedJessica, it will also change on jessica itself.
+ *
+ * This is also the reason why we can change properties in the
+ * marriedJessica object, which was declared using a const.
+ *
+ * `const` is supposed to be for constants i.e. things that we cannot
+ * change.
+ *
+ * However, the value that actually needs to be constant is the value in
+ * the stack. And in this stick, the value only holds the reference,
+ * which we are not actually changing.
+ *
+ * The only thing that we are changing is the underlying object that is
+ * stored in the heap; and that is okay to change as it has nothing to do
+ * with const or let.
+ *
+ * It is only about the value in the stack. But if we change something in
+ * the heap - that has nothing to do with const or let.
+ *
+ * What we can't do it to assign a completely different object to
+ * marriedJessica. Example:
+ */
+
+// marriedJessica = {}; // error
+
+/**
+ * This does not work because the new object will be stored at a different
+ * position in memory, and therefore the reference to that position in
+ * memory will have to change in the marriedJessica variable.
+ *
+ * Therefore, it does not work because it is in the stack and we cannot
+ * change a constant value in the stack. So, we cannot change the value
+ * to a new memory address, and therefore it does not work.
+ *
+ * If marriedJessica was defined with a `let` keyword then we could have
+ * changed the reference point in the stack but, with const, it gives us
+ * an error.
+ *
+ * In conclusion, completely changing the object i.e. assigning a new
+ * object to a variable is completely different than simply changing a
+ * property, as we did above.
+ */
+
+/**
+ * What if we wanted to copy an object, in a way where we could then
+ * change one of them without changing the other?
+ */
+
+// COPYING OBJECTS
+
+const jessica2 = {
+  firstName: 'Jessica',
+  lastName: 'Williams',
+  age: 27,
+};
+
+/**
+ * Now, if we really wanted to copy the jessica2 object, we could use a
+ * function called `Object.assign()`.
+ *
+ * This function essentially merges two objects and then returns a new
+ * one.
+ *
+ * So, we can simply merge a new empty object with jessica2 and this will
+ * then create a completely new object where all the properties are really
+ * copied.
+ */
+
+const jessicaCopy = Object.assign({}, jessica2);
+
+jessicaCopy.lastName = 'Davis';
+
+console.log(`Before Marriage: ${jessica2.lastName}`); // williams
+console.log(`After Marriage: ${jessicaCopy.lastName}`); // davis
+
+/**
+ * Now indeed, we can preserve the original lastName williams after we
+ * change the lastName on the other object.
+ *
+ * So, this means that jessicaCopy is a real copy of the original object.
+ *
+ * Behind the scenes, this means that a new object was in fact created in
+ * the heap and jessicaCopy is now pointing to that object.
+ *
+ * However, there is still a problem. This is because using this technique
+ * of Object.assign() only works on the first level.
+ *
+ * In other words, if we have an object inside of an object then the
+ * inner object will actually still be the same i.e. it will point to the
+ * same place in memory.
+ *
+ * That's why we say that Object.assing() only creates a shallow copy
+ * and not a deep clone, which is what we would like to have.
+ *
+ * Again, a shallow copy will only copy the properties in the first level
+ * while a deep clone would copy everything.
+ *
+ * Example:
+ */
+
+// Remember that an array is really just an object, behind the scenes
+const jessica3 = {
+  firstName: 'Jessica',
+  lastName: 'Williams',
+  age: 27,
+  family: ['Alice', 'Bob'],
+};
+
+const jessicaCopy2 = Object.assign({}, jessica3);
+
+jessicaCopy2.lastName = 'Davis';
+
+console.log(jessica3);
+console.log(jessicaCopy2);
+
+/**
+ * Right now we see the family array in both the objects.
+ *
+ * Let's now try and change that array in jessicaCopy2.
+ */
+
+jessicaCopy2.family.push('Mary');
+jessicaCopy2.family.push('John');
+
+console.log(jessica3);
+console.log(jessicaCopy2);
+
+/**
+ * Here we are manipulating an object that is within an object.
+ *
+ * Now we see that both of the object i.e. jessica3 and jessicaCopy2 have
+ * a family with four members.
+ *
+ * The change of lastName in jessicaCopy2 is preserver because it is in
+ * the first level and Object.assign() took care of copying that property.
+ * So, that was not changed in the original object, as we changed the
+ * lastName in the jessicaCopy2 object.
+ *
+ * However, the family object is a deeply nested object. Therefore,
+ * Object.assign() did not really, behind the scenes, copy it to the new
+ * object.
+ *
+ * So, in essence, both the objects, jessica3 and jessicaCopy2 have a
+ * property called family, which points at the same object in the memory
+ * heap.
+ *
+ * Now, a deep clone is not easy to achieve, and it woul dbe beyond the
+ * scope of this lesson to learn how to create a deep clone.
+ *
+ * Usually, we do something like this, which is very complex, using an
+ * external library, for example, like Lo-Dash, and this library has a
+ * ton of helpful tools and one of them is for deep cloning.
+ *
+ * We will do that in a later section, just so we can learn how to include
+ * an external library to do those kinds of things.
+ */

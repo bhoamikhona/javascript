@@ -54,6 +54,7 @@
     - [Regular Functions vs. Arrow Functions](#regular-functions-vs-arrow-functions)
     - [Primitives vs. Objects (Primitive vs. Reference Types)](#primitives-vs-objects-primitive-vs-reference-types)
       - [How Javascript Works Behind The Scenes Topics Covered In Later Sections](#how-javascript-works-behind-the-scenes-topics-covered-in-later-sections)
+    - [Primitives vs. Objects in Practice](#primitives-vs-objects-in-practice)
   - [Author](#author)
 
 ## Lessons Learned
@@ -960,6 +961,12 @@ console.log('friend', friend);
   - Covered in [Section 16](../Section%2016): Asynchronous Javascript - Promises, Async/Await, and AJAX
 - How the DOM Really Works
   - Covered in [Section 13](../Section%2013): Advanced DOM and Events
+
+### Primitives vs. Objects in Practice
+
+- Look at the [script](./script.js) file for details.
+- `Object.assign()` - This function essentially merges two objects and returns a new one.
+  - This only creates a shallow copy i.e. if there is a nested object, the inner object will still point to the original reference point in the memory.
 
 ## Author
 
