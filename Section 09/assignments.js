@@ -384,3 +384,39 @@ printBookInfo({
 });
 
 printBookInfo({ title: 'Algorithms', author: 'Robert Sedgewick' });
+
+/************************************************************************/
+/****************** ASSIGNMENT 03: THE SPREAD OPERATOR ******************/
+/************************************************************************/
+console.log(
+  `/****************** ASSIGNMENT 03: THE SPREAD OPERATOR ******************/`
+);
+
+/**
+ * TODO 01:
+ *
+ * Each book object has the `author` property, which stores an array of
+ * strings (author names) if there are multiple authors, or a single
+ * string (author name) if there is just one author.
+ *
+ * Declare and array called bookAuthors, and fill it with authors of
+ * the first two books from the `books` array. The `bookAuthors` array
+ * should have just one level (no nested arrays).
+ */
+
+const bookAuthors = [...books[0].author, ...books[1].author];
+console.log(bookAuthors);
+
+/**
+ * TODO 02:
+ *
+ * Write a function called `spellWord` that accepts a single string
+ * as an argument. This function should log to the console each letter
+ * of the argument separated by a space.
+ */
+
+const spellWord = function (word) {
+  console.log(...word);
+};
+
+spellWord('JavaScript');

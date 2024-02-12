@@ -376,7 +376,7 @@ console.log(restaurantName, hours, tags);
  */
 
 // default values
-const { menu = [], starterMenu: starters = [] } = restaurant;
+let { menu = [], starterMenu: starters = [] } = restaurant;
 console.log(menu, starters);
 
 /**
@@ -537,3 +537,378 @@ restaurant.orderDelivery({
  *
  * This becomes even more useful as the amount of parameters increases.
  */
+
+/***********************************************************************/
+/********************** THE SPREAD OPERATOR (...) **********************/
+/***********************************************************************/
+console.log(
+  `/********************** THE SPREAD OPERATOR (...) **********************/`
+);
+
+/**
+ * Let's now talk about the amazing spread operator.
+ *
+ * We can use the spread operator to basically expand an array into all
+ * its elements.
+ *
+ * Basically, unpacking all the array elements at once.
+ *
+ * Let's say that we have an array and we want to create a new array based
+ * on this array but, with some new elements at the beginning.
+ *
+ * So how would we do that?
+ *
+ * With what we already know, we would need to loop over our existing
+ * array or even worse, do it manually.
+ */
+
+arr = [7, 8, 9];
+
+// traditionally
+let tranditionalNewArry = [1, 2, arr[0], arr[1], arr[2]];
+console.log(tranditionalNewArry);
+
+/**
+ * Now, starting from ES6, we can achieve the same result in a much
+ * better way using the spread operator.
+ *
+ * With the spread operator, it is going to work like this:
+ */
+
+let newArray = [1, 2, ...arr];
+console.log(newArray);
+
+/**
+ * What the spread operator does is to basically take all the values out
+ * of `arr` and then write them individually as if we wrote them manually,
+ * like we did in the traditional way.
+ *
+ * If we wrote it without `...` then we would have the `arr` array nested
+ * inside the new array.
+ *
+ * This is because, we are including the entire array.
+ */
+
+let nestedNewArray = [1, 2, arr];
+
+/**
+ * But with the spread operator, it is like taking all the elements out
+ * of the array and writing them manually.
+ *
+ * This means that we can use spread opertors whenever we would otherwise
+ * write multiple values separated by commas.
+ *
+ * That situation happens whenever we write an array literal like we did
+ * above.
+ *
+ * So, that's the first situation in which it is very useful to expand an
+ * array.
+ *
+ * The second situation is when we pass arguments into functions.
+ *
+ * For example, let's say that we wanted to actually log the individual
+ * elements of the newArray.
+ */
+
+/**
+ * If we logged the array, like we did below, then it is of course,
+ * going to look like just one value which is an array
+ */
+console.log(newArray); // [1, 2, 7, 8, 9]
+
+/**
+ * But, if we use the spread operator to expand the new array, then see
+ * what happens then:
+ */
+
+console.log(...newArray); // 1 2 7 8 9
+
+/**
+ * Now it logged the individual elements of the array.
+ *
+ * So, this would be the same as writing 1, 2, 7, and 9 individually.
+ *
+ * So, once again, whenever we need the elements of an array individually,
+ * we can use the spread operator.
+ *
+ * That is useful when we write an array and when we need to pass
+ * multiple elements into a function like we did in the console.log()
+ * function above.
+ */
+
+/**
+ * Let's see a bit more useful example.
+ *
+ * In this example, we will create an array with one more food item
+ * in the mainMenu array of the restaurant object.
+ */
+
+restaurant = {
+  name: 'Classico Italiano',
+  location: 'Via Angelo Tavanti 23, Firenze, Italy',
+  categories: ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'],
+  starterMenu: ['Focaccia', 'Bruschetta', 'Garlic Bread', 'Caprese Salad'],
+  mainMenu: ['Pizza', 'Pasta', 'Risotto'],
+  order: function (starterIndex, mainIndex) {
+    return [this.starterMenu[starterIndex], this.mainMenu[mainIndex]];
+  },
+
+  openingHours: {
+    thu: {
+      open: 12,
+      close: 22,
+    },
+    fri: {
+      open: 11,
+      close: 23,
+    },
+    sat: {
+      open: 0,
+      close: 24,
+    },
+  },
+
+  orderDelivery: function ({
+    starterIndex = 1,
+    mainIndex = 0,
+    time = '20:00',
+    address,
+  }) {
+    console.log(
+      `Order received! ${this.starterMenu[starterIndex]} and ${this.mainMenu[mainIndex]} will be delivered to ${address} at ${time}.`
+    );
+  },
+};
+
+/**
+ * So, basically, we want to create a new menu here.
+ *
+ * Let's say that we want the original array plus one new element.
+ *
+ * We can do that by simply expanding the array and then add more items,
+ * spearated by comma.
+ */
+
+let newMenu = [...restaurant.mainMenu, 'Gnocci'];
+console.log(newMenu);
+
+/**
+ * Keep in mind, here we are indeed creating a completely new array.
+ *
+ * We are not manipulating the restaurant.mainMenu array. You can see that
+ * by the square brackets.
+ *
+ * The square brackets synctax is simply the way in which we have always
+ * been writing new arrays.
+ */
+
+/**
+ * Now you might have noticed that the spread operator is actually a bit
+ * similar to destructuring, because it also helps us to get elements
+ * out of arrays.
+ *
+ * The big difference is that the spread operator takes all the elements
+ * from the array and it also doesn't create new variables.
+ *
+ * As a consequence, we can only use it in places where we would otherwise
+ * write values separated by commas.
+ */
+
+/**
+ * Next, let's learn about two important use cases of the spread operator,
+ * which is to create shallow copies of arrays and to merge two arrays
+ * together.
+ */
+
+// Copy Array
+
+/**
+ * Let's simply create a copy of the main menu.
+ */
+
+let mainMenuCopy = [...restaurant.mainMenu];
+console.log(mainMenuCopy);
+
+/**
+ * That's it. Here we created a shallow copy of the mainMenu array in the
+ * restaurant object.
+ *
+ * It is a little bit similar to `Object.assign()` that we used in the
+ * previous section.
+ *
+ * But here, the spread operator syntax is a lot easier to use.
+ *
+ * Now, to join two arrays together (two arrays or more), we can use the
+ * same technique.
+ */
+
+// Join two or more arrays
+menu = [...restaurant.mainMenu, ...restaurant.starterMenu];
+console.log(menu);
+
+/**
+ * Here, with the spread operator, we took all the elements out from
+ * the main menu and wrote them in the new array and we did the same
+ * thing with the starter menu.
+ */
+
+/**
+ * We learned previously that the spread operator works on arrays but,
+ * that is not entirely true.
+ *
+ * The spread operator works on all so-called interables.
+ *
+ * What is an iterable?
+ *
+ * There are different iterables in JavaScript and we wil talk all about
+ * them by the end of the course, but for now, just know that iterables
+ * are things like arrays, strings, maps, or strings but, not objects.
+ *
+ * Basically, most of the built-in data structures in JavaScript are
+ * now iterables, except objects.
+ *
+ * Anyway, since strings are also iterables, that means that we can use
+ * the spread operator on a string as well.
+ *
+ * Let's see an example of that:
+ */
+
+let str = 'Bhoami';
+
+let letters = [...str, ' ', 'K'];
+console.log(letters); // ['B', 'h', 'o', 'a', 'm', 'i', ' ', 'K']
+
+/**
+ * Here we get an array where each letter of the original string is now
+ * an individual element.
+ *
+ * So, just like we expanded/unpacked an array, we now did the same
+ * thing with a string.
+ *
+ * Keep in mind that we can still only use the spread operator when building an array, or when we pass values into a function.
+ *
+ * We cannot use the spread operator in template literals, as it is not
+ * a place that expects multiple values separated by comma.
+ */
+
+console.log(...str); // B h o a m i
+console.log('B', 'h', 'o', 'a', 'm', 'i'); // B h o a m i
+
+// console.log(`${..str}`); // Unexpected Token Error
+
+/**
+ * So, multiple values separated by a comma are usually only expected when
+ * we pass arguments into a functiom, or when we build a new array.
+ *
+ * So, take a note of that because that is important to understand about
+ * the spread operator.
+ *
+ * Let's now write our own function that accepts multiple arguments and
+ * then use the spread operator to actually pass those arguments.
+ * So, this will be a real-life example.
+ *
+ * We will add this function as a method in our restaurant object.
+ */
+
+restaurant = {
+  name: 'Classico Italiano',
+  location: 'Via Angelo Tavanti 23, Firenze, Italy',
+  categories: ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'],
+  starterMenu: ['Focaccia', 'Bruschetta', 'Garlic Bread', 'Caprese Salad'],
+  mainMenu: ['Pizza', 'Pasta', 'Risotto'],
+  order: function (starterIndex, mainIndex) {
+    return [this.starterMenu[starterIndex], this.mainMenu[mainIndex]];
+  },
+
+  openingHours: {
+    thu: {
+      open: 12,
+      close: 22,
+    },
+    fri: {
+      open: 11,
+      close: 23,
+    },
+    sat: {
+      open: 0,
+      close: 24,
+    },
+  },
+
+  orderDelivery: function ({
+    starterIndex = 1,
+    mainIndex = 0,
+    time = '20:00',
+    address,
+  }) {
+    console.log(
+      `Order received! ${this.starterMenu[starterIndex]} and ${this.mainMenu[mainIndex]} will be delivered to ${address} at ${time}.`
+    );
+  },
+  // new method
+  /**
+   * Let's say that we want a method to order just pasta; and the pasta
+   * always needs to have exactly three ingredients.
+   */
+  orderPasta: function (ing1, ing2, ing3) {
+    console.log(`Here is your delicious pasta with ${ing1}, ${ing2}, ${ing3}`);
+  },
+};
+
+/**
+ * Here we are simply building an array of three ingredients that are
+ * going to be entered by the user.
+ */
+
+// let ingredients = [
+//   prompt(`Let's make pasta! Ingredient 1?`),
+//   prompt(`Ingredient 2?`),
+//   prompt(`Ingredient 3?`),
+// ];
+
+let ingredients = ['Cheese', 'Bell Peppers', 'Onions'];
+
+console.log(ingredients);
+
+// Here is how we would have called the orderPasta function traditionally:
+restaurant.orderPasta(ingredients[0], ingredients[1], ingredients[2]);
+
+// With the spread operator, we can call it like so:
+restaurant.orderPasta(...ingredients);
+
+/**
+ * The better solution is to use spread operator amongst the two, above.
+ * Especially, considering that an array could be a lot longer than just
+ * 3 elements.
+ *
+ * So, indeed, always go with the spread operator in such situations. It
+ * is an amazing addition to the language.
+ */
+
+/**
+ * Now, just to finish this lesson, since ES2018, the spread operator
+ * actually also works on objects, even though objects are not iterables.
+ *
+ * To see it in action, let's create a new restaurant object with all the
+ * data from the original restaurant object, plus some additional data.
+ */
+
+// NOTE: The order does not matter
+let newRestaurant = { foundedIn: 1998, ...restaurant, founder: 'Guiseppe' };
+console.log(newRestaurant);
+
+/**
+ * Since we were able to do shallow copies of arrays, using the spread
+ * operator, we can do the same with objects.
+ *
+ * So, instead of using `Object.assign()`, we can use the spread operator
+ * for that
+ */
+
+let restaurantCopy = { ...restaurant };
+
+restaurantCopy.name = 'Ristorante Roma';
+
+// this tells us that we did indeed make a copy of the object restaurant
+console.log(restaurant.name); // Classico Italiano
+console.log(restaurantCopy.name); // Ristorante Roma
