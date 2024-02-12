@@ -12,6 +12,7 @@
 - [Section 06](./Section%2006): HTML & CSS Crash Course
 - [Section 07](./Section%2007): JavaScript in the Browser: DOM and Events Fundamentals
 - [Section 08](./Section%2008): How JavaScript Works Behind the Scenes
+- [Section 09](./Section%2009): Data Structures, Modern Operators, and Strings
 
 ## Projects
 
