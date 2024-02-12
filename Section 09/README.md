@@ -8,6 +8,7 @@
   - [Table of Contents](#table-of-contents)
   - [Lessons Learned](#lessons-learned)
     - [Destructuring Arrays](#destructuring-arrays)
+    - [Destructuing Objects](#destructuing-objects)
   - [Author](#author)
 
 ## Lessons Learned
@@ -17,6 +18,16 @@
 - Destructuring is an ES6 feature and it is basically a way of unpacking values from an array or an object into separate variables.
 - Nested Destructuring.
 - Setting default values when destructuring an array.
+- Go through the [script](./script.js) file for details
+
+### Destructuing Objects
+
+- When destructuring objects, the order of the elements do not matter, and we use curly braces to destructure objects.
+- How to have different variable names when destructuring objects.
+- Setting default values when destructuring objects.
+  - Combination of the above two points.
+- Mutating variables while destructuring objects.
+- Nested Object Destructuring.
 - Go through the [script](./script.js) file for details
 
 ## Author

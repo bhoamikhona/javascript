@@ -259,3 +259,281 @@ console.log(p, q, r); // 8 9 1
  * So, we are going to use this and everything that we learned in this
  * lesson, a bit later in the course.
  */
+
+/***********************************************************************/
+/************************ DESTRUCTURING OBJECTS ************************/
+/***********************************************************************/
+console.log(
+  `/************************ DESTRUCTURING OBJECTS ************************/`
+);
+
+/**
+ * We talked about destructuring arrays, but we can also destructure
+ * objects.
+ *
+ * So, let's do that now.
+ */
+
+restaurant = {
+  name: 'Classico Italiano',
+  location: 'Via Angelo Tavanti 23, Firenze, Italy',
+  categories: ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'],
+  starterMenu: ['Focaccia', 'Bruschetta', 'Garlic Bread', 'Caprese Salad'],
+  mainMenu: ['Pizza', 'Pasta', 'Risotto'],
+  order: function (starterIndex, mainIndex) {
+    return [this.starterMenu[starterIndex], this.mainMenu[mainIndex]];
+  },
+
+  openingHours: {
+    thu: {
+      open: 12,
+      close: 22,
+    },
+    fri: {
+      open: 11,
+      close: 23,
+    },
+    sat: {
+      open: 0, // Open 24 hours
+      close: 24,
+    },
+  },
+};
+
+/**
+ * To destructure object, we use the curly braces, because that is also
+ * how we create objects.
+ *
+ * Then all we have to do is to provide the variable names that exactly
+ * match the property names that we want to retrieve from the object.
+ *
+ * NOTE:
+ * Since in an object, the order of elements does not matter, we don't
+ * need to manually skip elements like we did in an array.
+ *
+ * NOTE:
+ * When destructuring, the order of the elements do not matter, either.
+ */
+
+let { name, openingHours, categories } = restaurant;
+
+/**
+ * This is exactly the same as with arrays but, here we have to use the
+ * curly braces and specify the exact name of the properties.
+ *
+ * But just like with arrays, object destructuring creates brand new
+ * variables based on the object that they are set equal to.
+ */
+
+console.log(name, openingHours, categories);
+
+/**
+ * That's the fundamentals of destructuring objects.
+ *
+ * This is an extremely useful addition ot the language.
+ * Especially when we deal with the result of an API call, which
+ * basically means to get data from another web application, like weather
+ * data or data about movies or something like that.
+ *
+ * This data usually comes in the form of objects. So, then destructuring
+ * is really a lifesaver. It allows us to write a lot less code.
+ *
+ * So, this is really used in modern applications.
+ *
+ * But now, what if we wanted the variable names to be different from
+ * property names?
+ *
+ * Of course we still need to reference the property names like we did
+ * before, otherwise JavaScript has no way of knowing what we actually
+ * want.
+ *
+ * To use a different variable name, we first specify the property name
+ * followed by a colon and then the name that we want to use. Example:
+ */
+
+let {
+  name: restaurantName,
+  openingHours: hours,
+  categories: tags,
+} = restaurant;
+
+/**
+ * So the variables that we now created are called `restaurantName`,
+ * `hours`, and `tags`
+ */
+
+console.log(restaurantName, hours, tags);
+
+/**
+ * This is going to immensely helpful when dealing with third-party data.
+ *
+ * Another useful feature for object destructuring is setting default
+ * values when destructuring for the case that we are trying to read a
+ * property that does not exist on the obejct.
+ *
+ * NOTE: We get undefined when we try to access properties in an object
+ * that do not exist.
+ */
+
+// default values
+const { menu = [], starterMenu: starters = [] } = restaurant;
+console.log(menu, starters);
+
+/**
+ * Mutating variables while destructuring objects:
+ */
+
+a = 111;
+b = 999;
+
+let obj = { a: 23, b: 7, c: 14 };
+
+/**
+ * Here we are getting a syntax error and the reason for that is that
+ * when we start a line with a curly brace, like the one below, JS expects
+ * a code block.
+ *
+ * And since we cannot assign anything to a code block, like we did below,
+ * we get the eeor: "Unexpected token".
+ */
+
+// {a,b} = obj;
+
+/**
+ * To solive this, the trick is to wrap all of it into a set of
+ * parentheses.
+ */
+
+({ a, b } = obj);
+
+/**
+ * Now if we log a and b, it will work
+ */
+console.log(a, b); // 23 7
+
+/**
+ * So, we did override a = 111 and b = 999 but, in order to do that, we
+ * had to wrap the destructuring assignment into parentheses.
+ */
+
+// Nested Objects
+/**
+ * Now that we know how object destructuring owrks, we need to talk about
+ * nested objects.
+ *
+ * Let's say that we wanted to create two variables, open and close.
+ * These should contain the open and close hours for Friday.
+ *
+ * `openingHours` is an object and inside that object, we have another
+ * object called `fri`.
+ */
+
+// NOTE: We have already destructured and stored openingHours in its variable so, we are just going to use that.
+const {
+  fri: { open: op, close: cl },
+} = openingHours;
+
+console.log(op, cl);
+
+/**
+ * Now to finish, we will see a really cool application of this
+ * destructuring.
+ *
+ * In our restaurant object, we will create another method.
+ *
+ * Many times in JS, we have functions with a lot of parameters.
+ * But then it can be hard to know the order of parameters for someone
+ * that is using the function.
+ *
+ * So, instead of defining the parameters manually, we can just pass an
+ * object into the function as an argument, and the function will then
+ * immediately destructure that object.
+ */
+
+restaurant = {
+  name: 'Classico Italiano',
+  location: 'Via Angelo Tavanti 23, Firenze, Italy',
+  categories: ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'],
+  starterMenu: ['Focaccia', 'Bruschetta', 'Garlic Bread', 'Caprese Salad'],
+  mainMenu: ['Pizza', 'Pasta', 'Risotto'],
+  order: function (starterIndex, mainIndex) {
+    return [this.starterMenu[starterIndex], this.mainMenu[mainIndex]];
+  },
+
+  openingHours: {
+    thu: {
+      open: 12,
+      close: 22,
+    },
+    fri: {
+      open: 11,
+      close: 23,
+    },
+    sat: {
+      open: 0, // Open 24 hours
+      close: 24,
+    },
+  },
+  // new function
+  // we can destructure the parameters right away
+  // since we did destructuring in the paretheses, we have 4 variable names
+  orderDelivery: function ({
+    starterIndex = 1,
+    mainIndex = 0,
+    time = '20:00',
+    address,
+  }) {
+    console.log(
+      `Order received! ${this.starterMenu[starterIndex]} and ${this.mainMenu[mainIndex]} will be delivered to ${address} at ${time}.`
+    );
+  },
+};
+
+// Here we just called our new function and passed in an object of options
+// this is pretty standard in JS, especially in third party libraries
+restaurant.orderDelivery({
+  time: '22:30',
+  address: 'Via del Sole, 21',
+  mainIndex: 2,
+  starterIndex: 2,
+}); // Order received! Garlic Bread and Risotto will be delivered to Via del Sole, 21 at 22:30.
+
+/**
+ * It is important to realize that we passed in one object into the
+ * function. We did not pass four arguments.
+ *
+ * Then, inside the function, as we receive that object, we do immediate
+ * destructuring.
+ *
+ * That's why the names in the object destructuring have to be the exact
+ * same as the ones that are passed in.
+ *
+ * But what's great about this is that we don't have to match the order
+ * of the properties being passed in to the order in which they are being
+ * destructured in the parentheses.
+ *
+ * This makes it really easy for the user of the function to specify
+ * all the arguments.
+ *
+ * So, this is great but, we can even use some more knowledge that we
+ * gained here, which is the default valies.
+ *
+ * So, we can now use it to basically set default values on some of them.
+ * (Look at the oderDelivery function for the example).
+ */
+
+// In this object that we passed, we do not have any property for time
+// So then, as the JS does destructuring, it took the default value of
+// 20:00
+restaurant.orderDelivery({
+  address: 'Via del Sole, 21',
+  starterIndex: 1,
+}); // Order received! Bruschetta and Pizza will be delivered to Via del Sole, 21 at 20:00.
+
+/**
+ * So, if you ever need to a write a function, like the one in our
+ * example i.e. a complex one with a lot of parameters that might be
+ * hard to specify, keep this technique in mind.
+ *
+ * This becomes even more useful as the amount of parameters increases.
+ */
