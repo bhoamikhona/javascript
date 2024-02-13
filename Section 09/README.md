@@ -10,6 +10,8 @@
     - [Destructuring Arrays](#destructuring-arrays)
     - [Destructuring Objects](#destructuring-objects)
     - [The Spread Operator (...)](#the-spread-operator-)
+    - [Rest Pattern and Parameters](#rest-pattern-and-parameters)
+    - [Other Lessons](#other-lessons)
   - [Author](#author)
 
 ## Lessons Learned
@@ -44,6 +46,24 @@
 - Using the spread operator to pass arguments into a function.
 - Since ES 2018, the spread operator also works on objects, even though objects are not iterables.
 - Learning to use the spread operator on Objects.
+
+### Rest Pattern and Parameters
+
+- Collect elements in a destructuring assignment
+  - Building arrays using the rest operator
+  - Using Destructuring and Rest Pattern together
+  - Rest Pattern for Objects
+- Using Rest Pattern with Functions
+
+> [!NOTE]
+>
+> - The spread operator is used where we would otherwise write values, spearated by a comma.
+> - On the other hand, the rest pattern is basically used where we would otherwise write variable names separated by commas.
+> - It is a subtle distiction but, this is how you know when and where to use spread and rest.
+
+### Other Lessons
+
+- Escape Sequences (Learned in The Spread Operator Lesson)
 
 ## Author
 

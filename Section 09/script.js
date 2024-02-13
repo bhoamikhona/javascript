@@ -430,10 +430,10 @@ console.log(a, b); // 23 7
 
 // NOTE: We have already destructured and stored openingHours in its variable so, we are just going to use that.
 const {
-  fri: { open: op, close: cl },
+  fri: { open: op, close: clo },
 } = openingHours;
 
-console.log(op, cl);
+console.log(op, clo);
 
 /**
  * Now to finish, we will see a really cool application of this
@@ -912,3 +912,310 @@ restaurantCopy.name = 'Ristorante Roma';
 // this tells us that we did indeed make a copy of the object restaurant
 console.log(restaurant.name); // Classico Italiano
 console.log(restaurantCopy.name); // Ristorante Roma
+
+/***********************************************************************/
+/********************* REST PATTERN AND PARAMETERS *********************/
+/***********************************************************************/
+console.log(
+  `/********************* REST PATTERN AND PARAMETERS *********************/`
+);
+
+/**
+ * Moving on, let's now talk about the rest pattern and rest parameters.
+ *
+ * The rest pattern looks exactly like the spread operator i.e. it has the
+ * same syntax of the three dots but, it actually does the opposite of the
+ * spread operator.
+ *
+ * Remember that we use the spread operator to build new arrays or to
+ * pass multiple values into a function. Those are the two use cases of
+ * the spread operator and in both cases, we use the spread operator to
+ * expand an array into individual elements.
+ *
+ * Now, the rest pattern uses the exact same syntax, however, to collect
+ * multiple elements and condense them into an array.
+ *
+ * So, that's really the opposite of spread.
+ *
+ * The spread operator is to unpack an array while the rest is to pack
+ * elements into an array and since that sounds really confusing, let's
+ * write some code and let's start by exploring the use case of building
+ * arrays.
+ */
+
+// recap of spread operator
+// Spread Operator because on the RHS of =
+arr = [1, 2, ...[3, 4]];
+console.log(arr); // [1, 2, 3, 4]
+
+/**
+ * In the example above, we are still using the spread operator; and we
+ * know that we are using the spread operator because we are using it on
+ * the right hand side (RHS) of the assignment operator i.e. the equal
+ * sign.
+ *
+ * However, we can also use it on the left hand side (LHS) of the
+ * assignment operator, together with destructuring.
+ */
+
+let nums = [1, 2, 3, 4, 5];
+// Rest Syntax because on the LHS of the operator
+let [s, t, ...others] = nums;
+
+/**
+ * Here we are taking the first element of the nums array and setting it
+ * equal to 's', then we setting 't' equal to the second element of nums,
+ * finally, we are just grabbing all of the remaining elements in the
+ * nums array, putting them in an array and setting it equal to 'others'.
+ *
+ * So, the rest pattern basically collects the elements that are unused
+ * in the destructuring assignment.
+ */
+
+console.log(s); // 1
+console.log(t); // 2
+console.log(others); // [3, 4, 5]
+
+/**
+ * So, here we used the rest syntax because it is on the LHS of the
+ * assignment operator.
+ */
+
+/**
+ * Let's see another example here. This example will show you that
+ * we can use the three dots on both sides of the assignment operator.
+ *
+ * Let's say that we have an array which will be the entire menu; and we
+ * know how to build that using the spread operator.
+ */
+
+// 1) Destructuring with Rest Pattern
+
+const [pizza, , risotto, ...otherFood] = [
+  ...restaurant.mainMenu,
+  ...restaurant.starterMenu,
+];
+
+console.log(pizza, risotto, otherFood); // Pizza Risotto ['Focaccia', 'Bruschetta', 'Garlic Bread', 'Caprese Salad']
+
+/**
+ * So here, on the LHS, we are first using the spread operator to combine
+ * the mainMenu and the starterMenu to create one big array which
+ * contains the entire menu.
+ *
+ * Then, on the RHS, we are picking out pizza, skipping the second item,
+ * then picking the risotto, and the collecting all of the remaining
+ * items on the entire menu - putting them in an array and assigning
+ * them to a variable called otherFood, using the rest syntax.
+ *
+ * NOTE: The rest syntax collects all the array after the last variable.
+ * So, in our case, the last variable is risotto. It does not include any
+ * skipped elements. So, it really just is the rest of the elements. For
+ * that reason, the rest pattern always must be the last in the
+ * destructuring assignment because, otherwise, how will JavaScript know
+ * until when it should collect the rest of the array?
+ *
+ * If the rest pattern is not the last one in the destructuring
+ * assignment, it will throw an error:
+ */
+
+// let exampleArr = [1, 2, 3, 4, 5, 6];
+// let [u, v, ...rest, w] = exampleArr; // SyntaxError: Rest element must be last element
+
+/**
+ * Also, for the same reason, there can only ever be one rest pattern in
+ * any destructuring assignment.
+ */
+
+/**
+ * Now let's use rest pattern in objects because, it also works indeed
+ * in objects.
+ *
+ * The difference then of course, is that the remaining elements will
+ * be collected into a new object and not into a new array.
+ *
+ * Let's work with with the opening hours and let's say that we want to
+ * select only saturday and the rest should go into a new object, which
+ * are the weekdays.
+ */
+
+const { sat, ...weekdays } = restaurant.openingHours;
+
+console.log(weekdays); // {thu: {…}, fri: {…}}
+
+/**
+ * Now we know how the rest pattern works to collect elements in a
+ * destructuring assignment.
+ */
+
+// 2) Functions with Rest Pattern
+
+/**
+ * Remember that for the spread operator, the second use case was to
+ * pass multiple arguments into a function all at the same time.
+ *
+ * Now, as you can guess, the Rest Operator can basically do the
+ * opposite.
+ *
+ * So, let's write an example function for that.
+ *
+ * In a real-world adding function, we want to take an arbitrary amount
+ * of arguments and simply add all of them together.
+ *
+ * We will pass an arbitrary amount of parameters into an add function
+ * but, we won't specify that number in the function parentheses so,
+ * how will we be able achieve our goal?
+ *
+ * We will use the rest pattern, and in this case, it is actually called
+ * rest parameters.
+ *
+ * So, in the function parentheses, we will use the rest pattern.
+ * We will log that in the console, and once we do that, we will see that
+ * we get an array of all the parameters passed into the function.
+ *
+ * Again, the rest syntax takes multiple values and packs them all into
+ * one array. So, it does the opposite of the spread operator.
+ *
+ * With the spread operator we expand, and with the rest pattern we
+ * compress. In case of function parameters, it is called rest parameters
+ * or rest arguments.
+ */
+
+let add = function (...numbers) {
+  console.log(numbers);
+  let sum = 0;
+  for (let i = 0; i < numbers.length; i++) {
+    sum += numbers[i];
+  }
+  console.log(sum);
+};
+
+add(2, 3);
+add(5, 3, 7, 2);
+add(8, 2, 5, 4, 2, 1, 4);
+
+/**
+ * At this point, we have a working add function which can accept any
+ * number of parameters.
+ *
+ * Now let's take it to the next level. Let's create yet another array
+ * and call it x.
+ */
+
+x = [23, 5, 7];
+
+/**
+ * Mpw if we wanted to take these values (in the array x) and call
+ * the add function, how would we do that?
+ *
+ * We simply use the spread operator. That's it.
+ */
+
+add(...x);
+
+/**
+ * This is exactly what we learned in the previous lesson.
+ *
+ * We are taking all the numbers of the array and spreading them in
+ * paretheses when invoking the add function.
+ *
+ * So, this is a good example of showing hwo spread is the opposite of
+ * rest because, after these numbers are being spread when invoking
+ * the function, inside the function, they are being collected into the
+ * numbers array by the rest parameter.
+ *
+ * You might be wondering why we are not simply writing an add function
+ * which takes an array as an argumetn adn then we don't need to use
+ * rest and spread operators.
+ *
+ * Well, it is way better to do it the way we did because then the
+ * function can accept both an array (by using the spread operator) as
+ * well as all the single values.
+ *
+ * Also, it feels a little bit more natural to simply pass as many
+ * arguments as we want to add together into the function. So, without
+ * having to deal with arrays if we don't want to.
+ *
+ * So, the rest parameters is something that you will see all the time
+ * in modern JavaScript code basis.
+ */
+
+/**
+ * Now to finish, let's use rest parameters in our restaurant example
+ * to see some edge cases.
+ *
+ * So, let's add yet another method to our restaurant object and this
+ * time it is going to be about ordering pizza.
+ *
+ * Pizzas need to have atleast one ingredient but, the other ingredients
+ * are optional. So, rest parameters are perfect for this.
+ */
+
+restaurant = {
+  name: 'Classico Italiano',
+  location: 'Via Angelo Tavanti 23, Firenze, Italy',
+  categories: ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'],
+  starterMenu: ['Focaccia', 'Bruschetta', 'Garlic Bread', 'Caprese Salad'],
+  mainMenu: ['Pizza', 'Pasta', 'Risotto'],
+  order: function (starterIndex, mainIndex) {
+    return [this.starterMenu[starterIndex], this.mainMenu[mainIndex]];
+  },
+
+  openingHours: {
+    thu: {
+      open: 12,
+      close: 22,
+    },
+    fri: {
+      open: 11,
+      close: 23,
+    },
+    sat: {
+      open: 0,
+      close: 24,
+    },
+  },
+
+  orderDelivery: function ({
+    starterIndex = 1,
+    mainIndex = 0,
+    time = '20:00',
+    address,
+  }) {
+    console.log(
+      `Order received! ${this.starterMenu[starterIndex]} and ${this.mainMenu[mainIndex]} will be delivered to ${address} at ${time}.`
+    );
+  },
+  orderPasta: function (ing1, ing2, ing3) {
+    console.log(`Here is your delicious pasta with ${ing1}, ${ing2}, ${ing3}`);
+  },
+  // new method
+  orderPizza: function (mainIngredient, ...otherIngredients) {
+    console.log(mainIngredient);
+    console.log(otherIngredients);
+  },
+};
+
+restaurant.orderPizza('mushrooms', 'onion', 'olives', 'spinach');
+restaurant.orderPizza('mushrooms');
+
+/**
+ * The take away from this example is that the rest parameters  server
+ * to collect all of the remaining (basically unused) parameters.
+ */
+
+/**
+ * RECAP:
+ *
+ * The spread and the rest syntax, both look exactly the same but, they
+ * work in opposite ways depending on where they are used.
+ *
+ * The spread operator is used where we would otherwise write values,
+ * spearated by a comma.
+ *
+ * On the other hand, the rest pattern is basically used where we would
+ * otherwise write variable names separated by commas.
+ *
+ * It is a subtle distiction but, this is how you know when and where
+ * to use spread and rest.
+ */
