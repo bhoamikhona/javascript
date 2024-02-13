@@ -1494,3 +1494,69 @@ restaurant.orderPizza && restaurant.orderPizza('mushrooms', 'spinach');
  * default values, and we can use the AND operator to execute code in
  * the second operand if the first one is true.
  */
+
+/**********************************************************************/
+/**************** THE NULLISH COALESCING OPERATOR (??) ****************/
+/**********************************************************************/
+console.log(
+  `/**************** THE NULLISH COALESCING OPERATOR (??) ****************/`
+);
+
+/**
+ * Let's now learn about the new operator with the funny name of nullish
+ * coalescing operator.
+ *
+ * In the last lesson, we use the OR operator to set a default value
+ * in case that the first value was a falsy value.
+ */
+
+restaurant.numGuests = 0;
+
+let guests3 = restaurant.numGuests || 10;
+console.log(guests3);
+
+/**
+ * So, here when we set numGuests to 0, then JavaScript will still take
+ * the default value of 10 and assign it to guests3 because 0 is a falsy
+ * value now, and therefore, we go to the second operand.
+ *
+ * However, fortunately for us, there is a very good solution to this,
+ * and that's the new operator with the very weird name of nullish
+ * coalescing operator.
+ *
+ * It is an operator that was introduced in ES2020, and it works like
+ * this:
+ */
+
+let guestCorrect = restaurant.numGuests ?? 10;
+
+/**
+ * It works almost the same way as the OR operator, really almost the
+ * same, but it will fix our error.
+ */
+
+console.log(guestCorrect); // 0
+
+/**
+ * Indeed, we get a 0 now. Only when the `restaurant.numGuests` return
+ * undefined will it get the default value of 10.
+ *
+ * Why does this work?
+ *
+ * Well it works because the nullish coalescing operator works with the
+ * idea or with the concept of nullish values instead of falsy values.
+ *
+ * Nullish values are `null` and `undefined`, that's it. It does not
+ * include 0 or an empty string.
+ *
+ * So basically, for the nullish coalescing operator, it is as if the
+ * 0 and the empty string were not falsy values. For the nullish
+ * coalescing operator, 0 and empty string are truthy values.
+ *
+ * But again, this operator does work with the principle of nullish
+ * values. So, all the nullish values will short circuit the evaluation
+ * when using `??`.
+ *
+ * So, only if the first operand was null or undefined, will the second
+ * operand be executed and returned.
+ */

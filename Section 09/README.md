@@ -12,6 +12,7 @@
     - [The Spread Operator (...)](#the-spread-operator-)
     - [Rest Pattern and Parameters](#rest-pattern-and-parameters)
     - [Short Circuiting (\&\& and ||)](#short-circuiting--and-)
+    - [The Nullish Coalescing Operator (??)](#the-nullish-coalescing-operator-)
     - [Other Lessons](#other-lessons)
   - [Author](#author)
 
@@ -70,6 +71,14 @@
   - They do something called short-circuiting or short-circuit evaluation.
 - In the case of the OR operator, short circuiting means that if the first value is a truthy value, it will immediately return that first value.
 - The AND operator short circuits when the first value is falsy and then immediately returns that falsy value without even evaluating the second operand.
+
+### The Nullish Coalescing Operator (??)
+
+- It was introduced in ES2020.
+- The Nullish Coalescing Operator works almost the same as the OR operator but with the idea/concept of nullish values instead of falsy values.
+- The nullish values are `null` and `undefined`. It does not include 0 or empty string.
+- So basically, for the nullish coalescing operator, it is as if the 0 and the empty string were not falsy values and were instead truthy values as well.
+- So, all the nullish values will short circuit the evaluation. Only if it was null or undefined, the second operand will be evaluated.
 
 ### Other Lessons
 

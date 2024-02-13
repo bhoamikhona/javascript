@@ -510,3 +510,32 @@ console.log(hasExamplesInJava(books[1])); // 'no data available'
  *
  * Use short-circuiting.
  */
+
+for (let i = 0; i < books.length; i++) {
+  books[i].onlineContent &&
+    console.log(`"${books[i].title}" provides online content`);
+}
+
+/***********************************************************************/
+/********* ASSIGNMENT 06: THE NULLISH COALESCING OPERATOR (??) *********/
+/***********************************************************************/
+console.log(
+  `/********* ASSIGNMENT 06: THE NULLISH COALESCING OPERATOR (??) *********/`
+);
+
+/**
+ * TODO 01:
+ *
+ * There are objects in the `books` array that don't have the
+ * `onlineContent` property at all. Loop over the `books` array, and log
+ * a string to the console in this format:
+ *
+ * ""${title}" provides no data about its online content"
+ */
+
+for (let i = 0; i < books.length; i++) {
+  books[i].onlineContent ??
+    console.log(
+      `"${books[i].title} provides no data about its online content"`
+    );
+}
