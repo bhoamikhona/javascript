@@ -1193,6 +1193,9 @@ restaurant = {
   orderPizza: function (mainIngredient, ...otherIngredients) {
     console.log(mainIngredient);
     console.log(otherIngredients);
+    console.log(
+      `Here is your pizza with ${mainIngredient}, ${otherIngredients}`
+    );
   },
 };
 
@@ -1218,4 +1221,276 @@ restaurant.orderPizza('mushrooms');
  *
  * It is a subtle distiction but, this is how you know when and where
  * to use spread and rest.
+ */
+
+/**********************************************************************/
+/******************** SHORT CIRCUITING (&& AND ||) ********************/
+/**********************************************************************/
+console.log(
+  `/******************** SHORT CIRCUITING (&& AND ||) ********************/`
+);
+
+/**
+ * Let's go back to the two logical operators that we've already used
+ * before, but we didn't use their full potential yet.
+ *
+ * We are taling about the AND operator and the OR operator, and how
+ * we can use them for something called short circuiting.
+ *
+ * Up until this point, we have used logical operators only to combine
+ * Boolean values.
+ *
+ * But the truth is that we can do a lot more with the AND and OR
+ * operators.
+ *
+ * Let's start with the OR operator.
+ */
+///// OR OPERATOR /////
+console.log(3 || 'Bhoami'); // 3
+
+/**
+ * This is something that we didn't do before, which is to use, basically
+ * the non-boolean values as the operands for the logical operators.
+ *
+ * The result of the above operation is 3.
+ *
+ * This means that the result of the OR operator doesn't always have to
+ * be a boolean.
+ *
+ * This is something that we didn't learn before.
+ *
+ * So, there are three properties of the logical operators that we didn't
+ * learn them before.
+ *
+ * 1) They can use any data type
+ * 2) They can return any data type
+ * 3) They do something called short-circuiting a.k.a. short circuit evaluation
+ *
+ * In the above example, we used two non-boolean values and it returned
+ * a non-boolean value as well.
+ *
+ * Now about the short-circuiting:
+ *
+ * In the case of OR operator, short circuiting means that if the first
+ * value is a truthy value, it will immediately return that first value.
+ *
+ * That's exactly what we saw in the above example, where we got 3,
+ * which is a truthy value.
+ *
+ * Again, if the first operand is truthy in the OR operator, then the
+ * other operand will not even be evaluated.
+ *
+ * So, JavaScript will not even take a look at it.
+ *
+ * That's what we mean by short-circuiting.
+ *
+ * Let's see another example:
+ */
+
+/**
+ * The result of the operation below is Bhoami. That is because the
+ * first operand is an empty string which is a falsy value.
+ *
+ * So, the second operand will be evaluated which is Bhoami and it will
+ * then be returned.
+ *
+ * Here we see again that the result of the OR operator doesn't have to
+ * be boolean. It will simply be the truthy value.
+ */
+console.log('' || 'Bhoami'); // Bhoami
+
+/**
+ * Next up, we have true or 0.
+ *
+ * The first value is truthy, in fact, it is literally true.
+ *
+ * Therefore, that will simply be the result of the operator.
+ */
+console.log(true || 0); // true
+
+/**
+ * Here we have undefined or null.
+ *
+ * As we already know, undefined is a falsy value, and so we then go
+ * to the second operand - so, there is no short-circuiting, and so
+ * that is then the one that is going to be returned.
+ *
+ * So, we get null; and that happens even though null is a falsy value.
+ */
+console.log(undefined || null); // null
+
+/**
+ * Let's now generalize this to more operators.
+ *
+ * So, we can get the general rule of how this operator works, no matter
+ * with how many values.
+ */
+
+console.log(undefined || 0 || '' || 'Hello' || 23 || null); // Hello
+
+/**
+ * The result of the above operation is "Hello".
+ *
+ * That's essentially because 'Hello' is the first truthy value in the
+ * chain of OR operations.
+ *
+ * First it will go to 'undefined' which is falsy so, it will move on
+ * to 0, which is again falsy, then to the empty string and finally to
+ * "Hello", which is truthy. So, here the operation will short-circuit
+ * the evaluation and "Hello" will be returned.
+ *
+ * If we think about it, it makes sense because in OR operation, the
+ * result is true, if at least one operand is true.
+ *
+ * So, if the first operand is already true, then JavaScript doesn't
+ * even have to look at the other values because the result of the
+ * operation will already be true anyway.
+ *
+ * So, it will short-circuit and then simply return that first result.
+ */
+
+/**
+ * Now let's see a more practical application of this.
+ *
+ * Let's say that there might be a property on the restaurant object with
+ * the number of guests but, we don't know if it exists. However, we
+ * want to basically define a variable based on this number of guests.
+ *
+ * And we want to set a default value if it doesn't exits.
+ */
+
+restaurant.numGuests = 23;
+
+let guests1 = restaurant.numGuests ? restaurant.numGuests : 10;
+console.log(guests1);
+
+/**
+ * Instead of doing this, we can take advantage of short circuiting and
+ * the OR operator.
+ */
+
+let guests2 = restaurant.numGuests || 10;
+console.log(guests2);
+
+/**
+ * So, this is a way easier method of setting default value than having
+ * to deal with the ternary operator or even worse, an if-statement.
+ *
+ * So, that is short-circuiting with the OR operator.
+ *
+ * NOTE: Both of the above solutions won't work when the number of guests
+ * is 0. This is because 0 is a falsy value so, it will default to the
+ * value of 10 but, a restaurant can have 0 number of guests. It is a
+ * perfectly valid number. So, if it is 0, we do not want it to default
+ * to 10. We will explore a great solution to this problem in the next
+ * lesson.
+ */
+
+/**
+ * Now, let's talk about the AND Operator.
+ *
+ * We can do the same thing with the AND operator. Also, the AND operator
+ * also has short-circuiting.
+ *
+ * So, let's take a look at that.
+ */
+
+///// AND OPERATOR /////
+
+/**
+ * When it comes to short circuit evaluation, the AND operator works in
+ * the exact opposite way of the OR operator.
+ */
+
+console.log(0 && 'Bhoami'); // 0
+
+/**
+ * The result of above operation is 0.
+ *
+ * This means that the AND operator short circuits when the first value
+ * is falsy, and then immediately returns that falsy value without even
+ * evaluating the second operand.
+ *
+ * That is the exact opposite of the OR Operator which short circuits
+ * when the first operator is true.
+ */
+
+console.log(7 && 'Bhoami'); // Bhoami
+
+/**
+ * In this case, we get "Bhoami"
+ *
+ * So, when it is truthy, it means that the evaluation continues and
+ * then simply the last value is returned.
+ *
+ * Once again, this makes sense if we think about it.
+ *
+ * So, the AND operator is only true if all the operands are true.
+ *
+ * So, if the first operand is false, then it means that the entire
+ * result of the AND operation will already be false anyway.
+ *
+ * So, there is no need to even look at any of the other operands.
+ */
+
+console.log('Hello' && 23 && null && 'Bhoami'); // null
+
+/**
+ * The result this time is `null`.
+ *
+ * The string "Hello" is truthy so, the evaluation continues, then we
+ * have the number 23 which is also truthy, and then we reach at `null`,
+ * which is falsy. So, now the evaluation will short-circuit since the
+ * result will be false anyway and it will return `null`.
+ *
+ * Now, let's see another practical example.
+ */
+
+// we want to use the orderPizza() function only if it exists
+if (restaurant.orderPizza) {
+  restaurant.orderPizza('mushrooms', 'spinach');
+}
+
+/**
+ * Many times we can use the AND operator to actually avoid an
+ * if-statement like the one above, where all we want to do is to check
+ * if a certain property or value exists.
+ *
+ * So, in this case, what we're doing is to basically pretend that we
+ * don't know if orderPizza() exists. So, we first check if it exists
+ * and only then we execute it.
+ *
+ * Now, with the knowledge gained about the AND operator, we can do the
+ * same thing in a much simpler way.
+ */
+
+restaurant.orderPizza && restaurant.orderPizza('mushrooms', 'spinach');
+
+/**
+ * So, in the first operand, if `restaurant.orderPizza` is undefined,
+ * the evaluation will shortcircuit and nothing else will happen.
+ *
+ * But if it is true, it will evaluate the second operand and return that
+ * value - this is where we are actually calling the function.
+ *
+ * So, this gives us, essentially the same result that the if block
+ * gives us.
+ *
+ * Now this does not suggest that you should replace all of your if
+ * statements with AND and OR operators. Please don't do that because
+ * that will make your code very hard to read in the future.
+ */
+
+/**
+ * Summary:
+ *
+ * The OR operator will return the first truthy value of all the operands
+ * or simply the last value if all of them are false.
+ *
+ * On the other hand, the AND operator will return the first falsy value
+ * or the last value if all of them are truthy.
+ *
+ * As for practical applications, we can use the OR operator to set
+ * default values, and we can use the AND operator to execute code in
+ * the second operand if the first one is true.
  */

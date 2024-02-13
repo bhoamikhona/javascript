@@ -11,6 +11,7 @@
     - [Destructuring Objects](#destructuring-objects)
     - [The Spread Operator (...)](#the-spread-operator-)
     - [Rest Pattern and Parameters](#rest-pattern-and-parameters)
+    - [Short Circuiting (\&\& and ||)](#short-circuiting--and-)
     - [Other Lessons](#other-lessons)
   - [Author](#author)
 
@@ -60,6 +61,15 @@
 > - The spread operator is used where we would otherwise write values, spearated by a comma.
 > - On the other hand, the rest pattern is basically used where we would otherwise write variable names separated by commas.
 > - It is a subtle distiction but, this is how you know when and where to use spread and rest.
+
+### Short Circuiting (&& and ||)
+
+- There are 3 properties of logical operators that we haven't learned before.
+  - They can use any data type.
+  - They can return any data type.
+  - They do something called short-circuiting or short-circuit evaluation.
+- In the case of the OR operator, short circuiting means that if the first value is a truthy value, it will immediately return that first value.
+- The AND operator short circuits when the first value is falsy and then immediately returns that falsy value without even evaluating the second operand.
 
 ### Other Lessons
 
