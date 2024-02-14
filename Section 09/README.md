@@ -14,6 +14,7 @@
     - [Short Circuiting (\&\& and ||)](#short-circuiting--and-)
     - [The Nullish Coalescing Operator (??)](#the-nullish-coalescing-operator-)
     - [Logical Assignment Operators](#logical-assignment-operators)
+    - [Looping Arrays: The for-of Loop](#looping-arrays-the-for-of-loop)
     - [Other Lessons](#other-lessons)
   - [Author](#author)
 
@@ -89,6 +90,15 @@
 - `x ??= y`
 - Logical AND assignment operator: `x &&= y`
 - NOTE: When using the Logical AND Assignment Operator, what it does is to assign a value to a variable if it is currently truthy. If it is falsy, it does nothing. It will stay the same. Whereas, if you were to use the regular AND operator, it would have assigned `undefined` as a value if it was currently falsy.
+
+### Looping Arrays: The for-of Loop
+
+- The for-of loop was introduced in ES6.
+- Syntax: `for (variable of iterable) { // code block }`
+- The for-of loop will loop through the values of an iterable object (arrays, strings, maps...) and perform operations for each iteration, mentioned in the code block.
+- So, with for-of loop, we can do the same thing that we can do with a regular for loop but, without having to deal with underlying details such as conditions and counters.
+- We can use `continue` and `break` with for-of loop.
+- Getting index of the current element while using for-of loop on an array by using `entries()`.
 
 ### Other Lessons
 

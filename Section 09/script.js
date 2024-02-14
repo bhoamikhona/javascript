@@ -1737,3 +1737,138 @@ console.log(rest2);
  * defined i.e. a variable that has a value which at the time is truthy,
  * then you can use the logical assignment operator.
  */
+
+/***********************************************************************/
+/******************* LOOPING ARRAYS: THE FOR-OF LOOP *******************/
+/***********************************************************************/
+console.log(
+  `/******************* LOOPING ARRAYS: THE FOR-OF LOOP *******************/`
+);
+/**
+ * Let's now talk about a new way of looping over arrays, which was
+ * introduced in ES6 and that's the for-of loop.
+ *
+ * Let's say we wanted to loop over our entire menu.
+ *
+ * So, let's start by creating the entire menu again.
+ */
+
+menu = [...restaurant.starterMenu, ...restaurant.mainMenu];
+console.log(menu);
+
+/**
+ * We already know how to loop over an array with a regular for-loop.
+ * We would have to set up a counter, a condition, and also update the
+ * counter; and that is a lot of work.
+ *
+ * That's why we have the for-of loop now, in which we don't need any of
+ * that. It is so much simpler.
+ *
+ * Here is how it works:
+ *
+ * We still write `for` and then we create a variable inside a set of
+ * parentheses, followed by the keyword `of` and then the iterable name.
+ */
+
+for (const item of menu) console.log(item);
+
+/**
+ * If we now check our console, we will find all our items in the menu
+ * array, individually logged to the console.
+ *
+ * So the for-of loop will automatically loop over the entire array and
+ * in each iteration, it will give us access to the current array
+ * element, which we can specify within its parentheses. In our case,
+ * we called it "item" but, of course we can call it whatever we want.
+ *
+ * NOTE: Just like in the if/else statement, we don't need to create a
+ * code block if we only have one line to execute.
+ *
+ * So, it is pretty simple, but it is a really nice level of abstraction
+ * over the regular for-loop.
+ *
+ * We can do the same thing with for-of loop, that we do with the
+ * regular for-loop but, without worrying about the underlying details
+ * such as counters and conditions.
+ *
+ * What's also great about the for-of loop, is that we can still use the
+ * `continue` and `break` keywords. This is important because in the
+ * next section, we will learn other ways of looping arrays and in those
+ * onese, you will not be able to continue or to break. So, you will
+ * need to keep that in mind.
+ *
+ * But now, what if we also wanted the current index and not just the
+ * current element?
+ *
+ * Well, in the for-of loop, it is actually a bit of a pain when we need
+ * that index, because originally the for-of loop was really just meant
+ * to give you the current element.
+ *
+ * However, you can get both and you will have to do it like this:
+ */
+
+// Instead of just menu, you will have to call the entries() array on it
+for (const item of menu.entries()) {
+  console.log(item);
+}
+
+/**
+ * If you check the console right now, you will see that each item is now
+ * an array with the index in the array element itself.
+ *
+ * So, let's quickly take a look at what this mysterious menu.entries()
+ * is.
+ */
+
+console.log(menu.entries());
+
+/**
+ * We get this weird Array Iterator which is not really helpful but,
+ * we will learn all about iteraotr by the end of the course.
+ *
+ * But, if we want to take a look at menu.entries(), we need to expand
+ * it using the spread operator and then create a new array based on
+ * that.
+ */
+
+// This is just to take a look at what menu.entries() actually is
+console.log([...menu.entries()]);
+
+/**
+ * If we now take a look at the console, we will see that it is basically
+ * an array, where in each postion, it contains a new array; and each of
+ * these new array contain the index number along with the element of
+ * the original array.
+ *
+ * So, now if we wanted to print a nice menu then we can take advantage
+ * of the data we get from menu.entries()
+ */
+
+for (const item of menu.entries()) {
+  console.log(`${item[0] + 1}: ${item[1]}`);
+}
+
+/**
+ * This works great but, we are actually, at this point, smarter than
+ * doing it like this.
+ *
+ * That's because if 'item' is now an array, we can de-structure it.
+ *
+ * We don't have to manually take element 0 and element 1, that is the
+ * old-school way. So, let's not do it in a better way.
+ *
+ * We can destructure the array right inside the parentheses.
+ */
+
+for (const [idx, el] of menu.entries()) {
+  console.log(`${idx + 1}: ${el}`);
+}
+
+/**
+ * Indeed, it works the same.
+ *
+ * So, once again destructuring made our live a little bit easier.
+ * So, it is a great addition to the JavaScript language.
+ * The same is also true for the for-of loop, which makes it a lot easier
+ * to loop over arrays.
+ */
