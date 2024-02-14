@@ -1039,7 +1039,7 @@ console.log(pizza, risotto, otherFood); // Pizza Risotto ['Focaccia', 'Bruschet
  * are the weekdays.
  */
 
-const { sat, ...weekdays } = restaurant.openingHours;
+let { sat, ...weekdays } = restaurant.openingHours;
 
 console.log(weekdays); // {thu: {…}, fri: {…}}
 
@@ -1871,4 +1871,299 @@ for (const [idx, el] of menu.entries()) {
  * So, it is a great addition to the JavaScript language.
  * The same is also true for the for-of loop, which makes it a lot easier
  * to loop over arrays.
+ */
+
+/**********************************************************************/
+/********************** ENHANCED OBJECT LITERALS **********************/
+/**********************************************************************/
+console.log(
+  `/********************** ENHANCED OBJECT LITERALS **********************/`
+);
+
+/**
+ * Maybe you've been noticing that we have been talking a lot about the
+ * ES6 features and even newer additions to the language.
+ *
+ * So, let's continue with that now with yet another enhancement, which
+ * is enchanced object literals.
+ *
+ * So, let's take a closer look at our restaurant object.
+ */
+
+restaurant = {
+  name: 'Classico Italiano',
+  location: 'Via Angelo Tavanti 23, Firenze, Italy',
+  categories: ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'],
+  starterMenu: ['Focaccia', 'Bruschetta', 'Garlic Bread', 'Caprese Salad'],
+  mainMenu: ['Pizza', 'Pasta', 'Risotto'],
+  order: function (starterIndex, mainIndex) {
+    return [this.starterMenu[starterIndex], this.mainMenu[mainIndex]];
+  },
+
+  orderDelivery: function ({
+    starterIndex = 1,
+    mainIndex = 0,
+    time = '20:00',
+    address,
+  }) {
+    console.log(
+      `Order received! ${this.starterMenu[starterIndex]} and ${this.mainMenu[mainIndex]} will be delivered to ${address} at ${time}.`
+    );
+  },
+  orderPasta: function (ing1, ing2, ing3) {
+    console.log(`Here is your delicious pasta with ${ing1}, ${ing2}, ${ing3}`);
+  },
+  orderPizza: function (mainIngredient, ...otherIngredients) {
+    console.log(mainIngredient);
+    console.log(otherIngredients);
+    console.log(
+      `Here is your pizza with ${mainIngredient}, ${otherIngredients}`
+    );
+  },
+};
+
+/**
+ * This restaurant object is an object literal, you can see that because
+ * we basically wrote this object literally in our code using the curly
+ * braces syntax.
+ *
+ * So, this entire object has been written using the object literal
+ * syntax.
+ *
+ * Now ES6 introduced three ways, which make it easier to write object
+ * literals like this.
+ *
+ * So, let's go through them one-by-one now.
+ *
+ * First off, let's say that we have an object that is outside of the
+ * restaurant object.
+ *
+ * So, let's cut the openingHours child object and create another
+ * object outside of the restaurant object.
+ */
+
+openingHours = {
+  thu: {
+    open: 12,
+    close: 22,
+  },
+  fri: {
+    open: 11,
+    close: 23,
+  },
+  sat: {
+    open: 0,
+    close: 24,
+  },
+};
+
+/**
+ * So, openingHours is now its own object.
+ *
+ * Now, we still want to have the openingHours object inside of the
+ * restaurant. So, we can do it like so:
+ */
+
+restaurant = {
+  name: 'Classico Italiano',
+  location: 'Via Angelo Tavanti 23, Firenze, Italy',
+  categories: ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'],
+  starterMenu: ['Focaccia', 'Bruschetta', 'Garlic Bread', 'Caprese Salad'],
+  mainMenu: ['Pizza', 'Pasta', 'Risotto'],
+  order: function (starterIndex, mainIndex) {
+    return [this.starterMenu[starterIndex], this.mainMenu[mainIndex]];
+  },
+
+  orderDelivery: function ({
+    starterIndex = 1,
+    mainIndex = 0,
+    time = '20:00',
+    address,
+  }) {
+    console.log(
+      `Order received! ${this.starterMenu[starterIndex]} and ${this.mainMenu[mainIndex]} will be delivered to ${address} at ${time}.`
+    );
+  },
+  orderPasta: function (ing1, ing2, ing3) {
+    console.log(`Here is your delicious pasta with ${ing1}, ${ing2}, ${ing3}`);
+  },
+  orderPizza: function (mainIngredient, ...otherIngredients) {
+    console.log(mainIngredient);
+    console.log(otherIngredients);
+    console.log(
+      `Here is your pizza with ${mainIngredient}, ${otherIngredients}`
+    );
+  },
+  // adding the openingHours object to the restaurant object
+  openingHours: openingHours,
+};
+
+console.log(restaurant);
+
+/**
+ * So, before we would have to write write `openingHours: openingHours`
+ * within the restaurant object to create a property inside of it called
+ * `openingHours`.
+ *
+ * But the issue here is that the variable name and the property name
+ * are exactly the same. So, we are writing the same thing twice.
+ *
+ * So, with the enhanced object literals, you don't need to write it
+ * like that anymore. You can just write `openingHours` inside the
+ * restaurant object.
+ *
+ * What this will do now is to take the `openingHours` object and put it
+ * into the restaurant object and create a property name with exactly
+ * that variable name.
+ *
+ * Like so:
+ */
+
+restaurant = {
+  name: 'Classico Italiano',
+  location: 'Via Angelo Tavanti 23, Firenze, Italy',
+  categories: ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'],
+  starterMenu: ['Focaccia', 'Bruschetta', 'Garlic Bread', 'Caprese Salad'],
+  mainMenu: ['Pizza', 'Pasta', 'Risotto'],
+  order: function (starterIndex, mainIndex) {
+    return [this.starterMenu[starterIndex], this.mainMenu[mainIndex]];
+  },
+
+  orderDelivery: function ({
+    starterIndex = 1,
+    mainIndex = 0,
+    time = '20:00',
+    address,
+  }) {
+    console.log(
+      `Order received! ${this.starterMenu[starterIndex]} and ${this.mainMenu[mainIndex]} will be delivered to ${address} at ${time}.`
+    );
+  },
+  orderPasta: function (ing1, ing2, ing3) {
+    console.log(`Here is your delicious pasta with ${ing1}, ${ing2}, ${ing3}`);
+  },
+  orderPizza: function (mainIngredient, ...otherIngredients) {
+    console.log(mainIngredient);
+    console.log(otherIngredients);
+    console.log(
+      `Here is your pizza with ${mainIngredient}, ${otherIngredients}`
+    );
+  },
+  // ES6 Enhanced Object Literal: adding the openingHours object to the restaurant object
+  openingHours,
+};
+
+console.log(restaurant);
+
+/**
+ * If we check the console now, then we will see that the `openingHours`
+ * is still inside the restaurant object, just like before.
+ *
+ * Ofcourse the name of `openingHours` can be anything you want but,
+ * make sure you change the name inside the object as well otherwise,
+ * JS will not know what variable you are talking about.
+ *
+ * So, that's a very handy enhancement.
+ */
+
+/**
+ * Let's now check out the second enchancement.
+ *
+ * The second enchancement to the object literals is about writing
+ * methods.
+ *
+ * In ES6, we no longer have to create a property and then set it to
+ * a function expression, like we have always been doing.
+ *
+ * We can write it in an easier way - which is to get rid of the
+ * `function` keyword and the semi-colon (for key-value pair) and it
+ * will work exactly the same but, with a slightly easier syntax
+ */
+
+restaurant = {
+  name: 'Classico Italiano',
+  location: 'Via Angelo Tavanti 23, Firenze, Italy',
+  categories: ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'],
+  starterMenu: ['Focaccia', 'Bruschetta', 'Garlic Bread', 'Caprese Salad'],
+  mainMenu: ['Pizza', 'Pasta', 'Risotto'],
+  // ES6 Enhanced Object Literal: you can get rid of `function` keyword
+  // and the semi-colon that separated key-value pairs and it will work
+  // exactly the way it is supposed to
+  order(starterIndex, mainIndex) {
+    return [this.starterMenu[starterIndex], this.mainMenu[mainIndex]];
+  },
+
+  orderDelivery: function ({
+    starterIndex = 1,
+    mainIndex = 0,
+    time = '20:00',
+    address,
+  }) {
+    console.log(
+      `Order received! ${this.starterMenu[starterIndex]} and ${this.mainMenu[mainIndex]} will be delivered to ${address} at ${time}.`
+    );
+  },
+  orderPasta: function (ing1, ing2, ing3) {
+    console.log(`Here is your delicious pasta with ${ing1}, ${ing2}, ${ing3}`);
+  },
+  orderPizza: function (mainIngredient, ...otherIngredients) {
+    console.log(mainIngredient);
+    console.log(otherIngredients);
+    console.log(
+      `Here is your pizza with ${mainIngredient}, ${otherIngredients}`
+    );
+  },
+  openingHours,
+};
+
+console.log(restaurant);
+
+/**
+ * The third enhancement is that we can now compute property names
+ * instead of having to write them out manually and literally.
+ *
+ * Compute just means calculate so, let's try it out now.
+ *
+ * Let's say that we had an array with all the weekdays.
+ */
+
+weekdays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+/**
+ * Now we want to take the property names from openingHours object and
+ * instead of writing them manually, we want to use our weekdays array
+ * to calculate the property names using the bracket syntax.
+ *
+ * Basically, we can put any expression inside the bracket syntax as
+ * we learned in the fundamentals section.
+ */
+
+openingHours = {
+  [weekdays[3]]: {
+    open: 12,
+    close: 22,
+  },
+  [weekdays[4]]: {
+    open: 11,
+    close: 23,
+  },
+  // we can do anything within these square brackets
+  // this is just for demonstration purposes
+  [`day-${2 + 4}`]: {
+    open: 0,
+    close: 24,
+  },
+};
+
+console.log(openingHours);
+
+/**
+ * Now if we check the console, we will see that we still get 'thu'
+ * and 'fri' and last property name is "day-6".
+ *
+ * So, we computed the last property name (in openingHours object) using
+ * a template literal.
+ *
+ * So before, we could only compute values but now, we can also compute
+ * properties of an object.
  */

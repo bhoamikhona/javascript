@@ -15,6 +15,7 @@
     - [The Nullish Coalescing Operator (??)](#the-nullish-coalescing-operator-)
     - [Logical Assignment Operators](#logical-assignment-operators)
     - [Looping Arrays: The for-of Loop](#looping-arrays-the-for-of-loop)
+    - [Enhanced Object Literals](#enhanced-object-literals)
     - [Other Lessons](#other-lessons)
   - [Author](#author)
 
@@ -99,6 +100,13 @@
 - So, with for-of loop, we can do the same thing that we can do with a regular for loop but, without having to deal with underlying details such as conditions and counters.
 - We can use `continue` and `break` with for-of loop.
 - Getting index of the current element while using for-of loop on an array by using `entries()`.
+
+### Enhanced Object Literals
+
+- ES6 introduced 3 ways, which make it easier to write object literals.
+  - An easier way to incorporate another, outside object into an object.
+  - The second enhancement to object literals is about writing methods. In ES6, we no longer have to create a property, and then set it to a function expression, like we have been doing so far.
+  - The third enhancement is that we can now compute property names instead of having to write them out manually and literally.
 
 ### Other Lessons
 
