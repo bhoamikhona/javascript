@@ -1560,3 +1560,180 @@ console.log(guestCorrect); // 0
  * So, only if the first operand was null or undefined, will the second
  * operand be executed and returned.
  */
+
+/**********************************************************************/
+/******************** LOGICAL ASSIGNEMNT OPERATORS ********************/
+/**********************************************************************/
+console.log(
+  `/******************** LOGICAL ASSIGNEMNT OPERATORS ********************/`
+);
+
+/**
+ * Now, even more modern than the nullish coalescing operator that we
+ * just learned are three new so-called logical assignment operators
+ * that were introduced in ES 2021.
+ *
+ * So, let's see how they work.
+ *
+ * In order to do that in an effective way, let's quickly start by
+ * creating two new restaurant object.
+ */
+
+const rest1 = {
+  name: 'Capri',
+  // numGuests: 20,
+  numGuests: 0,
+};
+
+const rest2 = {
+  name: 'La Piazza',
+  owner: 'Giovanni Rossi',
+};
+
+/**
+ * The first thing that we want to do now is to set a default number of
+ * guests for all the restaurant objects that do not have that property.
+ *
+ * Let's start by using the OR operator to do this.
+ */
+
+// rest1.numGuests = rest1.numGuests || 10;
+// rest2.numGuests = rest2.numGuests || 10;
+
+/**
+ * Let's remind ourselves that this works because of short-circuiting.
+ *
+ * In the OR operator, if the first value is truthy, then that first
+ * value will immediately be returned and the second value will not even
+ * be evaluated.
+ *
+ * So, by doing the the above operation, we are returning the number of
+ * guests if it does exist, otherwise we will return 10.
+ */
+
+console.log(rest1); // {name: 'Capri', numGuests: 20}
+console.log(rest2); // {name: 'La Piazza', owner: 'Giovanni Rossi', numGuests: 10}
+
+/**
+ * The rest2 did not have a number of guests so now the numGuests is 10.
+ * Again, that is because of short-circuiting.
+ *
+ * So, nothing new up until this point.
+ *
+ * But now, let's introduce ourselves to the very first logical
+ * assignment operator, which is the OR assignment operator.
+ *
+ * With that operator, we will be able to write the same thing but, in a
+ * more concise way.
+ */
+
+///// OR ASSIGNMENT OPERATOR /////
+
+// this is the same as `rest1.numGuests = rest1.numGuests || 10`
+// rest1.numGuests ||= 10;
+// rest2.numGuests ||= 10;
+console.log(rest1.numGuests);
+console.log(rest2.numGuests);
+
+/**
+ * Basically, the OR assignment operator assigns a value to a variable
+ * if that variable is currently falsy.
+ *
+ * So, exactly like a regular OR operator.
+ *
+ * That works beautifully, except in one situation that we already
+ * encountered in the previous lesson - where the numGuests value is 0.
+ *
+ * The OR assignment operator will assign a value to a variable if that
+ * variable is falsy and 0 is a falsy value. But 0 number of guests is
+ * a perfectly valid number. So, although the code is working as
+ * expected, it is still an error. However, we fortunately have a
+ * solution for it.
+ *
+ * The solution is Logical Nullish Assignment Operator, and it works like
+ * this:
+ */
+
+///// NULLISH ASSIGNMENT OPERATOR /////
+rest1.numGuests ??= 10;
+rest2.numGuests ??= 10;
+console.log(rest1.numGuests);
+console.log(rest2.numGuests);
+
+/**
+ * Now we get 0 if the existing value is 0. So, that is exactly the
+ * result we want.
+ *
+ * Just remember that nullish basically means `null` or `undefined`.
+ *
+ * In a nutshell, the nullish assignment operator will assign a value to
+ * a variable if that exact variable is currently nullish.
+ */
+
+/**
+ * We also have the Logical AND Assignment operator.
+ *
+ * To learn about that one, let's say that we want to anonymize the names
+ * of the restaurant owners.
+ *
+ * So, when there currently is an owner, we want to basically replace it
+ * with the string "anonymous".
+ *
+ * With the tools that we already know, this is how we will do it:
+ */
+
+// rest2.owner = rest2.owner && '<ANONYMOUS>';
+// console.log(rest2);
+
+/**
+ * This works because of short circuiting.
+ *
+ * In the particular case of the AND operator, it short circuits when the
+ * first value is falsy, and then immediately returns that falsy value.
+ */
+
+// rest1.owner = rest1.owner && '<ANONYMOUS>';
+// console.log(rest1); // {name: 'Capri', numGuests: 0, owner: undefined}
+
+/**
+ * Right now, if you check `rest1`, you will see that is being set to
+ * undefined. This is because `rest1.owner` does not exist, which is
+ * why it is undefines.
+ *
+ * Since the AND operator short circuits when the first value is falsy,
+ * then that is the value that is immediately returned.
+ *
+ * Here is how the logical AND assignment operator works:
+ */
+
+///// AND ASSIGNMENT OPERATOR /////
+rest1.owner &&= '<ANONYMOUS>';
+rest2.owner &&= '<ANONYMOUS>';
+
+console.log(rest1); // {name: 'Capri', numGuests: 0}
+console.log(rest2);
+
+/**
+ * In the case of rest2, the owner has been replaced by <ANONYMOUS>.
+ *
+ * In the case of rest1, we have an even better result than the regular
+ * AND operator because with the regular AND operator, we actually got
+ * the rest1.owner set to undefined. But with the logical AND assignment
+ * operator, the rest1.owner simply doesn't exist in rest1 object.
+ *
+ * This is better because we don't want our object property to be set to
+ * undefined.
+ *
+ * So basically, what the logical AND assignment operator does is to
+ * assign a value to a variable if it is currently truthy.
+ *
+ * So, clearly in rest1 object, the owner property didn't exist so,
+ * nothing happened. The object stayed exactly the same.
+ *
+ * In the rest2 object, the owner property was truthy so, it replaced it
+ * with another string.
+ *
+ * So, if you ever need to assign a value to a variable that is already
+ * defined i.e. a variable that has a value which at the time is truthy,
+ * then you can use the logical assignment operator.
+ */

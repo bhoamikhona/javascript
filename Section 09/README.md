@@ -13,6 +13,7 @@
     - [Rest Pattern and Parameters](#rest-pattern-and-parameters)
     - [Short Circuiting (\&\& and ||)](#short-circuiting--and-)
     - [The Nullish Coalescing Operator (??)](#the-nullish-coalescing-operator-)
+    - [Logical Assignment Operators](#logical-assignment-operators)
     - [Other Lessons](#other-lessons)
   - [Author](#author)
 
@@ -79,6 +80,15 @@
 - The nullish values are `null` and `undefined`. It does not include 0 or empty string.
 - So basically, for the nullish coalescing operator, it is as if the 0 and the empty string were not falsy values and were instead truthy values as well.
 - So, all the nullish values will short circuit the evaluation. Only if it was null or undefined, the second operand will be evaluated.
+
+### Logical Assignment Operators
+
+- The logical OR assignment (`x ||= y`) operator only assigns if `x` is falsy.
+- `x ||= y` is equivalent to `x = x || y`.
+- The logical OR assignment works on the concept of falsy values, so to solve that problem, we also have the nullish assignment operator.
+- `x ??= y`
+- Logical AND assignment operator: `x &&= y`
+- NOTE: When using the Logical AND Assignment Operator, what it does is to assign a value to a variable if it is currently truthy. If it is falsy, it does nothing. It will stay the same. Whereas, if you were to use the regular AND operator, it would have assigned `undefined` as a value if it was currently falsy.
 
 ### Other Lessons
 
