@@ -16,6 +16,7 @@
     - [Logical Assignment Operators](#logical-assignment-operators)
     - [Looping Arrays: The for-of Loop](#looping-arrays-the-for-of-loop)
     - [Enhanced Object Literals](#enhanced-object-literals)
+    - [Optional Chaining (?.)](#optional-chaining-)
     - [Other Lessons](#other-lessons)
   - [Author](#author)
 
@@ -107,6 +108,16 @@
   - An easier way to incorporate another, outside object into an object.
   - The second enhancement to object literals is about writing methods. In ES6, we no longer have to create a property, and then set it to a function expression, like we have been doing so far.
   - The third enhancement is that we can now compute property names instead of having to write them out manually and literally.
+
+### Optional Chaining (?.)
+
+- Introduced in ES2020.
+- The `?.` operator is like the `.` chaining operator, except that instead of causing an error if a reference is nullish (null or undefined), the expression short-circuits with a return value of undefined.
+- When used with function calls, it returns undefined if the given function does not exist.
+- Multiple Optional Chaining Operators.
+- The nullish coalescing operator and optional chaining were introduced into the language at the same time in ES2020 because they were really designed to work well with each other. Also, both of them rely on the concept of nullish values.
+- Optional chaining to call methods.
+- Optional chaining on arrays.
 
 ### Other Lessons
 
