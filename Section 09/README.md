@@ -17,6 +17,7 @@
     - [Looping Arrays: The for-of Loop](#looping-arrays-the-for-of-loop)
     - [Enhanced Object Literals](#enhanced-object-literals)
     - [Optional Chaining (?.)](#optional-chaining-)
+    - [Looping Objects: Object Keys, Values, and Entries](#looping-objects-object-keys-values-and-entries)
     - [Other Lessons](#other-lessons)
   - [Author](#author)
 
@@ -118,6 +119,14 @@
 - The nullish coalescing operator and optional chaining were introduced into the language at the same time in ES2020 because they were really designed to work well with each other. Also, both of them rely on the concept of nullish values.
 - Optional chaining to call methods.
 - Optional chaining on arrays.
+
+### Looping Objects: Object Keys, Values, and Entries
+
+- Using for-of loop to loop over object's property names and values.
+- `Object.keys()` - It returns an array whose elements are strings corresponding to the enumerable string-keyed property names found directly upon object.
+- `Object.values()` - It returns an array whose elements are values of enumerable string-keyed properties found directly upon object.
+- Looping over entire object using `entries()`.
+- `Object.entries()` - It returns an array whose elements are arrays corresponding to the enumerable string-keyed property key-value pairs found directly upon object.
 
 ### Other Lessons
 

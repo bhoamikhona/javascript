@@ -2496,3 +2496,122 @@ if (users.length > 0) {
  * do something in case we don't get a result from the object or from
  * the array that is on the LHS.
  */
+
+/***********************************************************************/
+/********** LOOPING OBJECTS: OBJECT KEYS, VALUES, AND ENTRIES **********/
+/***********************************************************************/
+console.log(
+  `/********** LOOPING OBJECTS: OBJECT KEYS, VALUES, AND ENTRIES **********/`
+);
+
+/**
+ * We learned about the for-of loop to loop over arrays, which remember
+ * is an iterable, but we can also loop over objects, which are not
+ * iterable, but in an indirect way.
+ *
+ * We have different options here, depending on what exactly we want to
+ * loop over. Do we want to loop over the objet's property names, or the
+ * values or both together.
+ *
+ * Let's start by simply looping over property names. Remember that
+ * property names are also called keys.
+ *
+ * Now, ultimately we will still have to use the for-of loop to loop
+ * over the array, but again, we are going to do that in an indirect way.
+ *
+ * So, we are not actually going to loop over the object itself. Instead,
+ * we are going to loop over, an array.
+ *
+ * So, let's see how:
+ */
+
+openingHours = {
+  thu: {
+    open: 12,
+    close: 22,
+  },
+  fri: {
+    open: 11,
+    close: 23,
+  },
+  sat: {
+    open: 0,
+    close: 24,
+  },
+};
+
+/**
+ * We get an array with the three property names.
+ */
+let properties = Object.keys(openingHours);
+console.log(properties); // ['thu', 'fri', 'sat']
+
+/**
+ * We can also use it to compute how many properties are in the object.
+ *
+ * Let's say we wanted to print a string saying how many days the
+ * restaurant is open.
+ */
+
+let openStr = `We are open on ${properties.length} days: `;
+
+/**
+ * We will loop over the properties array now
+ */
+for (const day of properties) {
+  openStr += `${day}, `;
+}
+
+console.log(openStr);
+
+/**
+ * Now, if we wanted the property values, then we would use
+ * Object.values()
+ */
+
+let values = Object.values(openingHours);
+console.log(values); // [{…}, {…}, {…}]
+
+/**
+ * Now to really simulate, to loop over the entire object, we actually
+ * need entries().
+ *
+ * So, entries() is basically property names plus values together.
+ *
+ * We already saw the entries() before when we looped over an array.
+ * So, we can do something similar on objects and that will then also
+ * return the key and the value.
+ *
+ * It works differently on objects because it is not going to be a method
+ * that we call on the object itself.
+ *
+ * This distiction between the array and the object is important as we
+ * loop over the entire object.
+ *
+ * For Arrays: arrayName.entries()
+ * For Objects: Object.entries(objectName)
+ */
+
+// Entire Object
+let entries = Object.entries(openingHours);
+console.log(entries); // [Array(2), Array(2), Array(2)]
+
+/**
+ * Basically, Object.entries(), Object.keys(), and Object.values(), all
+ * transform an object into an array.
+ *
+ * Now we can use it to loop over the object.
+ */
+
+for (const x of entries) {
+  console.log(x); // here we have each key and each value
+}
+
+/**
+ * Just like with arrays, we can destructure `x` right in the parentheses.
+ *
+ * The value is an object, so we have to destructure that as well.
+ */
+for (const [key, { open, close }] of entries) {
+  console.log(`On ${key} we open at ${open} and close at ${close}`);
+}
