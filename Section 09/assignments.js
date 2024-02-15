@@ -689,3 +689,27 @@ const newBook2 = {
 };
 
 console.log(newBook2);
+
+/***********************************************************************/
+/**************** ASSIGNMENT 10: OPTIONAL CHAINING (?.) ****************/
+/***********************************************************************/
+console.log(
+  `/**************** ASSIGNMENT 10: OPTIONAL CHAINING (?.) ****************/`
+);
+
+/**
+ * TODO 01:
+ *
+ * Write a function called `getFirstKeyword` that takes the book object
+ * as an argument. This function should return the frist keyword from the
+ * book's `keywords` property (array) or `undefined` (if the `keywords`
+ * property doesn't exist). It shouldn't throw an error. Use optional
+ * chaining for that.
+ */
+
+const getFirstKeyword = function (book) {
+  console.log(book.keywords?.[0]);
+};
+
+getFirstKeyword(books[0]);
+getFirstKeyword(newBook2); // from previous tasks

@@ -2167,3 +2167,332 @@ console.log(openingHours);
  * So before, we could only compute values but now, we can also compute
  * properties of an object.
  */
+
+/**********************************************************************/
+/*********************** OPTIONAL CHAINING (?.) ***********************/
+/**********************************************************************/
+console.log(
+  `/*********************** OPTIONAL CHAINING (?.) ***********************/`
+);
+
+/**
+ * Let's learn about an even newer feature of objects and also of arrays
+ * which is called optional chaining.
+ *
+ * This one is really amazing.
+ *
+ * So, let's say that we wanted to get the opening hours of our
+ * restaurant for Monday.
+ */
+
+restaurant = {
+  name: 'Classico Italiano',
+  location: 'Via Angelo Tavanti 23, Firenze, Italy',
+  categories: ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'],
+  starterMenu: ['Focaccia', 'Bruschetta', 'Garlic Bread', 'Caprese Salad'],
+  mainMenu: ['Pizza', 'Pasta', 'Risotto'],
+  order: function (starterIndex, mainIndex) {
+    return [this.starterMenu[starterIndex], this.mainMenu[mainIndex]];
+  },
+
+  openingHours: {
+    thu: {
+      open: 12,
+      close: 22,
+    },
+    fri: {
+      open: 11,
+      close: 23,
+    },
+    sat: {
+      open: 0,
+      close: 24,
+    },
+  },
+
+  orderDelivery: function ({
+    starterIndex = 1,
+    mainIndex = 0,
+    time = '20:00',
+    address,
+  }) {
+    console.log(
+      `Order received! ${this.starterMenu[starterIndex]} and ${this.mainMenu[mainIndex]} will be delivered to ${address} at ${time}.`
+    );
+  },
+  orderPasta: function (ing1, ing2, ing3) {
+    console.log(`Here is your delicious pasta with ${ing1}, ${ing2}, ${ing3}`);
+  },
+  // new method
+  orderPizza: function (mainIngredient, ...otherIngredients) {
+    console.log(mainIngredient);
+    console.log(otherIngredients);
+    console.log(
+      `Here is your pizza with ${mainIngredient}, ${otherIngredients}`
+    );
+  },
+};
+
+console.log(restaurant.openingHours.mon);
+
+/**
+ * Actually, `restaurant.openingHours.mon` doesn't exist. So we get
+ * undefined.
+ *
+ * But, let's pretend that we don't know if this restaurant opens on
+ * Monday or not, which could be the case if we are getting this data
+ * from a real web service (a web API); and in that service there could
+ * be multiple restaurants and not all of them would open on Monday.
+ *
+ * So, we have no way of knowing if this particular restaurant would
+ * open on Monday or not.
+ *
+ * But now, let's go even further because we actually want to know
+ * exactly the hour during which the restaurant opens on Monday.
+ */
+
+// console.log(restaurant.openingHours.mon.open);
+
+/**
+ * Now, we get an error. This is because the result of
+ * `restaurant.openinghours.mon` was undefined.
+ *
+ * Then undefined.mon is really an error. So, that's the error we get
+ * in our console.
+ *
+ * So, in order to avoid this error, we would first have to check if
+ * `restaurant.openingHours.mon` actually exists.
+ *
+ * To do that, we could do something like this:
+ */
+
+if (restaurant.openingHours.mon) {
+  console.log(restaurant.openingHours.mon.open);
+}
+
+/**
+ * We could also use a logical operator if we want but, let's go with
+ * the if-statement for now.
+ *
+ * If we do the same for friday then it would work because we already
+ * know that friday exists
+ */
+
+if (restaurant.openingHours.fri) {
+  console.log(restaurant.openingHours.fri.open);
+}
+
+/**
+ * But let's focus on Monday, which is the day that doesn't exist in
+ * our openingHours object.
+ *
+ * So with the if-statement, we atleast got rid of our error.
+ *
+ * It is not a big deal to add the if/else logic here but, it does make
+ * our code a little bit more unreadable and more messy.
+ *
+ * However this is just checking for one property, which is 'mon' but,
+ * now imagine that the `openingHours` would also be optional or in
+ * other words, that maybe the restaurant object doesn't even have the
+ * openingHours object.
+ *
+ * In that case, we would have to check for both: 'mon' and
+ * 'openingHours', which would look something like this:
+ */
+
+if (restaurant.openingHours && restaurant.openingHours.mon) {
+  console.log(restaurant.openingHours.mon.open);
+}
+
+/**
+ * So, this can get out of hand pretty quickly when we have deeply
+ * nested objects with lots of optional properties; and sometimes that
+ * does happen in the real-world.
+ *
+ * Therefore ES2020 introduced a great solution for this, which is a
+ * feature called optional chaining.
+ *
+ * With optional chaining, if a certain property does not exist, then
+ * undefined is returned immediately.
+ *
+ * So, that will then avoid that kind of error that we saw earlier.
+ *
+ * This is how that works: (let's re-create it now with optional
+ * chaining).
+ */
+
+// Without Optional Chaining
+// console.log(restaurant.openingHours.mon.open); // error
+
+// With Optional Chaining
+console.log(restaurant.openingHours.mon?.open); // undefined
+
+/**
+ * For the optional chaining operator, instead of just a dot `.`, we use
+ * a question mark `?` and then a dot `.`
+ *
+ * Here is how the optional chaining works:
+ *
+ * Only if the property before the `?` exists i.e. only if `mon` exists,
+ * then the `open` property will be read from the object. If it does
+ * not exist, then immediately `undefined` will be returned.
+ *
+ * And exists here actually means the nullish concept that we already
+ * talked about before. So, a property exists if it is not `null` or not
+ * `undefined`. So, if it is 0 or an empty string then it still exists,
+ * of course.
+ *
+ * So, the result of the above operation, with optional chaining is
+ * `undefined`.
+ *
+ * Of course, we can have multiple optional chaining, like so:
+ */
+
+console.log(restaurant.openingHours?.mon?.open);
+
+/**
+ * So, this makes it really easy to prevent all kinds of bugs that
+ * sometimes we might not even expect.
+ *
+ * It also takes away all the extra work of using the if/else statement
+ * simply by adding a question mark.
+ *
+ * Now, let's see a little bit more of a real-world example. For that
+ * let's work with the weekdays array.
+ */
+
+weekdays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+/**
+ * Now what we want to do is to loop over this array and log to the
+ * console, whether the restaurant is open or close on each of the days.
+ */
+
+for (const day of weekdays) {
+  // NOTE: If we want to use a variable name as the property name of an
+  // object, we need to use the square brackets notation.
+  // We learned this in the fundamentals section so, if you don't
+  // remember, please refer that.
+  const open = restaurant.openingHours[day]?.open || 'are closed';
+
+  console.log(
+    `On ${day}, we ${typeof open !== 'number' ? open : 'open at ' + open}`
+  );
+}
+
+/**
+ * We have a problem here. On Saturday, it says that the restaurant is
+ * closed but, the restaurant is actually open on Saturday.
+ *
+ * If we look at our openingHours object, we will find a property
+ * called 'sat' which opens at 0.
+ *
+ * So here, we have the same problem as before where 0 is falsy value,
+ * which is why it triggers the second part.
+ *
+ * But, we also saw a solution to this, which is to use the nullish
+ * coalescing operator.
+ *
+ * So, let's use that now.
+ */
+
+for (const day of weekdays) {
+  // using the nullish coalescing operator
+  const open = restaurant.openingHours[day]?.open ?? 'are closed';
+
+  console.log(
+    `On ${day}, we ${typeof open !== 'number' ? open : 'open at ' + open}`
+  );
+}
+
+/**
+ * Now we are getting the desired result.
+ *
+ * So, this is an amazing use case of the optional chaining operator and
+ * the nullish coalescing operator working together.
+ *
+ * In fact, they were introduced into the language at the same time in
+ * ES2020 because they were really designed to work well with each other.
+ *
+ * So again, both of them rely on this new concept of nullish and the
+ * nullish values are null and undefined. So, this is true for both,
+ * the nullish coalescing operator and the optional chaining.
+ *
+ * Now that you understand how it works, let's move on to the next topic,
+ * which is on methods.
+ */
+
+// METHODS
+
+/**
+ * So, optional chaining does indeed also work for calling methods.
+ *
+ * Essentially, we can check if a method actually exists before we
+ * call it.
+ */
+
+// calling the method only if it exists
+// We should always the nullish coalescing operator with optional chaining
+console.log(restaurant.order?.(0, 1) ?? 'Method does not exist'); // this method exists, so it works - ['Focaccia', 'Pasta']
+
+console.log(restaurant.orderRisotto?.(0, 1) ?? 'Method does not exist'); // Method does not exist
+
+/**
+ * So, just like before, the optional chaining operator will check
+ * if orderRisotto() actually exists and if it doesn't, it will
+ * immediately return `undefined`. So the entire first operand returns
+ * undefined so because of the nullish coalescing operator, we
+ * immediately go to the second operand.
+ *
+ * So, really useful on methods as well.
+ *
+ * Finally, optional chaining also works on arrays as well.
+ */
+
+// ARRAYS
+
+/**
+ * Basically, we can use the optional chaining operator to check if an
+ * array is empty.
+ */
+
+let users = [
+  { name: 'Bhoami', email: 'bhoami@email.com' },
+  { name: 'Jonas', email: 'jonas@email.com' },
+];
+
+/**
+ * This optional chaining checks if the value on the left of the question
+ * mark exists. In our case, it does exists, so it returns the name.
+ */
+console.log(users[0]?.name ?? 'User array is empty');
+
+/**
+ * Now we set the users array to empty so, users[0] does not exist and
+ * we get "User array empty" as a result.
+ */
+users = [];
+console.log(users[0]?.name ?? 'User array is empty');
+
+/**
+ * Without optional chaining, this is how we would have written the same
+ * thing as above:
+ */
+
+if (users.length > 0) {
+  console.log(users[0].name);
+} else {
+  console.log('User array is empty');
+}
+
+/**
+ * So, using the if/else statement is a lot more work than using the
+ * optional chaining operator.
+ *
+ * Therefore, optional chaining is a much better solution.
+ *
+ * So, get used to the optional chaining operator, which almost always
+ * is used together with the nullish coalescing operator so that we can
+ * do something in case we don't get a result from the object or from
+ * the array that is on the LHS.
+ */
