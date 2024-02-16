@@ -297,7 +297,7 @@ console.log(
  * called `title`, `author`, and `ISBN`.
  */
 
-const { title, author, ISBN } = books[0];
+let { title, author, ISBN } = books[0];
 console.log(title, author, ISBN);
 
 /**
@@ -438,8 +438,8 @@ console.log(
  * array).
  */
 
-const [mainKeyword, ...rest] = books[0].keywords;
-console.log(mainKeyword, rest);
+const [mainKeyword, ...restKeywords] = books[0].keywords;
+console.log(mainKeyword, restKeywords);
 
 /**
  * TODO 02:
@@ -866,3 +866,68 @@ console.log(uniqueKeywordsArr);
 
 uniqueKeywords.clear();
 console.log(uniqueKeywords);
+
+/************************************************************************/
+/****************** ASSIGNMENT 13: MAPS - FUNDAMENTALS ******************/
+/************************************************************************/
+console.log(
+  `/****************** ASSIGNMENT 13: MAPS - FUNDAMENTALS ******************/`
+);
+
+/**
+ * TODO 01:
+ *
+ * Create a new book, but this time, as a Map. Assign it to the `bookMap`
+ * variable. Use this array as initial data:
+ *
+ * [['title', 'Clean Code'], ['author', 'Robert C. Martin']]
+ */
+
+let bookMap = new Map([
+  ['title', 'Clean Code'],
+  ['author', 'Robert C. Martin'],
+]);
+
+console.log(bookMap);
+
+/**
+ * TODO 02:
+ *
+ * Set a new key in `bookMap` called `pages`, and assign it with a number
+ * 464.
+ */
+
+bookMap.set('pages', 464);
+console.log(bookMap);
+
+/**
+ * TODO 03:
+ *
+ * Get the `title` and `author` values from `bookMap`, and log to the
+ * console a string formatted like that:
+ * `"${title} by ${author}"`
+ */
+
+title = bookMap.get('title');
+author = bookMap.get('author');
+
+console.log(`${title} by ${author}`);
+
+/**
+ * TODO 04:
+ *
+ * Get the size of `bookMap`, and log it to the console.
+ */
+
+console.log(bookMap.size);
+
+/**
+ * TODO 05:
+ *
+ * Check if `bookMap` has the `author` key and if so, log "The author of
+ * the book is known" to the console.
+ */
+
+if (bookMap.has('author')) {
+  console.log('The author of the book is known');
+}

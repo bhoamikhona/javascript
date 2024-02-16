@@ -19,6 +19,7 @@
     - [Optional Chaining (?.)](#optional-chaining-)
     - [Looping Objects: Object Keys, Values, and Entries](#looping-objects-object-keys-values-and-entries)
     - [Sets](#sets)
+    - [Maps: Fundamentals](#maps-fundamentals)
     - [Other Lessons](#other-lessons)
   - [Author](#author)
 
@@ -144,6 +145,20 @@
 - Looping over sets.
 - Converting an array to a set.
 - Converting a set to an array.
+
+### Maps: Fundamentals
+
+- What is map?
+- The difference between maps and objects.
+- Creating a new, empty map.
+- `mapName.set(key, value)` - The `set()` method is used to add key-value pairs to a Map object. It can also be used to update the value of an existing key. Each value must have a unique key so that they get mapped correctly.
+- `mapName.get()` - The `get()` method is used for returning a specific element among all the elements which are present in the map. It takes the key of the element to be returned as an argument and returns the element which is associated with the specified key passed as an argument. If the key passed as an argument is not present in the map, then `mapName.get()` returns `undefined`.
+- `mapName.has()` - The `has()` method is used to check whether an element with the specified key exists in a map or not. It returns a boolean value indicating the presence or absence of an element with the specified key in the map.
+- `mapName.delete()` - The `delete()` method is used to delete the specified element among all the elements which are present in the map. It takes the key which needs to be removed from the map, thus removing the element associated with that key and returning true. If the key is not present, it will return false.
+- `mapName.size` - The `size` property is used to return the number of key-value pairs stored in a map.
+- `mapName.clear()` - The `clear()` method is used for the removal of all the elements from a map and making it empty. No arguments are required and it returns `undefined` value.
+- Using booleans, arrays, and objects as map keys.
+- Using maps with DOM elements.
 
 ### Other Lessons
 
