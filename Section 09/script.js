@@ -2615,3 +2615,287 @@ for (const x of entries) {
 for (const [key, { open, close }] of entries) {
   console.log(`On ${key} we open at ${open} and close at ${close}`);
 }
+
+/************************************************************************/
+/********************************* SETS *********************************/
+/************************************************************************/
+console.log(
+  `/********************************* SETS *********************************/`
+);
+
+/**
+ * In the past, JavaScript has always had very little built-in data
+ * structures.
+ *
+ * So basically, we only had objects and arrays.
+ *
+ * But in ES6, two more data stuctures were finally introduced; and they
+ * are sets and maps.
+ *
+ * These are pretty common data structures that already exist in other
+ * programming languages and now they also exist in JavaScript.
+ *
+ * So, in this lesson, let's learn all about sets.
+ *
+ * A set is basically just a collection of unique values.
+ *
+ * So, this means that a set can never have any duplicates; and this
+ * property makes them useful in certain situations.
+ *
+ * Let's create a new set.
+ *
+ * To create a new set, we write the `new` keyword followed by `Set()`
+ * and within its parentheses, we need to pass in an iterable.
+ *
+ * Most common iterable is an array.
+ *
+ * NOTE: Sets can hold mixed data types.
+ */
+
+let ordersSet = new Set([
+  'Pasta',
+  'Pizza',
+  'Pizza',
+  'Risotto',
+  'Pasta',
+  'Pizza',
+]);
+
+console.log(ordersSet);
+
+/**
+ * When we check in the console, we can see that get a set which has a
+ * size of 3 and the only values that are in there are Pasta, Pizza, and
+ * Risotto.
+ *
+ * So, all the duplicates are gone.
+ *
+ * We can also see that a set actually looks very similar to an array.
+ * There are no key-value pairs, it is just a bunch of values grouped
+ * together, in this case into a set.
+ *
+ * Just like arrays, sets are also iterables.
+ *
+ * Of course, a set is still very different from an array.
+ * First, because its elements are unique, and second, because the order
+ * of elements in the set is irrelevant.
+ * We will see why in a second.
+ *
+ * But anyway, keep in mind that strings are also iterables.
+ * So, we can do this:
+ */
+
+console.log(new Set('Bhoami')); // {'B', 'h', 'o', 'a', 'm', 'i'}
+
+/**
+ * Of course, the set could also be empty, like this:
+ */
+
+console.log(new Set()); // Set(0) {size: 0}
+
+/**
+ * Let's now learn how to actually work with sets.
+ *
+ * First off, we can get the size of a set.
+ */
+
+console.log(ordersSet.size); // 3
+
+/**
+ * Note how it is called 'size' and not 'length' like it is in arrays.
+ * Don't make that confusion.
+ *
+ * Next, we can check if a certain element is in a set.
+ */
+console.log(ordersSet.has('Pizza')); // true
+console.log(ordersSet.has('Lasagna')); // false
+
+/**
+ * Comparing to the arrays, the has() method for sets is similar to the
+ * inlcudes() method in arrays.
+ *
+ * Next up, we can also add new elements to a set.
+ */
+
+// let's say someone ordered it twice
+ordersSet.add('Garlic Bread');
+ordersSet.add('Garlic Bread');
+
+console.log(ordersSet); // {'Pasta', 'Pizza', 'Risotto', 'Garlic Bread'}
+
+/**
+ * The 'Garlic Bread' got added but, of course, only one of them got
+ * added.
+ *
+ * This is because the set has to be unique so, the second one was simply
+ * ignored.
+ *
+ * Finally, we can also delete elements.
+ */
+
+ordersSet.delete('Risotto');
+console.log(ordersSet); // {'Pasta', 'Pizza', 'Garlic Bread'}
+
+/**
+ * Notice how all the method names are very straightforward.
+ *
+ * This is because set is such a modern feature.
+ *
+ * The modern concepts really have more straightforward names and a
+ * different way of working with data structures.
+ *
+ * In fact, in arrays, there is actually no method that is this simple
+ * to delete elements.
+ *
+ * We will see how to delete elements from arrays, later. But what we
+ * can say is it is a little bit more complex.
+ *
+ * Now you may ask, how do we retrieve values out of a set? Can we maybe
+ * use an index, like in arrays?
+ *
+ * The answer is no. It doesn't work and it will give us undefined.
+ */
+
+console.log(ordersSet[0]); // undefined
+
+/**
+ * This is because in sets, there are no indexes.
+ *
+ * In fact, there is no way of getting values out of a set. If we think
+ * about it, then it makes sense.
+ *
+ * There is really no need for getting data out of a set. That's because
+ * if all values are unique, and it their order does not matter, then
+ * there is no point of retrieving values out of a set.
+ *
+ * All we need to know is whether a certain value is in the set or not
+ * and that's why we have the has() method.
+ *
+ * If your goal is to actually store value and then retrieve it, then
+ * the best use case, is to just use an array.
+ *
+ * You wouldn't use a set for that.
+ *
+ * Finally, there is one more method for sets, however, it is not that
+ * important. All we can use it for is to basically delete all of the
+ * elements of the set.
+ */
+
+ordersSet.clear();
+console.log(ordersSet); // Set(0) {size: 0}
+
+// re-building the set so, we can work with it a bit more
+ordersSet = new Set(['Pasta', 'Pizza', 'Pizza', 'Risotto', 'Pasta', 'Pizza']);
+
+console.log(ordersSet);
+
+/**
+ * As mentioned before, sets are also iterables.
+ *
+ * Therefore, we can loop over them.
+ */
+
+for (const order of ordersSet) {
+  console.log(order);
+}
+
+/**
+ * If we check the console now, we should get each of the orders logged
+ * on there.
+ *
+ * So, looping is possible, just like any other iterable.
+ *
+ * Now that we know how to work with sets, let's see a big use case
+ * for them.
+ *
+ * In a normal code base, the main use case of sets is actually to
+ * remove duplicate values of arrays.
+ *
+ * Example:
+ * Let's say that we have an array in our restaurant, which contains
+ * the staff of our restaurant.
+ */
+
+// Example
+let staff = ['Waiter', 'Chef', 'Waiter', 'Manager', 'Chef', 'Waiter'];
+
+/**
+ * So, we have all our staff in the array above but, now let's say that
+ * we are interested in knowing only which different postions there are
+ * in our restaurant.
+ *
+ * In other words, we would basically like to have an unique array of
+ * the 'staff' array above i.e. array without duplicates.
+ *
+ * So, let's create a set for that.
+ */
+
+let staffUnique = new Set(staff);
+console.log(staffUnique); // {'Waiter', 'Chef', 'Manager'}
+
+/**
+ * So, we have a set now with waiter, chef, and manager, which are the
+ * three unique positions.
+ *
+ * But, we want it to be an array.
+ *
+ * The conversion from a set to an array is pretty easy because they are
+ * both iterables.
+ *
+ * So, remember from earlier that the spread operator works on all
+ * iterables. That includes sets.
+ *
+ * So, we can now create an array around it basically.
+ */
+
+staffUnique = [new Set(staff)];
+console.log(staffUnique); // [Set(3)]
+
+/**
+ * Now we can unpack the set using the spread operator, like so:
+ */
+
+staffUnique = [...new Set(staff)];
+console.log(staffUnique); // ['Waiter', 'Chef', 'Manager']
+
+/**
+ * So now, indeed, we end up with a new array.
+ *
+ * So, the spread operator works just same on sets as it does on arrays.
+ *
+ * Now, if we only wanted to know how many different positions there
+ * are, then the `size` property is very useful.
+ */
+
+console.log(
+  new Set(['Waiter', 'Chef', 'Waiter', 'Manager', 'Chef', 'Waiter']).size
+); // 3
+
+/**
+ * Now we won't even need to create the new array at all.
+ *
+ * The same could even be done with counting how many different letters
+ * there are in a string, since strings are an iterable too.
+ */
+
+console.log(new Set('bhoamikkhona').size); // 8
+
+/**
+ * As a conclusion, sets are not intended to replace arrays at all.
+ *
+ * So, whenever you need to store values in order, and that might contain
+ * duplicates, always just use arrays.
+ *
+ * That's also true when you need to really manipulate data, because
+ * arrays have access to a lot of great array methods that we are going
+ * to study a bit later.
+ *
+ * Sets have this very useful property of being unique; and it is also
+ * very easy to interact with sets by using all of their straightforward
+ * methods.
+ *
+ * However, they are not nearly as important as arrays.
+ *
+ * So, keep sets in mind when you need to work with unique values but,
+ * besides that, you can just continue using arrays.
+ */

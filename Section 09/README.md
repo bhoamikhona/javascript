@@ -18,6 +18,7 @@
     - [Enhanced Object Literals](#enhanced-object-literals)
     - [Optional Chaining (?.)](#optional-chaining-)
     - [Looping Objects: Object Keys, Values, and Entries](#looping-objects-object-keys-values-and-entries)
+    - [Sets](#sets)
     - [Other Lessons](#other-lessons)
   - [Author](#author)
 
@@ -127,6 +128,22 @@
 - `Object.values()` - It returns an array whose elements are values of enumerable string-keyed properties found directly upon object.
 - Looping over entire object using `entries()`.
 - `Object.entries()` - It returns an array whose elements are arrays corresponding to the enumerable string-keyed property key-value pairs found directly upon object.
+
+### Sets
+
+- A set is just a collection of unique values i.e. no duplicates.
+- Differences and similarities between sets and arrays.
+- Using String as an iterable to pass into the Set().
+- Empty Set.
+- `setName.size` - The Set.size property returns the number of elements in a set. If the set is empty, the size of the set will be returned as 0.
+- `setName.has()` - The `has()` method indicates whether the Set object contains the specified value. It returns true if the specified value is present, otherwise false.
+- `setName.add()` - The `add()` method is used to add an element to Set object with a specified value. Each element must have a unique value.
+- `setName.delete()` - The `delete()` method is used to delete an element with a specified value in a set and it returns a boolean value depending upon the availability of the element. It will not modify the set if the element with a specified value does not exist in the set and return false instead.
+- There is no way of retrieving elements out of a set.
+- `setName.clear()` - The `clear()` method is used for the removal of ALL elements from a set and make it empty. No arguments are required to be sent as parameters. It returns an `undefined` return value.
+- Looping over sets.
+- Converting an array to a set.
+- Converting a set to an array.
 
 ### Other Lessons
 

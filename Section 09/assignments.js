@@ -715,10 +715,10 @@ getFirstKeyword(books[0]);
 getFirstKeyword(newBook2); // from previous tasks
 
 /************************************************************************/
-/*** ASSIGNMENT 10: LOOPING OBJECTS - OBJECT KEYS, VALUES AND ENTRIES ***/
+/*** ASSIGNMENT 11: LOOPING OBJECTS - OBJECT KEYS, VALUES AND ENTRIES ***/
 /************************************************************************/
 console.log(
-  `/*** ASSIGNMENT 10: LOOPING OBJECTS - OBJECT KEYS, VALUES AND ENTRIES ***/`
+  `/*** ASSIGNMENT 11: LOOPING OBJECTS - OBJECT KEYS, VALUES AND ENTRIES ***/`
 );
 
 /**
@@ -786,3 +786,83 @@ console.log(entries2);
 
 console.log(entries);
 console.log(entries2);
+
+/***********************************************************************/
+/************************* ASSIGNMENT 12: SETS *************************/
+/***********************************************************************/
+console.log(
+  `/************************* ASSIGNMENT 12: SETS *************************/`
+);
+
+/**
+ * TODO 01:
+ *
+ * Below is the `allKeywords` variable, which stores an empty array. Loop
+ * over the `books` array, and fill the `allKeywords` arrays with the
+ * keywords coming from the `keywords` property of each book object. The
+ * `allKeywords` array should have just one level (no nested arrays).
+ *
+ * Use whatever loop and methods you want. You can also use the spread
+ * syntax. In the end, the `allKeywords` array should look more or less
+ * like this:
+ * `['computer science', 'programming', 'algorithms', ...]`
+ */
+
+let allKeywords = [];
+
+for (const { keywords } of books) {
+  allKeywords.push(...keywords);
+}
+
+console.log(allKeywords);
+
+/**
+ * TODO 02:
+ *
+ * The `allKeywords` array contains duplicates. Remove them by creating
+ * a Set out of that array. Assign the newly created set to the
+ * `uniqueKeywords` variable.
+ */
+
+let uniqueKeywords = new Set(allKeywords);
+console.log(uniqueKeywords);
+
+/**
+ * TODO 03:
+ *
+ * Add two more keywords to the `uniqueKeywords` set, for example,
+ * 'coding' and 'science'.
+ */
+
+uniqueKeywords.add('coding');
+uniqueKeywords.add('science');
+
+console.log(uniqueKeywords);
+
+/**
+ * TODO 04:
+ *
+ * Delete 'business' from the `uniqueKeywords` set.
+ */
+
+uniqueKeywords.delete('business');
+console.log(uniqueKeywords);
+
+/**
+ * TODO 05:
+ *
+ * Create an array out of the `uniqueKeywords` set, and assign it to the
+ * `uniqueKeywordsArr` variable.
+ */
+
+let uniqueKeywordsArr = [...uniqueKeywords];
+console.log(uniqueKeywordsArr);
+
+/**
+ * TODO 06:
+ *
+ * Delete all items from the `uniqueKeywords` set
+ */
+
+uniqueKeywords.clear();
+console.log(uniqueKeywords);
