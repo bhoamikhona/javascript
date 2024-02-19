@@ -255,6 +255,7 @@ const chocolates = new Map([
 
 - Now let's talk about objects vs. maps, and we already know that we should use these key-value data structures whenever we need to describe the values using keys.
 - But, when to use objects and when to use maps?
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/0f3a1cff-cbcb-4c9b-acfe-37be0f5300cf)
 
 | Objects                                                                                                                                                                                                                                                             | Maps                                                                                                                                         |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
