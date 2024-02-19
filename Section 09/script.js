@@ -3185,3 +3185,157 @@ console.log(rest); // 9: {h1 => "Heading"}
  * This sounds crazy but, it is possible and it can enable some advanced
  * functionality.
  */
+
+/***********************************************************************/
+/*************************** MAPS: ITERATION ***************************/
+/***********************************************************************/
+console.log(
+  `/*************************** MAPS: ITERATION ***************************/`
+);
+
+/**
+ * Let's continue learning about maps.
+ *
+ * In the last lesson we created an empty map and then added elements
+ * to it by using the set() method.
+ *
+ * However, there is actually another way of populating a new map
+ * without having to use the set() method.
+ *
+ * This other way of adding elements is more preferrable because the
+ * set() method can be very cumbersome when there are a lot of values
+ * to set.
+ *
+ * Instead we can create a new map like this:
+ *
+ * NOTE: We will be implementing something like a quiz.
+ *
+ * Inside the Map() constructor function, we can pass in an array and
+ * this array itself will contain multiple arrays.
+ *
+ * In each of these child arrays, the first position is going to be
+ * the key and the second position is going to be the value.
+ */
+
+let question = new Map([
+  ['question', 'What is the best programming language in the world?'],
+  [1, 'C'],
+  [2, 'Python'],
+  [3, 'JavaScript'],
+  ['correct', 3],
+  [true, 'Correct 🎉'],
+  [false, 'Try again!'],
+]);
+
+console.log(question);
+
+/**
+ * So, when creating a new map from scratch, directly in the code, it
+ * is preferrable to do the way we did it above instead of using the
+ * set() function.
+ *
+ * But, when we keep adding new elements programmatically i.e. using
+ * code, then of course the set() method is still the way to go.
+ *
+ * The array of arrays structure should look familiar to you because
+ * that is the same array structure which is returned from calling
+ * Object.entries().
+ */
+
+// easy way to convert objects to maps
+console.log(Object.entries(openingHours)); // array of arrays
+
+/**
+ * The result of Object.entries(openingHours) is an array of arrays,
+ * and within each of the child array, the first element is the key and
+ * the second element is the value.
+ *
+ * This means that there is an easy way to convert from objects to maps.
+ */
+
+let hoursMap = new Map(Object.entries(openingHours));
+console.log(hoursMap);
+
+/**
+ * Keep this small trick in mind, whenever you need a map and you already
+ * have an object.
+ *
+ * Next up, let's talk about iteration and iteration is possible on maps
+ * because as we already know, maps are also iterables.
+ *
+ * So, the for-loop is also available for them.
+ *
+ * Let's use the for-loop to print the three options of quiz/question map
+ * to the console.
+ */
+
+console.log(question.get('question'));
+/**
+ * This loop is exactly the same as we did when we looped over the
+ * object. The only difference is that for the object, we needed
+ * Object.entries(). This is because, the object is not an iterable but,
+ * then we converted it to an iterable using Object.entries()
+ */
+for (const [key, value] of question) {
+  /**
+   * Keep in mind that we only want to print the answer options from our
+   * question map. So, we only want to print if the key is a number.
+   * For that, let's use what we already know.
+   */
+  if (typeof key === 'number') console.log(`Answer ${key}: ${value}`);
+}
+
+// getting a user input for their answer
+// let answer = Number(prompt('Your answer'));
+let answer = 3;
+console.log(answer);
+
+/**
+ * Now we can use the power of the boolean keys in the map, in order to
+ * either print the success message or the error message.
+ */
+
+console.log(question.get(answer === question.get('correct')));
+
+/**
+ * With that, we finished our nice little quiz.
+ *
+ * Now, just to finish, as a side note, sometimes we also need to convert
+ * a map back to an array of arrays.
+ *
+ * We can do it like so:
+ */
+
+// convert map to an array of arrays
+console.log([...question]);
+
+// Some array methods that are also applicable to map:
+console.log(question.entries());
+console.log(question.keys());
+console.log(question.values());
+
+/**
+ * They give us the weird MapIterator in the console if we simply do it
+ * like we did above.
+ *
+ * So, in order to get rid of it, simply use the spread operator and
+ * put them in an array, like so:
+ */
+
+console.log([...question.entries()]);
+console.log([...question.keys()]);
+console.log([...question.values()]);
+
+/**
+ * This all we need to know about maps for now.
+ *
+ * Now you might be wondering, when should we use maps/object? OR
+ * When should we use arrays/sets? This is because they are pretty
+ * similar.
+ *
+ * That is what we will answer in the next theorectical lesson. There
+ * we will learn how to choose between all the data structures including
+ * arrays and sets.
+ *
+ * NOTE: Since it is theoretical, the notes are in the README.md file.
+ */

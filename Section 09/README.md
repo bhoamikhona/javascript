@@ -20,6 +20,7 @@
     - [Looping Objects: Object Keys, Values, and Entries](#looping-objects-object-keys-values-and-entries)
     - [Sets](#sets)
     - [Maps: Fundamentals](#maps-fundamentals)
+    - [Maps: Iteration](#maps-iteration)
     - [Other Lessons](#other-lessons)
   - [Author](#author)
 
@@ -159,6 +160,27 @@
 - `mapName.clear()` - The `clear()` method is used for the removal of all the elements from a map and making it empty. No arguments are required and it returns `undefined` value.
 - Using booleans, arrays, and objects as map keys.
 - Using maps with DOM elements.
+
+### Maps: Iteration
+
+- Another method of populating a map, by passing in an array of arrays in the `new Map()`. Each array inside the array will have two elements, the first element being the key, and the second being the value. Example:
+
+```javascript
+const chocolates = new Map([
+  ['Cadbury', 'Dairy Milk'],
+  ['Nestle', 'Kit Kat'],
+  ['Hershey', 'Kisses'],
+]);
+```
+
+- Convert objects to maps.
+- Looping over maps.
+- Convert maps to arrays (array of arrays).
+- `mapName.entries()` - The `entries()` method is used for returning an iterator object which contains all the key-value pairs of each element of the map. It does not require any arguments.
+- `mapName.keys()` - The `keys()` is used to extract the keys from a given map object and return the iterator object of keys. The keys are returned in the order they were inserted.
+- `mapName.values()` - The `values()` method is used to return an iterator object that contains the value of each element present in the map. The order of the values are in the same order that they were inserted into the map.
+- NOTE: The above 3 methods of `entries()`, `keys()`, and `values()` return an iterator but, in order to get rid of them, just use the spread operator within square bracket to convert them into an array.
+- NOTE: `[...question.entries()]` is exactly the same as `[...question]`
 
 ### Other Lessons
 
