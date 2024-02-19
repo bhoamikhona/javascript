@@ -21,6 +21,7 @@
     - [Sets](#sets)
     - [Maps: Fundamentals](#maps-fundamentals)
     - [Maps: Iteration](#maps-iteration)
+    - [Summary: Which Data Structure to Use?](#summary-which-data-structure-to-use)
     - [Other Lessons](#other-lessons)
   - [Author](#author)
 
@@ -181,6 +182,90 @@ const chocolates = new Map([
 - `mapName.values()` - The `values()` method is used to return an iterator object that contains the value of each element present in the map. The order of the values are in the same order that they were inserted into the map.
 - NOTE: The above 3 methods of `entries()`, `keys()`, and `values()` return an iterator but, in order to get rid of them, just use the spread operator within square bracket to convert them into an array.
 - NOTE: `[...question.entries()]` is exactly the same as `[...question]`
+
+### Summary: Which Data Structure to Use?
+
+- Dealing and working with data is the main in thing that we do as developers.
+- That's the reason why, since the beginning of the course, we have been working with JavaScript's built-in data structures, like arrays and objects.
+- In the last few lessons, we learned about two new data structures which are sets and maps.
+- Now, we have four data structures from which we can choose.
+- So, this lesson is created to show you the pros and cons of each data structure and also, when to choose each of them.
+- Let's first start by quickly categorizing where data can actually come from.
+- There are essentially three sources of data:
+  - From the program itself
+    - First, the data can be written within the program source code itself like status messages that will be displayed on a webpage based on user actions.
+  - From the UI
+    - Second, data can come from the user interface i.e. from the webpage. It can either be data the user inputs into some form or data test already written somehow in the DOM.
+    - For example, this can be the user's tasks in a todo app or expenses in a budget app.
+  - From External Sources
+    - Finally, data can come from external sources, which is usually a web API.
+    - What is a web API?
+      - API stands for <ins>Application Programming Interface</ins> and we can basically use a web API to get data from other web applications.
+      - For example, we can use a web API to get the current weather in any city or data about movies or currency conversion rates, and really any kind of data that you can imagine.
+      - We will learn how all that works, later in the course.
+- So, no matter where the data comes from and what kind of data it is, we usually always have collections of data that we then need to store somewhere.
+- So, where do we store collections of data?
+  - We use data structures.
+  - But, as we've learned - there are 4 built-in data structures in JavaScript.
+  - So, now we need a way of deciding between them, but it is not that hard.
+    - ![image](https://github.com/bhoamikhona/javascript/assets/50435319/9bcba259-bd9f-41ae-9471-ebd1cc702809)
+    - The first decision is this: Do we just need a simple list of values? If so, then we are going to use an array or a set.
+    - On the other hand, if we need key-value pairs, then we need an object or a map.
+  - So, the big difference is that with a key-value pair, we have a way of describing the values - by using the key.
+  - On the other hand, in a list like an array or a set, we simply have the values without any description.
+- Now, as a quick example, let's go back to getting data from a web API because in modern JavaScript applications that's usually the most common source of data.
+- So, data from Web APIs usually comes in a special data format called <ins>JSON</ins> which looks like this:
+- ![json-example](https://github.com/bhoamikhona/javascript/assets/50435319/b46a4275-b4b3-4539-8a6b-d245693bdd82)
+- JSON is essentially just text i.e. a long string, but it can easibly be converted to JavaScript objects because it uses the same formatting as JavaScript objects and arrays.
+- In the image above, we have three objects that describe recipes.
+- We have the values in green, e.g. the value of "title" and the value of "publisher".
+- And it makes complete sense that these values are then described using a key. Otherwise, we would have no idea what the different values actually are.
+- So, key-value pairs are essential here and that is why this data is stored in an object, and not in an array.
+- Now, each of these recipe objects in itself can be seen as a value.
+- And since we have many of them, it means that we have, again, a collection of data and therefore, we need a data structure to store them.
+- Do we want to describe each of the objects?
+  - It is not necessary.
+  - This is because we already know that they are all recipes and whatever information we need about the recipes is already stored right in each of the objects.
+  - So, all we want is basically a simple list where all the recipes are held together.
+  - That is why, an array is the perfect data structure for that.
+  - In fact, creating an array of objects is extremely important in JavaScript.
+- We will be working on this kind of data all the time as a professional JavaScript developer. That is why, we are placing so much focus on it.
+- Other built-in JavaScript Data Structures:
+  - WeakMap
+  - WeakSet
+- Non built-in Data Structures: (These are used in other programming languages but, they are not built into JS)
+  - Stacks
+  - Queues
+  - Linked Lists
+  - Trees
+  - Hash Tables
+- All of these Data Structures don't matter for now but, you should know that there are more that just the 4 built-in data structures.
+- Now, let's talk about the built-in data structures.
+  - At this point, you already know how to use them but, it is important to know when to use them.
+  - Starting with Arrays vs. Sets
+    - ![image](https://github.com/bhoamikhona/javascript/assets/50435319/944c1367-d063-4a7c-91f7-652d48c5dd65)
+    - We already know that we shoiuld use them for simple lists of values when we do not need to describe the values.
+
+| Arrays                                                                                                                | Sets                                                                                                                                                                                                                              |
+| --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| You should use arrays whenever you need to store values in order, and when these values might contain duplicates.     | Sets, on the other hand, should only be used when you are working with unique values.                                                                                                                                             |
+| Also, you should always use arrays when you need to manipulate data because, tehre are a ton of useful array methods. | Besides that, you can also use sets in situations when high-performance is imperative. This is because, operations like searching for an item or deleting an item from a set can be up to 10 times faster in sets than in arrays. |
+| -                                                                                                                     | One great use case for sets is to remove duplicate values from an array, like we did before.                                                                                                                                      |
+| -                                                                                                                     | So, sets are really not meant to replace arrays but, to compliment them whenever we are dealing with unique values.                                                                                                               |
+
+- Now let's talk about objects vs. maps, and we already know that we should use these key-value data structures whenever we need to describe the values using keys.
+- But, when to use objects and when to use maps?
+
+| Objects                                                                                                                                                                                                                                                             | Maps                                                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Objects have the traditional key-value data structure simply because we didn't have maps before ES6, but using objects simply as key-value stores has a couple of technical disadvantages. That's why some people say that we have been abusing objects for this.   | Map, on the other hand are way better suited for simple key-value stores because they offer better performance, in fact.                     |
+| However, the biggest advantage of objects is how easy it is to write them and to access data by simply using the dot or the brackets operator. Also, most developers are already super used to objects so, they simply keep using them for simple key-value stores. | Also, maps keys can have any data type.                                                                                                      |
+| -                                                                                                                                                                                                                                                                   | Maps are easy to iterate.                                                                                                                    |
+| -                                                                                                                                                                                                                                                                   | It is easy to compute the size of a map.                                                                                                     |
+| If you need functions as values then you should absolutely use an objet for that. In objects, these functions are then called methods and you can use the `this` keyword to access properties of the same object, which is impossible in maps.                      | As a conclusion you should use maps when you simply need to map keys to values.                                                              |
+| Also, when working with JSON data, you will probably be using objects for that as well unless you then want to convert the objects to maps, but that is usually not something that we do.                                                                           | You should also use maps when you need keys that are not strings because, as we saw in the last lesson, this can be very powerful sometimes. |
+
+- In conclusion, we still use objects all the time but, maps are also a very important data structure right now and way more important than sets.
 
 ### Other Lessons
 
