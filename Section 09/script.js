@@ -3339,3 +3339,272 @@ console.log([...question.values()]);
  *
  * NOTE: Since it is theoretical, the notes are in the README.md file.
  */
+
+/***********************************************************************/
+/******************** WORKING WITH STRINGS: PART 01 ********************/
+/***********************************************************************/
+console.log(
+  `/******************** WORKING WITH STRINGS: PART 01 ********************/`
+);
+
+/**
+ * Over the next few lessons, we will learn how to work with strings so,
+ * we are going to take a look at a couple of useful string methods.
+ *
+ * In this part of the section, we are going to leave the restaurant
+ * theme behind and work on things related to airplanes and airlines.
+ *
+ * Let's start by creating an airline variable.
+ */
+
+let airline = 'Air India';
+let plane = 'A320';
+
+/**
+ * Just like in arrays, we can get the character of a string at a
+ * certain position.
+ */
+
+console.log(plane[0]); // A
+console.log(plane[1]); // 3
+console.log(plane[2]); // 2
+
+/**
+ * We get 3 and 2 from postion 1 and 2 but, both of them are still
+ * strings so, we would have to convert them into Number if we wanted
+ * them to be numbers.
+ *
+ * This is how we can do that:
+ */
+
+console.log(Number(plane[1])); // 3
+console.log(Number(plane[2])); // 2
+
+// We can also do this:
+console.log('B737'[0]); // B
+
+// We can read the length property of strings, just like we can in arrays
+console.log(airline.length); // 9
+console.log('B737'.length); // 4
+
+/**
+ * Next up, let's talk about methods.
+ *
+ * Again, comparing strings to arrays here, strings also have methods
+ * and some of them are quite similar to the array methods.
+ */
+
+// indexOf()
+console.log(airline.indexOf('r')); // 2
+
+// NOTE: Strings are also 0 based
+
+// lastIndexOf()
+console.log(airline.lastIndexOf('i')); // 7
+
+// searching for words using indexOf() - this case sensitive so, if we
+// search for India with a small i, we will get -1 because it cannot
+// find "india" in the string
+console.log(airline.indexOf('India')); // 4
+console.log(airline.indexOf('india')); // -1
+
+/**
+ * What can we do with these indexes? Why are they useful?
+ *
+ * One good use case is to extract part of a string using the slice()
+ * method and a slice() method needs indexes as arguments.
+ *
+ * Therefore, sometimes it can be very useful to first figure out the
+ * index of part of a string to then extract that.
+ *
+ * Let's see how the slice() method works:
+ */
+
+console.log(airline.slice(4)); // India
+
+/**
+ * The result is "India" and the reason for that is the 4 that we passed
+ * in, is the begin parameter i.e. the position at which the extraction
+ * will start.
+ *
+ * Remember that strings are 0 based. So, we get "I" as position 4
+ * therefore, the slice() method begins to extract there.
+ *
+ * The result that we get from using the slice() method is called as a
+ * sub-string because it is just a part of the original string.
+ *
+ * Keep in mind that slice() method does not change the underlying
+ * string, and that is because it is actually impossible to mutate
+ * strings since they are primitive types.
+ *
+ * So, if we wanted to use the substring from the slice() method, we
+ * would first have to store it in some variable or some other data
+ * structure.
+ *
+ * So, slice() method and all the other methods that we are going to talk
+ * about are always going to return a new string.
+ *
+ * Besides the begin parameter that we already specified in the slice()
+ * method, we can also specify the end parameter. So, let's try that:
+ */
+
+console.log(airline.slice(4, 6)); // In
+
+/**
+ * At position 4, it is the letter I; at position 5, it is the letter n
+ * but, we did not get the letter at position 6 - which is d. So this
+ * tells us that the end value is not included in the string.
+ *
+ * So basically, the slice() method stops extractice before reaching
+ * the index number 6. This is really important to keep in mind.
+ *
+ * NOTE: The length of the extracted string (or substring) is always
+ * going to be the start index that we passed in minus the end index.
+ *
+ * In our case 6 - 4 is to 2 and that is the length of "In".
+ *
+ * Up until this point we have hard-coded the values that we pass into
+ * the slice() method; but many times we don't even know the string that
+ * we received yet.
+ *
+ * So, let's now try to extract the first word of the airline string but,
+ * without knowing any of the indexes - this is where the indexOf()
+ * and the lastIndexOf() become really important. Basically, we do not
+ * have to hardcode what we pass into slice() method.
+ *
+ * So, since we want the first word, the start index will be 0 and the
+ * end parameter will be indexOf() space character.
+ *
+ * REMEMBER: The indexOf() method returns the first occurence of the
+ * provided parameter in the string it is called upon.
+
+* REMEMBER: The lastIndexOf() method returns the last occurence of the
+ * provided parameter in the string it is called upon.
+ */
+
+console.log(airline.slice(0, airline.indexOf(' ')));
+
+// here we don't need the end parameter because we are starting at the
+// space character in the string and it will go till the end, giving us
+// the last word in the string.
+// NOTE: Since the character at the starting position is included in the
+// result, we need to add 1 to it so, it will get rid of the space at the
+// beginning of the string
+console.log(airline.slice(airline.lastIndexOf(' '))); // " India"
+console.log(airline.slice(airline.lastIndexOf(' ') + 1)); // "India"
+
+/**
+ * That's the fundamentals of the slice() method but, we can do even more
+ * with it.
+ *
+ * We can even pass a negative arugment in the slice() method and then
+ * it will start counting from the end.
+ */
+
+// this will start from the second last index of the string
+console.log(airline.slice(-2)); // ia
+
+// we can also specify a negative end parameter
+/**
+ * Here we started at 1, that is why the A is cut off and then the end
+ * index is not included in the slice() method that is why the last
+ * letter is cut off.
+ */
+console.log(airline.slice(1, -1)); // ir Indi
+
+/**
+ * We will need all of these different combinations of slice(),
+ * indexOf(), and lastIndexOf() methods in different situations. So, it
+ * is good that you know how to use them because, you will need them at
+ * some point.
+ *
+ * Now let's practice a little bit, what we just learned and write a
+ * function that receives an airplane seat and logs to the console,
+ * whether it is a middle seat or not.
+ *
+ * In small planes like A320 or the Boeing 737, we only have 6 seats in
+ * a row - that means that B and E are the middle seats.
+ *
+ * So, what we have to do here is to basically take the last character
+ * of the string and check if it is B or E.
+ */
+
+const checkMiddleSeat = function (seat) {
+  const seatLetter = seat.slice(-1);
+  if (seatLetter === 'B' || seatLetter === 'E') {
+    console.log(`You got the middle seat 😬`);
+  } else {
+    console.log(`You got lucky 😎`);
+  }
+};
+
+checkMiddleSeat('11B'); // You got the middle seat 😬
+checkMiddleSeat('23C'); // You got lucky 😎
+checkMiddleSeat('3E'); // You got the middle seat 😬
+
+/**
+ * That's how we extract parts of strings and it is something that is
+ * really important to do.
+ *
+ * Now before we move on, let's just stop for a second and understand
+ * why all of it actually works.
+ *
+ * We know that strings are just primitives. So, why do they have
+ * methods? Shouldn't methods only be available on objects such as
+ * arrays?
+ *
+ * That is actually true. However, JavaScript is really smart, so here
+ * is how it works:
+ *
+ * Whenever we call a method on a string, JavaScript will automatically,
+ * behind the scenes convert that string primitive to a string object
+ * with the same content.
+ *
+ * Then, it is on that object where the methods are called.
+ *
+ * This process is called boxing because, it basically takes our string
+ * and puts it into a box, which is the object.
+ *
+ * So, basically what happens is this:
+ */
+
+console.log(new String('bhoami')); // String {'bhoami'}
+
+/**
+ * What JavaScript does is to call the `String()` function, and if you
+ * look in the console, it looks a little bit more like an object.
+ *
+ * And if you further expand and look into it (in the console), you will
+ * find methods that we could call upon it, including the slice() method
+ * that we just learned.
+ *
+ * These methods are beyond the scope of this lesson but, we will come
+ * back to it learn what it is, a little bit later.
+ *
+ * What matters for now is that `new String('bhoami')` indeed is now an
+ * object. We can confirm that using the `typeof` operator, like so:
+ */
+
+console.log(typeof new String('bhoami')); // object
+
+/**
+ * So this conversion of string from primitive type to an object type is
+ * what JavaScript does behind the scenes whenever we call a method on a
+ * string.
+ *
+ * Then, when the operation is done, the object is converted back to a
+ * regular string primitive.
+ *
+ * In fact, all string methods return primitives. Even if called on a
+ * string object.
+ *
+ * We can confirm that like so:
+ */
+
+// the result of all of this is then back to being a string
+console.log(typeof new String('bhoami').slice(2)); // string
+
+/**
+ * Don't get confused by this. This is just a theory explanation behind
+ * why all of this works in case, you are curious, and I hope you are.
+ */

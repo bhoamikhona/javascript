@@ -22,6 +22,8 @@
     - [Maps: Fundamentals](#maps-fundamentals)
     - [Maps: Iteration](#maps-iteration)
     - [Summary: Which Data Structure to Use?](#summary-which-data-structure-to-use)
+    - [Working with Strings](#working-with-strings)
+      - [Part 1](#part-1)
     - [Other Lessons](#other-lessons)
   - [Author](#author)
 
@@ -267,6 +269,19 @@ const chocolates = new Map([
 | Also, when working with JSON data, you will probably be using objects for that as well unless you then want to convert the objects to maps, but that is usually not something that we do.                                                                           | You should also use maps when you need keys that are not strings because, as we saw in the last lesson, this can be very powerful sometimes. |
 
 - In conclusion, we still use objects all the time but, maps are also a very important data structure right now and way more important than sets.
+
+### Working with Strings
+
+#### Part 1
+
+- Retrieving a string character using indexes.
+- Length property of strings.
+- `string.indexOf(substring, position)` - It searches the string and returns the index of the first occurrence of the specified substring. It takes an optional starting position and returns the first occurence of the specified substring at an index greater than or equal to the specified number. `position` parameter is optional.
+- `string.lastIndexOf(substring, position)` - It searches the substring and returns the index of the last occurence of the specified substring. It takes an optional starting position and returns the last occurence of the specified substring at an index less than or equal to the specified number. `position` parameter is optional.
+- `string.slice(indexStart, indexEnd)` - The `slice()` method extracts a section of a string and returns it as a new string, without modifying the original string. `indexEnd` parameter is optional. The sliced string will include the character of the start index and exclude the character at the end index.
+- Extracting the first and last word of a string.
+- Negative indexes.
+- The process of <ins>boxing</ins>.
 
 ### Other Lessons
 

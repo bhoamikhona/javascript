@@ -959,3 +959,71 @@ console.log(firstBookMap);
 for (const [key, value] of firstBookMap) {
   if (typeof value === 'number') console.log(key);
 }
+
+/************************************************************************/
+/************* ASSIGNMENT 15: WORKING WITH STRING - PART 01 *************/
+/************************************************************************/
+console.log(
+  `/************* ASSIGNMENT 15: WORKING WITH STRING - PART 01 *************/`
+);
+
+/**
+ * TODO 01:
+ *
+ *
+ * Take the `ISBN` property of the first book from the `books` array, and
+ * log it to the console characters at index 6, 4, 9, and 8. Use bracket
+ * notation to access individual chracters.
+ */
+
+console.log(books[0].ISBN[6]);
+console.log(books[0].ISBN[4]);
+console.log(books[0].ISBN[9]);
+console.log(books[0].ISBN[8]);
+
+/**
+ * TODO 02:
+ *
+ * Below is the `quote` variable that stores a string. Find the index of
+ * the word `'chess'`, and log it to the console.
+ */
+
+const quote =
+  'A computer once beat me at chess, but it was no match for me at kick boxing';
+console.log(quote.indexOf('chess'));
+
+/**
+ * TODO 03:
+ *
+ * Extract the word "boxing" from the same `quote` string, and log it
+ * to the console.
+ */
+
+console.log(quote.slice(quote.lastIndexOf(' ') + 1));
+
+/**
+ * TODO 04:
+ *
+ * Some authors are noted as '(Contributor)', for example "Julie Sussam
+ * (Contributor)". Create a function called `isContributor` that takes
+ * an author's name as an argument, and returns either true (if he's a
+ * contributor) or false (if he's not a contributor). The string
+ * "(Contributor)" is always the last part of the author's name string.
+ */
+
+// my solution
+// const isContributor = function (authorName) {
+//   if (authorName.slice(authorName.lastIndexOf(' ') + 1) === '(Contributor)') {
+//     return true;
+//   } else {
+//     return false;
+//   }
+// };
+
+// actual solution
+function isContributor(author) {
+  return author.lastIndexOf('(Contributor)') !== -1;
+}
+
+console.log(isContributor('Julie Sussman (Contributor)')); // true
+console.log(isContributor('Robert Sedgewick')); // false
