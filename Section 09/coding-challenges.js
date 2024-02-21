@@ -347,3 +347,102 @@ for (const [min, event] of gameEvents) {
   const gameHalf = min < 45 ? 'FIRST' : 'SECOND';
   console.log(`[${gameHalf} HALF]: ${event}`);
 }
+
+/***********************************************************************/
+/************************* CODING CHALLENGE 04 *************************/
+/***********************************************************************/
+console.log(
+  `/************************* CODING CHALLENGE 04 *************************/`
+);
+
+/**
+ * Write a program that receives a list of variable names written in
+ * underscore_case and convert them to camelCase.
+ *
+ * The input will come from a textarea inserted into the DOM (see code
+ * below to insert the elements), and conversion will happen when the
+ * button is pressed.
+ *
+ * Test Data: (pasted to text area, including spaces):
+ * underscore_case
+ *  first_name
+ * Some_Variable
+ *  calculate_AGE
+ * delayed_departure
+ *
+ * Output: (5 separate console.log outputs):
+ * underscoreCase      ✅
+ * firstName           ✅✅
+ * someVariable        ✅✅✅
+ * calculateAge        ✅✅✅✅
+ * delayedDeparture    ✅✅✅✅✅
+ *
+ * Hints:
+ * 1) Remember which character defines a new line in the text area. 😉
+ * 2) The solution only needs to work for a variable made out of 2 words,
+ * like a_b.
+ * 3) Start without worrying about the ✅. Tackle that only after you have
+ * the variable name conversion working. 😉
+ * 4) This challenge is difficult on purpose, so start watching the
+ * solution in case you're stuck. Then pause and continue!
+ *
+ * Afterwards, test with your own test data!
+ */
+
+document.body.append(document.createElement('textarea'));
+document.body.append(document.createElement('button'));
+
+// my solution:
+// const camelCase = function (str) {
+//   str = str.toLowerCase().trim();
+
+//   const capitalLetter = str.slice(str.indexOf('_') + 1)[0].toUpperCase();
+
+//   return (
+//     str.slice(0, str.indexOf('_')) +
+//     capitalLetter +
+//     str.slice(str.indexOf('_') + 2)
+//   );
+// };
+
+// actual solution:
+// convert to capital case
+const capitalCase = function (word) {
+  word = word.toLowerCase();
+  return word[0].toUpperCase() + word.slice(1);
+};
+
+// convert to camel case
+const camelCase = function (variableName) {
+  variableName = variableName.trim();
+  const [firstWord, secondWord] = variableName.split('_');
+  return firstWord.toLowerCase() + capitalCase(secondWord);
+};
+
+// Testing
+console.log(camelCase(`underscore_case`));
+console.log(camelCase(` first_name`));
+console.log(camelCase(`Some_Variable`));
+console.log(camelCase(` calculate_AGE`));
+console.log(camelCase(`delayed_departure`));
+
+// button click event
+document.querySelector('button').addEventListener('click', function () {
+  const text = document.querySelector('textarea').value;
+  const rows = text.split('\n');
+  console.log(rows);
+
+  for (const [i, row] of rows.entries()) {
+    console.log(camelCase(row).padEnd(20) + '✅'.repeat(i + 1));
+  }
+});
+
+/**
+TEST DATA:
+
+underscore_case
+  first_name
+Some_Variable
+  calculate_AGE
+delayed_departure
+ */
