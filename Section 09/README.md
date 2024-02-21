@@ -25,6 +25,7 @@
     - [Working with Strings](#working-with-strings)
       - [Part 1](#part-1)
       - [Part 2](#part-2)
+      - [Part 3](#part-3)
     - [Other Lessons](#other-lessons)
   - [Author](#author)
 
@@ -301,6 +302,15 @@ const chocolates = new Map([
 - `string.includes(searchString, position)` - This method performs a case-sensitive search to determine whether one string may be found within another string, returning `true` or `false` as appropriate. `position` is an optional parameter.
 - `string.startsWith(searchString, position)` - This method determines whether a string begins with the characters of a specified string, returning `true` or `false` as appropriate. `position` is an optional parameter.
 - `string.endsWith(searchString, endPosition)` - This method determines whether a string ends with the characters of a specified string, returning `true` or `false` as appropriate. `endPosition` is an optional parameter.
+
+#### Part 3
+
+- `string.split(separator, limit)` - This method takes a pattern and divides a string into an ordered list of substrings by searching for the pattern, puts these substrings into an array, and returns the array. `limit` is an optional parameter.
+- `array.join(separator)` - This method creates and returns a new string by concatenating all of the elements in an array, separated by commas or a specified separator string. If the array has only one item, then that item will be returned without using the separator. `separator` is an optional parameter.
+- Padding a string.
+- `string.padStart(targetLength, padString)` - This method pads the current string with another string (multiple times, if needed) until the resulting string reaches the given length. The padding is applied from the start of the current string. `padString` is an optional parameter. The default value for `padString` parameter is the space character.
+- `string.padEnd(targetLength, padString)` - This method pads the current string with another string (multiple times, if needed) until the resulting string reaches the given length. The padding is applied from the end of the current string. `padString` is an optional parameter. The default value for `padString` parameter is the space character.
+- `string.repeat(count)` - This method constructs and returns a new string which contains the specified number of copies of the string on which it was called, concatenated together.
 
 ### Other Lessons
 

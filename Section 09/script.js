@@ -3830,3 +3830,210 @@ let checkBaggae = function (items) {
 checkBaggae('I have a laptop, some Food, and a pocket Knife.');
 checkBaggae('Socks and camera.');
 checkBaggae('Got some snacks and a gun for protection.');
+
+/***********************************************************************/
+/******************** WORKING WITH STRINGS: PART 03 ********************/
+/***********************************************************************/
+console.log(
+  `/******************** WORKING WITH STRINGS: PART 03 ********************/`
+);
+
+/**
+ * This is the third and final part of working with strings. Let's start
+ * by learning about one of the most powerful string methods, which is
+ * split().
+ *
+ * split() allows us to split a string into multiple parts based on a
+ * divider string.
+ *
+ * So, let's check that out.
+ */
+
+console.log('a+very+nice+string');
+
+/**
+ * Let's say that for some reason we have a string like the one above and
+ * now on that string, we can call the split() method.
+ *
+ * As an argument, we need to specify a divider string, so in this case,
+ * we will say +
+ *
+ * What will happen now is that it will split up the string by the +
+ * sign and then store results into elements of a new array.
+ */
+
+console.log('a+very+nice+string'.split('+')); // ['a', 'very', 'nice', 'string']
+
+/**
+ * Essentially everything split up by the divider string.
+ */
+
+console.log('Bhoami Khona'.split(' ')); // ['Bhoami', 'Khona']
+
+/**
+ * This is very useful as we can now use the power of destructuring to
+ * create new variables like so:
+ */
+
+const [firstName, lastName] = 'Bhoami Khona'.split(' ');
+console.log(firstName, lastName);
+
+/**
+ * We could have done the same with the slice() method but, that would
+ * have been too complicated and for longer sentences, almost impossible.
+ *
+ * By using split() method, it is very straightforward.
+ *
+ * Now, let's say that we want to make lastName uppercase and add "Miss"
+ * in the beginning.
+ *
+ * So, we could just use a simple template literal and do that but, there
+ * is something else that we want to learn here - which is the join()
+ * method.
+ *
+ * join() method is essentially the opposite of split().
+ *
+ * So, let's create an array, which contains all that we just said.
+ *
+ * Then we want to call the join() method with a joining string on that
+ * array and we will get the result that we wanted.
+ */
+
+let newName = ['Miss', firstName, lastName.toUpperCase()].join(' ');
+console.log(newName); // Miss Bhoami KHONA
+
+/**
+ * Indeed, we now get one entire string which is composed of the three
+ * parts of the array, joined together by the joining string passed as
+ * an argument to the join() method.
+ *
+ * NOTE: The joining string can be anything you want. It doesn't have to
+ * be a space character.
+ *
+ * This combination of split() and join() is very powerful and we will
+ * use it all the time.
+ *
+ * In fact, we can use it to for something that we already did in one of
+ * the previous lessons, which is to capitalize name.
+ *
+ * But, with this, it makes it really easy to capitalize an entire name
+ * with multiple names in there.
+ */
+
+const capitalizeName = function (name) {
+  const names = name.split(' ');
+  const namesUpper = [];
+
+  for (const n of names) {
+    // namesUpper.push(n[0].toUpperCase() + n.slice(1));
+
+    namesUpper.push(n.replace(n[0], n[0].toUpperCase()));
+  }
+  console.log(namesUpper.join(' '));
+};
+
+capitalizeName('jessica anne smith davis'); // Jessica Anne Smith Davis
+capitalizeName('bhoami kuleen khona'); // Bhoami Kuleen Khona
+capitalizeName('jonas schmedtmann'); // Jonas Schmedtmann
+
+/**
+ * Now, no matter how long a naame we feed into this function, it will
+ * always give us the correct output.
+ *
+ * Next up, let's talk about padding a string.
+ *
+ * Padding a string means to add a number of characters to the string
+ * until the string has a certain desired length.
+ */
+
+// Padding
+let message = 'Go to gate 23';
+
+// the first parameter is how long you want the string to be
+// the second paramter is what do you want to pad the string with
+console.log(message.padStart(25, '+')); // ++++++++++++Go to gate 23
+console.log('Bhoami'.padStart(25, '+')); // +++++++++++++++++++Bhoami
+
+// there is also padEnd()
+console.log(message.padStart(25, '+').padEnd(35, '+')); // ++++++++++++Go to gate 23++++++++++
+
+/**
+ * The above operation will basically add 10 '+' to the string because
+ * the result of padStart() will already make the string 25 characters
+ * long.
+ *
+ * Now, let's see a more real-world example of padding strings.
+ *
+ * When you see a credit card number on the internt, you never see
+ * the entire number. Usually you only see the last 4 digits and the
+ * rest is masked with some symbol.
+ *
+ * So, let's implement a function that actually does that masking.
+ */
+
+const maskCreditCard = function (number) {
+  /**
+   * Here we are converting the number to a string.
+   *
+   * This works because whenever one of the operands of the + operator
+   * is a string, it performs type coercion and converts the other
+   * operand to string as well.
+   *
+   * We learned this in the fundamentals section of the course.
+   */
+  const str = number + '';
+
+  /**
+   * Here we are grabbing the last 4 digits of the number using negative
+   * indexes and storing it in a variable.
+   */
+  const last = str.slice(-4);
+
+  /**
+   * Here we are just padding the start of the string with '*' characters
+   * upto the length of the original string.
+   */
+  return last.padStart(str.length, '*');
+};
+
+console.log(maskCreditCard(123504683095));
+console.log(maskCreditCard(231668323255));
+
+/**
+ * To finish, the last string method that we will see is the repeat()
+ * method.
+ *
+ * As the name suggests, this method allows us to repeat the same string
+ * multiple times.
+ *
+ * Let's say that the weather is bad at an airport. When that happens,
+ * they usually have those long messages on the screen with texts
+ * repeating and running all the time.
+ */
+
+let message2 = 'Bad weather... All departures dealyed... ';
+
+/**
+ * If you check the console now, the same message will have been printed
+ * 5 times.
+ *
+ * It is the same big string that has been repeated over and over again.
+ *
+ * NOTE: These repeated string won't be separate strings. They will
+ * combine into one big string.
+ */
+console.log(message2.repeat(5));
+
+/**
+ * We can also simulate that due to the bad weather, there are now many
+ * planes waiting in line for takeoff.
+ */
+
+const planesInLine = function (n) {
+  console.log(`There are ${n} planes in line ${'✈'.repeat(n)}`);
+};
+
+/**
+ * We didn't talk about ALL the string methods that exist but, you can
+ * check them out on MDN if you want to know.
+ */
