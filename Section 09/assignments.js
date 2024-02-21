@@ -283,9 +283,9 @@ const [fiveStarRatings, oneStarRatings, threeStarRatings = 0] = ratingStars;
 
 console.log(fiveStarRatings, oneStarRatings, threeStarRatings);
 
-/************************************************************************/
-/***************** ASSIGNMENT 02: DESTRUCTURING OBJECTS *****************/
-/************************************************************************/
+/**********************************************************************/
+/**************** ASSIGNMENT 02: DESTRUCTURING OBJECTS ****************/
+/**********************************************************************/
 console.log(
   `/***************** ASSIGNMENT 02: DESTRUCTURING OBJECTS *****************/`
 );
@@ -385,9 +385,9 @@ printBookInfo({
 
 printBookInfo({ title: 'Algorithms', author: 'Robert Sedgewick' });
 
-/************************************************************************/
-/****************** ASSIGNMENT 03: THE SPREAD OPERATOR ******************/
-/************************************************************************/
+/**********************************************************************/
+/***************** ASSIGNMENT 03: THE SPREAD OPERATOR *****************/
+/**********************************************************************/
 console.log(
   `/****************** ASSIGNMENT 03: THE SPREAD OPERATOR ******************/`
 );
@@ -421,9 +421,9 @@ const spellWord = function (word) {
 
 spellWord('JavaScript');
 
-/************************************************************************/
-/************** ASSIGNMENT 04: REST PATTERN AND PARAMETERS **************/
-/************************************************************************/
+/**********************************************************************/
+/************* ASSIGNMENT 04: REST PATTERN AND PARAMETERS *************/
+/**********************************************************************/
 console.log(
   `/************** ASSIGNMENT 04: REST PATTERN AND PARAMETERS **************/`
 );
@@ -714,9 +714,9 @@ const getFirstKeyword = function (book) {
 getFirstKeyword(books[0]);
 getFirstKeyword(newBook2); // from previous tasks
 
-/************************************************************************/
-/*** ASSIGNMENT 11: LOOPING OBJECTS - OBJECT KEYS, VALUES AND ENTRIES ***/
-/************************************************************************/
+/**********************************************************************/
+/** ASSIGNMENT 11: LOOPING OBJECTS - OBJECT KEYS, VALUES AND ENTRIES **/
+/**********************************************************************/
 console.log(
   `/*** ASSIGNMENT 11: LOOPING OBJECTS - OBJECT KEYS, VALUES AND ENTRIES ***/`
 );
@@ -960,9 +960,9 @@ for (const [key, value] of firstBookMap) {
   if (typeof value === 'number') console.log(key);
 }
 
-/************************************************************************/
-/************* ASSIGNMENT 15: WORKING WITH STRING - PART 01 *************/
-/************************************************************************/
+/**********************************************************************/
+/************ ASSIGNMENT 15: WORKING WITH STRING - PART 01 ************/
+/**********************************************************************/
 console.log(
   `/************* ASSIGNMENT 15: WORKING WITH STRING - PART 01 *************/`
 );
@@ -1027,3 +1027,118 @@ function isContributor(author) {
 
 console.log(isContributor('Julie Sussman (Contributor)')); // true
 console.log(isContributor('Robert Sedgewick')); // false
+
+/**********************************************************************/
+/************ ASSIGNMENT 15: WORKING WITH STRING - PART 02 ************/
+/**********************************************************************/
+console.log(
+  `/************* ASSIGNMENT 15: WORKING WITH STRING - PART 02 *************/`
+);
+
+/**
+ * TODO 01:
+ *
+ * Write a function called `normalizeAuthorName` that takes an author's
+ * name (string) as an argument, and returns the same string, but the
+ * first name and last name are capitalized, and the `"(Contributor)"`
+ * part is removed (if exists).
+ *
+ * You can be sure that the author's name always consists of two words
+ * separated by a space, and possibly ends with `"(Contributor)"`. The
+ * string may also contain trailing spaces.
+ */
+
+// my solution:
+// const normalizeAuthorName = function (authorName) {
+//   let formattedAuthorName = '';
+//   if (authorName.includes('(Contributor)')) {
+//     formattedAuthorName = authorName.replace('(Contributor)', '');
+//   }
+
+//   formattedAuthorName = formattedAuthorName.trim();
+
+//   const firstName =
+//     formattedAuthorName[0].toUpperCase() +
+//     formattedAuthorName
+//       .slice(1, formattedAuthorName.indexOf(' '))
+//       .toLowerCase();
+
+//   const lastNameString = formattedAuthorName.slice(
+//     formattedAuthorName.indexOf(' ') + 1
+//   );
+
+//   const lastName =
+//     lastNameString[0].toUpperCase() + lastNameString.slice(1).toLowerCase();
+
+//   return firstName + ' ' + lastName;
+// };
+
+// actual solution:
+function normalizeAuthorName(author) {
+  author = author.trim();
+  const firstName = author.slice(0, author.indexOf(' '));
+  const lastName = author.slice(
+    author.indexOf(' ') + 1,
+    author.lastIndexOf(' ') + 1
+  );
+  const capitalizedFirstName =
+    firstName[0].toUpperCase() + firstName.slice(1).toLowerCase();
+  const capitalizedLastName =
+    lastName[0].toUpperCase() + lastName.slice(1).toLowerCase();
+
+  return capitalizedFirstName + ' ' + capitalizedLastName;
+}
+
+console.log(normalizeAuthorName('  JuliE sussMan (Contributor)'));
+
+/**
+ * TODO 02:
+ *
+ * Take the `title of the second book (`books[1]`) from the `books`
+ * array, and replace the word `"Programs"` with `"Software"`. Assign
+ * the new string to the `newBookTitle` variable.
+ */
+
+const newBookTitle = books[1].title.replace('Programs', 'Software');
+console.log(newBookTitle);
+console.log(books[1].title);
+
+/**
+ * TODO 03:
+ *
+ * Write a function called `logBookTheme` that takes book's title
+ * (string), and logs to the console:
+ *
+ * `"This book is about computers"` if the `title` starts with the word
+ * `"computer"`,
+ *
+ * `"This book is about algorithms and data structures"` if the title
+ * includes both the `"algorithms"` and `"structures"` words,
+ *
+ * and, `"This book is about some systems, but definitely not about
+ * operating systems"` if the title ends with the word `"system"` or
+ * `"systems"`, but doesn't include the word `"operating"`.
+ *
+ * NOTE: The `title` may contain both small and capital letters.
+ */
+
+console.log('---');
+const logBookTheme = function (bookTitle) {
+  const title = bookTitle.toLowerCase();
+  if (title.startsWith('computer')) {
+    console.log('This book is about computers');
+  } else if (title.includes('algorithms') && title.includes('structures')) {
+    console.log('This book is about algorithms and data structures');
+  } else if (
+    (title.endsWith('system') || title.endsWith('systems')) &&
+    !title.includes('operating')
+  ) {
+    console.log(
+      'This book is about some systems, but definitely not about operating systems.'
+    );
+  }
+};
+
+for (let book of books) {
+  logBookTheme(book.title);
+}

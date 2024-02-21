@@ -3608,3 +3608,225 @@ console.log(typeof new String('bhoami').slice(2)); // string
  * Don't get confused by this. This is just a theory explanation behind
  * why all of this works in case, you are curious, and I hope you are.
  */
+
+/***********************************************************************/
+/******************** WORKING WITH STRINGS: PART 02 ********************/
+/***********************************************************************/
+console.log(
+  `/******************** WORKING WITH STRINGS: PART 02 ********************/`
+);
+
+/**
+ * Let's continue with some simple string methods. The first two are
+ * going to be for changing the case of a string.
+ */
+
+// converting to lower case
+console.log(airline.toLowerCase()); // air india
+console.log('BhOaMi'.toLowerCase()); // bhoami
+
+// converting to upper case
+console.log(airline.toUpperCase()); // AIR INDIA
+console.log('BhOaMi'.toUpperCase()); // BHOAMI
+
+/**
+ * The above two methods we use all the time.
+ *
+ * Let's use them on a more practical example to fix the capitalization
+ * in a passenger name.
+ */
+
+// fix capitalization in name
+let passenger = 'BhOaMi';
+let passengerLower = passenger.toLowerCase();
+let passengerCorrect =
+  passengerLower[0].toUpperCase() + passengerLower.slice(1);
+
+console.log(passengerCorrect); // Bhoami
+
+/**
+ * Let's do another real-life example, which is to check a user input
+ * email.
+ *
+ * This will not really be checking, it will be more like comparing
+ * emails.
+ */
+
+// comparing emails
+let email = 'hello@email.com';
+
+/**
+ * Let's say, when logging in the passenger makes mistakes of leaving
+ * spaces, hitting the enter key to go to the next line, and leaves
+ * certain characters capital.
+ *
+ * But, the email is kind of still correct and valid.
+ *
+ * So, we can now still compare if passenger's email and the one they
+ * used to login are still kind of the same.
+ *
+ * It would be different, if they had different letters but, they are
+ * the same because the difference is only letter casing and white
+ * spaces.
+ *
+ * For eamils, they are still valid even with the capitalization off.
+ */
+
+let loginEmail = ' Hello@Email.Com \n';
+
+/**
+ * When we check user input like this, the first step is usually to
+ * convert it to lower case.
+ */
+
+let lowerEmail = loginEmail.toLowerCase();
+
+/**
+ * Now we must also get rid of all the white spaces in the entered email.
+ * There is even a method for that, which is `trim()`.
+ */
+
+let trimmedEmail = lowerEmail.trim();
+console.log(trimmedEmail); // hello@email.com
+
+/**
+ * Now it looks exact like the original passenger email.
+ *
+ * Now, just look closely at what we did here.
+ *
+ * We called `toLowerCase()` on the `loginEmail`, then stored it in the
+ * `lowerEmail` variable. Then on that variable, we called the `trim()`
+ * method.
+ *
+ * But, why do we even need the intermediate variable? We could do all
+ * of it in one step, like so:
+ */
+
+const normalizedEmail = loginEmail.toLowerCase().trim();
+console.log(normalizedEmail); // hello@email.com
+
+/**
+ * This works because, each of these string methods return a new string,
+ * and on strings, we can call string methods.
+ *
+ * So, when we do `loginEmail.toLowerCase()`, it returns a string that
+ * is all in lower case, and then on that returned string, we call the
+ * trim() method, which gets rid of all the white spaces.
+ *
+ * For the sake of completetion, let's compare the original email with
+ * normalizedEmail.
+ */
+
+console.log(email === normalizedEmail); // true
+
+/**
+ * Since ES2019, there is also trimStart() and trimEnd(), which as their
+ * name suggests, you can use to trim the white space only from the start
+ * of the string or only from the end.
+ *
+ * Next up, let's learn one of the most important thing about strings,
+ * which is to replace parts of strings.
+ */
+
+// replacing
+let priceGB = '₤288,97';
+let priceUS = priceGB.replace('₤', '$').replace(',', '.');
+
+console.log(priceUS); // $288.97
+
+/**
+ * We can also replace entire words, not just single characters.
+ *
+ * Just like other String methods, replace() also returns a brand new
+ * string. It doesn't mutate the original string.
+ */
+
+let annoucement = 'All passengers come to boarding door 23. Boarding door 23!';
+
+console.log(annoucement.replace('door', 'gate')); // All passengers come to boarding gate 23. Boarding door 23!
+
+/**
+ * Notice how only the first 'door' was replaced by 'gate' in the
+ * announcement string.
+ *
+ * So, replace() only replaces the first occurence of the search string.
+ *
+ * To replace all the occurences, we have a method called replaceAll().
+ */
+
+console.log(annoucement.replaceAll('door', 'gate')); // All passengers come to boarding gate 23. Boarding gate 23!
+
+/**
+ * Another solution to this problem is to use regular expressions or
+ * regex.
+ *
+ * Regular expressions are one of the most complex and confusing topics
+ * of programming, but we will still take a short look at them at some
+ * point in the course.
+ *
+ * For now, we are just going to use a very simple regular expression
+ * to tell the replace method that it should actually target all the
+ * occurences of 'door' in the announcement string and not just the first
+ * one.
+ *
+ * To create a regular expression, we need to write the string between
+ * slashes, not between quotes.
+ */
+
+// NOTE: /door/ is yellow now, which means that it is some kind of string but, it is not a so-called regular expression.
+console.log(annoucement.replace(/door/, 'gate')); // All passengers come to boarding gate 23. Boarding door 23!
+
+/**
+ * Now all we want to do, in this case, to add a `g` flag after the
+ * closing slash in the regular expresssion. This `g` flag stands for
+ * "global".
+ *
+ * Now all the occurences will be targeted.
+ */
+console.log(annoucement.replace(/door/g, 'gate')); // All passengers come to boarding gate 23. Boarding gate 23!
+
+/**
+ * NOTE: The replace() method is also case sensitive - just like all of
+ * the other string methods are.
+ *
+ * Now, as a final topic of this lesson, there are three simple methods
+ * that return booleans.
+ *
+ * These methods are inlcudes(), startsWith(), and endsWith().
+ */
+
+plane = 'Airbus A320neo';
+
+// includes()
+console.log(plane.includes('A320')); // true
+console.log(plane.includes('Boeing')); // false
+
+// startsWith()
+// NOTE: It doesn't have to match the entire word
+console.log(plane.startsWith('Air')); // true
+console.log(plane.startsWith('Ai')); // true
+console.log(plane.startsWith('Aib')); // false
+
+if (plane.startsWith('Airbus') && plane.endsWith('neo')) {
+  console.log('Part of the NEW Airbus family');
+}
+
+/**
+ * So, whenever you need to take some decision based on the contents
+ * of a string, these three methods viz includes(), startsWith(), and
+ * endsWith() are very helpful.
+ */
+
+// Practice Exercises
+let checkBaggae = function (items) {
+  const baggage = items.toLowerCase();
+  if (baggage.includes('knife') || baggage.includes('gun')) {
+    console.log(`You are not allowed on board`);
+  } else {
+    console.log(`Welcome aboard!`);
+  }
+};
+
+checkBaggae('I have a laptop, some Food, and a pocket Knife.');
+checkBaggae('Socks and camera.');
+checkBaggae('Got some snacks and a gun for protection.');

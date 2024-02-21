@@ -24,6 +24,7 @@
     - [Summary: Which Data Structure to Use?](#summary-which-data-structure-to-use)
     - [Working with Strings](#working-with-strings)
       - [Part 1](#part-1)
+      - [Part 2](#part-2)
     - [Other Lessons](#other-lessons)
   - [Author](#author)
 
@@ -282,6 +283,24 @@ const chocolates = new Map([
 - Extracting the first and last word of a string.
 - Negative indexes.
 - The process of <ins>boxing</ins>.
+
+#### Part 2
+
+- Changing the case of a string.
+- `string.toLowerCase()` - This method returns the calling string value converted to lower case.
+- `string.toUpperCase()` - This method returns the calling string value converted to upper case.
+- `string.trim()` - This method removes whitespace from both ends of a string and returns a new string, without modifying the original string.
+- Method chaining on strings.
+- `string.trimStart()` - This method removes whitespace from the beginning of a string and returns a new string, without modifying the original string. `trimLeft()` is an alias of this method.
+- `string.trimEnd()` - This method removes whitespace from the end of a string and returns a new string, without modifying the original string. `trimRight()` is an alias of this method.
+- Replace parts of strings.
+- `string.replace(pattern, replacement)` - This method returns a new string with one, some, or all matches of a `pattern` replaced by a `replacement`. The `pattern` can be a `string` or a `RegExp`, and the `replacement` can be a string or a function called for each match. If the `pattern` is a string, only the first occurence will be replaced. The original string is left unchanged.
+- `string.replaceAll('pattern', 'replacement')` - This method returns a new string with all matches of a `pattern` replaced by a `replacement`. The `pattern` can be a string or a `RegEx`, and the `replacement` can be a string or a function to be called for easy match. The original string is left unchanged.
+- Regular Expressions (RegEx).
+- Methods that return booleans.
+- `string.includes(searchString, position)` - This method performs a case-sensitive search to determine whether one string may be found within another string, returning `true` or `false` as appropriate. `position` is an optional parameter.
+- `string.startsWith(searchString, position)` - This method determines whether a string begins with the characters of a specified string, returning `true` or `false` as appropriate. `position` is an optional parameter.
+- `string.endsWith(searchString, endPosition)` - This method determines whether a string ends with the characters of a specified string, returning `true` or `false` as appropriate. `endPosition` is an optional parameter.
 
 ### Other Lessons
 
