@@ -1,7 +1,7 @@
 'use strict';
 
 // Data needed for a later exercise
-const flights =
+let flights =
   '_Delayed_Departure;fao93766109;txl2133758440;11:25+_Arrival;bru0943384722;fao93766109;11:45+_Delayed_Arrival;hel7439299980;fao93766109;12:05+_Departure;fao93766109;lis2323639855;12:30';
 
 // Data needed for first part of the section
@@ -4037,3 +4037,88 @@ const planesInLine = function (n) {
  * We didn't talk about ALL the string methods that exist but, you can
  * check them out on MDN if you want to know.
  */
+
+/***********************************************************************/
+/*********************** STRING METHODS PRACTICE ***********************/
+/***********************************************************************/
+console.log(
+  `/*********************** STRING METHODS PRACTICE ***********************/`
+);
+
+flights =
+  '_Delayed_Departure;fao93766109;txl2133758440;11:25+_Arrival;bru0943384722;fao93766109;11:45+_Delayed_Arrival;hel7439299980;fao93766109;12:05+_Departure;fao93766109;lis2323639855;12:30';
+
+/**
+ * Over the last few lessons, we learned how to work with string and also
+ * did a couple of exercises and one challenge but, it might be a good
+ * idea to have some more practice on the topic. So, in this lesson,
+ * we are going to solve one more challenge and do one more string
+ * exercise.
+ *
+ * We are given the `flights` string above and our goal is to transform
+ * the messy (given) string into a nicely formatted output which contains
+ * all the information that is in the string but that is actually legible
+ * to people.
+ *
+ * Let's pretend that we get the `flights` string from some kind of web
+ * API. Our goal in our application is tend to display data like this.
+ *
+ * If we look at the string more closesly, we will find that it basically
+ * has 4 lines of output:
+ *
+ * 🔴 Delayed Departure from FAO to TXL (11h25)
+ *               Arrival from BRU to FAO (11h45)
+ *    🔴 Delayed Arrival from HEL to FAO (12h05)
+ *             Departure from FAO to LIS (12h30)
+ *
+ * So, if we have a look at the string, we have our 1st part, then a plus
+ * sign, then second part, another plus sign, and so on and so forth.
+ *
+ * So, essentially, the plus sign acts as a separator between these 4
+ * pieces of information.
+ *
+ * Let's start by diving that up so that we can transform this one string
+ * into 4 pieces.
+ */
+
+console.log(flights.split('+'));
+
+/**
+ * We get an array with 4 separating strings that were separated by '+'.
+ */
+
+for (const flight of flights.split('+')) {
+  console.log(flight);
+}
+
+/**
+ * Now it's time to actually build each of these 4 pieces nicely.
+ *
+ * Again, we can note that we have an element which further splits or
+ * separated different pieces of information inside of the string, this
+ * separator is semi-colon.
+ */
+
+for (const flight of flights.split('+')) {
+  console.log(flight.split(';'));
+}
+
+/**
+ * Now, all we have to do is to get this data out of the arrays and then
+ * format each of them in the way we want, assemble them together and log
+ * the final string on the console.
+ */
+
+const getCode = str => str.slice(0, 3).toUpperCase();
+
+for (const flight of flights.split('+')) {
+  const [type, from, to, time] = flight.split(';');
+  const output = `${type.startsWith('_Delayed') ? '🔴' : ''}${type.replaceAll(
+    '_',
+    ' '
+  )} from ${getCode(from)} to ${getCode(to)} (${time.replace(
+    ':',
+    'h'
+  )})`.padStart(50);
+  console.log(output);
+}
