@@ -13,6 +13,7 @@
 - [Section 07](./Section%2007): JavaScript in the Browser: DOM and Events Fundamentals
 - [Section 08](./Section%2008): How JavaScript Works Behind the Scenes
 - [Section 09](./Section%2009): Data Structures, Modern Operators, and Strings
+- [Section 10](./Section%2010): A Closer Look at Functions
 
 ## Projects
 
