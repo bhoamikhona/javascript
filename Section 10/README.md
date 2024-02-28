@@ -29,7 +29,7 @@
 - Changing the value of parameter inside a function, does affect the original object if the passed value is that of an object.
 - Passing a primitive type to a function is really just the same as creating a copy outside of the function. So, the value is simply copied.
 - On the other hand, when we pass an object to a function, it is really just like copying an object. So, whatever we change in a copy, will also happen in the original.
-- Interaction of multiple functions with the same object, can create some problems. Look at its [script](./how-passing-arguments-work-value-vs-reference.js) file to check out an example for it.
+- Interaction of multiple functions with the same object, can create some problems. Look at its [script](./script.js) file to check out an example for it.
 - Passing by value and passing by reference.
 - Javascript does not have passing by reference. It only has passing by value; even though it looks like it is passing by reference.
 
