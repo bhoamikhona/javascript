@@ -9,6 +9,7 @@
   - [Lessons Learned](#lessons-learned)
     - [Default Parameters](#default-parameters)
     - [How Passing Arguments Work: Value vs. Reference](#how-passing-arguments-work-value-vs-reference)
+    - [First-Class and Higher-Order Functions](#first-class-and-higher-order-functions)
   - [Author](#author)
 
 ## Lessons Learned
@@ -32,6 +33,71 @@
 - Interaction of multiple functions with the same object, can create some problems. Look at its [script](./script.js) file to check out an example for it.
 - Passing by value and passing by reference.
 - Javascript does not have passing by reference. It only has passing by value; even though it looks like it is passing by reference.
+
+### First-Class and Higher-Order Functions
+
+(Theoretical Lesson)
+
+- Let's now talk about a fundamental property of the Javascript language, which is the fact that it has first class functions.
+- This enables us to write higher order functions but, what is that all about?
+  - Javascript is a language that has first-class functions which in technical terms means that functions are so-called first citizens.
+  - In practice, that means that functions are simply treated as values.
+  - We've already touched on this idea a couple of times before but, this is such an important feature of the language that it is worth spending some more time on it.
+- Why does Javascript work this way?
+
+  - It is simply because functions are really just another type of objects in Javascript.
+  - Since objects are values, functions are values too.
+  - Since functions are values, there are a bunch of interesting things that we can do with them, like storing them in variables or object properties, which we have already done a couple times before.
+
+  ```javascript
+  const add = (a, b) => a + b; // storing functions in variables
+
+  const counter = {
+    value: 23,
+    inc: function () {
+      this.value++;
+    }, // function as an object property
+  };
+  ```
+
+  - We can also pass functions as arguments to other functions; and we actually already did that before when we added event handlers/listeners to DOM objects.
+
+  ```javascript
+  const greet = () => console.log('Hey Bhoami');
+  btnClose.addEventListener('click', greet); // passing greet (a function) as parameter to `addEventListener()` function.
+  ```
+
+  - Now to make things more interesting, we can also return a function from another function. This may sound crazy but, it can be very useful.
+  - Finally, remember that functions are object; and many types of objects in Javascript have methods. So, there are also function-methods i.e. methods that we can call on functions. Again, this may sound crazy but, we will see how to use this to our advantage throughout this section.
+
+  ```javascript
+  // we will learn about bind() later in this section
+  counter.inc.bind(someOtherObject);
+  ```
+
+- The fact that Javascript has first-class functions makes it possible for us to use and write higher-order functions.
+- A higher order function is either a function that receive another function as an argument or a function that returns a new function.
+
+```javascript
+// Example 01: A function that receives another function as an argument
+const greet = () => console.log('Hey Bhoami');
+btnClose.addEventListener('click', greet); // passing greet (a function) as parameter to `addEventListener()` function.
+
+// Example 02: A function that returns a new function
+function count() {
+  let counter = 0;
+  return function () {
+    counter++;
+  };
+}
+```
+
+- We usually say that the function that is passed in as a parameter, is a callback function. That's because the callback function will be called later by the higher order function.
+- As for a function that returns another function, this style of function is also used a lot in Javascript but, it is also more advanced. We will explore this deeper a bit later.
+- There often seems to be some confusion between first-class functions and higher-order functions. Some people think that they are the same thing but, they are 2 different things.
+- First-class function is just a feature that a programming language either has or does not have. All it means that all functions are values. That's it. There are no first-class functions in practice. It is just a concept.
+- There are, however, higher-order function in practice, which are possible because the language supports first class functions. So, it is a subtle difference but, still worth noting if you want to be able to talk like a true Javascript master.
+- In the next lesson, we will actually create our own higher-order functions.
 
 ## Author
 
