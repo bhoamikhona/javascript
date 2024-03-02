@@ -473,3 +473,222 @@ Summary
 
 - When we pass an object, the function works with a value, which is a copy of the reference that address to the spot in the memory where the original object is in the memory (still is not a reference).
  */
+/************************************************************************/
+/**************** FUNCTIONS ACCEPTING CALLBACK FUNCTIONS ****************/
+/************************************************************************/
+console.log(
+  `/**************** FUNCTIONS ACCEPTING CALLBACK FUNCTIONS ****************/`
+);
+
+/**
+ * Now that we know what higher-order functions are, let's actually create
+ * our own, just to demonstrate how they work.
+ *
+ * In this lesson, we are going to create a function that accepts other
+ * functions as an input.
+ *
+ * But to start, let's write two very generic functions that do simple
+ * string transformations.
+ */
+
+// This function simply replaces all the spaces in a string
+const oneWord = function (str) {
+  return str.replace(/ /g, '').toLowerCase();
+};
+
+// This function will transform the first word of the input string to uppercase
+const upperFirstWord = function (str) {
+  const [first, ...others] = str.split(' ');
+  return [first.toUpperCase(), ...others].join(' ');
+};
+
+// Higher Order Function - Takes in a function as an argument
+const transformer = function (str, fn) {
+  console.log(`Original String: ${str}`);
+  console.log(`Transformed String: ${fn(str)}`);
+
+  /**
+   * In the last lesson we learned that function even have methods and
+   * besides methods, they can even have properties.
+   * So, functions have a `name` property.
+   */
+  console.log(`Transformed by: ${fn.name}`);
+};
+
+/**
+ * Basically, what we want the transformer() function to do is to
+ * transform the string that we pass in, using the function that we pass
+ * in.
+ *
+ * Notice how we are only passing in the function value itself. We are not
+ * calling it, we are really just passing in its value. It will be the
+ * transformer() function that will call that function.
+ */
+transformer('JavaScript is the best!', upperFirstWord); // JAVASCRIPT is the best!
+
+/**
+ * If we check our console now, we see that the original string looks like
+ * the way we passed it in but then, the transformed string indeed, was
+ * transformed just as we hoped it would.
+ *
+ * So, the first word is the uppercase and that is of course the work of
+ * upperFirstWord() function.
+ *
+ * Finally, we can also see that it was transformed by upperFirstWord -
+ * that is the `fn` name.
+ *
+ * So, `name` is just a property of functions which returns the name of
+ * the function and we can use it on any function in JavaScript.
+ *
+ * Now let's try the same with our other function:
+ */
+
+transformer('JavaScript is the best!', oneWord); // javascriptisthebest!
+
+/**
+ * Let's recap:
+ *
+ * We are calling the transformer function and into that function, we are
+ * passing the callback function.
+ *
+ * Remember that the functions we pass in as arguments are called
+ * callback functions and that's because we do not call them ourselves
+ * but instead, we tell JavaScript to basically call them later.
+ *
+ * In our case, calling them later happens inside the transformer()
+ * function. The callback functions inside the transformer() function is
+ * called `fn` so, we have to use fn() to call those functions inside
+ * transformer().
+ *
+ * In fact, this is exactly the same idea that we already talked about,
+ * using the addEventListener() function.
+ *
+ * Let's say that we have this very simple function called highFive()
+ * which doesn't really do much except of logging something to the
+ * console.
+ */
+
+const highFive = function () {
+  console.log('👋');
+};
+
+document.body.addEventListener('click', highFive);
+
+/**
+ * Just like our transformer function, we pass in a callback function
+ * in the addEventListener() function.
+ *
+ * The callback function in the case of addEventListener() is also
+ * called the event handler or event listener but, that doesn't really
+ * matter.
+ *
+ * What matters is that conceptually, the argument function `highFive` is
+ * the callback function and the addEventListener() function is the
+ * higher order function.
+ *
+ * So, it is just a callback function that JS will call whenever we
+ * click on the body.
+ *
+ * There are many other examples in the JavaScript language; and this
+ * concept of callback functions is used all the time in built-in JS
+ * functions.
+ *
+ * So, there are many more examples, for example the forEach() function
+ * that we call on arrays:
+ */
+
+// NOTE: We will learn about forEach() in the next section
+['Bhoami', 'Jonas', 'Janine'].forEach(highFive);
+
+/**
+ * If we check the console now, we will find that the highFive() function
+ * was executed 3 times. That's because we have 3 elements in the array
+ * on which we called the forEach() method. But, we will learn about the
+ * forEach() method in the next section.
+ *
+ * What matters here is that once again, we use the concept of the
+ * callback function here.
+ *
+ * This is something that is really common in JavaScript.
+ *
+ * Let's now take a minute or two to understand why that is. Why are
+ * callback functions so much used in JavaScript and why are they so
+ * helpful?
+ *
+ * The first big advantage of this is that it makes it each to split up
+ * our code into more re-usable and interconnected parts.
+ *
+ * The second and way more important advantage is the fact that callback
+ * functions allow us to create abstraction.
+ *
+ * Let's understand what that means.
+ *
+ * What we did in our transformer example was to create a level of
+ * abstraction and abstraction is something that is really important in
+ * programming.
+ *
+ * Basically, what abstraction means is that we hide the detail of some
+ * code implementation because we don't really care about all that detail.
+ *
+ * This allows us to think about problems at a higher more abstract level.
+ * That's why it is called an abstration.
+ *
+ * Coming back to our tranformer example, the transformer() function
+ * does not care at all how the string is transformed. It doesn't care
+ * about that level of detail.
+ *
+ * All that it wants to do is to transform a string, but doesn't care
+ * how it should do it.
+ *
+ * What we mean here is that we could have easily taken the code from
+ * oneWord() function or upperFirstWord() function and directly placed
+ * it inide the transformer() function but instead, we abstracted those
+ * codes away into other functions.
+ *
+ * So, we created a new level of abstraction and by doing that our main
+ * transformer() function is really only concerned with transforming the
+ * input string itself but, it doesn't matter how the transforming
+ * actually works.
+ *
+ * Basically, it is delegating the string transformation to the other
+ * lower level of functions, which are oneWord() and upperFirstWord().
+ *
+ * Hope this makes sense and we will also come back to this idea of
+ * abstraction later when we talk about object oriented programming.
+ *
+ * But, it is good for you think and talk about it as soon as possible,
+ * so that you can start to get an idea of this really important concept
+ * of abstraction.
+ *
+ * Now, with this idea of abstraction and higher levels and lower levels
+ * of abstraction, it makes sense that the kind of transformer() function
+ * is, is called a higher-order function.
+ *
+ * Again, that's because functions like transformer() operates at a higher
+ * level of abstraction, leaving the low-level details to the low-level
+ * functions.
+ *
+ * NOTE: They are not really called lower-order or low-level functions
+ * but, that just makes sense in this kind of a circumstance.
+ *
+ * Understand this is absolutely crucial for your process. In fact, this
+ * lesson could be considered one of the most important lessons in the
+ * course. This is because callback functions are really, a vital part
+ * of the JavaScript language. That's one of the main takeaways from this
+ * lesson.
+ *
+ * They allow us to create the kind of logic that we used in our
+ * transformer() function so, it is good idea to review this lesson
+ * thoroughly and maybe even write your own example of something that
+ * you see in the real world using the same concept.
+ *
+ * In the built-in functions like addEventListener() and forEach(),
+ * these callback functions are very important and useful because we
+ * use them to tell addEventListener() and forEach() what exactly they
+ * should do.
+ *
+ * For example, the addEventListener() function on its own would have
+ * no idea of what to do whenever the click event happens. That's why
+ * we pass in the callback function to tell the addEventListener()
+ * function exactly what to do.
+ */

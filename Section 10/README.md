@@ -10,6 +10,7 @@
     - [Default Parameters](#default-parameters)
     - [How Passing Arguments Work: Value vs. Reference](#how-passing-arguments-work-value-vs-reference)
     - [First-Class and Higher-Order Functions](#first-class-and-higher-order-functions)
+    - [Functions Accepting Callback Functions](#functions-accepting-callback-functions)
   - [Author](#author)
 
 ## Lessons Learned
@@ -98,6 +99,15 @@ function count() {
 - First-class function is just a feature that a programming language either has or does not have. All it means that all functions are values. That's it. There are no first-class functions in practice. It is just a concept.
 - There are, however, higher-order function in practice, which are possible because the language supports first class functions. So, it is a subtle difference but, still worth noting if you want to be able to talk like a true Javascript master.
 - In the next lesson, we will actually create our own higher-order functions.
+
+### Functions Accepting Callback Functions
+
+- Creating functions that accept other functions as an input.
+- Functions have methods and properties that you can call on them.
+- `function.name` - This property of a function instance indicates the function's name as specified when it was created, or it may be either `anonymous` or `''` (an empty string) for functions created anonymously.
+- `array.forEach(callbackFunction)` - This method executes a provided function once for each array element.
+- Understanding why callbacks are used so much in Javascript and why are they so helpful.
+- Understanding code abstractions.
 
 ## Author
 
