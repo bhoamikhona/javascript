@@ -818,3 +818,242 @@ greetArr('Howdy')('Bhoami'); // Howdy Bhoami
  * another arrow function. That's the essence of this lesson - which I
  * hope is clear to you.
  */
+
+/************************************************************************/
+/********************** THE CALL AND APPLY METHODS **********************/
+/************************************************************************/
+console.log(
+  `/********************** THE CALL AND APPLY METHODS **********************/`
+);
+
+/**
+ * In this lesson, we are going to go back to the `this` keyword and learn
+ * how we can set the `this` keyword manually. We will also learn why we
+ * would want to do that.
+ *
+ * Let's say that we are an ariline, again; and in this case, Luftansa.
+ *
+ * Let's create a very simple object for this airlime with a very simple
+ * booking method as well.
+ */
+
+let luftansa = {
+  airline: 'Luftansa',
+  iataCode: 'LH',
+  bookings: [],
+
+  // Enhanced Object Literal Syntax
+  book(flightNum, name) {
+    console.log(
+      `${name} booked a seat on ${this.airline} flight ${this.iataCode}${flightNum}`
+    );
+    this.bookings.push({ flight: `${this.iataCode}${flightNum}`, name });
+  },
+};
+
+luftansa.book(239, 'Bhoami K Khona'); // Bhoami K Khona booked a seat on Luftansa flight LH239
+luftansa.book(635, 'Jonas Schmedtmann'); // Jonas Schmedtmann booked a seat on Luftansa flight LH635
+
+console.log(luftansa);
+
+/**
+ * For now, this is just a nice review of how the `this` keyword works.
+ *
+ * Now, let's say that after some years, the Luftansa Group create a new
+ * airline called Eurowings so, let's create that.
+ */
+
+let eurowings = {
+  airline: 'Eurowings',
+  iataCode: 'EW',
+  bookings: [],
+};
+
+/**
+ * We also want to be able to take bookings for a Eurowings flight but,
+ * simply copy pasting or re-creating the same book() function from
+ * Luftansa to Eurowings is a bad practice.
+ *
+ * So, of course we are not going to do that. Instead, we will just take
+ * the method and store it in an external function. Then, we can re-use
+ * that function for all of the different airlines.
+ *
+ * So, we will simply create a new function in global scope called book()
+ * and we will simply set it to `luftansa.book`.
+ *
+ * Again, this is possible because JavaScript has first class functions
+ * so, we can simply take the book() function value from `luftansa` object
+ * and store it into a new variable, which we also call book().
+ */
+
+let book = luftansa.book;
+
+/**
+ * We could have written the function in the gloabl scope but, that is
+ * just not necessary.
+ *
+ * We have it inside the luftansa object and so, let's just leave it
+ * there and assign it to the `book` variable in the global scope.
+ *
+ * Let's now try to use the book() in global scope to do a new booking
+ * now and let's see what happens.
+ */
+
+// book(23, 'Sarah Williams'); // TypeError
+
+/**
+ * We get an error which says "Cannot read property of undefined".
+ * So, why did that happen?
+ *
+ * It happened because the `book()` function in the global scope is now
+ * just a regular function call; and as we learned in one of the previous
+ * sections, in a regular function call, the `this` keyword points to
+ * undefined (at least in strict mode).
+ *
+ * So again, the `book()` function in global scope is no longer a method.
+ * It is now a separate function. It is a copy of the method inside the
+ * luftansa object but, it is not a method anymore - it is now a function.
+ *
+ * So, in the global scope, the book() function is just a regular function
+ * call. Therefore, the `this` keyword inside of it now points to
+ * `undefined`.
+ *
+ * That's why it was mentioned earlier that the `this` keyword depends on
+ * how the function is actually called.
+ *
+ * Make sure to understand these dynamics.
+ *
+ * Now, how do we actually fix this problem? In other words, how do we
+ * tell JavaScript that we want to create a booking on the new Eurowings
+ * airline.
+ *
+ * Well, we need to tell JavaScript explicitly what the `this` keyword
+ * should be like.
+ *
+ * So, if we want to book a Luftansa flight, the `this` keyword should
+ * point to `luftansa` but if we want to book a Eurowings flight, the
+ * `this` keyword should point to `eurowings`.
+ *
+ * How do we do that? How do we tell JavaScript explicitly or manually
+ * what the `this` keyword should look like?
+ *
+ * There are three function methods to do that viz call(), apply() and
+ * bind().
+ *
+ * Let's see how:
+ */
+
+// book.call();
+
+/**
+ * Remember that a function is really just an object and object have
+ * methods too and the call() method is one of them.
+ *
+ * In the call method, the first argument is exactly what we want the
+ * `this` keyword to point to.
+ *
+ * After that, the rest of the arguments are for the actual function
+ * that we are calling.
+ */
+
+book = luftansa.book;
+book.call(eurowings, 23, 'Bhoami Khona'); // Bhoami Khona booked a seat on undefined flight EW23
+console.log(eurowings);
+
+/**
+ * If we check the console now, we have the booking array and in it, we
+ * have the object with ES23 which comes from the eurowings object and,
+ * then, of course, the name.
+ *
+ * Let's re-cap what happened here.
+ *
+ * This time, we did not call the `book()` function ourselves. Instead,
+ * we called the `call()` method and it is then this `call()` method,
+ * which will call the book() function with the `this` keyword pointing
+ * to `eurowings` object i.e. whatever we pass as the first argument of the call() method.
+ *
+ * This allows us to manually and explicitly set the `this` keyword of
+ * any function that we want to call. Then all the arguments after the
+ * first one are simply the arguments of the original function. In the
+ * case of the book() function it is the flight number and passenger
+ * name.
+ *
+ * We can also do the same for luftansa.
+ */
+
+book.call(luftansa, 239, 'Janine Adams'); // Janine Adams booked a seat on Luftansa flight LH239
+console.log(luftansa);
+
+/**
+ * So, even though the code of the book() function is inside of the
+ * luftansa object, we made it so that the `this` keyword inside it
+ * would point to `eurowings` object.
+ *
+ * So, we have a way now of manually manipulating the `this` keyword
+ * using the call() method.
+ *
+ * Of course, we could now keep going and create more airlines into the
+ * luftansa group e.g. Swiss airlines.
+ *
+ * Of course, the property names will have to have the exact same format
+ * as the original object because the book() method is trying to read
+ * them.
+ */
+
+const swiss = {
+  airline: 'Swiss Air Lines',
+  iataCode: 'LX',
+  bookings: [],
+};
+
+/**
+ * Now we can go ahead and use our book() function on the Swiss Air Lines
+ */
+
+book.call(swiss, 312, 'Sheldon Cooper'); // Sheldon Cooper booked a seat on Swiss Air Lines flight LX312
+console.log(swiss);
+
+/**
+ * There is a similar method to the call() method, which is the apply()
+ * method.
+ *
+ * The apply() method does basically the exact same thing. The only
+ * difference is that apply() does not receive a list of arguments
+ * after the `this` keywrod but intead, it is going to take an array
+ * of the arguments.
+ *
+ * So, it will take the elements from that array and pass it into the
+ * function.
+ */
+
+const flightData = [312, 'Amy Farrah Fowler']; // Amy Farrah Fowler booked a seat on Swiss Air Lines flight LX312
+book.apply(swiss, flightData);
+console.log(swiss);
+
+/**
+ * The apply() method is not that used anymore in modern JavaScript
+ * because now, we actually have a better way of doing the exact same
+ * thing.
+ *
+ * We can use call() method and use the spread operator to expand the
+ * array.
+ */
+
+book.call(swiss, ...flightData);
+console.log(swiss);
+
+/**
+ * book.apply(swiss, flightData); is the same as book.call(swiss, ...flightData);
+ *
+ * Therefore, with modern JavaScript, it is preferred to always just
+ * use the call() method and then spread out the arguments from an array
+ * like we did above.
+ *
+ * In summary, we now have yet another tool in our toolbox and this one
+ * allows us to explicitly define the `this` keyword in any function
+ * that we want.
+ *
+ * But, there is yet another method which allows us to do the same thing
+ * and that's the bind() mehtod. It is more important than the call()
+ * and apply() methods so, we will learn all about it in the next lesson.
+ */

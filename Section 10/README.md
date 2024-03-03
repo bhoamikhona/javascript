@@ -12,6 +12,7 @@
     - [First-Class and Higher-Order Functions](#first-class-and-higher-order-functions)
     - [Functions Accepting Callback Functions](#functions-accepting-callback-functions)
     - [Functions Returning Functions](#functions-returning-functions)
+    - [The call and apply Methods](#the-call-and-apply-methods)
   - [Author](#author)
 
 ## Lessons Learned
@@ -114,6 +115,16 @@ function count() {
 
 - Creating a function that returns a new function and how to call them.
 - A super brief introduction to closures.
+
+### The call and apply Methods
+
+- Setting up `this` keyword manually and understanding why we would need it.
+- `functionName.call(thisArg, arg1, ... , argN)` - This method calls the function with a given `this` value and arguments provided individually.
+  - The `thisArg` is the value to use as `this` when calling `functionName`.
+  - `arg1, ... , argN` - Arguments required for `functionName`.
+- `functionName.apply(thisArg, argsArray)` - This method calls the specified function with a given `this` value, and `arguments` provided as an array (or an array-like object).
+  - `thisArg` - The value of `this` provided for the call to `functionName`.
+  - `argsArray` - An array-like object, specifying the arguments with which `functionName` should be called, or `null`, or `undefined` if no arguments shouls be provided to the function.
 
 ## Author
 
