@@ -11,6 +11,7 @@
     - [How Passing Arguments Work: Value vs. Reference](#how-passing-arguments-work-value-vs-reference)
     - [First-Class and Higher-Order Functions](#first-class-and-higher-order-functions)
     - [Functions Accepting Callback Functions](#functions-accepting-callback-functions)
+    - [Functions Returning Functions](#functions-returning-functions)
   - [Author](#author)
 
 ## Lessons Learned
@@ -108,6 +109,11 @@ function count() {
 - `array.forEach(callbackFunction)` - This method executes a provided function once for each array element.
 - Understanding why callbacks are used so much in Javascript and why are they so helpful.
 - Understanding code abstractions.
+
+### Functions Returning Functions
+
+- Creating a function that returns a new function and how to call them.
+- A super brief introduction to closures.
 
 ## Author
 

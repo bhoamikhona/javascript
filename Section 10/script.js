@@ -692,3 +692,129 @@ document.body.addEventListener('click', highFive);
  * we pass in the callback function to tell the addEventListener()
  * function exactly what to do.
  */
+
+/***********************************************************************/
+/******************** FUNCTIONS RETURNING FUNCTIONS ********************/
+/***********************************************************************/
+console.log(
+  `/******************** FUNCTIONS RETURNING FUNCTIONS ********************/`
+);
+
+/**
+ * Let's now do the oppposite of the last lesson and create a function
+ * that returns a new function.
+ *
+ * Let's create a simple greet() function which will take a simply
+ * greeting string as an argument and it will simply return a another
+ * function.
+ *
+ * This function that we return will have a parameter to receive
+ * arguments. This function will simple log to the console the greeting
+ * and the name of the person that we pass into it.
+ */
+
+const greet = function (greeting) {
+  return function (name) {
+    console.log(`${greeting} ${name}`);
+  };
+};
+
+/**
+ * Let's now actually use the greet() function
+ */
+greet('Hey');
+
+/**
+ * What will be the result of the function call above?
+ *
+ * It is going to be the function that we are returning from it. So, let's
+ * store it in a variable.
+ */
+
+const greeterHey = greet('Hey');
+
+/**
+ * Now, `greeterHey` is the function that has been returned when we called
+ * greet().
+ *
+ * This means that we can now call `greeterHey` function just as as if it
+ * was any other function that we defined ourselves.
+ */
+
+greeterHey('Bhoami'); // Hey Bhoami
+greeterHey('Jonas'); // Hey Jonas
+
+/**
+ * Now if we check the console, we get "Hey Bhoami" and "Hey Jonas" and
+ * this worked because greeterHey is essentially the function that is
+ * returned from greet() function when we called it.
+ *
+ * Now we are calling it with the argument 'Bhoami' and 'Jonas' which is
+ * called `name` inside of that function.
+ *
+ * The greeting itself is still coming from the greet() function and in
+ * case you are wondering why that works, it is because of something
+ * called a closure.
+ *
+ * Closures are a very complex and difficult to understand mechanism
+ * that's part of JavaScript, which is why there are 2 separate lessons
+ * at the end of the section about closures.
+ *
+ * Closures is one of the most misunderstood topics in JavaScript so,
+ * don't worry about it now. What matters here is that our first function
+ * greet(), returned a new function that we stored into `greeterHey`
+ * variable and this variable is now just a function that we can call
+ * as we did above.
+ *
+ * Of course, we can also do it all in one go:
+ */
+
+greet('Hello')('Bhoami'); // Hello Bhoami
+
+/**
+ * Here greet("Hello") represents the function that is returned from
+ * the greet() function and we call that function by using another set
+ * of parentheses and an argument.
+ *
+ * It is sort of like chaining methods.
+ *
+ * It looks a bit weird but, it works.
+ *
+ * At this point in time, this example might look a bit weird and
+ * unnecessary for you, you might wonder what is the point of having
+ * functions returning other functions?
+ *
+ * But, this will actually become extremely useful in some situations.
+ * Especially if we are using a really important programming paradigm
+ * called functional programming.
+ *
+ * We will look into functional programming by the end of the course.
+ *
+ * Make sure to understand what happened here; especially this: greet('Hello')('Bhoami');
+ *
+ * If you understand that, then I'm sure you understand everything we
+ * learned in this lesson.
+ *
+ * As a small challege, try to re-write the entire greet() function as
+ * an arrow function.
+ *
+ * It might look a little bit confusing but, I am sure you can do it.
+ * So, just take some time and try to re-write the entire greet()
+ * function using only arrow functions.
+ */
+
+// challenge
+const greetArr = greeting => name => console.log(`${greeting} ${name}`);
+
+greetArr('Howdy')('Bhoami'); // Howdy Bhoami
+
+/**
+ * So, using arrow function is an even shorter way of writing the greet()
+ * function but, in my opinion it is a lot more confusing to look at,
+ * especially if you are a beginner. That's why it is better to write it
+ * using the traditional function syntax.
+ *
+ * But, in the end, it is also simply one arrow function returning
+ * another arrow function. That's the essence of this lesson - which I
+ * hope is clear to you.
+ */
