@@ -13,6 +13,7 @@
     - [Functions Accepting Callback Functions](#functions-accepting-callback-functions)
     - [Functions Returning Functions](#functions-returning-functions)
     - [The call and apply Methods](#the-call-and-apply-methods)
+    - [The bind Method](#the-bind-method)
   - [Author](#author)
 
 ## Lessons Learned
@@ -125,6 +126,17 @@ function count() {
 - `functionName.apply(thisArg, argsArray)` - This method calls the specified function with a given `this` value, and `arguments` provided as an array (or an array-like object).
   - `thisArg` - The value of `this` provided for the call to `functionName`.
   - `argsArray` - An array-like object, specifying the arguments with which `functionName` should be called, or `null`, or `undefined` if no arguments shouls be provided to the function.
+
+### The bind Method
+
+- `functionName.bind(thisArg, arg1, ... , argN)` - This method creates a new function that, when called, has its `this` keyword set to the provided value, with a given sequence of arguments preceding any provided when the new function is called.
+  - `thisArg` - The value to be passed as the `this` parameter to the target function when the bound function is called.
+  - `arg1, ... , argN` - Arguments to prepend to arguments provided to the bound function when invoking `functionName`.
+- The concept of partial application.
+  - Partial application means that a part of the arguments of the original function are already applied i.e. already set.
+- `bind()` method with event listeners.
+- `bind()` method with partial application.
+- Use `null` as the value for `this` keyword in `bind()` incase you need to use `bind()` but, have no use for the `this` keyword.
 
 ## Author
 
