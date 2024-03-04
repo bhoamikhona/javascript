@@ -14,6 +14,7 @@
     - [Functions Returning Functions](#functions-returning-functions)
     - [The call and apply Methods](#the-call-and-apply-methods)
     - [The bind Method](#the-bind-method)
+    - [Immediately Invoked Function Expressions (IIFE)](#immediately-invoked-function-expressions-iife)
   - [Author](#author)
 
 ## Lessons Learned
@@ -137,6 +138,12 @@ function count() {
 - `bind()` method with event listeners.
 - `bind()` method with partial application.
 - Use `null` as the value for `this` keyword in `bind()` incase you need to use `bind()` but, have no use for the `this` keyword.
+
+### Immediately Invoked Function Expressions (IIFE)
+
+- Creating an IIFE function and calling it.
+- The importance of IIFE functions.
+- A very brief introduction to data encapsulation and data privacy.
 
 ## Author
 
