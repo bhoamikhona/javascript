@@ -1,10 +1,10 @@
-# Section 10: A Close Look At Functions
+# Section 10: A Closer Look At Functions
 
 **About:** Functions are one of the most fundamental building blocks of any Javascript program. So, let's now turn our attention back to functions because, there is a lot that we don't know yet about them. In this section, we are going to study some quite advanced topics, such as higher order functions to bind method and also closure. It is crucial that you understand these topics before moving on to future sections.
 
 ## Table of Content
 
-- [Section 10: A Close Look At Functions](#section-10-a-close-look-at-functions)
+- [Section 10: A Closer Look At Functions](#section-10-a-closer-look-at-functions)
   - [Table of Content](#table-of-content)
   - [Lessons Learned](#lessons-learned)
     - [Default Parameters](#default-parameters)
