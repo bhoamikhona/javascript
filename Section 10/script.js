@@ -1416,3 +1416,196 @@ console.log(addTaxRate(0.23)(23)); // 28.29
  * Now this is just another way of doing the same thing and it is already
  * pretty advanced stuff.
  */
+
+/***********************************************************************/
+/*********** IMMEDIATELY INVOKED FUNCTION EXPRESSIONS (IIFE) ***********/
+/***********************************************************************/
+console.log(
+  `/*********** IMMEDIATELY INVOKED FUNCTION EXPRESSIONS (IIFE) ***********/`
+);
+
+/**
+ * Our next topic is something called "Immediately Invoked Function
+ * Expressions". So, let's take a look at what they are.
+ *
+ * Sometimes in JavaScript, we need a function that is only executed
+ * once, and then never again.
+ *
+ * Basically, a function that disappears right after it is called once.
+ *
+ * This might not appear to make much sense right now but, we actually
+ * need this technique later; for example, with something called
+ * async/await.
+ *
+ * So, how could we do that?
+ *
+ * We could simply create a function and then only execute it once.
+ */
+
+const runOnce = function () {
+  console.log(`This will never run again.`);
+};
+
+runOnce();
+
+/**
+ * However, we can actually run this function again at some other point
+ * in the code, if we wanted to. There is nothing stopping from calling
+ * it once more:
+ */
+
+runOnce();
+
+/**
+ * So, this is not what we want to do. We want to actually execute a
+ * function immediately and not even have to save it somewheree. This
+ * is how we would do that:
+ *
+ * We write the function expression itself, without assigning it to any
+ * variable.
+ *
+ * If we try to run it, we will get an error for now. It says that
+ * function statements require a function name and that's because
+ * JavaScript expects a function statement because we simply started
+ * the like of code below with a function keyword.
+ */
+
+// function () {
+//   console.log(`This will never run again.`);
+// };
+
+/**
+ * However, we can still trick JS into thinking that all of it is just
+ * an expression. We do that by simply wrapping all of it into a set
+ * of parentheses.
+ */
+
+(function () {
+  console.log(`This will never run again.`);
+});
+
+/**
+ * Now, we basically transformed the statement that we had before into
+ * an expression.
+ *
+ * So, now if we save this file, we get no errors.
+ *
+ * But also, this function didn't execute yet. We never called it.
+ *
+ * We can call it by adding another set of parenthese at the end of
+ * that expression, like so:
+ */
+
+(function () {
+  console.log(`This will never run again.`);
+})(); // This will never run again.
+
+/**
+ * This is just a function expression:
+ * (function () { console.log(`This will never run again.`) })
+ *
+ * and then we just immediately call it with a set of parentheses and
+ * that is why this pattern is called the Immediately Invoked Function
+ * Expression (IIFE).
+ *
+ * The same would also work for an arrow function.
+ */
+
+(() => console.log('This will ALSO never run again'))(); // This will ALSO never run again
+
+/**
+ * Now you might be wondering, why was this pattern actually invented?
+ *
+ * We already know that functions create scopes and what's important
+ * here is that one scope does not have access to variables from an
+ * inner scope.
+ *
+ * For example, in the global scope, we do not have access to any
+ * variables that are defined in function scopes. That's because the
+ * scope chain only works inside out i.e. the inner scopes have access
+ * to anything defined outside but, parent scopes do not have access
+ * to children scopes.
+ *
+ * Therefore, we say that all data defined inside a scope is private.
+ * We also say that data within a scope is encapsulated within that
+ * scope.
+ *
+ * For example, the `isPrivate` variable below is encapsulated inside its
+ * function scope.
+ */
+
+(function () {
+  console.log('This will never run again');
+  const isPrivate = 23;
+})();
+
+/**
+ * Data encapsulation and data privacy are extremely important concepts
+ * in programming.
+ *
+ * Many times we actually need to protect our variables from being
+ * accidentally overwritten by some other parts of the program or even
+ * with external scripts or libraries.
+ *
+ * We will talk about this in detail in the Object Oriented Programming
+ * section of the course.
+ *
+ * For now, keep in mind that it is important to hide variables and that
+ * scopes are a good tool for doing this.
+ *
+ * This is also the reason why the Immediately Invoked Function
+ * Expressions were invented.
+ *
+ * Basically, IIFE is not really a feature of the JS language. It is more
+ * of a pattern, that some developers came up with, which was then
+ * started to being used by many other developers.
+ *
+ * In ES6, variables declared with `const` or `let` also create their
+ * own scope inside a block. We learned that in the Behind the scenes
+ * section of this course.
+ *
+ * When we create a block and create a variable inside it, the global
+ * scope still cannot access that variable:
+ */
+
+{
+  const isPrivate = 23;
+}
+
+// console.log(isPrivate); // Error
+
+/**
+ * On the other hand, variables created by `var` would be accessible
+ * in the parent scope:
+ */
+
+{
+  const isPrivate = 23;
+  var notPrivate = 42;
+}
+
+console.log(notPrivate); // 42
+
+/**
+ * This is something that we have already learned in the Behind the
+ * Scenes section.
+ *
+ * This is the reason why, now in modern JavaScript IIFEs are not that
+ * used anymore.
+ *
+ * This is because, if all we want is to create a new scope for data
+ * privacy, all we need to do is to just create a block with curly
+ * brace, like we did above.
+ *
+ * There is no need to create a function to create a new scope. Unless,
+ * of course, we want to use `var` for our variables. But, we already
+ * learned why it is a bad practice to use `var` so, we should avoid
+ * using it in the first place.
+ *
+ * On the other hand, if what you really need is to execute a function
+ * just once, then the IIFE pattern is still the way to go, even now
+ * with modern JS.
+ *
+ * In fact, we will actually see a great use case of using an IIFE, a
+ * little bit later.
+ */
