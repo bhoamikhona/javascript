@@ -1609,3 +1609,396 @@ console.log(notPrivate); // 42
  * In fact, we will actually see a great use case of using an IIFE, a
  * little bit later.
  */
+
+/**********************************************************************/
+/****************************** CLOSURES ******************************/
+/**********************************************************************/
+console.log(
+  `/****************************** CLOSURES ******************************/`
+);
+
+/**
+ * There is an almost mystical feature of JavaScript functions that
+ * many developers fail to fully understand.
+ *
+ * We are talking about something called closures.
+ *
+ * Many beginners say that the hardest JavaScript concept to understand
+ * is closures.
+ *
+ * However, with the right explanation, it is actually not that hard,
+ * especially when you already understand everything that you learned
+ * thus far in this course, such as execution context, the call stack,
+ * and the scope chain.
+ *
+ * This is because, closures kind of brings all of these concepts
+ * together in a beautiful, almost magical way.
+ *
+ * So, let's see what closures are all about.
+ *
+ * Let's start by creating a new function called secureBooking(), and
+ * in this function, we will create the closure.
+ */
+
+let secureBooking = function () {};
+
+/**
+ * The first thing that you need to know about closures is that a
+ * closure is not a feature that we explicitly use.
+ *
+ * So, we don't create closures manually, like we create a new array or
+ * a new function.
+ *
+ * A closure simply happens automatically in certain situations, we just
+ * need to recognize those situations. That's what we are going to do
+ * in this example.
+ *
+ * We will create one of those situations so that we can then take a look
+ * at a closure.
+ *
+ * Let's now continue to write our secureBooking() example.
+ */
+
+secureBooking = function () {
+  let passengerCount = 0;
+};
+
+/**
+ * We are calling this function secureBook() because the `passengerCount`
+ * variable cannot be manipulated and accessed from the outside.
+ *
+ * What is special about this function is that it will return a new
+ * function. In this returning function, we will update the
+ * `passengerCount` variable i.e. the variable that is defined in the
+ * parent function (an important detail to note).
+ */
+
+secureBooking = function () {
+  let passengerCount = 0;
+
+  return function () {
+    passengerCount++;
+    console.log(`${passengerCount} passengers`);
+  };
+};
+
+/**
+ * Now let's call the secureBooking() function and then store the result
+ * in a variable called `booker`.
+ */
+
+let booker = secureBooking();
+
+/**
+ * This is pretty similar to what we did in the lesson of "Functions
+ * Returning Functions".
+ *
+ * We have one function called secureBooking() that we call and this
+ * function will return a new function.
+ *
+ * Now that we called secureBook() and stored its returning value in
+ * `booker` variable, the `booker` variable now points to the function
+ * that was returned by `secureBooking()` i.e. `booker` is now a function
+ * as well.
+ *
+ * So, let's analyze in detail what happens when this line of code:
+ * let booker = secureBooking();
+ * is executed using all of the concepts that we already know about.
+ *
+ * Before we start running the secureBooking() function, our code is
+ * running in the global execution context.
+ *
+ * In the global execution context, we currently only have the
+ * secureBooking() function.
+ *
+ * We can also say that the global scope now contains secureBooking().
+ *
+ * Then when secureBooking() is actually executed, a new execution
+ * context is put on top of the execution stack.
+ *
+ * Now remember, each execution context has a variable environment, which
+ * contains all its local variables.
+ *
+ * In this case, it only contains passengerCount set to 0.
+ *
+ * This variable environment is also the scope of the secureBooking()
+ * function.
+ *
+ * So, the scope chain of this execution context looks like this:
+ *
+ * The passengerCount is in the local scope, but of course, this scope
+ * also gets access to all variables of the parent's scope, which in
+ * this case is the global scope.
+ *
+ * In the next line of the secureBooking() functions, a new function is
+ * returned and it will be stored in the `booker` variable.
+ *
+ * So, the global context now also contains the `booker` variable.
+ *
+ * What else happens when the secureBooking() function returns?
+ *
+ * The execution context pops off the stack and disappears.
+ *
+ * So, the secureBooking() function has done its job and now has finished
+ * execution. It really is gone now and that is important to be aware of
+ * and to keep in mind.
+ *
+ * For now, that's actually all we did. Up to this point, nothing is new.
+ * All we did was to analyze the call stack and the scope chain as we
+ * call the secure booking function. This is going to be important to
+ * later on understand the closure.
+ *
+ * As of now, we didn't see the closure yet.
+ *
+ * All we did was to use the knowledge that we already have to understand
+ * how teh `booker()` function was create, because that's going to be
+ * important for the next step.
+ *
+ * Let's now go back to our code to actually use the `booker()` function
+ * and then finally see the closure in action.
+ *
+ * Now that we understand how the booker() function was created, let's
+ * now actually call it.
+ */
+
+booker();
+booker();
+booker();
+
+/**
+ * Now if we check the console, we get:
+ *
+ * 1 passengers
+ * 2 passengers
+ * 3 passengers
+ *
+ * What this means is that the `booker()` function was in-fact able to
+ * increment the `passengerCount` to 1, then to 2, and then to 3.
+ *
+ * But now if we think about it, how is this even possible? How can
+ * the `booker()` function update the `passengerCount` variable that's
+ * defined in the secureBooking() function that actually has already
+ * finished executing?
+ *
+ * The secureBooking() function has already finished its execution, it is
+ * gone therefore, its execution context is no longer in the stack but,
+ * the inner function i.e. the booker() function is still able to access
+ * the passengerCount variable that is inside of the secureBooking()
+ * function that should no longer exist.
+ *
+ * Maybe you can guess that what makes this possible is a closure, but
+ * before I explain exactly how the closure works, just appreciate once
+ * more, how strange this actually is.
+ *
+ * Again, the `booker()` function is simply a function that exists
+ * in the global environment or in the global scope; and the environment
+ * in which the function was created i.e the secureBooking() function
+ * scope is no longer active. It is in-fact gone.
+ *
+ * But, still the `booker()` function somehow continues to have access
+ * to the variables that were present at the time that the function was
+ * created. In particular, booker() function has access to passengerCount
+ * variable.
+ *
+ * That's exactly what the closure does.
+ *
+ * We can say that a closure makes a function remember all the variables
+ * that existed at the function's birthplace, essentially.
+ *
+ * So, we can imagine that secureBooking() being the birthplace of the
+ * booker() function. Therefore, the booker() function rememebers
+ * everything at its birthplace, by the time it was created.
+ *
+ * This cannot simply be explained with the scope chain alone. We need
+ * to also understand the closure.
+ *
+ * So, let's now really understand how it all actually works.
+ *
+ * Let's go back to talking about how we left the call stack.
+ *
+ * The most important thing to notice here is that the execution context
+ * of secureBooking() function is no longer on call stack, becuase it
+ * has finished execution a long time ago.
+ *
+ * So, now it is time to run the booker() function and see exactly what's
+ * going to happen.
+ *
+ * Note that `booker` is really just the function that is returned
+ * from the secureBooking() function located in the global scope.
+ *
+ * Anyway, the first thing that's going to happen is that a new execution
+ * context is going to be created and it is going to be put on top of the
+ * call stack, and the variable environment of this context is empty
+ * simply because there are no variables declared in this function.
+ *
+ * Now, what about the scope chain?
+ *
+ * Since booker() is in the global context, it is simply the child scope
+ * of the global scope.
+ *
+ * Maybe now you are starting to see the problem. How will the booker()
+ * function access the passengerCount variable? It is nowhere to be
+ * found in the scope chain.
+ *
+ * This is where we start to unveil the secret of closure and the secret
+ * is this:
+ *
+ * Any function always has access to the variable environment of the
+ * execution context in which the function was created.
+ *
+ * In the case of booker() function, this function was created/born in
+ * the execution context of the secureBooking() function, which was
+ * popped() of the stack previously.
+ *
+ * Therefore, the booker() function will get access to its variable
+ * environment, which contains the passengerCount variable.
+ *
+ * This is how the function will be able to read and manipulate the
+ * passengerCount variable.
+ *
+ * So, it is this connection that we call closure.
+ *
+ * Let's go over it once again to make it really clear.
+ *
+ * A function always has access to the variable environment of the
+ * execution context in which it was created, even after that execution
+ * context is gone.
+ *
+ * This last part is very important. The closure is then basically this
+ * variable environment attached to the function, exactly as it was at
+ * the time and place that the function was created.
+ *
+ * This probably still sounds confusing, but we will go over some
+ * analogies in a minute. For now, we are just trying to understand
+ * the mechanism behind the closure i.e. how it all works behind the
+ * scenes.
+ *
+ * What matters the most here is that the `booker()` function has access
+ * to the passengerCount variable because it is basically defined in
+ * the scope in which the booker() function was actually created.
+ *
+ * So in a sense, the scope chain is actually preserved through the
+ * closure, even when a scope has already been destroyed as its execution
+ * context is gone.
+ *
+ * This means that even though the execution context has actually been
+ * destroyed, the variable environment somehow keeps living somewhere
+ * in the engine.
+ *
+ * Now, we can say that the booker() function closed over its parent's
+ * scope or closed over its parent's variable environment, and this
+ * includes all function arguments, even though in this example, we
+ * don't have any.
+ *
+ * Now, this attached or closed over variable environment stays with
+ * the function forever. It will carry it around and be able to use it
+ * forever.
+ *
+ * To make it a bit more digestible, we can also say that thanks to
+ * closure, a function does not lose connection to variables that existed
+ * at the function's birthplace. That's a bit more intuitive.
+ *
+ * Now let's see what happens with execution of the booker() function.
+ *
+ * So, the function attepts to increase the passengerCount vairbale.
+ *
+ * However, this variable is not in the current scope. So, JavaScript
+ * will immediately look into the closure and see if it can find the
+ * variable there; and it does this even before look at the scope
+ * chain.
+ *
+ * For example, if there was a global passengerCount variable set to 10,
+ * it would still first use the one in the closure.
+ *
+ * So, the closure basically has priority over the scope chain.
+ *
+ * So, after running the booker() function, the passengerCount increases
+ * by 1, the message is logged on the console, and then its execution
+ * context is popped off the stack.
+ *
+ * Then execution moves to the next line.
+ *
+ * That's what closures are and how they work behind the scenes.
+ *
+ * This might all be quite complex so, let's look at a couple of
+ * definitions and analogies of closures now - some more formal and some
+ * more intuitive and maybe easier to grasp.
+ */
+
+/**
+ * Closures Summary
+ *
+ * Formal Definition: A closure is the closed-over variable environment
+ * of the execution context in which a function was created, even after
+ * that execution context is gone or in other words, even after the
+ * function to which the execution context belongs has returned.
+ *
+ * Informal Definition: A closure gives a function access to all the
+ * variables of its parent function, even after that parent function has
+ * returned. The function keeps a reference to its outer scope, which
+ * preserves the scope chain throughout time.
+ *
+ * So, the function keeps a reference to its outer scope, even after that
+ * outer scope is gone, which basically preserves the scope chain
+ * through-out time.
+ *
+ * Another Definition: A closure makes sure that a function does not lose
+ * connection to variables that existed at the function's birth place.
+ *
+ * Analogy: A closure is like a backpack that a function carries around
+ * whereever it goes. This backpack has all the variables that were
+ * present in the environment where the function was created.
+ *
+ * Finally, we need to understand that we do not have to create manually.
+ * Instead, this is something that Javascript does completely
+ * automatically, we don't have to do anything.
+ *
+ * Also, there is no ways for us to explicitly access closed-over
+ * variables. That's because, closures are not like a tangible thing.
+ * They're not like an object or something that we can access. So, we
+ * cannot just reach into a closure and take variables from it. That's
+ * impossible because, a closure is just an internal property of a
+ * function.
+ *
+ * We can observe that a closure happens because functions magically
+ * keep having access to variables that should no longer exist but,
+ * we cannot directly access these variables.
+ *
+ * However, what we can do is to actually take a look at this internal
+ * property. So, at this backpack, so to say, in a console. So, let's
+ * quickly do that before we finish this lesson.
+ */
+
+// look at: function anonymous() => scopes => closures
+console.dir(booker);
+
+/**
+ * NOTE: In console.dir(), you will see scopes within double square
+ * brackets like so: [[scopes]]. Whenever you see that, know that it is
+ * an internal property which we cannot access from our code.
+ *
+ * In the next lesson, we are going to look at 2 more examples of
+ * closures to analyze how they work because, it is really important
+ * that you understand this concept of closures.
+ *
+ * It is a feature that is used in Javascript all the time, and many
+ * times, even without realizing that closures are happening.
+ *
+ * So, if you want to become confident programmer, you always need to
+ * know how exactly everything in your code works, which includes
+ * closures.
+ */
+
+/**
+ * MY ANALOGY:
+ *
+ * I think the concept of closures can be thought of as heirlooms.
+ *
+ * When an ancestor passes away, they leave their heirlooms behind for
+ * their children to own. So, when the function is finished executing and
+ * it's execution context is gone from the call stack, you can think of
+ * it as a function "dying" and the variables declared in it as its
+ * function, you can think of that returning function as the child of
+ * that parent function which gets the heirlooms to keep/use/access for
+ * whenever they need.
+ */

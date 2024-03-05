@@ -15,6 +15,7 @@
     - [The call and apply Methods](#the-call-and-apply-methods)
     - [The bind Method](#the-bind-method)
     - [Immediately Invoked Function Expressions (IIFE)](#immediately-invoked-function-expressions-iife)
+    - [Closures](#closures)
   - [Author](#author)
 
 ## Lessons Learned
@@ -144,6 +145,18 @@ function count() {
 - Creating an IIFE function and calling it.
 - The importance of IIFE functions.
 - A very brief introduction to data encapsulation and data privacy.
+
+### Closures
+
+- <ins>Formal Definition</ins>: A closure is the closed-over **variable environment** of the execution context **in which a function was created**, even **_after_** that execution context is gone.
+- <ins>Informal Definition:</ins>: A closure gives a function access to all the variables **of its parent function**, even **_after_** that parent function has returned. The function keeps a **reference** to its outer scope, which **_preserves_** the scope chain throughout time.
+- <ins>Analogy</ins> - A closure makes sure that a function doesn't loose connection to **variables that existed at the function's birth place**.
+- <ins>Analogy</ins> - A closure is like a **backpack** that a function carries around where ever it goes. This backpack has all the **variables that were present in the environment where the function was created**.
+- <ins>My Analogy (I came up with this)</ins>: I think the concept of closures can be thought of as heirlooms. When an ancestor passes away, they leave their heirlooms behind for their children to own. So, when the function is finished executing and it's execution context is gone from the call stack, you can think of it as a function "dying" and the variables declared in it as its heirlooms. Now, since the returning function is inside the parent function, you can think of that returning function as the child of that parent function which gets the heirlooms to keep/use/access for whenever they need.
+- NOTE: We do **NOT** have to manually create closures, this is a Javascript feature that happens automatically. We can't even access closed-over variables explicitly. A closure is **NOT** a tangible Javascript object.
+- `console.dir()` - This method displays an interactive list of properties of the specified Javascript object. The output is presented as a hierarchical listing with disclosure triangles that let you see the contents of child objects. In other words, `console.dir()` is the way to see the all the properties of a specified Javascript object in console by which the developer can easily get the properties of the object.
+- To view closures on the console, use this: `console.dir(functionName)`. On the console, look at: f anonymous => scopes => closures
+- NOTE: If you see something in the console with double square brackets, like so: `[[scopes]]` then it is an internal property.
 
 ## Author
 
