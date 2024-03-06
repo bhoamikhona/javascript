@@ -2002,3 +2002,201 @@ console.dir(booker);
  * that parent function which gets the heirlooms to keep/use/access for
  * whenever they need.
  */
+
+/**********************************************************************/
+/*********************** MORE CLOSURES EXAMPLES ***********************/
+/**********************************************************************/
+console.log(
+  `/*********************** MORE CLOSURES EXAMPLES ***********************/`
+);
+
+/**
+ * Let's now create two more situations in which closures are going to
+ * appear, so that you can start identifying closures in your own code,
+ * in the future.
+ *
+ * Both of these examples are going to demonstrate that we don't need
+ * to return a function from another function in order to create a
+ * closure.
+ */
+
+// Example 01:
+
+let f;
+
+const g = function () {
+  const a = 23;
+  f = function () {
+    console.log(a * 2);
+  };
+};
+
+g(); // this returns the f function
+f(); // 46
+
+/**
+ * This proves that the `f` value/function really does close-over any
+ * variables of the execution context in which it was defined.
+ *
+ * This is true even when the variable `f` itself was technically not
+ * even defined inside of the `g()` variable environment. The `f` was
+ * defined outside, in the global scope. Then we assigned it a function,
+ * inside the `g()` function, it can still close-over the variable
+ * environment of the `g()` function, which includes the `a` variable.
+ *
+ * That's why it is able to access the `a` variable, even after the `g()`
+ * function has already finished its execution.
+ *
+ * Let's take it to the next level and create a new function and re-assign
+ * `f` here.
+ *
+ * So, what we want to see here is what happens when we assign `f` a
+ * second function
+ *
+ * We will first call `g()`. The `g()` will assign `f`, an empty variable
+ * at this point a function. Then we call `f()`. After that, we will call
+ * `g()` where `f` will be re-assigned to another function. So, we want to
+ * see what `f` does then.
+ */
+
+const h = function () {
+  const b = 777;
+  f = function () {
+    console.log(b * 2);
+  };
+};
+
+g();
+f(); // this `f` is the function from `g()`
+
+console.dir(f); // closure has the value of `a`, which is 23.
+
+// Re-assigning `f` by `h()`
+h();
+f(); // this `f` is the function from `h()`
+
+/**
+ * After re-assigning `f()`, we get 1554, which is 777 times 2.
+ *
+ * This proves that the `f()` function was re-assigned in `h()`, and it
+ * also closed-over the variable environment of `h()`. That's how it is
+ * accessing the `b` variable which is set to 777.
+ *
+ * Let's inspect the variable environment of `f()`
+ */
+
+console.dir(f);
+
+/**
+ * At this point of our code, the closure has the value of `b`, which is
+ * 777. It no longer has the value of `a`.
+ *
+ * Notice how the closure can change like this as the variable is
+ * re-assigned.
+ *
+ * So, this proves that a closure always makes sure that a function does
+ * not lose the connection to the variables that were present at its
+ * birthplace.
+ *
+ * In this example, the function was first born in `g()` and then it was
+ * re-born in `h()`.
+ *
+ * So, whenever something like this happens where you re-assign functions
+ * even without returning them, keep in mind that will also create a
+ * closure.
+ */
+
+// Example 02:
+
+/**
+ * Our second example is going to be a timer. A timer is another great
+ * example where we don't need to return a function to see a closure in
+ * action.
+ *
+ * We will continue with our airplane theme for this one.
+ *
+ * We will create a function called `boardPassengers()` which will take
+ * number of passengers `n` and waiting time `wait`. Inside the function,
+ * we will divide the number of passengers into groups as the boarding
+ * happens in groups.
+ *
+ *
+ * NOTE: We will learn more about timers later in the coure.
+ * For timer, we just use the `setTimeout()` function which takes two
+ * parameters. The first is a function which will be executed after a
+ * certain time interval; and the second argument specifies the time
+ * interval in which the first argument of the function will execute.
+ */
+
+const boardPassengers = function (n, wait) {
+  const perGroup = n / 3;
+
+  // NOTE: We will learn more about timers later in the course.
+  /**
+   * The `n` in the `setTimeout` function is the `n` parameter of the
+   * `boardPassengers()` function i.e. of the parent function.
+   */
+  setTimeout(function () {
+    console.log(`We are all boarding all ${n} passengers.`);
+    console.log(`There are 3 groups, each with ${perGroup} passengers.`);
+  }, wait * 1000);
+
+  console.log(`Will start boarding in ${wait} seconds.`);
+};
+
+// boardPassengers(180, 3);
+
+/**
+ * Immediately, when we call the `boardPassengers()` function, `perGroup`
+ * variable will be created, the `setTimeout()` function will run and the
+ * `console.log()` will execute as well. All three of
+ * these events will happen at the same time.
+ *
+ * So, the `console.log()` will not wait for `setTimeout()` function to
+ * be over, it will execute immediately.
+ *
+ * After 3 seconds, the `setTimeout()` will execute.
+ *
+ * Now let's see what happens to the `n` variable and to the `perGroup`
+ * variable in the `boardPassengers()` function.
+ *
+ * Keep in mind that the callback function of `setTimeout()` executed
+ * completely independently from the `boardPassengers()` function but
+ * still, the callback function was able to use all the variables that
+ * were in the variable environment in which it was created, which are
+ * `n` and `perGroup`.
+ *
+ * So, once again, this is a clear sign of a closure being created because
+ * the only in which the callback function can have access to the
+ * variables that are defined in the `boardPassengers()` function that
+ * has long finished execution is if it created a closure.
+ *
+ * The closure ofcourse also includes the arguments of a funciton and
+ * that's because they are really just a local variables in the function.
+ */
+
+/**
+ * Just to finish, let's also prove that closures do in fact have priority
+ * over the scope chain.
+ *
+ * In the global scope, I'm also going to create a variable called
+ * `perGroup` and set it equal to 1000.
+ *
+ * Now, if the scope chain had priority over the closure, then the
+ * callback function of `setTimeout()` in the `boardPassengers()` function
+ * would indeed use the global `perGroup` variable because, we can imagine
+ * the `setTimeout()` being executed in the global scope.
+ *
+ * So, if it wasn't for closure, it would use the global `perGroup`.
+ * You can confirm that by commenting out the `perGroup` declared inside
+ * the `boardPassengers()` function. Once you comment out that line of
+ * code, you will see `perGroup` being equal to 1000.
+ *
+ * But, when you un-comment that line of code, you will see that
+ * `perGroup` now will be equal to 60 instead.
+ *
+ * This proves that closures have priority over scope chain.
+ */
+
+const perGroup = 1000;
+boardPassengers(180, 3);

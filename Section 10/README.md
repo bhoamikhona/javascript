@@ -17,6 +17,7 @@
     - [Immediately Invoked Function Expressions (IIFE)](#immediately-invoked-function-expressions-iife)
     - [Closures](#closures)
       - [Closures Summary](#closures-summary)
+    - [More Closure Examples](#more-closure-examples)
   - [Author](#author)
 
 ## Lessons Learned
@@ -415,6 +416,17 @@ console.dir(booker);
 - In the next lesson we are going to take a look at 3 more examples of closures and also analyze how they work, because it is really important that you understand this concept of closures.
 - It is a feature that's used all the time in JavaScript and many times, even without us realizing that closures are happening.
 - So, if you want to become confident as a programmer, you always need to know how exactly everything in your code works, and that of course includes closures.
+- MY ANALOGY:
+- I think the concept of closures can be thought of as heirlooms.
+- When an ancestor passes away, they leave their heirlooms behind for their children to own. So, when the function is finished executing and it's execution context is gone from the call stack, you can think of it as a function "dying" and the variables declared in it as its function, you can think of that returning function as the child of that parent function which gets the heirlooms to keep/use/access for whenever they need.
+
+### More Closure Examples
+
+- Creating closures without a function returning from another function.
+- `setTimeout(function, milliseconds)` - This method calls a function after a number of milliseconds.
+  - `function` - The function to execute
+  - `milliseconds` (optional) - Number of milliseconds to wait before executing. Default is 0.
+- Closures have priority over the scope chain.
 
 ## Author
 
