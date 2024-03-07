@@ -14,6 +14,7 @@
 - [Section 08](./Section%2008): How JavaScript Works Behind the Scenes
 - [Section 09](./Section%2009): Data Structures, Modern Operators, and Strings
 - [Section 10](./Section%2010): A Closer Look at Functions
+- [Section 11](./Section%2011): Working With Arrays
 
 ## Projects
 
