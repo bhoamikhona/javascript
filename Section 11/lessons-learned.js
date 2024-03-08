@@ -326,3 +326,120 @@ console.log(letters.join('-')); // a-b-c-d-e-f-j-g-h-i-j
  * Let's move on to the next lesson now, where we will take array methods
  * to a whole new level.
  */
+
+/***********************************************************************/
+/************************** THE NEW AT METHOD **************************/
+/***********************************************************************/
+console.log(
+  `/************************** THE NEW AT METHOD **************************/`
+);
+
+/**
+ * There's a new, very simple array method in ES2022, which is the at()
+ * method. So, let's take a look at it.
+ *
+ * Let's start by creating a dummy array:
+ */
+
+arr = [23, 11, 64];
+
+/**
+ * Now, if we wanted to take one of these value out of the array, let's
+ * say the first one then we would traditionally do this:
+ */
+
+console.log(arr[0]); // 23
+
+/**
+ * With the new at() method, we can do the exact same thing using a
+ * method.
+ */
+
+console.log(arr.at(0)); // 23
+
+/**
+ * Basically, we can now replace the traditional bracket notation with the
+ * more modern looking at() method, if we prefer to use array methods like
+ * this.
+ *
+ * Maybe this doesn't look all too useful. What is the big deal here?
+ * Actually, there is one particularity of the at() method which makes it
+ * quite useful to use instead of the brackets notation.
+ *
+ * Let's now say that we wanted to get the last element of the array.
+ *
+ * Supposing that we do not know the length of the array, we would write
+ * something like this:
+ */
+
+console.log(arr[arr.length - 1]); // 64
+
+/**
+ * This is quite a common scenario in JavaScript and that's why there is
+ * also another solution. We could use the slice() method that we just
+ * learned in the last lesson.
+ *
+ * Using the slice() method, we get the copy of the original array and if
+ * we pass in -1, we get the last element of the array.
+ *
+ * Just like we learned in the previous lesson.
+ *
+ * As a result, we get a copy of the array only with the last element in
+ * it.
+ */
+
+console.log(arr.slice(-1)); // [64]
+
+/**
+ * But, since we only need the value, we can use the brackets notation
+ * to pull that out of the array, like so:
+ */
+
+console.log(arr.slice(-1)[0]); // 64
+
+/**
+ * So, these are the two more traditional ways of solving the problem
+ * of getting the last element.
+ *
+ * However, as you can probably guess, the new at() method makes this
+ * process even easier.
+ *
+ * Now, all we have to do is write this:
+ */
+
+console.log(arr.at(-1)); // 64
+
+/**
+ * Essentially, we can pass in negative indexes in the at() method, just
+ * like we did in the slice() method.
+ *
+ * Basically, the negative indexes start counting from the right side
+ * of the i.e. the end of the array.
+ *
+ * If we pass in -2, we get the second to last element of the array:
+ */
+
+console.log(arr.at(-2)); // 11
+
+/**
+ * But, most of the time, the thing that we are most interested in is the
+ * -1 to get the last element of the array.
+ *
+ * Now the question is, should you use the at() method or should you use
+ * the bracket notation?
+ *
+ * If you want to get the last element of an array, or basically start
+ * counting from the end of an array, then you should probably start
+ * using the at() method. Also, if you want to do something called
+ * "Method Chaining", which we will talk about later in this section,
+ * then the at() method is also perfect for that.
+ *
+ * On the other hand, if you just want to quickly get a value from an
+ * array, like the first element of the array, then of course you can keep
+ * using the brackets notation.
+ *
+ * NOTE: The at() method also works on strings:
+ */
+
+console.log('bhoami'.at(0)); // b
+console.log('bhoami'.at(-1)); // i

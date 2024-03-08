@@ -13,6 +13,7 @@
       - [Reverse Method](#reverse-method)
       - [Concat Method](#concat-method)
       - [Join Method](#join-method)
+    - [The New at Method](#the-new-at-method)
   - [Author](#author)
 
 ## Lessons Learned
@@ -45,6 +46,12 @@
 
 - `array.join(separator)` - This method creates and returns a new string by concatenating all of the elements in an array, separated by commas or a specified separator string. If the array has only one item, then that item will be returned without using the separator.
   - `separator` (optional) - Specifies a string to separate each pair of adjacent elements of the array. The separator is converted into a string if necessary. If omitted, the array elements are separated with a comma (","). If `separator` is an empty string, all elements are joined without any characters in between them.
+
+### The New at Method
+
+- `array.at(index)` - This method takes an integer value and returns the item at that index, allowing for positive and negative integers. Negative integers count back from the last item in the array.
+  - `index` - Zero based index of the array element to be returned, converted to an integer. Negative index counts back from the end of the array -- if `index < 0`, `index + array.length` is accessed.
+- The `at()` method can also be used on strings.
 
 ## Author
 
