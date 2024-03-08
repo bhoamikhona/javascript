@@ -14,6 +14,7 @@
       - [Concat Method](#concat-method)
       - [Join Method](#join-method)
     - [The New at Method](#the-new-at-method)
+    - [Looping Arrays: forEach](#looping-arrays-foreach)
   - [Author](#author)
 
 ## Lessons Learned
@@ -52,6 +53,18 @@
 - `array.at(index)` - This method takes an integer value and returns the item at that index, allowing for positive and negative integers. Negative integers count back from the last item in the array.
   - `index` - Zero based index of the array element to be returned, converted to an integer. Negative index counts back from the end of the array -- if `index < 0`, `index + array.length` is accessed.
 - The `at()` method can also be used on strings.
+
+### Looping Arrays: forEach
+
+- `forEach(callbackFn, thisArg)` - This method executes a provided function once for each array element.
+  - `callbackFn` - A function to execute for each element in the array. Its return value is discarded. The function is called with the following arguments:
+    - `element` - The current element being processed in the array.
+    - `index` - The index of the current element being processed in the array.
+    - `array` - The array `forEach()` was called upon.
+  - `thisArg` (optional) - A value to use as `this` when executing `callbackFn`.
+  - NOTE: You cannot break out of a forEach() loop. The `continue` and `break` statements do not work in a forEach() loop at all. If you want to use `continue` or `break` statements, use for-of loop or regular for-loop.
+- `Math.abs(x)` - This static method returns the absolute value of a number.
+  - `x` - It takes a number as an input.
 
 ## Author
 

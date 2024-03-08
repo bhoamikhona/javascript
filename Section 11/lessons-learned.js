@@ -443,3 +443,230 @@ console.log(arr.at(-2)); // 11
 
 console.log('bhoami'.at(0)); // b
 console.log('bhoami'.at(-1)); // i
+
+/***********************************************************************/
+/*********************** LOOPING ARRAYS: FOREACH ***********************/
+/***********************************************************************/
+console.log(
+  `/*********************** LOOPING ARRAYS: FOREACH ***********************/`
+);
+
+/**
+ * In this lesson we will loop over an array using the forEach() method.
+ *
+ * Now, we have already learned how to loop over an array using the
+ * for-of loop but, the forEach() method is really fundamentally
+ * different.
+ *
+ * From now on we will start working with our bank account data, but
+ * in a very simplified way.
+ */
+
+// took this data from the script.js file
+movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+/**
+ * Let's say that we wanted to loop over this movements array in order
+ * to print a message for each movement in this bank account.
+ *
+ * The positive values are deposits and the negative values are
+ * withdrawals.
+ *
+ * So, we can print something to the console that says whether the user
+ * deposited or withdrew some money.
+ *
+ * We will first do that by using the for-of loop, just so we can compare
+ * it with forEach() method.
+ */
+
+for (const movement of movements) {
+  if (movement > 0) {
+    console.log(`You deposited ${movement}`);
+  } else {
+    console.log(`You withdrew ${Math.abs(movement)}`);
+  }
+}
+
+/**
+ * Our for-of solution works perfectly but now, let's finally learn how
+ * to use the forEach() method to achieve the exact same thing - buy
+ * in an easier way.
+ *
+ * We call the forEach() method on the movements array and as an argument,
+ * it requires a callback function.
+ *
+ * So, forEach() is technically a higher order function as we learned in
+ * the last section, whcih requires a callback function in order to tell
+ * it what to do.
+ *
+ * So, it is the forEach() method that will call the callback function,
+ * we will not be calling it ourselves. That is, of course, important to
+ * keep in mind.
+ *
+ * When exactly will the forEach() method actually call the callback
+ * function?
+ *
+ * Well, what the forEach() method does is to loop over the array, and in
+ * each iteration it will execute the callback function that we pass in.
+ *
+ * Also as the forEach() method calls the callback function in each
+ * iteration it will pass in the current element of the array as an
+ * argument.
+ *
+ * So, we can specify that in the callback function as a parameter, and
+ * in our case, let's call it again 'movement'.
+ *
+ * So, each time the callback function is called (i.e. in each iteration)
+ * it will receive the current element of the array as an argument.
+ *
+ * We can of course give any name to this argument as we want but, let's
+ * just call it 'movement' because that what we called it in the for-of
+ * loop.
+ *
+ * In the code body of this callback function, we can do exactly what we
+ * did in the for-of loop.
+ */
+
+console.log(`---`);
+
+movements.forEach(function (movement) {
+  if (movement > 0) {
+    console.log(`You deposited ${movement}`);
+  } else {
+    console.log(`You withdrew ${Math.abs(movement)}`);
+  }
+});
+
+/**
+ * Indeed, we get the same result as we got in with the for-of loop.
+ *
+ * That's essentially how the forEach() method works.
+ *
+ * So, basically behind the scenes, this happens:
+ *
+ * Iteration 0: function (200)
+ * Iteration 1: function (450)
+ * Iteration 2: function (-400)
+ * ...
+ *
+ * so on and so forth, until it reaches the end of the array.
+ *
+ * This part of the forEach() method i.e. passing in the current element
+ * of the array like above, is especially important to understand.
+ *
+ * Basically, this is exactly the concept that we went over in the last
+ * section when we learned that we use a callback function to tell
+ * another - higher order function exactly what it should do.
+ *
+ * So, in this case, we tell forEach() that in each iteration, it should
+ * log one of the two strings on the console.
+ *
+ * So, we give the forEach() method instructions by giving it a callback
+ * function which contains these instructions.
+ *
+ * It might be quite a hard concept to wrap your head around but, if you
+ * just continue using it then eventualy it will start to make sense.
+ *
+ * Now if we compare the for-of and forEach(), you might notice that
+ * forEach() method is a bit easier to write and easier to read.
+ *
+ * Maybe you don't agree with it but, that's okay because, it is always
+ * good to develop your own style of programiming.
+ *
+ * But, using the forEach() method and especially understanding the logic
+ * behind it with the callback function, is still really important for
+ * all the other methods that we are going to learn later.
+ *
+ * Anyways, let's learn some more about forEach() method because we are
+ * not done yet.
+ */
+
+/**
+ * What if we needed access to a counter variable in the forEach() method,
+ * just like we can access the current index of the array in the for-of
+ * loop.
+ *
+ * Remember how we did that in for-of:
+ */
+
+console.log(`---`);
+
+for (const [index, value] of movements.entries()) {
+  if (value > 0) {
+    console.log(`Movement ${index + 1}: You deposited ${value}`);
+  } else {
+    console.log(`Movement ${index + 1}: You withdrew ${value}`);
+  }
+}
+
+/**
+ * Let's now do the same in the forEach() method.
+ *
+ * With forEach(), it is fortunately a lot easier to get access to the
+ * current index.
+ *
+ * To understand how it works, we need to remember once more that it is
+ * the forEach() method who calls the callback function in each iteration.
+ *
+ * And as it calls this callback function, it also passes in the current
+ * element of th array but, actually that's not all it passes in. In fact,
+ * forEach() passes in the current element, the index and the entire
+ * array that we are looping.
+ *
+ * Therefore, we can specify them in the callback function's parameter
+ * list.
+ *
+ * Of course, we can just use one like we have been doing thus far, or
+ * we can use two or all three of them. And as always, the names of these
+ * parameters don't matter but, what does matter is the order.
+ *
+ * The first parameter always needs to be the current elements, the
+ * second parameter always needs to be the current index, and third
+ * parameter always needs to be the entire array that we are looping
+ * over.
+ *
+ * This is because that is the order in which the arguments i.e. the
+ * actual values are passed into our callback function.
+ */
+console.log(`---`);
+
+movements.forEach(function (movement, index, array) {
+  if (movement > 0) {
+    console.log(`Movement ${index + 1}: You deposited ${movement}`);
+  } else {
+    console.log(`Movement ${index + 1}: You withdrew ${movement}`);
+  }
+});
+
+/**
+ * I hope you can see that it is a lot easier to get the current index
+ * in the forEach() method.
+ *
+ * Just notice that the order of the parameters is different in forEach()
+ * and for-of loop.
+ *
+ * In forEach(), the first value is the current element and the second
+ * one is the index.
+ *
+ * While when we use the entries() in the for-of loop, the first element
+ * is the index and second element is current element.
+ *
+ * This is how we loop over arrays with the forEach() method.
+ *
+ * When should you use the forEach() method and when should you use the
+ * for-of loop?
+ *
+ * Well, one fundamental difference between the two of them is that you
+ * cannot break out of a forEach() loop.
+ *
+ * So, the `continue` and `break` statements do not work in a forEach()
+ * loop at all.
+ *
+ * So instead, forEach() will always loop over the entire array and there
+ * is nothing that you can do about it.
+ *
+ * So, if you really need to break out of a loop then you have to keep
+ * using the for-of loop.
+ *
+ * Other than that, it really comes down to your personal preference.
+ */
