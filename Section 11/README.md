@@ -15,6 +15,9 @@
       - [Join Method](#join-method)
     - [The New at Method](#the-new-at-method)
     - [Looping Arrays: forEach](#looping-arrays-foreach)
+    - [forEach with Maps and Sets](#foreach-with-maps-and-sets)
+      - [forEach with Maps](#foreach-with-maps)
+      - [forEach with Sets](#foreach-with-sets)
   - [Author](#author)
 
 ## Lessons Learned
@@ -65,6 +68,32 @@
   - NOTE: You cannot break out of a forEach() loop. The `continue` and `break` statements do not work in a forEach() loop at all. If you want to use `continue` or `break` statements, use for-of loop or regular for-loop.
 - `Math.abs(x)` - This static method returns the absolute value of a number.
   - `x` - It takes a number as an input.
+
+### forEach with Maps and Sets
+
+#### forEach with Maps
+
+- The `forEach()` method of `Map` instance executes a provided function once per each key/value pair in this map, in insertion order.
+  - Parameters
+    - `callbackFn` - A function to execute for each entry in the map. The function is called with the following arguments:
+      - `value` - Value of each iteration.
+      - `key` - Key of each iteration.
+      - `map` - The map being iterated.
+    - `thisArg` (optional) - A value to use as `this` when execution `callbackFn`.
+  - Returns
+    - `undefined`
+
+#### forEach with Sets
+
+- The `forEach()` method of `Set` instances executes a provided function once for each value in this set, in insertion order.
+  - Parameters:
+    - `callbackFn` - A function to execute for each entry in the set. The function is called with the following arguments:
+      - `value` - Value of each iteration.
+      - `key` - Key of each iteration. This is always the same as `value`.
+      - `set` - The set being iterated.
+    - `thisArg` (optional) - A value to use as `this` when executing `callbackFn`.
+  - Returns
+    - `undefined`
 
 ## Author
 

@@ -670,3 +670,135 @@ movements.forEach(function (movement, index, array) {
  *
  * Other than that, it really comes down to your personal preference.
  */
+
+/************************************************************************/
+/********************** FOREACH WITH MAPS AND SETS **********************/
+/************************************************************************/
+console.log(
+  `/********************** FOREACH WITH MAPS AND SETS **********************/`
+);
+
+/**
+ * So we learned about the forEach() method on arrays.
+ *
+ * However, forEach() is also available on maps and sets so, let's take
+ * a small detour now and see how forEach() works with maps and sets.
+ *
+ * We are going to start with maps, so let's get the currencies map from
+ * our bankist app in the script file.
+ */
+
+currencies = new Map([
+  ['USD', 'United States dollar'],
+  ['EUR', 'Euro'],
+  ['GBP', 'Pound sterling'],
+]);
+
+// MAP
+/**
+ * Remember that in the array of arrays (of currencies map), each of the
+ * child array will be one entry of the map. Where the first element in
+ * the child array is the key and the second element is the value.
+ *
+ * So, we can also call forEach() on a map.
+ *
+ * The callback function on the forEach() method for maps also has 3
+ * parameters. So, when the forEach() method call the callback, it will
+ * call the callback with 3 arguments.
+ *
+ * The first parameter is the current value in the current iteration, the
+ * second parameter is the key, and third one is the entire map that is
+ * being looped over.
+ *
+ * So, as you see, this is similar to the array, where in the array, the
+ * first parameter is the current element of the array, the seocnd one is
+ * the index and the third parameter is the entire array.
+ *
+ * So, there is a nice correspondence between array forEach() and maps
+ * forEach(); therefore, it is quite each to memorize.
+ */
+
+currencies.forEach(function (value, key, map) {
+  console.log(`${key}: ${value}`);
+});
+
+/**
+ * Indeed, it worked.
+ *
+ * So, we got the keys of each of the map entries and then also the value.
+ *
+ * Now let's try the same with a set.
+ */
+
+// Set
+const currenciesUnique = new Set(['USD', 'GBP', 'USD', 'EUR', 'EUR']);
+console.log(currenciesUnique); // Set(3) {'USD', 'GBP', 'EUR'}
+
+/**
+ * Let's now call forEach() on the `currenciesUnique` set.
+ *
+ * Once again, the callback function of the forEach() method has the
+ * parameters of value, key, and set; and we we will see in a second,
+ * if that actually makes sense.
+ */
+
+currenciesUnique.forEach(function (value, key, set) {
+  console.log(`${key}: ${value}`);
+});
+
+/**
+ * We get:
+ *
+ * USD: USD
+ * GBP: GBP
+ * EUR: EUR
+ *
+ * So, what this means is that the key is exactly the same as the value.
+ *
+ * Why is that?
+ *
+ * Well, a set doesn't have keys and it doesn't have indexes either.
+ * Therefore, there is no value that would make sense for the key.
+ *
+ * So, essentially, the `key` parameter makes no sense at all. It wouldn't
+ * even have to be there.
+ *
+ * So, the people who designed the forEach() method for sets, they could
+ * have simply omitted the second argument.
+ *
+ * But, if they did that, then the forEach() for set would be different
+ * from others. So, that would then create confusion in developers.
+ *
+ * Therefore, it was decided to keep the same signature i.e. keep the
+ * same three parameters in the callback function and simply to set the
+ * second parameter equal to the first one.
+ *
+ * So, you can also write value instead of key, like so:
+ * just to avoid that confusion.
+ */
+
+// currenciesUnique.forEach(function (value, value, set) {
+//   console.log(`${value}: ${value}`);
+// });
+
+/**
+ * But, this gives us an error because no two parameter names should be
+ * the same.
+ *
+ * So, instead, you can just type underscore which in JavaScript means a
+ * throwaway variable. So, that means a variable that is completely
+ * unnecessary. So, it is just a convention which we will see again
+ * a little bit later.
+ */
+
+currenciesUnique.forEach(function (value, _, set) {
+  console.log(`${value}: ${value}`);
+});
+
+/**
+ * That's all you need to know about the forEach() method for maps and
+ * sets.
+ *
+ * It is very straightforward if you already understood how it works for
+ * arrays.
+ */
