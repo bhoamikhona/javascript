@@ -30,6 +30,10 @@
       - [forEach with Maps](#foreach-with-maps)
       - [forEach with Sets](#foreach-with-sets)
     - [Creating DOM Elements](#creating-dom-elements)
+    - [Data Transformations: map, filter, reduce](#data-transformations-map-filter-reduce)
+      - [map()](#map)
+      - [filter()](#filter)
+      - [reduce()](#reduce)
   - [Author](#author)
 
 ## Lessons Learned
@@ -123,6 +127,49 @@
   - `element.innerHTML = ' '` - setting an HTML content to empty string
   - `element.innerHTML = '<h1>Hi</h1>'` - setting an HTML content to a Heading 1 tag with "hi" in it.
 - There are many other ways of creating elements in HTML using Javascript besides `insertAjacentHTML()` and we will study all of them in great detail in a future section but, this one is the more preferred. Since all we have to do is to create a string of HTML and then we can insert that simply using this method.
+
+### Data Transformations: map, filter, reduce
+
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/584bf698-8276-4ccd-8f4a-1ad3b560c390)
+- In JavaScript, there are three big and important array methods that we use all the time to perform data transformations.
+- Basically, these are methods that we use to create new arrays based on transforming data from other arrays.
+- In recent years, these tools have become really popular and for good reason. Therefore, you will see them everywhere you look in modern JavaScript.
+- The tools that we are talking about are `map()`, `filter()`, and `reduce()`. These are three array methods and in this lesson, we are going to get a quick overview of them.
+- Then, over the next couple of lessons, we are going to dive deep into these three methods in practice so that we can use them throughout the rest of the course.
+
+#### map()
+
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/2d71d381-ef4c-41ff-bc5b-8ea153d26fa8)
+- First, the `map()` method is yet another method that we can use to loop over arrays.
+- `map()` is actually similar to the `forEach()` method that we studied before but, with the difference that `map()` creates a brand new array based on the original array.
+- Essentially, the `map()` method takes an array, loops over that array and in each iteration, it applies the callback function that we specify in our code to the current array element.
+- In the example, in the image above, we say that each element should be multiplied by 2. With that in place in the callback, the `map()` method multiplies every single element by 2 and puts it into a new array.
+- We say that it maps the values of the original array to a new array and that's why this method is called `map()`; and it is exetremely useful. Usually, way more useful than the `forEach()` method because `forEach()` simply allows us to do some work with each array element. But `map()` on the other hand, builds a brand new array containing the results of applying an operation to the original array.
+- We will use the `map()` method in practice, right in the next lesson.
+
+#### filter()
+
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/9e0bff2d-7069-4867-9345-58b2b942e5b1)
+- Next up, we have the `filter()` method, which as the name says, is used to filter elements in the original aaray which satisfy a certain condition.
+- In the example, in the image above, we are only looking for elements greater than 2.
+- So, all the elements that pass the test that we specified will make it into a new filtered array.
+- In other words, elements for which the condition in true will be included in a new array that the `filter()` method returns.
+- All the other elements will be filtered out i.e. they will not be included in the new array.
+
+#### reduce()
+
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/b0bc4717-44b1-449b-86c2-52198cb870b8)
+- Finally, there is also the `reduce()` method which we use to boil down all the elements of the original array into one single value.
+- An example of this can be to add all the elements of an array together.
+- But, we can also do many other interesting things.
+- For the example of adding up all the numbers in the array, we need to specify an operation like this: `acc + current` where we have an accumulator variable.
+- Then, as the `reduce()` method loops over the array, it keeps adding the current eleemnt onto the accumulator until at the end - where we have the total sum of all the elements.
+- So, you can imagine this as a snowball that keeps getting bigger and bigger as it rolls down the hill - this is known as the snowball effect and `reduce()` is pretty similar to that. So, keep that in mind as a nice analogy.
+- We can also say that this whole process has now reduced the original array to one single value, which in the case of our example, is the sum of all the elements.
+- But, it can of course do many other operations.
+- Now it is this reduced value that gets returned from the `reduce()` method in the end.
+- So, there is no new array in this case, only the reduced value.
+- This probably sounds more complicated than it actually is so, let's put it into practice right in the next lesson.
 
 ## Author
 
