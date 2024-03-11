@@ -2,9 +2,20 @@
 
 **About:** This section is all about arrays. In JavaScript, arrays are probably the most used data structure. We use arrays all the time, and therefore, JavaScript has countless modern array methods, which we can also imagine as array tools. In this section, we will learn all about these tools, how to use them, and more importantly - when to use them. We will do that while building our next beautiful project, so that you can immediately apply all these array tools to a real world situation. Let's get started.
 
+- [Live Website]()
+  - Username: bkk
+  - Pin: 6666
+
+## Project: Bankist App
+
+**About**: This is an online banking application. Once you log into the application, you will first see all of the transactions made in that particular's user's account, its bank balance, and you can either transfer money, request a loan, or close the account. You can sort all of the transactions made in the bank account, and you can log into another account to check its details. Each bank account can be set up according to currency used in their country.
+
+- ![Bankist-flowchart](https://github.com/bhoamikhona/javascript/assets/50435319/fae6a673-14ee-407b-b707-940a02212117)
+
 ## Table of Content
 
 - [Section 11: Working With Arrays](#section-11-working-with-arrays)
+  - [Project: Bankist App](#project-bankist-app)
   - [Table of Content](#table-of-content)
   - [Lessons Learned](#lessons-learned)
     - [Simple Array Methods](#simple-array-methods)
@@ -18,6 +29,7 @@
     - [forEach with Maps and Sets](#foreach-with-maps-and-sets)
       - [forEach with Maps](#foreach-with-maps)
       - [forEach with Sets](#foreach-with-sets)
+    - [Creating DOM Elements](#creating-dom-elements)
   - [Author](#author)
 
 ## Lessons Learned
@@ -94,6 +106,23 @@
     - `thisArg` (optional) - A value to use as `this` when executing `callbackFn`.
   - Returns
     - `undefined`
+
+### Creating DOM Elements
+
+- In this lesson, we are finally going to work with DOM again, and learn a couple of DOM manipulation techniques. We will use them together with the `forEach()` method that we learned in the past couple of lessons.
+- To add HTML elements to the HTML file using Javascript, we can use a method called `insertAdjacentHTML()`
+- `domElement.insertAdjacentHTML(position, text)` - This method of the Element interface parses the specified text as HTML or XML and inserts the resulting nodes into the DOM tree at a specified position.
+  - `position` - A string representing the position relative to the element. Must be one of the following strings:
+    - `beforebegin` - Before the element. Only valid if the element is in the DOM tree and has a parent element.
+    - `afterbegin` - Just inside the element, before its first child.
+    - `beforeend` - Just inside the element, after its last child.
+    - `afterend` - After the element. Only valid if the element is in the DOM tree and has a parent element.
+  - `text` - The string to be parsed as HTML or XML and inserted into the tree.
+- `domElement.innerHTML` - The `innerHTML` property gets or sets the HTML or XML markup contained within the element. Setting the value of `innerHTML` removes all of the element's descendants and replaces them with nodes constructed by parsing the HTML given in the string.
+  - `element.innerHTML;` - getting an HTML element
+  - `element.innerHTML = ' '` - setting an HTML content to empty string
+  - `element.innerHTML = '<h1>Hi</h1>'` - setting an HTML content to a Heading 1 tag with "hi" in it.
+- There are many other ways of creating elements in HTML using Javascript besides `insertAjacentHTML()` and we will study all of them in great detail in a future section but, this one is the more preferred. Since all we have to do is to create a string of HTML and then we can insert that simply using this method.
 
 ## Author
 

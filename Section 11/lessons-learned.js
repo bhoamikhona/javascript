@@ -1,5 +1,13 @@
 'use strict';
 
+let currencies = new Map([
+  ['USD', 'United States dollar'],
+  ['EUR', 'Euro'],
+  ['GBP', 'Pound sterling'],
+]);
+
+let movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
 /************************************************************************/
 /************************* SIMPLE ARRAY METHODS *************************/
 /************************************************************************/
@@ -462,7 +470,6 @@ console.log(
  * in a very simplified way.
  */
 
-// took this data from the script.js file
 movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /**
@@ -684,8 +691,7 @@ console.log(
  * However, forEach() is also available on maps and sets so, let's take
  * a small detour now and see how forEach() works with maps and sets.
  *
- * We are going to start with maps, so let's get the currencies map from
- * our bankist app in the script file.
+ * We are going to start with maps.
  */
 
 currencies = new Map([
