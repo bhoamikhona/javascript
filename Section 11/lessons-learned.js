@@ -808,3 +808,280 @@ currenciesUnique.forEach(function (value, _, set) {
  * It is very straightforward if you already understood how it works for
  * arrays.
  */
+
+/**********************************************************************/
+/*************************** THE MAP METHOD ***************************/
+/**********************************************************************/
+console.log(
+  `/*************************** THE MAP METHOD ***************************/`
+);
+
+/**
+ * Let's now start seeing the three data transformation methods in
+ * practice, starting with the `map()` method in this lesson.
+ *
+ * As we just learned (in the theoretical lesson), the `map()` method is
+ * yet another way that we can use to loop over arrays.
+ *
+ * But unlike forEach(), the map() method will give us a brand new array.
+ *
+ * This new array will contain in each position the results of applying
+ * a callback function to the original array elements.
+ *
+ * So, let's see how that works.
+ */
+
+movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+/**
+ * Let's suppose the movements in the array above are in Euros, and we
+ * will try to convert them to USD using the map() method.
+ *
+ * Let's suppose that 1€ = $1.1 - let's store that conversion rate in a
+ * separate variable.
+ */
+
+const euroToUsd = 1.1;
+
+/**
+ * Now what we want to do is to basically multiply each element of the
+ * movements array by 1.1 (i.e. the conversion rate).
+ */
+
+/**
+ * Just like the forEach() method, the map() method also get a callback
+ * function and this callback function also gets an argument - the current
+ * element - just like in the forEach() method.
+ *
+ * In the callback function, we need to return the value that we want the
+ * new array to have in the current position.
+ *
+ * In our example, we want the orignal array times the euroToUsd
+ * conversion rate.
+ *
+ * Let's store the result in a variable so that we can take a look at
+ * the new array in the console.
+ */
+
+let movementsUSD = movements.map(function (mov) {
+  return mov * euroToUsd;
+});
+
+console.log(movements);
+console.log(movementsUSD);
+
+/**
+ * Don't mind the multiplication errors in the result, we will learn
+ * where they are coming from a bit later but essentially, the new
+ * values in the new array are exactly each value times 1.1
+ *
+ * Indeed, we ended up with a new array containing all the movements but
+ * converted from euros to USD.
+ *
+ * Also, we can see that the original `movements` array was not mutated
+ * at all.
+ *
+ * Indeed, the `map()` method really only returns a new array with the
+ * new elements.
+ *
+ * This really is the fundamentals of the `map()` method works.
+ *
+ * So, we can use it and we will use it in all kinds of different
+ * situations.
+ *
+ * Now, just to compare, let's write the same thing here with a for-of
+ * loop. In this loop, we want to create a new array. So, the way that we
+ * do it in for-of loop is to create an empty array outside of the loop
+ * and then while iterating, we push the resulting item in the new array.
+ */
+
+let movementsUSDfor = [];
+for (const mov of movements) {
+  movementsUSDfor.push(mov * euroToUsd);
+}
+
+console.log(movementsUSDfor);
+
+/**
+ * The resulting array looks exactly the same as the result of map()
+ * method.
+ *
+ * So, we could've used for-of loop instead of map() method and it doesn't
+ * look that bad either but, it is a completely different philosophy.
+ *
+ * In the map() method, we use a function to solve the problem of creating
+ * a new array.
+ *
+ * While in the for-of loop, we simply loop over one array and then
+ * manually create a new one.
+ *
+ * So, they are completely different philosophies or we can also say
+ * paradigms.
+ *
+ * Using map() method is more in line with functional programming which
+ * is something that we have mentioned a couple of times in this course,
+ * and we will talk about it later, in greater detail.
+ *
+ * Also, in modern JavaScript, there is definitely a push going on in the
+ * direction of functional programming i.e. a more functional language.
+ *
+ * Therefore, in modern JavaScript, using map() method is the way to go.
+ *
+ * So, using methods together with callback functions is the new and
+ * modern way of doing stuff.
+ */
+
+/**
+ * Now, let's make our callback function in the map() method look a
+ * little bit cleaner i.e. we can simplify it greatly.
+ */
+
+movementsUSD = movements.map(function (mov) {
+  return mov * euroToUsd;
+});
+
+/**
+ * We could use an arrow function here and simplify it into just one
+ * line of code.
+ */
+
+movementsUSD = movements.map(mov => mov * euroToUsd);
+
+/**
+ * So, now we have nice and clean, one liner callback function.
+ *
+ * However, many people don't like the way that it looks. They say that
+ * it lacks the `function` and `return` keyword which leads to bad
+ * readability, and that makes it more difficult to understand.
+ *
+ * There is a point to what they are saying and there is some truth in it
+ * but, some people prefer the fact how much smaller and cleaner it looks
+ * with arrow functions.
+ *
+ * So, if you understand it well enough (i.e. how the arrow functions
+ * work) then you will become familiar with it pretty quickly. Then there
+ * is no problem writing code using arrow functions.
+ *
+ * The main thing that you need to keep in mind is that we are returing
+ * the value that is written right after the "arrow". So, you need to
+ * remember that writing the arrow is like writing the `return` keyword,
+ * at least in one liners.
+ *
+ * If you understand that, then you are good to go.
+ *
+ * We will keep using the arrow functions in these kinds of situations
+ * for the rest of the course because, they are perfect for these small
+ * callback functions.
+ *
+ * In fact they were really developed for this kind of application.
+ *
+ * But, if you do prefer the regular function syntax then feel free to
+ * use them instead.
+ *
+ * With that being said, let's experiment a bit more and explore the
+ * map() function further.
+ */
+
+/**
+ * Just like the forEach() method, the map() method also has access to the
+ * exact same three parameters i.e. besides the current array element, we
+ * also get access to the current index as well as the whole array.
+ *
+ * So, let's now use the map() method to loop over the movements array
+ * but, this time we are going to create a string similar to the one
+ * that we created using forEach(), in one of the previous lessons, to
+ * log onto the console.
+ */
+
+// here we are returning the string because it will then set that string
+// as the current item in the new array
+let movementsDescriptions = movements.map((mov, i, arr) => {
+  if (mov > 0) {
+    return `Movement ${i + 1}: You deposited ${mov}`;
+  } else {
+    return `Movement ${i + 1}: You withdrew ${Math.abs(mov)}`;
+  }
+});
+
+console.log(movementsDescriptions);
+
+/**
+ * Indeed, we get an array with strings that we previously logged on to
+ * the console, when we used forEach() method (in one of the previous
+ * lessons).
+ *
+ * NOTE:
+ * By the way, it is completely acceptable to have 2 return statements
+ * or even more in the same function, as long as only of them is
+ * executed.
+ *
+ * We can simplify it further because the two returning strings are
+ * pretty much the same thing except for the words "deposited" and
+ * "withdrew".
+ *
+ * Let's use a ternary operator for that.
+ *
+ * Note that this has nothing to do with the map() method but, it is
+ * a good way to also keep practicing the other skills that we have
+ * been learning.
+ */
+
+movementsDescriptions = movements.map(
+  (mov, i, arr) =>
+    `Movement ${i + 1}: You ${mov > 0 ? 'deposited' : 'withdrew'} ${Math.abs(
+      mov
+    )}`
+);
+
+console.log(movementsDescriptions);
+
+/**
+ * It works just the same.
+ *
+ * In this case, we actually don't even need our third parameter which
+ * is the array that we are iterating over. But, let's leave it there
+ * for reference purposes.
+ *
+ * Also, it is a good idea to keep in mind why we actually get access
+ * to the first two parameters.
+ *
+ * Once again, all we do here is to pass the callback function into the
+ * map() method. But, we do not call the callback function ourselves.
+ *
+ * It is the map() method who will call the callback function for each
+ * of the array elements in the movements array.
+ *
+ * Now, each time that the map() method calls the callback function, it
+ * will simply pass in the current array element as well as the current
+ * index and the whole array. Off those 3, in our case, we are only
+ * using the first two, which are the current array element and the
+ * current index.
+ *
+ * Hopefully by now, it is crystal clear of how it all works.
+ *
+ * Now, you could say that what we did here with the map() method is
+ * essentially the same as what we did with the forEach() method. But,
+ * in fact, there is a big, big difference between the two approaches.
+ *
+ * Before, we printed each line individually to the console, as we were
+ * looping over the array i.e. in each of the iterations, we performed
+ * some action that was then visible in the console and we call this
+ * a side effect.
+ *
+ * So, the forEach() method creates side effects.
+ *
+ * But, with the map() method, all we did was to return each of the
+ * strings from the callback. Basically, they got added into a new array
+ * and finally, we logged that entire array to the console and the
+ * elements one by one.
+ *
+ * So, in the map() method, we did not create a side effect in each
+ * iteration. All we did was to build a brand new array.
+ *
+ * This idea of side-effects will become important again, as we talk
+ * more about functional programming.
+ *
+ * This is how the map() method works. In the next lesson, we will see
+ * a more practical application of it in the context of our Bankist
+ * application.
+ */

@@ -34,6 +34,7 @@
       - [map()](#map)
       - [filter()](#filter)
       - [reduce()](#reduce)
+    - [The Map Method](#the-map-method)
   - [Author](#author)
 
 ## Lessons Learned
@@ -170,6 +171,17 @@
 - Now it is this reduced value that gets returned from the `reduce()` method in the end.
 - So, there is no new array in this case, only the reduced value.
 - This probably sounds more complicated than it actually is so, let's put it into practice right in the next lesson.
+
+### The Map Method
+
+- The `array.map(callbackFn(element, index, array){}, thisArg)` method creates a new array populated with the results of calling a provided function on every element in the calling array.
+- Parameters:
+  - `callbackFn` - A function to execute for each element in the array. Its return value is added as a single element in the new array. The function is called with the following arguments:
+    - `element` - The current element being processed in the array.
+    - `index` - The index of the current element being processed in the array.
+    - `array` - The array `map()` was called upon.
+  - `thisArg` (optional) - A value to use as `this` when executing `callbackFn`.
+- This method will return a new array with each element being the result of the callback function.
 
 ## Author
 
