@@ -35,6 +35,7 @@
       - [filter()](#filter)
       - [reduce()](#reduce)
     - [The Map Method](#the-map-method)
+    - [Computing Usernames](#computing-usernames)
   - [Author](#author)
 
 ## Lessons Learned
@@ -182,6 +183,16 @@
     - `array` - The array `map()` was called upon.
   - `thisArg` (optional) - A value to use as `this` when executing `callbackFn`.
 - This method will return a new array with each element being the result of the callback function.
+
+### Computing Usernames
+
+- It is important to distinguish when we should use `map()` and when we should use `forEach()`.
+- We can use `map()` when we want to create a new array. Where as we should use `forEach()` when we just want to update an existing object or an array.
+- In this lesson, we are trying to create usernames for each of the accounts in the `accounts` array and to do that, we need to iterate over that array and update each `account` object with the newly created username. So, we are not trying to create a new array, we are just trying to update the existing array of objects. Hence, the better choice in this case is to use `forEach()` and not `map()`.
+- This whole thing banks on the idea of <ins>side-effect</ins>.
+- In JavaScript, a side-effect occurs when a piece of code modifies the state of an object or introduces a subtle alteration in code execution.
+- In simpler terms, if a component or function is not purely functional, it exhibits a side-effect.
+- To learn more, visit these sources: [LinkedIn](https://www.linkedin.com/pulse/javascript-side-effects-react-john-musa/) and [GreenRoots Blog](https://blog.greenroots.info/what-are-pure-functions-and-side-effects-in-javascript)
 
 ## Author
 
