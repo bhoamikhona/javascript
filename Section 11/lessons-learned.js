@@ -1085,3 +1085,112 @@ console.log(movementsDescriptions);
  * a more practical application of it in the context of our Bankist
  * application.
  */
+
+/***********************************************************************/
+/************************** THE FILTER METHOD **************************/
+/***********************************************************************/
+console.log(
+  `/************************** THE FILTER METHOD **************************/`
+);
+
+/**
+ * Now let's learn about the filter() method, which as we learned before,
+ * is used to filter array elements that satisfy a certain condition.
+ *
+ * How do we specify such a condition? We use a callback function.
+ *
+ * Let's work with our `movements` array again.
+ */
+
+movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+/**
+ * Just like the other array methods such as forEach() and map(), the
+ * filter() method also gets access to the current element, the current
+ * index, and the entire array that we are looping over as the parameters
+ * of the callback function.
+ *
+ * In our case, for now, we will simply access the current element, which
+ * in filter() is usually all that we need.
+ *
+ * Now, what we want to do here is to create an array of deposits; and
+ * deposits are only the movements that are above 0.
+ *
+ * So, we want to filter out the negative value.
+ *
+ * So, to make this work, in the body of the callback function, we would
+ * have a condition which will check if the current element is above 0
+ * or not. If the conditions results in true, then that value will be
+ * stored in the new array; and to store it in the new array, we have to
+ * return that value.
+ *
+ * So, we have to make the function return a boolean value. If the
+ * returning value is true, then the current element makes it into the
+ * new array, otherwise, it moves on to the next iteration.
+ */
+
+const deposits = movements.filter(function (mov) {
+  // only the array elements for which the condition below is true
+  // will make it into the new array. All the other values will simply
+  // get filtered out i.e. they will not be included in the `deposits`
+  // array.
+  return mov > 0;
+});
+console.log('movements:', movements);
+console.log('deposits:', deposits);
+
+/**
+ * That's it, it is really that simple.
+ *
+ * So, just as mentioned before, if you know how to use the callback
+ * function correctly and if you know how and why it works, then all
+ * of these methods become really, really simple.
+ *
+ * Let's do the same thing with the for-of loop just so you can
+ * appreciate the difference.
+ */
+
+const depositsFor = [];
+for (const mov of movements) if (mov > 0) depositsFor.push(mov);
+
+console.log('depositsFor:', depositsFor);
+
+/**
+ * As expected, we get the same result.
+ *
+ * So you could ask again, what is the big difference here? What is the
+ * big deal? Why not just use the for-of loop for everything.
+ *
+ * The reason for that is again, that there is a push in the JavaScript
+ * community to use more functional code such as filter() method.
+ *
+ * But, there is also a more practical implication. That's because,
+ * we can actually chain all of these methods together. Basically,
+ * use them all one after another to build a big final result.
+ *
+ * A bit similar to what we did in our script.js file to create
+ * usernames. But, in that case, we mixed string methods with array
+ * methods however, later on, we will do big chains of only array
+ * methods; and that would be completely impossible using the for-of
+ * loop.
+ *
+ * So, that's another advantage of using the methods instead of the
+ * regular for-of loop.
+ */
+
+/**
+ * Anyway, let's complete another small challenge here, which is to
+ * create an array of withdrawals.
+ *
+ * Let's create that using the filter() method, and without looking at
+ * how we created deposits.
+ */
+
+const withdrawals = movements.filter(mov => mov < 0);
+console.log('withdrawals:', withdrawals);
+
+/**
+ * This was the second of the data transformation methods (map(),
+ * filter(), and reduce()). In the next lesson we will talk about
+ * reduce().
+ */

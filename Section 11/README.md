@@ -36,6 +36,7 @@
       - [reduce()](#reduce)
     - [The Map Method](#the-map-method)
     - [Computing Usernames](#computing-usernames)
+    - [The Filter Method](#the-filter-method)
   - [Author](#author)
 
 ## Lessons Learned
@@ -193,6 +194,17 @@
 - In JavaScript, a side-effect occurs when a piece of code modifies the state of an object or introduces a subtle alteration in code execution.
 - In simpler terms, if a component or function is not purely functional, it exhibits a side-effect.
 - To learn more, visit these sources: [LinkedIn](https://www.linkedin.com/pulse/javascript-side-effects-react-john-musa/) and [GreenRoots Blog](https://blog.greenroots.info/what-are-pure-functions-and-side-effects-in-javascript)
+
+### The Filter Method
+
+- The `array.filter(callbackFn(element, index, array){}, thisArg)` creates a shallow copy of a portion of a given array, filtered down to just the elements from the given array that pass the test implemented by the provided function.
+- Parameters:
+  - `callbackFn` - A function to execute for each element in the array. It should return a truthy value to keep the element in the resulting array, and a falsy value otherwise. The function is called with the following arguments:
+    - `element` - The current element being processed in the array.
+    - `index` - The index of the current element being processed in the array.
+    - `array` - The array `filter()` was called upon.
+  - `thisArg` - A value to use as `this` when executing `callbackFn`.
+- If no elements pass the test, an empty array will be returned.
 
 ## Author
 
