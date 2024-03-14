@@ -1194,3 +1194,250 @@ console.log('withdrawals:', withdrawals);
  * filter(), and reduce()). In the next lesson we will talk about
  * reduce().
  */
+
+/***********************************************************************/
+/************************** THE REDUCE METHOD **************************/
+/***********************************************************************/
+console.log(
+  `/************************** THE REDUCE METHOD **************************/`
+);
+
+/**
+ * In this lesson, we are going to talk about the third data
+ * transformations method, which is the reduce() method.
+ *
+ * We use the reduce() method to essentially boil down all the elements
+ * in an array to one single value.
+ *
+ * In one of the previous lessons, we talked about the example of adding
+ * up all the numbers in one array. So, let's try that now with the
+ * `movements` array.
+ */
+
+movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+/**
+ * By adding all the movements (deposits and withdrawals), we end up
+ * with the global balance of the account.
+ *
+ * The reduce() method also gets a callback function but, this one is a
+ * little bit different than the other ones e.g. map() and forEach().
+ *
+ * In the callback functions of map() and filter() methods, the first
+ * parameter is the current element, the second parameter is current
+ * index, and the third parameter is the entire array upon which the
+ * method is called.
+ *
+ * But, in the callback function of the reduce() method, the first
+ * parameter is actually something called the accumulator.
+ *
+ * This accumulator is essentially like a snowball that keeps
+ * accumulating the value that we ultimately want to return.
+ *
+ * So, in the case of adding all the elements or all the numbers of an
+ * array together, that will be the sum.
+ *
+ * As always, the callback function will be called in each iteration
+ * of looping over the array.
+ *
+ * So, reduce() also loops over the array and calls the callback in
+ * each iteration, but now, what will we actually do in each of these
+ * iterations?
+ *
+ * Since the accumulator is the value that we will keep adding to, what
+ * we are going to do here is add the current value to the accumulator.
+ *
+ * This works because in each call of the callback function, the
+ * accumulator will be the current sum of all the previous values.
+ *
+ * So, we will really keep adding to this accumulator in each iteration
+ * of the loop.
+ *
+ * Finally, we also need to return `acc + cur` from the callback - this
+ * is how the new accumulator can then be used in the next iteration of
+ * the loop.
+ *
+ * Basically, in each loop iteration, we return the updated accumulator
+ * plus the new current value. So, like this, we can then keep adding
+ * to it in the next iteration.
+ *
+ * This callback function is the first argument of the reduce() method.
+ * But, the reduce() method actually has another i.e. a second parameter,
+ * and that is the initial value of the accumulator.
+ *
+ * So, the second parameter is going to be the initial value of the
+ * accumulator in the first loop iteration.
+ *
+ * In our case, it is going to be 0.
+ *
+ * With that, we should be able to take a look at our balance now.
+ */
+
+// accumulator -> SNOWBALL
+let balance = movements.reduce(function (acc, cur, idx, arr) {
+  console.log(`Iteration ${idx}: ${acc}`);
+  return acc + cur;
+}, 0);
+
+console.log(balance); // 3840
+
+/**
+ * We have one single number as a result. So, indeed everything was
+ * boiled down to one number, which we can suppose is all of the values
+ * in the `movements` arrays added together.
+ *
+ * When we look at the accumulator in each iteration, we see that in
+ * iteration 0, the accumulator is 0, which is the value that we
+ * specified as the initial value.
+ *
+ * Then in the second iteration, the accumulator is already at 200 and
+ * that's because the initial accumulator value (0) plus the current
+ * value in the second iteration (200) is 200.
+ *
+ * In the next iteration, the accumulator's value is 200 and it will be
+ * added to the new current value which is 450 so 200 + 450 is 650.
+ *
+ * 650 will be the updated accumulator value in the next iteration.
+ * This will go on until the entire array has been looped over.
+ *
+ * So here you can really see the snowball effect of all the values,
+ * adding up to one final value. In the end, that value is essentially
+ * the accumulator.
+ *
+ * So, this is really how the reduce() method works.
+ *
+ * Let's do the same thing using the for-of loop.
+ */
+
+let balance2 = 0;
+for (const mov of movements) {
+  balance2 += mov;
+}
+
+console.log(balance2); // 3840
+
+/**
+ * Indeed, we get the same result.
+ *
+ * But, you can this common pattern that we always need an external
+ * variable whenever we want to use a for-of loop.
+ *
+ * It is fine if you only need one loop but, it starts to become very
+ * cumbersome and impractical when we use many loops for doing many
+ * operations.
+ *
+ * So, these methods that we have been studying, they completely avoid
+ * this extra variable and they simply return the variable or the value
+ * right away.
+ *
+ * We can write the above reduce() example in an even simpler way
+ * by using arrow function, like so:
+ */
+
+balance = movements.reduce((acc, cur) => acc + cur, 0);
+console.log(balance); // 3840
+
+/**
+ * Understanding how the reduce() method works is very important, but it
+ * is also way more confusing than the other ones, but I am sure you
+ * are well underway of really understanding it.
+ *
+ * Now that we know how it workds, we can actually also calculate the
+ * balance of movements in our bankist app and print it to our
+ * application user interface.
+ *
+ * So, headover to bankist.js for that.
+ */
+
+/**
+ * Now, just to finish this lesson about reduce() method, let's see one
+ * final example because we can also do other things with it than just
+ * adding all the values in an array.
+ *
+ * This time, we want to get the maximum value of the movements array
+ * using the reduce() method.
+ *
+ * So, the result that we are looking for is 3000 from the movements
+ * array.
+ *
+ * We can use reduce() method for this because reduce() method is for
+ * boiling down the array into just one single value, but that value
+ * can be whatever we want. It doesn't have to be a sm. It could be a
+ * multiplication, or even something completely different, like a string
+ * or an object, but here, we will keep working with numbers, but
+ * this time, we want the maximum number.
+ */
+
+movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+/**
+ * Whenever we use the reduce() method, we need to ask: "What should be
+ * the purpose of this accumulator value?"
+ *
+ * In the above example, when we wanted to add all the values in an
+ * array, the purpose of the accumulator was to keep track of the current
+ * sum.
+ *
+ * In our current example, the accumulator will be the one that will
+ * keep track of the current maximum value.
+ *
+ * So, let's just start by writing the logic in a bigger way so we
+ * can understand what's happening and then we will simplify it to make
+ * it a one-liner function.
+ *
+ * So, in the function body, we want to return the current accumulator
+ * value if it is bigger than current movement value, otherwise we want
+ * to return the current movement value. This is because in the next
+ * iteration, the value that we return will be the value of the
+ * accumulator.
+ *
+ * Also, the initial value of the accumulator will be the first element
+ * of the array. We could have set it to 0 but, if the first value of
+ * the movements array was negative and we were looking for the minimum
+ * value in the array then that wouldn't work. Also, imagine if all
+ * the values of the array are negative and we wanted to find the biggest
+ * value of them all, then 0 wouldn't give us the expected outcome.
+ *
+ * So, don't just set the initial value of the accumulator to 0 if you
+ * are looking for a maximum or minimum value. Always just go with the
+ * first value of the array.
+ */
+
+// Maximum value in the movements array
+let max = movements.reduce((acc, mov) => {
+  if (acc > mov) {
+    return acc;
+  } else {
+    return mov;
+  }
+}, movements[0]);
+
+console.log(max); // 3000
+
+/**
+ * There are a ton of things that we can do with the reduce() method. It
+ * is by far the most powerful array method there is and because of that,
+ * it can also be the hardest one to use.
+ *
+ * So, we always need to think exactly what we want the accumulator and
+ * the current value to be and how they should interact.
+ *
+ * Hopefully, with this exercise, we could demonstrate the thought
+ * process a little bit and throughout the section and the rest of the
+ * course, there will be some more exercises of the reduce() method so
+ * that you can also learn better and better how to use it yourself.
+ */
+
+// simplifying the above exercise:
+max = movements.reduce((acc, mov) => (acc > mov ? acc : mov));
+console.log(max); // 3000
+
+/**
+ * NOTE: If there is no initial value explicitly mentioned when calling
+ * the reduce() method, the first value of the array is set as the
+ * initial value of the accumulator by default and the the callback
+ * function starts executing with the second value in the arra as the
+ * current value.
+ *
+ * To learn more, visit MDN Docs: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce
+ */
