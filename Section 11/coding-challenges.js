@@ -61,3 +61,97 @@ const checkDogs = function (dogsJulia, dogsKate) {
 
 checkDogs([3, 5, 2, 12, 7], [4, 1, 15, 8, 3]);
 checkDogs([9, 16, 6, 8, 3], [10, 5, 6, 1, 4]);
+
+/***********************************************************************/
+/************************* CODING CHALLENGE 02 *************************/
+/***********************************************************************/
+console.log(
+  `/************************* CODING CHALLENGE 02 *************************/`
+);
+
+/**
+ * Let's go back to Julia and Kate's study about dogs. This time, they
+ * want to convert dog ages to human ages and calculate the average age of
+ * the dogs in their study.
+ *
+ * Data 01: [5, 2, 4, 1, 15, 8, 3]
+ * Data 02: [16, 6, 10, 5, 6, 1, 4]
+ */
+
+/**
+ * TODO 01:
+ *
+ * Create a function 'calcAverageHumanAge', which accepts an arrays of
+ * dog's ages ('ages'), and does the following things in order:
+ *
+ * 1) Calculate the dog age in human years using the following formula:
+ * if the dog is <= 2 years old, humanAge = 2 * dogAge. If the dog is > 2
+ * years old, humanAge = 16 + dogAge * 4
+ *
+ * 2) Exclude all dogs that are less than 18 human years old (which is the
+ * same as keeping dogs that are at least 18 years old)
+ *
+ * 3) Calculate the average human age of all adult dogs (you should
+ * already know from other challenges how we calculate averages 😉)
+ *
+ * 4) Run the function for both test datasets
+ */
+
+console.log(`---original solution---`);
+let calcAverageHumanAge = function (ages) {
+  const adults = [];
+  ages.forEach(function (dogAge) {
+    const humanAge = dogAge <= 2 ? 2 * dogAge : 16 + dogAge * 4;
+
+    if (humanAge >= 18) {
+      adults.push(humanAge);
+    }
+  });
+
+  return adults.reduce((acc, curAge) => acc + curAge) / adults.length;
+};
+
+console.log(calcAverageHumanAge([5, 2, 4, 1, 15, 8, 3]));
+console.log(calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]));
+
+console.log(`---with array methods---`);
+calcAverageHumanAge = function (ages) {
+  const humanAges = ages.map(dogAge =>
+    dogAge <= 2 ? 2 * dogAge : 16 + dogAge * 4
+  );
+
+  const adults = humanAges.filter(age => age >= 18);
+
+  const avg1 = adults.reduce((acc, age) => acc + age) / adults.length;
+  const avg2 = adults.reduce((acc, age, i, arr) => acc + age / arr.length, 0);
+
+  /**
+   * This is the explanation for how we calculated avg2:
+   *
+   * We usually calculate average like so: (n1 + n2 + n3 + ... + nN)/N
+   *
+   * But, if we spread the denominator of N like so:
+   * n1/N + n2/N + n3/N + ... + nN/N
+   * we will get the same result.
+   *
+   * So, we can have our accumulator have the initial value of 0 so,
+   * 0/N will be 0, and then in every iteration, we divide age by N.
+   *
+   * So, we will end up starting with 0/N + n1/N, then in the next
+   * iteration  it will be (0 + n1)/N + n2/N
+   *
+   * In the next it will be (0 + n1 + n2)/N + n3/N
+   * so on and so forth
+   *
+   * This will get us the same result.
+   *
+   * This solution allows us to see a use case of the array parameter in
+   * the callback function, as we will use to calculate N, which is
+   * array.length.
+   */
+
+  return avg2;
+};
+
+console.log(calcAverageHumanAge([5, 2, 4, 1, 15, 8, 3]));
+console.log(calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]));
