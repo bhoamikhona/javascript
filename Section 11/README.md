@@ -38,6 +38,7 @@
     - [Computing Usernames](#computing-usernames)
     - [The Filter Method](#the-filter-method)
     - [The Reduce Method](#the-reduce-method)
+    - [The Magic Of Chaining Methods](#the-magic-of-chaining-methods)
   - [Author](#author)
 
 ## Lessons Learned
@@ -219,6 +220,26 @@
     - `array` - The array `reduce()` was called upon.
   - `initialValue` (optional) - A value to which `accumulator` is initialized the first time the callback is called. If `initialValue` is specified, `callbackFn` starts executing with the first value in the array as `currentValue`. If `initialValue` is not specified, accumulator is initialzied to the first value in the array, and `callbackFn` starts executing with the second value in the array as `currentValue`. In this case, if the array is empty (so that there's no first value to return as `accumulator`), an error is thrown.
 - The value that results from running the "reducer" callback function to completion over the entire array.
+
+### The Magic Of Chaining Methods
+
+- Examples of chaining methods.
+- Completed the statistics (income, outcome, interest) part of the bankist application.
+- Debugging method chaining, in case there is an error.
+- Remarks about method chaining:
+  - We should not overuse chaning, we should try to optimize it because, chaining a lot of methods one after another can cause real performance issues if we have huge arrays.
+  - It is a bad practice in Javascript to chain methods that mutate the underlying original array. An example of that is the `splice()` method.
+- Remarks about Method Chaining:
+  - We should not overuse chaining.
+    - We should try to optimize it because chaining a ton of methods one after another can cause real performance issues if we have huge arrays.
+    - If we have a huge chain of methods, chained one after another, we should try to compress all the functionality that they do into as little methods as possible.
+    - For example, sometimes we create way more `map()` methods than we actually need, where we could just do it all in one `map()` call.
+    - So, when you chain methods like this, keep looking for opportunities to keep you code's performance up.
+  - It is a bad practice in JavaScript to chain methods that mutate the underlying original array.
+    - An example of that is `splice()` method.
+    - You should not chain a method like `splice()` or the `reverse()`
+    - methods.
+    - You can technically chain them, and for small applications like our bankist app, it is not a big deal and it is not going to cause problems, but, in a large scale application, it usually always a good practice to avoid mutating arrays (we will come back to this when we talk a little bit more about functional programming).
 
 ## Author
 

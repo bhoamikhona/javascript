@@ -841,7 +841,7 @@ movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
  * separate variable.
  */
 
-const euroToUsd = 1.1;
+let euroToUsd = 1.1;
 
 /**
  * Now what we want to do is to basically multiply each element of the
@@ -1440,4 +1440,161 @@ console.log(max); // 3000
  * current value.
  *
  * To learn more, visit MDN Docs: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce
+ */
+
+/***********************************************************************/
+/******************** THE MAGIC OF CHAINING METHODS ********************/
+/***********************************************************************/
+console.log(
+  `/******************** THE MAGIC OF CHAINING METHODS ********************/`
+);
+
+/**
+ * Up until now, we have been using the map(), filter(), and reduce()
+ * methods kind of in isolation.
+ *
+ * However, we can take it one step further by chaining all of these
+ * methods one after another.
+ *
+ * For example, let's say that we wanted to take all the movement
+ * deposits then convert them from euros to dollars and finally add them
+ * all up, so that we know exactly how much was deposited into the
+ * account in USD.
+ *
+ * Now, we could of course, do each of those operations individually
+ * and store each result in a new variable.
+ *
+ * However, we can also do it all in one go. So, let's do that.
+ *
+ * We will start by using the filter() method to extract all the
+ * deposits from the movements array, then we will use method chaining
+ * to chain the map() method on the resulting array to convert each
+ * deposit into USD, finally, we will chain the reduce() method to
+ * sum all the deposits up.
+ *
+ * Method chaining works because map() and filter() return a new array
+ * based on the conditions that we pass into their callback functions.
+ * So, if the returning value is an array, then we can call another
+ * array method on that returning value.
+ */
+
+movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+euroToUsd = 1.1;
+
+// PIPELINE Analogy
+let totalDepositsUSD = movements
+  .filter(mov => mov > 0)
+  .map(mov => mov * euroToUsd)
+  .reduce((sum, mov) => sum + mov, 0);
+
+console.log(totalDepositsUSD); // 5522.000000000001
+
+/**
+ * We could of course chain many other methods as long as they return
+ * new arrays.
+ *
+ * NOTE: We cannot chain another array method after reduce() because
+ * reduce() returns a single value. It does not return a new array.
+ *
+ * So, we can only chain an array method one after another, if the first
+ * one returns an array.
+ *
+ * You can imagine all of it sort of like a pipeline that processes our
+ * data. We access our data right at the beginning (like the movements
+ * array in our example), then it goes through different steps of
+ * processing (steps being filter(), map(), and reduce() in our case),
+ * and the processed data comes out the other end of the pipeline.
+ *
+ * When we chain all these methods together, it can be a little hard
+ * to debug if one of the results is not what we expect.
+ *
+ * For example, if our result was a negative value, it would be very
+ * difficult to figure out which step of the pipeline that bug would
+ * come from.
+ *
+ * To solve that, it would be good to check the result at every step.
+ *
+ * For demonstration purposes, let's introduce a mistake, let's filter
+ * all the withdrawals instead of deposits.
+ *
+ */
+
+totalDepositsUSD = movements
+  .filter(mov => mov < 0) // mistake inserted
+  .map(mov => mov * euroToUsd)
+  .reduce((sum, mov) => sum + mov, 0);
+
+console.log(totalDepositsUSD); // -1298.0000000000002
+
+/**
+ * Now to figure out where our mistake lies, we can take the help of
+ * the `array` parameter that we get a hold of in each of these array
+ * methods.
+ */
+
+totalDepositsUSD = movements
+  .filter(mov => mov < 0)
+  .map((mov, idx, arr) => {
+    // finding the bug using the `arr` parameter
+    console.log(arr); // [-400, -650, -130]
+    return mov * euroToUsd;
+  })
+  .reduce((sum, mov) => sum + mov, 0);
+
+console.log(totalDepositsUSD);
+
+/**
+ * So, if we want to see the result of filter(), we can use array
+ * parameter of the next chained method because the input to that method
+ * is essentially the output of the previous method.
+ *
+ * This is one of the greate use cases of having access to the array
+ * parameter that we are iterating over in these array methods.
+ *
+ * Let's bring back our original correct solution:
+ */
+
+totalDepositsUSD = movements
+  .filter(mov => mov > 0)
+  .map(mov => mov * euroToUsd)
+  .reduce((sum, mov) => sum + mov, 0);
+
+console.log(totalDepositsUSD); // 5522.000000000001
+
+/**
+ * Now that we know how the method chaining works, we can go back to our
+ * application and calculate the statistics displayed below the movements
+ * in the UI.
+ *
+ * So, head over to the script.js file for that.
+ */
+
+/**
+ * Remarks about Chaining:
+ *
+ * 1. We should not overuse chaning, we should try to optimize it because,
+ * chaining a lot of methods one after another can cause real performance
+ * issues if we have huge arrays.
+ *
+ * If we have a huge chain of methods, chained one after another, we
+ * should try to compress all the functionality that they do into as
+ * little methods as possible.
+ *
+ * For example, sometimes we create way more map() methods that we
+ * actually need, where we could just do it all in one map() call.
+ *
+ * So, when you chain methods like this, keep looking for opportunities
+ * of keeping up your code's performance.
+ *
+ * 2. It is a bad practice in Javascript to chain methods that mutate
+ * the underlying original array. An example of that is the `splice()`
+ * method.
+ *
+ * You should not chain a method like `splic()` or `reverse()`. You can
+ * do it if you wanted to and for a small application like this, it is
+ * not a big deal, however, in a large scale application, it is usually
+ * always a good practice to avoid mutating arrays.
+ *
+ * We will comeback to this, when we talk more about functional
+ * programming.
  */

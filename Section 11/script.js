@@ -69,7 +69,7 @@ const displayMovements = function (movements) {
         <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
-        <div class="movements__value">${mov}</div>
+        <div class="movements__value">${mov}€</div>
       </div>
     `;
 
@@ -82,10 +82,61 @@ displayMovements(account1.movements);
 // Calculates and displays the total sum of balance on the UI
 const calcDisplayBalance = function (movements) {
   const balance = movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${balance} €`;
+  labelBalance.textContent = `${balance}€`;
 };
 
 calcDisplayBalance(account1.movements);
+
+// Calculates and displays the three summaries of the account in the UI
+const calcDisplaySummary = function (movements) {
+  const incomes = movements
+    .filter(mov => mov > 0)
+    .reduce((acc, mov) => acc + mov, 0);
+
+  labelSumIn.textContent = `${incomes}€`;
+
+  const outcomes = movements
+    .filter(mov => mov < 0)
+    .reduce((acc, mov) => acc + mov, 0);
+
+  labelSumOut.textContent = `${Math.abs(outcomes)}€`;
+
+  /**
+   * Let's say that this bank pays out an interest each time there is a
+   * deposit to the bank account, and that interest is 1.2% of the
+   * deposited amount.
+   *
+   * NOTE:
+   * Unfortunately there is nothing like that in the real world but,
+   * here in our fictional bank, we can have whatever rules we want.
+   */
+
+  // const interest = movements
+  //   .filter(mov => mov > 0)
+  //   .map(deposit => (deposit * 1.2) / 100)
+  //   .reduce((acc, int) => acc + int, 0);
+
+  // labelSumInterest.textContent = `${interest}€`;
+
+  /**
+   * Now let's say that our bank introduces a new rule. Now the bank only
+   * pays interest if that interest is at least 1€ or whatever other
+   * currency.
+   */
+
+  const interest = movements
+    .filter(mov => mov > 0)
+    .map(deposit => (deposit * 1.2) / 100)
+    // we are using filter() here because we want to filter out the interests that are below 1
+    .filter((int, i, arr) => {
+      console.log(arr);
+      return int >= 1;
+    })
+    .reduce((acc, int) => acc + int, 0);
+
+  labelSumInterest.textContent = `${interest}€`;
+};
+calcDisplaySummary(account1.movements);
 
 // Creates usernames for all the accounts
 const createUsernames = function (accs) {
