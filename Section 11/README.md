@@ -41,6 +41,7 @@
     - [The Magic Of Chaining Methods](#the-magic-of-chaining-methods)
     - [The Find Method](#the-find-method)
     - [Implementing Login](#implementing-login)
+    - [Implementing Transfers](#implementing-transfers)
   - [Author](#author)
 
 ## Lessons Learned
@@ -265,6 +266,11 @@
 - Another great thing about forms is that whenever we have one of the input fields, and we click/type into it and then we hit 'enter' then that will automatically trigger a click event on the submit button.
 - So clicking into or typing into any of the input fields of the form and then hitting enter, will trigger the submit button.
 - Now since we added a 'click' event, event listener to the submit button now both, the 'enter' key and the 'click' event will trigger the event listener function attached to it.
+
+### Implementing Transfers
+
+- In this lesson, we are going to implement our next feature, which is to transfer money from one user to another.
+- Here's how transfers work - we input the username of another user to whom we want to transfer and then the amount.
 
 ## Author
 
