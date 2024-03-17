@@ -40,6 +40,7 @@
     - [The Reduce Method](#the-reduce-method)
     - [The Magic Of Chaining Methods](#the-magic-of-chaining-methods)
     - [The Find Method](#the-find-method)
+    - [Implementing Login](#implementing-login)
   - [Author](#author)
 
 ## Lessons Learned
@@ -251,6 +252,19 @@
     - `index` - The index of the current element being processed in the array.
     - `array` - The array `find()` was called upon
   - `thisArg` (optional) - A value to use as `this` when executing `callbackFn`.
+
+### Implementing Login
+
+- In this lesson, we will implement log in functionality, and dynamically displayed information depending on the account that has been logged in.
+- In an HTML form, the default behavior of the submit button is to reload the page. In order to prevent that from happening, we can call `preventDefault()` on events parameter of the event listener.
+- The `event.preventDefault()` method cancels the event if it is cancelable, meaning that the default action that belongs to the event will not occur. For example, this can be useful when:
+  - Clicking on a "submit" button, prevent it from submitting a form.
+  - Clicking on a link, prevent the link from following the URL.
+- NOTE: Not all events are cancelable. Use `cancelable` property to find out if an event is cancelable.
+- The `HTMLElement.blur()` method removes keyboard focus from the current element.
+- Another great thing about forms is that whenever we have one of the input fields, and we click/type into it and then we hit 'enter' then that will automatically trigger a click event on the submit button.
+- So clicking into or typing into any of the input fields of the form and then hitting enter, will trigger the submit button.
+- Now since we added a 'click' event, event listener to the submit button now both, the 'enter' key and the 'click' event will trigger the event listener function attached to it.
 
 ## Author
 
