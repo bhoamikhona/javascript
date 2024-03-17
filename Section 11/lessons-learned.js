@@ -1598,3 +1598,110 @@ console.log(totalDepositsUSD); // 5522.000000000001
  * We will comeback to this, when we talk more about functional
  * programming.
  */
+
+/***********************************************************************/
+/*************************** THE FIND METHOD ***************************/
+/***********************************************************************/
+console.log(
+  `/*************************** THE FIND METHOD ***************************/`
+);
+
+/**
+ * After the very important map(), filter(), and reduce() methods, we
+ * still have some more methods to learn which are also super important
+ * and are used all the time.
+ *
+ * In this lesson, we are going to talk about the find() method.
+ *
+ * As the name suggests, we can use the find() method to retrieve one
+ * element of an array based on a condition.
+ *
+ * Just like all the other array methods that we have been talking about,
+ * the find() method also accepts a callback function which will then
+ * be called as the method loops over the array.
+ *
+ * So, find() is just another method that loops over the array but then,
+ * it does something different.
+ *
+ * In our case, what the find() method does is to retrieve an element
+ * of the array.
+ */
+
+movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+let firstWithdrawal = movements.find(mov => mov < 0);
+
+/**
+ * As you see, just like the filter() method, the find() method also
+ * needs a callback function that returns either true or false.
+ *
+ * Unline the filter() method, the find() method will not return a new
+ * array but, it will only return the first element in the array that
+ * satisfies the condition in its callback function.
+ *
+ * In other words, the find() method returns the first element in the
+ * array for which the condition in the callback function returns true.
+ */
+
+console.log(movements);
+console.log(firstWithdrawal); // -400
+
+/**
+ * So, as you see, the find() method is a bit similar to the filter()
+ * method, but there are two fundamental differences.
+ *
+ * 1) filter() method returns all the elements that match the condition
+ * while the find() method only returns the first one.
+ *
+ * 2) The filter() method returns a new array while find() method only
+ * returns the element itself.
+ *
+ * Make sure you understand this fundamental difference.
+ */
+
+/**
+ * Let's now take it to the next level and start working with an array
+ * of objects that is, the `accounts` array.
+ *
+ * Array of objects is a very common data structure in JavaScript so,
+ * let's now work with it along with find() method.
+ *
+ * In this context, the find() method becomes very useful because we can
+ * find an object in an array based on some property of that object.
+ */
+
+console.log(accounts);
+let account = accounts.find(acc => acc.owner === 'Jessica Davis');
+console.log(account);
+
+/**
+ * Indeed, we get the account object where the owner is "Jessica Davis".
+ *
+ * This really, really powerful of arrays and objects where one array
+ * contains multiple objects that all have similar structure.
+ */
+
+/**
+ * Usually the goal of the find() method is just to find exactly one
+ * element, and therefore, we usually set up a condition where only
+ * one element can satisfy that condition.
+ *
+ * That's why we used the `===` operator in our example above.
+ *
+ * So, if the owner name is unique, then the equal operator will only
+ * ever match one account with that particular name.
+ *
+ * We will use this in the next couple of lessons to implement the login
+ * feature, and also some other features.
+ *
+ * Just for comparison, here is how we would do it using the for-of loop.
+ */
+
+account = {};
+for (const acc of accounts) {
+  if (acc.owner === 'Jessica Davis') {
+    account = acc;
+  }
+}
+
+console.log(account);

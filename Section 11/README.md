@@ -39,6 +39,7 @@
     - [The Filter Method](#the-filter-method)
     - [The Reduce Method](#the-reduce-method)
     - [The Magic Of Chaining Methods](#the-magic-of-chaining-methods)
+    - [The Find Method](#the-find-method)
   - [Author](#author)
 
 ## Lessons Learned
@@ -240,6 +241,16 @@
     - You should not chain a method like `splice()` or the `reverse()`
     - methods.
     - You can technically chain them, and for small applications like our bankist app, it is not a big deal and it is not going to cause problems, but, in a large scale application, it usually always a good practice to avoid mutating arrays (we will come back to this when we talk a little bit more about functional programming).
+
+### The Find Method
+
+- The `array.find(callbackFn(element, index, array){}, thisArg)` method returns the first element in the provided array that satisfies the provided testing function. If no values satisfy the testing function, `undefined` is returned.
+- Parameters:
+  - `callbackFn` - A function to execute for each element in the array. It should return a truthy value to indicate a matching element has been found, and a falsy value otherwise. The function is called with the following arguments:
+    - `element` - The current element being processed in the array.
+    - `index` - The index of the current element being processed in the array.
+    - `array` - The array `find()` was called upon
+  - `thisArg` (optional) - A value to use as `this` when executing `callbackFn`.
 
 ## Author
 
