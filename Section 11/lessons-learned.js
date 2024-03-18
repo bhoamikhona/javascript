@@ -1861,3 +1861,173 @@ console.log(movements.filter(deposit));
  * In practice, this is something that we do sometimes because it is,
  * of course, better for the DRY principle.
  */
+
+/**********************************************************************/
+/************************** FLAT AND FLATMAP **************************/
+/**********************************************************************/
+console.log(
+  `/************************** FLAT AND FLATMAP **************************/`
+);
+
+/**
+ * The next two array methods that we are going to learn are the flat()
+ * and flatMap() methods. Thankfully, these are very easy to understand.
+ * So, let's go.
+ *
+ * Let's say that we have an array with some arrays in it; essentially,
+ * a nested array.
+ */
+
+arr = [[1, 2, 3], [4, 5, 6], 7, 8];
+
+/**
+ * This array is perfectly normal but, what if we wanted to take all
+ * these nested arrays and put them all together in just one big array,
+ * which contains all the numbers from 1 to 8.
+ *
+ * That's pretty simple using the new flat() method; and we say new
+ * because both flat() and flatMap() were both introduced in ES2019.
+ *
+ * So, they are pretty recent and they will therefore not work in super
+ * old browsers.
+ */
+
+console.log(arr.flat()); // [1, 2, 3, 4, 5, 6, 7, 8]
+
+/**
+ * That's it for the flat() method. It doesn't need a callback function
+ * and we indeed get our full array from 1 to 8.
+ *
+ * It removed the nested arrays and flattened the array, which is why
+ * the method is called flat().
+ *
+ * But now, let's say we have an array which is even deeper nested.
+ *
+ */
+
+let arrDeep = [[[1, 2], 3], [4, [5, 6]], 7, 8];
+
+/**
+ * Let's see what happens when we use flat() method on `arrDeep`.
+ */
+
+console.log(arrDeep.flat()); // [Array(2), 3, 4, Array(2), 7, 8]
+
+/**
+ * Now we see a result which still contains the two inner arrays.
+ *
+ * This means that the flat() method only goes one level deep, when
+ * flattening the array.
+ *
+ * We can fortunately fix that by using the `depth` argument.
+ * The default value of `depth` argument is 1.
+ */
+
+console.log(arrDeep.flat(1)); // [Array(2), 3, 4, Array(2), 7, 8]
+console.log(arrDeep.flat(2)); // [1, 2, 3, 4, 5, 6, 7, 8]
+
+/**
+ * With the `depth` value of 2, we get the result that we have been
+ * wanting.
+ *
+ * This works because it now goes even deeper, into the second level
+ * of nesting and also takes the element out of that array.
+ *
+ * That is how flat() works but, this example is not really that useful
+ * so, let's go back to the bank accounts.
+ *
+ * So, let's say that the bank itself wants to calculate the overall
+ * balance of all the movements of all the accounts.
+ *
+ * So, how would we go about solving this problem?
+ *
+ * First of all, we have all these movements stored in arrays, and these
+ * arrays are inside the objects in the accounts array.
+ */
+
+console.log(accounts);
+
+/**
+ * The first thing to do is to take those movements out of there and
+ * put them all in one array.
+ */
+
+let accountMovements = accounts.map(acc => acc.movements);
+console.log(accountMovements);
+
+/**
+ * Now we actually have a nested structure which is an array of arrays
+ * and this big array has all the movements array from all the accounts
+ * stored in it.
+ *
+ * Now we want one big array with all the movements values, not nested.
+ */
+
+let allMovements = accountMovements.flat();
+console.log(allMovements);
+
+/**
+ * Now we have a nice big array which holds all the movements from all
+ * the accounts in the bank.
+ *
+ * Now, all we have to do is to add them all together, which is pretty
+ * easy at this point.
+ */
+
+let overalBalance = allMovements.reduce((acc, mov) => acc + mov, 0);
+console.log(overalBalance);
+
+/**
+ * Now we get the final result of adding up all of the values, that were
+ * originally as we started, in the separate movements arrays that were
+ * in turn, inside of the account objects.
+ *
+ * We can make this all, more beautiful by using the power of method
+ * chaining.
+ */
+
+// flat
+overalBalance = accounts
+  .map(acc => acc.movements)
+  .flat()
+  .reduce((acc, mov) => acc + mov, 0);
+
+console.log(overalBalance);
+
+/**
+ * Now, as it turns out, using a map() first and then flattening the
+ * result is a pretty common operation; just like have it in our example
+ * above.
+ *
+ * So, to solve this, there is another method that was also introduced
+ * at the same time, which is flatMap().
+ *
+ * So, `flatMap()` essentially combines a map() and a flat() method,
+ * into just one method, which is better for performance.
+ *
+ * So, let's re-create our example above but, this time with flatMap().
+ *
+ * NOTE: Since flatMap() also does mapping, it needs to receive exactly
+ * the same callback as a map() method.
+ */
+
+// flatMap
+
+overalBalance = accounts
+  .flatMap(acc => acc.movements)
+  .reduce((acc, mov) => acc + mov, 0);
+
+console.log(overalBalance);
+
+/**
+ * So, flatMap() is essentially a map() method the difference is that,
+ * in the end, it flattens the end result.
+ *
+ * Note that flatMap() only goes one level deep and we cannot change it.
+ *
+ * So, if you do need to go deeper than just one level, you still need
+ * to use the flat() method.
+ *
+ * So, keep these two methods in mind whenever you find yourself in a
+ * situation where you have nessted array and need to work with them.
+ */

@@ -44,6 +44,7 @@
     - [Implementing Transfers](#implementing-transfers)
     - [The findIndex Method](#the-findindex-method)
     - [Some and Every](#some-and-every)
+    - [Flat and FlatMap](#flat-and-flatmap)
   - [Author](#author)
 
 ## Lessons Learned
@@ -308,6 +309,21 @@
       - `element` - The current element being processed in the array.
       - `index` - The index of the current element being processed in the array.
       - `array` - The array `every()` was called upon.
+    - `thisArg` (optional) - A value to use as `this` when executing `callbackFn`.
+
+### Flat and FlatMap
+
+- `flat()`
+  - The `array.flat(depth)` method creates a new array with all sub-array elements concatenated into it recursively up to the specified depth. It returns a new array with the sub-array elements concatenated into it.
+  - Parameters:
+    - `depth` (optional) - The depth level specifying how deep a nested array structure should be flattened. Defaults to 1.
+- `flatMap()`
+  - The `array.flatmap(callbackFn(element, index, array){}, thisArg)` method returns a new array formed by applying a given callback function to each element of the array, and then flattening the result by one level. It is identical to the `map()` method, followed by a `flat()` method of depth 1 but, slightly more efficient than calling those two methods separately.
+  - Parameters:
+    - `callbackFn` - A function to execute for each element in the array. It should return an array containing new elements of the new array, or a single non-array value to be added to the new array. The function is called with the following arguments:
+      - `element` - The current element being processed in the array.
+      - `index` - The index of the current element being processed in the array.
+      - `array` - The array `flatMap()` was called upon.
     - `thisArg` (optional) - A value to use as `this` when executing `callbackFn`.
 
 ## Author
