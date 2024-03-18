@@ -42,6 +42,7 @@
     - [The Find Method](#the-find-method)
     - [Implementing Login](#implementing-login)
     - [Implementing Transfers](#implementing-transfers)
+    - [The findIndex Method](#the-findindex-method)
   - [Author](#author)
 
 ## Lessons Learned
@@ -271,6 +272,23 @@
 
 - In this lesson, we are going to implement our next feature, which is to transfer money from one user to another.
 - Here's how transfers work - we input the username of another user to whom we want to transfer and then the amount.
+
+### The findIndex Method
+
+- Now that we have a good grip on the `find()` method, we will learn about a close cousin of it, which is the `findIndex()` method.
+- The `findIndex()` method works almost the same ways as `find()` but, as the name suggests, `findIndex()` returns the index of the found element and not the element itself.
+- The `array.findIndex(callbackFn(element, index, array){}, thisArg)` method returns the index of the first element in an array that satisfies the provided testing function. If no elements satisfy the testing function, -1 is returned.
+- Parameters:
+  - `callbackFn` - A function to execute for each element in the array. It should return a truthy value to indicate a matching element has been found, and a falsy value otherwise. The function is called with the following arguments:
+    - `element` - The current element being processed in the array.
+    - `index` - The index of the current element being processed in the array.
+    - `array` - The array `findIndex()` was called upon.
+  - `thisArg` (optional) - A value to use as `this` when executing `callbackFn`.
+- So, let's see a great usecase for `findIndex()` in our bankist application, which is the close account feature; and in our application, closing an account means to basically, just delete that account object from our `accounts` array.
+- To delete an element from an array, we use the `splice()` method but, in order to use that, we need the index at which we want to delete and that's where `findIndex()` comes into play.
+- You might notice that `findIndex()` is very similar to the `indexOf()` method that we've studied before but, the big difference is that, with `indexOf()`, we can only search for a value that is in the array e.g. `indexOf(23)` but, on the other hand, with `findIndex()`, we can create a complex condition e.g. `findIndex(function (element) {element > 13})`.
+- So, both of those methods return an index number but, `indexOf()` is a lot simpler than `findIndex()`.
+- NOTE: Both, the `find()` and `findIndex()` methods get access to current index, and the current array. So as always, besides the current element, these other two values are also available. Also, both `find()` and `findIndex()` methods were added to JavaScript in ES6.
 
 ## Author
 
