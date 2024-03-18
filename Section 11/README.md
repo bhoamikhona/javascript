@@ -43,6 +43,7 @@
     - [Implementing Login](#implementing-login)
     - [Implementing Transfers](#implementing-transfers)
     - [The findIndex Method](#the-findindex-method)
+    - [Some and Every](#some-and-every)
   - [Author](#author)
 
 ## Lessons Learned
@@ -289,6 +290,25 @@
 - You might notice that `findIndex()` is very similar to the `indexOf()` method that we've studied before but, the big difference is that, with `indexOf()`, we can only search for a value that is in the array e.g. `indexOf(23)` but, on the other hand, with `findIndex()`, we can create a complex condition e.g. `findIndex(function (element) {element > 13})`.
 - So, both of those methods return an index number but, `indexOf()` is a lot simpler than `findIndex()`.
 - NOTE: Both, the `find()` and `findIndex()` methods get access to current index, and the current array. So as always, besides the current element, these other two values are also available. Also, both `find()` and `findIndex()` methods were added to JavaScript in ES6.
+
+### Some and Every
+
+- `some()`
+  - The `array.some(callbackFn(element, index, array) {}, thisArg)` method tests whether at least one element in the array passes the test implemented by the provided function. It returns true if, in the array, it finds an element for which the provided function returns true; otherwise it returns false. It doesn't modify the array.
+  - Parameters:
+    - `callbackFn` - A function to execute for each element in the array. It should return a truthy value to indicate the element passes the test, and a falsy value otherwise. The function is called with the following arguments:
+      - `element` - The current element being processed in the array.
+      - `index` - The index of the current element being processed in the array.
+      - `array` - The array `some(callbackFn(element, index, array){}, thisArg)` was called upon
+    - `thisArg` - A value to use as `this` when executing `callbackFn`.
+- `every()`
+  - The `array.every()` method test whether all elements in the array pass the test implemented by the provided function. It returns true is callbackFn returns a truthy value for every array element, otherwise false.
+  - Parameters:
+    - `callbackFn` - A function to execute for each element in the array. It should return a truthy value to indicate the element passes the test, and a falsy value otherwise. The function is called with the following arguments:
+      - `element` - The current element being processed in the array.
+      - `index` - The index of the current element being processed in the array.
+      - `array` - The array `every()` was called upon.
+    - `thisArg` (optional) - A value to use as `this` when executing `callbackFn`.
 
 ## Author
 

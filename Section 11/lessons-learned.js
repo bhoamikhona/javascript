@@ -1705,3 +1705,159 @@ for (const acc of accounts) {
 }
 
 console.log(account);
+
+/**********************************************************************/
+/*************************** SOME AND EVERY ***************************/
+/**********************************************************************/
+console.log(
+  `/*************************** SOME AND EVERY ***************************/`
+);
+
+// SOME
+/**
+ * We are getting closer to the end of this section but, there are still
+ * a couple of array methods left to learn.
+ *
+ * In this lesson, we are going to look at the some() and the every()
+ * methods. To start learning about the some() method, let's look back
+ * at includes() method that we studied earlier.
+ */
+
+movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+console.log(movements.includes(-130)); // true
+
+/**
+ * So, we can use the includes() method to test if an array includes a
+ * certain value.
+ *
+ * However, we can only really test for equality. Basically, includes()
+ * returns true if any value in the array is exactly equal to -130. So,
+ * this is essentially testing for equality.
+ *
+ * But, what if we wanted to test for a condition instead? That's where
+ * the some() method comes into play.
+ *
+ * Let's say that we would like to know if there has been any deposits
+ * on this account. In other words, we want to know if there is any
+ * positive movement in this array i.e. any number above 0. How would we
+ * do that?
+ */
+
+let anyDeposits = movements.some(mov => mov > 0);
+console.log(anyDeposits); // true
+
+anyDeposits = movements.some(mov => mov > 5000);
+console.log(anyDeposits); // false
+
+anyDeposits = movements.some(mov => mov > 1500);
+console.log(anyDeposits); // true
+
+/**
+ * So, as you can see, the includes() and some() methods are kind of
+ * similar.
+ *
+ * The difference is that we can only check for equality when using
+ * includes() but, we can check for any condition with some().
+ */
+
+// EQUALITY
+console.log(movements.includes(-130));
+
+// CONDITION
+console.log(movements.some(mov => mov > 0));
+console.log(movements.some(mov => mov === -130)); //  this is the same as what we did with includes() method but, this is just for demonstration purposes. Needless to say, it is better to use includes() if we are just checking for equality.
+
+/**
+ * Essentially, if there is any value in the array for which the
+ * condition in the callback function is true, then the some() method
+ * will return true, otherwise, it will return false.
+ *
+ * Let's now actually use this some() method to implement our missing
+ * functionality in our bankist app, which is to request a loan to the
+ * bank.
+ *
+ * The some() method will become helpful for the loan feature because,
+ * our bank has a rule, which says that it only grants a loan if there
+ * is at least one deposit with at least 10% of the requested loan
+ * amount.
+ *
+ * So, head over to the script.js file for that.
+ */
+
+// EVERY
+/**
+ * Let's now talk about the close cousin of some() method which is
+ * every() method.
+ *
+ * But, as you might have already guessed the difference between them, is
+ * that every() only returns true if all of the elements in the array
+ * satisfy the condition that we pass in.
+ *
+ * In other words, if every element passes the test in our callback
+ * function, only then the every() method returns true and that's why
+ * the method is called "every" in the first place.
+ *
+ * So, let's test it out now.
+ */
+
+movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+console.log(movements.every(mov => mov > 0)); // false
+
+let movements2 = [430, 1000, 700, 50, 90];
+console.log(movements2.every(mov => mov > 0)); // true
+
+/**
+ * This proves that every() returns true if all the elements in the array
+ * satisfy the condition in the callback function.
+ *
+ * It is quite straightforward.
+ */
+
+/**
+ * Now just to finish, let's see one more cool thing.
+ *
+ * Up until this point, we have always written the callback function
+ * directly as an argument into our array methods.
+ *
+ * However, we could also write them separately and then pass the
+ * function as a callback.
+ */
+
+// Separate Callback
+let deposit = mov => mov > 0;
+
+/**
+ * So, our deposit() function is exactly the same as the callback
+ * functions that we used in some() and every() method above.
+ *
+ * But, as mentioned before, there is no reason for the callback
+ * functions to be directly written in all of the array methods.
+ *
+ * We could simply write them like this:
+ */
+
+console.log(movements.some(deposit));
+
+/**
+ * Now we could re-use the same function for all kinds of different
+ * methods that require callbacks with a true/false condition.
+ *
+ * Example:
+ */
+
+console.log(movements.some(deposit));
+console.log(movements.every(deposit));
+console.log(movements.filter(deposit));
+
+/**
+ * As you see, we get the expected result all by re-using the same
+ * function.
+ *
+ * Now if we wanted to change the function, we would only have to do
+ * it one place - and then all the results would become different
+ * according to that.
+ *
+ * In practice, this is something that we do sometimes because it is,
+ * of course, better for the DRY principle.
+ */
