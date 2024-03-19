@@ -2031,3 +2031,229 @@ console.log(overalBalance);
  * So, keep these two methods in mind whenever you find yourself in a
  * situation where you have nessted array and need to work with them.
  */
+
+/**********************************************************************/
+/*************************** SORTING ARRAYS ***************************/
+/**********************************************************************/
+console.log(
+  `/*************************** SORTING ARRAYS ***************************/`
+);
+
+/**
+ * We are almost finished with this section and with our application but,
+ * one feature that is still missing in our application is the ability
+ * to sort our movements.
+ *
+ * So, in this lesson, let's talk about sorting arrays.
+ *
+ * Now, sorting is a much-discussed topic in computer science and there
+ * are countless algorithms and methods of sorting values and we might
+ * actually talk about this a little bit later in the course.
+ *
+ * For now though, we are simply going to use JavaScript's built-in
+ * sort() method.
+ *
+ * Let's start with an array of strings.
+ */
+
+let owners = ['Bhoami', 'Jonas', 'Zach', 'Mary', 'Amy'];
+console.log(owners.sort()); // ['Amy', 'Bhoami', 'Jonas', 'Mary', 'Zach']
+
+/**
+ * Indeed, we not get out array nicely sorted alphabetically from A to Z.
+ * So, it works just as expected.
+ *
+ * Now this actually mutates the original array. So, let's take a look at
+ * it.
+ */
+
+console.log(owners); // ['Amy', 'Bhoami', 'Jonas', 'Mary', 'Zach']
+
+/**
+ * So, we have to be very careful with this method.
+ *
+ * Now let's try it with an array of numbers.
+ */
+
+movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+console.log(movements.sort()); // [-130, -400, -650, 1300, 200, 3000, 450, 70]
+
+/**
+ * This time the result is not really what we are expecting.
+ *
+ * These numbers are not at all ordered in any way.
+ *
+ * The reason for this is that the sort() method does the sorting based
+ * on strings. So, it might sound weird but, that is just how it works
+ * by default.
+ *
+ * Basically, what it does is to convert everything to strings and then
+ * it does the sorting itself.
+ *
+ * And if we look at the results as if they were strings, then the result
+ * actually makes sense.
+ *
+ * The negative values always comes first. Then we have value that starts
+ * with 1, then with 4, then with 6. After that are all the positive
+ * values. The first positive value starts with 1, the second with 2, the
+ * third with 3, fourth with 4, and last one with 7.
+ *
+ * So, they are alphabetically ordered as if they were strings.
+ *
+ * However, they are not strings and so we have to fix it.
+ * In fact, we can fix it by passing in a compare callback function
+ * into the sort() method.
+ *
+ * This callback function is called with two arguments. Let's simply
+ * call those arguments `a` and `b`.
+ *
+ * These two parameters are essentially the current value and the next
+ * value, if we imagine the sort() method looping over the array.
+ *
+ * However, in order to understand how the compare callback function
+ * works, let's just think of a and b as simply being two consecutive
+ * numbers in the array; and it doesn't matter which ones.
+ *
+ * Now, in our callback function, if we return a value that is less than
+ * 0 then the value a will be sorted before value b.
+ *
+ * And if we return a value that is greater than 0, then b will be put
+ * before a.
+ *
+ * So, let's use that in practice to sort the movements array in
+ * ascending order.
+ */
+
+movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+// if return < 0, A before B (keep order)
+// if return > 0, B before A (switch order)
+
+// Ascending
+movements.sort((a, b) => {
+  if (a > b) return 1; // the number here doesn't matter, as long as it is greater than 0.
+  if (b > a) return -1;
+});
+
+console.log(movements); // [-650, -400, -130, 70, 200, 450, 1300, 3000]
+
+/**
+ * Now as we see, the array is indeed sorted in an ascending order.
+ *
+ * This is because the sort() method basically keeps looping over the
+ * array and applying the callback function until everything is an
+ * ascending order according to the rules that we establish in the
+ * callback function.
+ *
+ * If we wanted to sort our array in descending order, we would simply
+ * do it the other way around.
+ */
+
+movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+// if return < 0, A before B (keep order)
+// if return > 0, B before A (switch order)
+
+// Descending
+movements.sort((a, b) => {
+  if (a < b) return 1; // the number here doesn't matter, as long as it is greater than 0.
+  if (b < a) return -1;
+});
+
+console.log(movements); // [3000, 1300, 450, 200, 70, -130, -400, -650]
+
+/**
+ * Now the array is nicely sorted the other way round.
+ *
+ * This works beautifully and it will also work for strings.
+ */
+
+let fruits = [
+  'banana',
+  'apple',
+  'cherry',
+  'grapes',
+  'custard-apple',
+  'guava',
+  'pineapple',
+];
+
+// fruits ascending
+fruits.sort((a, b) => {
+  if (a > b) return 1;
+  if (a < b) return -1;
+});
+
+console.log(fruits); // ['apple', 'banana', 'cherry', 'custard-apple', 'grapes', 'guava', 'pineapple']
+
+fruits = [
+  'banana',
+  'apple',
+  'cherry',
+  'grapes',
+  'custard-apple',
+  'guava',
+  'pineapple',
+];
+
+// fruits descending
+fruits.sort((a, b) => {
+  if (a < b) return 1;
+  if (a > b) return -1;
+});
+
+console.log(fruits); // ['pineapple', 'guava', 'grapes', 'custard-apple', 'cherry', 'banana', 'apple']
+
+/**
+ * Now, if we are working with numbers, then we can actually simplify
+ * it a lot by simply using some simple math.
+ *
+ * Let's take a look at our condition:
+ *
+ * We already know that if a > b, then a - b would always be something
+ * positive; and if a < b then a - b would always be something negative
+ * so, with this, we can improve our callback function tremendously;
+ * because all we need to return is a - b.
+ */
+
+// Ascending
+movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+movements.sort((a, b) => a - b);
+console.log(movements); // [-650, -400, -130, 70, 200, 450, 1300, 3000]
+
+/**
+ * Let's recap what we did here.
+ *
+ * So, we already know that if a > b then it will be a positive number and
+ * so, we will return a positive number. It doesn't have to be positive 1.
+ * It just has to be greater than 0.
+ *
+ * Now, if it is the other way around i.e. if a < b, then it will be a
+ * negative number therefore, something negative will be returned. Again,
+ * it does not have to negative 1. It just needs to be less than 0.
+ *
+ * NOTE: If the return value is 0 i.e. a is equal to b then their
+ * positions remain unchanged.
+ *
+ * Let's do the same for descending:
+ */
+
+// Descending
+movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+movements.sort((a, b) => b - a);
+console.log(movements); // [3000, 1300, 450, 200, 70, -130, -400, -650]
+
+/**
+ * This is basically the most of what you need to know about sorting
+ * arrays with numbers.
+ *
+ * If you have a mixed array, like with strings and numbers together,
+ * this is not going to work and it is advisable to simple not use the
+ * `sort()` method in that case. That's because, there is not really a
+ * point in doing so.
+ *
+ * But, now that we know how the sort method works, let's go back to our
+ * bankist application and implement it there.
+ */

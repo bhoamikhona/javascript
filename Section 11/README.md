@@ -45,6 +45,7 @@
     - [The findIndex Method](#the-findindex-method)
     - [Some and Every](#some-and-every)
     - [Flat and FlatMap](#flat-and-flatmap)
+    - [Sorting Arrays](#sorting-arrays)
   - [Author](#author)
 
 ## Lessons Learned
@@ -325,6 +326,22 @@
       - `index` - The index of the current element being processed in the array.
       - `array` - The array `flatMap()` was called upon.
     - `thisArg` (optional) - A value to use as `this` when executing `callbackFn`.
+
+### Sorting Arrays
+
+- The `array.sort(compareFn(a, b){})` method sorts the elements of an array **in place** and returns the reference to the same array, now sorted. The default sort order is ascending, built upon converting the elements into strings, then comparing their sequences of UTF-16 code units values.
+- The time and space complexity of the sort cannot be gauranteed as it depends on the implementation.
+- To sort the elements in an array without mutating the original array, use `toSorted()`.
+- Parameters:
+  - `compareFn` - A function that defines the sort order. The return value should be a number whose sign indicates the relative order of the two elements:
+    - Negative if `a` is less than `b`
+    - Positive if `a` is greater than `b`, and
+    - Zero if they are equal.
+    - NOTE: `NaN` is treated as 0.
+  - The function is called with the following arguments:
+    - `a` - The first element for comparison. Will never be `undefined`.
+    - `b` - The second element for comparison. Will never be `undefined`.
+  - If omitted, the array elements are converted to strings, then sorted according to each character's unicode code point value.
 
 ## Author
 
