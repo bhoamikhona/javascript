@@ -47,6 +47,7 @@
     - [Flat and FlatMap](#flat-and-flatmap)
     - [Sorting Arrays](#sorting-arrays)
     - [More Ways of Creating and Filling Arrays](#more-ways-of-creating-and-filling-arrays)
+    - [Summary: Which Array Method to Use?](#summary-which-array-method-to-use)
   - [Author](#author)
 
 ## Lessons Learned
@@ -373,6 +374,24 @@
       - `element` - The current element being processed in the array.
       - `index` - The index of the current element being processed in the array.
   - `thisArg` - Value to use as `this` when executing `mapFn`.
+
+### Summary: Which Array Method to Use?
+
+- ![which-array-method-to-use](https://github.com/bhoamikhona/javascript/assets/50435319/5804b30c-e1ec-497a-9b10-1009cdd88a91)
+- Since the beginning of the course, we have studied exactly 23 different array methods. That's really amazing because, that means that you can now do everything that you can imagine with arrays.
+- The problem is that, choosing between 23 different array methods is not always easy, especially when you just started learning about them.
+- So probably, in your mind, there is a big confusing regarding all of the methods that we learned and which one to use when.
+- This summary lesson is made to make that easier.
+- The best way to figure out which method to use when is by starting to ask the question "What do I want from this method?"
+  - Mutate original array
+  - Get a new array
+  - Get an array index
+  - Retrieve an entire element from the array
+  - Know if the array includes a certain element
+  - Get a new string
+  - Transform the array to a new value
+  - Simply loop over the array
+- These are a lot of different scenarios and by asking exactly these questions, we can now categorize the methods, and then easily choose between them.
 
 ## Author
 
