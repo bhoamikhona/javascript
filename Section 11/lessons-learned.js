@@ -2257,3 +2257,422 @@ console.log(movements); // [3000, 1300, 450, 200, 70, -130, -400, -650]
  * But, now that we know how the sort method works, let's go back to our
  * bankist application and implement it there.
  */
+
+/**********************************************************************/
+/************** MORE WAYS OF CREATING AND FILLING ARRAYS **************/
+/**********************************************************************/
+console.log(
+  `/************** MORE WAYS OF CREATING AND FILLING ARRAYS **************/`
+);
+
+/**
+ * The last thing that we are going to learn in this section is how to
+ * programmatically create and fill arrays.
+ *
+ * So far we have always simply created arrays like this:
+ */
+
+console.log([1, 2, 3, 4, 5, 6, 7]);
+
+/**
+ * Basically writing them out by hand, literally.
+ *
+ * Or maybe, we might have also created them using the Array constructor
+ * function, like this:
+ */
+
+console.log(new Array(1, 2, 3, 4, 5, 6, 7));
+
+/**
+ * In these cases, we basically already have our data. Therefore, we
+ * could then manually create those arrays.
+ *
+ * However, we can actually also generate arrays programmatically i.e.
+ * without having to define all the items manually.
+ *
+ * There are many situations in which this is necessary and there are
+ * also multiple ways of doing it.
+ *
+ * The easiest way of doing it is to use the Array() constructor
+ * function.
+ *
+ * We will only pass in one argument: 7.
+ *
+ * What do you think will happen?
+ */
+
+let x = new Array(7);
+console.log(x); // [empty × 7]
+
+/**
+ * We might think that it will create an array with only one element,
+ * the number 7.
+ *
+ * But actually it doesn't.
+ *
+ * Instead, it creates a new array with seven empty elements in there
+ * and it simply contains nothing.
+ *
+ * This output is very weird indeed and the reason for that is the weird
+ * behaviour of the Array() function which does it so that whenever we
+ * only pass in one argument, then it creates a new empty argument with
+ * that length.
+ *
+ * So, if we don't know about this special particularity of the Array()
+ * constructor function then this can lead to weird errors.
+ *
+ * Also, we cannot really use this `x` array for anything. For example,
+ * we cannot call the map() method on it to fill it up.
+ */
+
+console.log(x.map(() => 5)); // [empty × 7]
+
+/**
+ * Now if you see the result, you will find that nothing happened.
+ *
+ * So, this is not really usefull except for one thing, because there is
+ * one method that we can call on the empty array and that is the fill()
+ * method.
+ *
+ * That is a new method that we haven't studied yet but, it is a very
+ * straight forward so, let's see it.
+ *
+ * To use fill(), all we need to do is to call it on an array using the
+ * dot operator and then pass in a value value - this value will then
+ * fill up the entire array.
+ */
+
+// fill()
+
+x.fill(23);
+
+/**
+ * The fill() method does actually mutate the underlying array.
+ */
+
+console.log(x); // [23, 23, 23, 23, 23, 23, 23]
+
+/**
+ * Let's re-initialize our array so we can experiment a bit more with
+ * fill().
+ */
+
+x = new Array(7);
+console.log(x); // [empty × 7]
+
+/**
+ * The fill() method is a little bit similar to the slice() method.
+ *
+ * So besides the value that we want to fill the array with, we can also
+ * specify where we want it to start to fill.
+ *
+ * If we wanted the fill() method to fill the array with value of 1
+ * starting at index 3, we would do it like this:
+ */
+
+// start parameter
+x.fill(1, 3);
+console.log(x); // [empty × 3, 1, 1, 1, 1]
+
+/**
+ * So, it will fill it up until the end unless we specify the end
+ * parameter, just like in the slice() method.
+ */
+
+x = new Array(7);
+console.log(x); // [empty × 7]
+
+// end parameter
+x.fill(1, 3, 5);
+console.log(x); // [empty × 3, 1, 1, empty × 2]
+
+/**
+ * Just like in slice() the end index is not going to be included in the
+ * array. So, in the above example only position 3 and 4 are filled up.
+ *
+ * Of course, we can also use the fill() method on other arrays. It
+ * doesn't have to be an empty array.
+ *
+ * NOTE: fill() mutates the original underlying array.
+ */
+
+arr = [1, 2, 3, 4, 5, 6, 7];
+arr.fill(23, 4, 6);
+console.log(arr); // [1, 2, 3, 4, 23, 23, 7]
+
+/**
+ * With this, we created an array programmatically i.e. wihout actually
+ * having to write it down manually.
+ *
+ * Indeed, the fill() method can be very useful sometimes.
+ *
+ * However, what if we wanted to re-create an array like this:
+ * [1, 2, 3, 4, 5, 6, 7], programmatically?
+ *
+ * For that, we could use the Array.from() function.
+ */
+
+// Array.from()
+
+/**
+ * Here is how we use Array.from()
+ *
+ * Side-note: This is soemthing completely new, we haven't seen anything
+ * like this before.
+ */
+
+// Array.from();
+
+/***
+ * Here, we are not using the `from()` method on an array. Instead, we
+ * are using it on the Array() constructor. That's why it is Array.from()
+ *
+ * The `Array` in `Array.from()` is exactly the same as the constructor
+ * `Array()` function from which we create a new array.
+ *
+ * On that `Array` object, we call the `from()` method.
+ *
+ * This might sound confusing but, it will make more sense in the
+ * object-oriented programming section.
+ *
+ * In the `Array.from()` function, we first pass in an object with
+ * the length property - let's set it to 7 and then the second argument
+ * is a mapping function - it is exactly like the callback function
+ * that we pass into the map() method.
+ *
+ * To start, let's programmatically re-create this array:
+ * [1, 1, 1, 1, 1, 1, 1]
+ * In this case, we don't even need any arguments but, we still have to
+ * write an arrow function, which will simply return 1 in each iteration.
+ *
+ * So, no arguments, no current element, no current index, nothing.
+ *
+ * All we want to do is to return 1 and that will then put a 1 in each
+ * of the array positions.
+ */
+
+let y = Array.from({ length: 7 }, () => 1);
+console.log(y); // [1, 1, 1, 1, 1, 1, 1]
+
+/**
+ * Now we have the exact same result that we had before.
+ *
+ * Let's now take it one step further and create the initial array
+ * which has elements from 1 to 7.
+ *
+ * The callback function is exactly like the one in the map() method.
+ * So, we get access to current element and current index. Therefore,
+ * we can use that to create the array that we want.
+ *
+ * So, you can simply imagine that you are using the map() method as
+ * a callback function in calling the map() method on an empty array.
+ */
+
+let z = Array.from({ length: 7 }, (cur, i) => i + 1);
+console.log(z); // [1, 2, 3, 4, 5, 6, 7]
+
+/**
+ * Remember that we use `_` as a throwaway variable. We can use it here
+ * as we are not really using the current element parameter.
+ *
+ * So, this is another use case for using this convention, as we do not
+ * need the current element at all but, we still need to define something
+ * as the first parameter because the index that we need is only the
+ * second parameter.
+ *
+ * So, to denote that we are not using the first parameter, we use `_`
+ * and then the other programmers will also understand this convention
+ * and automatically know that we don't use that parameter.
+ */
+
+z = Array.from({ length: 7 }, (_, i) => i + 1);
+console.log(z); // [1, 2, 3, 4, 5, 6, 7]
+
+/**
+ * This is how we create an array programmatically and hopefuly you can
+ * see all kinds of different use cases for this.
+ *
+ * For example, you could create an array with 100 random dice rolls.
+ * This is a challenge and we will do this later in this section as an
+ * exercise but, if you feel like finishing it right now, you can.
+ */
+
+let hundredDiceRolls = Array.from({ length: 100 }, () =>
+  Math.trunc(Math.random() * 6 + 1)
+);
+
+console.log(hundredDiceRolls);
+
+/**
+ * Let's now move on and see a more real use-case of the Array.from()
+ * function.
+ *
+ * The Array.from() function was initially introduced into JavaScript
+ * in order to create arrays from array like structures.
+ *
+ * Remember how we talked about so-called iterables before i.e. Strings,
+ * Maps, or Sets - they are all iterables.
+ *
+ * Since they are iterables, they can be converted to real arrays using
+ * Array.from()
+ *
+ * That's also the reason for the name of the function because we can
+ * create arrays from other things.
+ *
+ * Aside from these obvious iterables that we just mentioned, like Maps
+ * and Sets, another greate example of an array like structure is the
+ * result of using `querySelectorAll()`.
+ *
+ * Maybe you remember that `querySelectorAll()` returns something called
+ * a NodeList, which is something like an array, which contains all the
+ * selected elements.
+ *
+ * But NodeList is not a real array so it doesn't have methods like
+ * map(), for example.
+ *
+ * So, if we actually wanted to use a real array method like that on a
+ * NodeList, we would first need to convert the NodeList to an array.
+ *
+ * For that, Array.from() is perfect.
+ *
+ * So, let's do something here now and let's say that we do not have
+ * the movements for our application stored in an array i.e. let's
+ * pretend that we only have our movements stored in the user interface,
+ * we do not have them anywhere in our code but, we want to calculate
+ * their sum.
+ *
+ * Therefore, we need to somehow get them first from the user interface
+ * and then do the calculation based on that.
+ *
+ * So, let's create a variable called `movementsUI`, we set it equal to
+ * `Array.from()`, and we want to pass in the elements that we want to
+ * convert to an an array.
+ *
+ * If we look at our index.html file, we will see that all the movement
+ * values have a class called `movements__value` and we want to target
+ * all of them so, we will use `querySelectorAll()` and target the
+ * elements with the classname of `movements__value`.
+ */
+
+let movementsUI = Array.from(document.querySelectorAll('.movements__value'));
+console.log(movementsUI);
+
+/**
+ * Right now we are only getting the values are currently hard-coded
+ * in our HTML file.
+ *
+ * If we want to get the ones from a particular account, we will need
+ * to use some event handler. So, let's do that - let's simply perform
+ * this action when we click on the balance label.
+ *
+ * Side-Note: You can add event listeners on any object, it doesn't have
+ * to be a button.
+ */
+
+labelBalance.addEventListener('click', function () {
+  movementsUI = Array.from(document.querySelectorAll('.movements__value'));
+  console.log(movementsUI);
+});
+
+/**
+ * Indeed, it worked. We now get the movements from a particular
+ * account, that we are logged into.
+ *
+ * Now we can use the map() method to get the number from the movement
+ * object.
+ *
+ * So, once we get the NodeList from `querySelectorAll()`, we can
+ * use the map() method on it, and on each element, we can take its
+ * text content, remove the euro sign by using the replace method and
+ * get an array which has all the movement numbers in it.
+ *
+ * NOTE: The map() method works because we used Array.from() on the
+ * result that we got from `querySelectorAll()`. If we hadn't used
+ * Array.from(), then the map() method wouldn't have worked.
+ */
+
+labelBalance.addEventListener('click', function () {
+  movementsUI = Array.from(document.querySelectorAll('.movements__value'));
+  console.log(movementsUI.map(el => el.textContent.replace('€', '')));
+});
+
+/**
+ * We can make this even better but, first, we need to convert the
+ * elements in the resulting map() array into Number type.
+ */
+
+labelBalance.addEventListener('click', function () {
+  movementsUI = Array.from(document.querySelectorAll('.movements__value'));
+  console.log(movementsUI.map(el => Number(el.textContent.replace('€', ''))));
+});
+
+/**
+ * Now we can use the second argument of the `Array.from()` function
+ * which is the mapping callback.
+ *
+ * Basically, we can put entire map() callback in the second argument,
+ * like so:
+ */
+
+labelBalance.addEventListener('click', function () {
+  movementsUI = Array.from(document.querySelectorAll('.movements__value'), el =>
+    Number(el.textContent.replace('€', ''))
+  );
+
+  console.log(movementsUI);
+});
+
+/**
+ * Now when we click the labelBalance, we indeed get all the numbers
+ * in the movements.
+ *
+ * So, let's recap:
+ *
+ * We used `Array.from()` to create an array from the result of
+ * `querySelectorAll()` which is a NodeList.
+ *
+ * NodeList is not really an array but, it is an array like structure.
+ *
+ * An array like structure can easily be converted to an array using
+ * `Array.from()`.
+ *
+ * Then as the second argument, we included a mapping function, which
+ * then transforms the initial array to an array exactly as we want it.
+ *
+ * In the end, we get exactly the array of numbers that we intended.
+ *
+ * There is also another way of converting the resulting NodeList from
+ * `querySelectorAll()` by using the spread operator and array brackets,
+ * like so:
+ */
+
+labelBalance.addEventListener('click', function () {
+  movementsUI = Array.from(document.querySelectorAll('.movements__value'), el =>
+    Number(el.textContent.replace('€', ''))
+  );
+
+  console.log(movementsUI);
+
+  let movementsUI2 = [...document.querySelectorAll('.movements__value')];
+  console.log(movementsUI2);
+});
+
+/**
+ * So, that also creates an array but then, we would have to do the
+ * mapping separately. Due to that reason, Array.from() is prefered.
+ *
+ * Therefore Array.from() function was a great addition to JavaScript
+ * in ES6.
+ *
+ * That is all that we had to learn in this lesson. Those were the last
+ * couple of methods/functions that we had to learn about arrays.
+ *
+ * Indeed, we learned a lot of methods in this section.
+ *
+ * Keeping all of them in your mind to solve different tasks is a very
+ * hard thing to do.
+ *
+ * So, to make sense of all of it, in the next lesson, we will learn how
+ * to decide which array method to use in which situation to solve
+ * different problems (It is a theoretical lesson).
+ */

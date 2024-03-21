@@ -46,6 +46,7 @@
     - [Some and Every](#some-and-every)
     - [Flat and FlatMap](#flat-and-flatmap)
     - [Sorting Arrays](#sorting-arrays)
+    - [More Ways of Creating and Filling Arrays](#more-ways-of-creating-and-filling-arrays)
   - [Author](#author)
 
 ## Lessons Learned
@@ -342,6 +343,36 @@
     - `a` - The first element for comparison. Will never be `undefined`.
     - `b` - The second element for comparison. Will never be `undefined`.
   - If omitted, the array elements are converted to strings, then sorted according to each character's unicode code point value.
+
+### More Ways of Creating and Filling Arrays
+
+- Array Constructor: `Array ()`
+  - The array constructor creates array objects. It can be called with or without `new` keyword. Both create a new array instance.
+  - Parameters:
+    - `elementN` - A Javascript array initialized with the given elements, excep in the case where a single argument is passed to the array constructor and that argument is a nuber. Note that this special case only applies to Javascript arrays created with the array constructor, not array literals created with the bracket syntax.
+    - `arrayLength` - If the only argument passed to the array constructor is an integer between 0 and 2 ^ (32 -1) (inclusive), this returns a new Javascript array with its `length` property set to that number (Note: This implies an array of `arrayLength` empty slots, not slots with actual `undefined` values).
+  - Exceptions:
+    - `RangeError` - Thrown if there is only one argument (`arrayLength`) that is a number, but its value is not an integer or not between 0 and 2 ^ (32 - 1) (inclusive).
+- The `array.fill(value, start, end)` method changes all elements in an array to a static value, from a start index (default `0`) to an end index (default `array.length`). It returns the modified array, filled with `value`.
+  - Parameters:
+    - `value` - Value to fill the array with. Note - all elements in the array will be tis exact value. If `value` is an object, each slot in the array will reference that object.
+    - `start` (optional) - Zero-based index at which to start filling, converted to an integer.
+      - Negative index counts back from the end of the array -- if `start < 0`, `start + array.length` is used.
+      - If `start < -array.length` or `start` is omitted, 0 is used.
+      - If `start >= array.length`, no index is filled.
+    - `end()` (optional) - Zero-based index at which to end filling, converted to an integer. `fill()` fills up to but, not including `end`.
+      - Negative index counts back from the end of the array -- if `end < 0`, `end + array.lenght` is used.
+      - If `end < -array.length`, `0` is used.
+      - If `end >= array.length` or `end` is omitted, `array.length` is used, causing all indices until the end to be filled.
+      - If `end` is positioned before or at `start` after normalization, no index is filled.
+- `Array.from()`
+  - The `Array.from(arrayLike, mapFn, thisArg)` static method creates a new, shallow copied `Array` instance from an iterable or array-like object. It returns a new `Array` instance.
+  - Parameters:
+    - `arrayLike` - An iterable or array-like object to convert to an array.
+    - `mapFn` (optional) - A function to call on every element of the array. If provided, every value to be added to the array is first passed through this function, and `mapFn`'s return value is added to the array instead. The function is called with the following arguments:
+      - `element` - The current element being processed in the array.
+      - `index` - The index of the current element being processed in the array.
+  - `thisArg` - Value to use as `this` when executing `mapFn`.
 
 ## Author
 
