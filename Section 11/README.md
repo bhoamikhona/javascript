@@ -48,6 +48,7 @@
     - [Sorting Arrays](#sorting-arrays)
     - [More Ways of Creating and Filling Arrays](#more-ways-of-creating-and-filling-arrays)
     - [Summary: Which Array Method to Use?](#summary-which-array-method-to-use)
+    - [Array Methods Practice](#array-methods-practice)
   - [Author](#author)
 
 ## Lessons Learned
@@ -392,6 +393,25 @@
   - Transform the array to a new value
   - Simply loop over the array
 - These are a lot of different scenarios and by asking exactly these questions, we can now categorize the methods, and then easily choose between them.
+
+### Array Methods Practice
+
+- NOTE: The `++` operator does actually increment the value but, it still returns the previous vlaue.
+
+```javascript
+const a = 10;
+console.log(a++); // 10
+console.log(a); // 11
+```
+
+- Fortunately for us, the solution is pretty simple, we can use the so-called prefix `++` operator, which is writte before the operand.
+
+```javascript
+const b = 10;
+console.log(++b); // 11
+```
+
+- Using the accumulator of `reduce()` method to create a brand new object instead of just a primitive value.
 
 ## Author
 

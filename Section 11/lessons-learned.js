@@ -2676,3 +2676,211 @@ labelBalance.addEventListener('click', function () {
  * to decide which array method to use in which situation to solve
  * different problems (It is a theoretical lesson).
  */
+
+/**********************************************************************/
+/*********************** ARRAY METHODS PRACTICE ***********************/
+/**********************************************************************/
+
+console.log(
+  '/*********************** ARRAY METHODS PRACTICE ***********************/'
+);
+
+/**
+ * Before we go into our next and final coding challenge of this section,
+ * let's practice these array methods some more.
+ */
+
+/**
+ * Exercise 01:
+ *
+ * Calculate how much has been deposited in total (across all accounts),
+ * in the bank.
+ */
+
+const bankDepositSum = accounts
+  .flatMap(acc => acc.movements)
+  .filter(mov => mov > 0)
+  .reduce((acc, deposit) => acc + deposit, 0);
+console.log(bankDepositSum);
+
+/**
+ * Exercise 02:
+ *
+ * Count how many deposits there have been in the bank with at least
+ * $1000.
+ */
+
+// Solution 01:
+let numDeposits1000 = accounts
+  .flatMap(acc => acc.movements)
+  .filter(mov => mov >= 1000).length;
+console.log(numDeposits1000);
+
+// Solution 02:
+numDeposits1000 = accounts
+  .flatMap(acc => acc.movements)
+  // .reduce((acc, mov) => (mov >= 1000 ? acc + 1 : acc), 0);
+  // .reduce((acc, mov) => (mov >= 1000 ? acc++ : acc), 0);
+  .reduce((acc, mov) => (mov >= 1000 ? ++acc : acc), 0);
+console.log(numDeposits1000);
+
+// NOTE: About the `++` operator
+
+let l = 10;
+console.log(l++); // 10
+
+/**
+ * Here you will see that `l` is still 10, even though we used the `++`
+ * operator.
+ *
+ * Why is that?
+ *
+ * The `++` operator does actually increment tha value but, it still
+ * returns the previous value.
+ *
+ * If you log it now, you will see that it is indeed 11.
+ */
+
+console.log(l); // 11
+
+/**
+ * The `++` operator did its job but, the thing is that when we use it
+ * like so: `l++`, it will still return the old value, which in our
+ * example is 10.
+ *
+ * Fortunately for us, there is a simple solution because, we can simply
+ * use the so-called prefix `++` operator. That is written before the
+ * operand, like so:
+ */
+
+console.log(++l); // 12
+
+// Let's apply this in the solution 02 of our previous exercise.
+
+/**
+ * Exercise 03:
+ *
+ * The goal of this exercise is to create an object which contains the
+ * sum of the deposits and withdrawals. Basically, we want to calculate
+ * these two sums all at the same time, all in one go, using the
+ * `reduce()` method.
+ *
+ * We already know that reduce() boils down an array to just one value and
+ * that value might very well be an object, it could even be a new array
+ * as well.
+ *
+ * In fact, we could use reduce() to replace many of the other methods
+ * that we have. It is really like the Swiss knife of array methods. We
+ * could use it for everything.
+ */
+
+// The goal of our exercise is to create an object therefore, our
+// starting point i.e. initial value of accumulator needs to be an object.
+// It could be an empty object or we can already start filling it.
+const sums = accounts
+  .flatMap(acc => acc.movements)
+  .reduce(
+    (sums, cur) => {
+      cur > 0 ? (sums.deposits += cur) : (sums.withdrawals += cur);
+      return sums;
+    },
+    { deposits: 0, withdrawals: 0 }
+  );
+
+// NOTE: sums is the same as our accumulator, whose initial value is set as an object. So technically, we are updating values in the object that we defined.
+
+// NOTE: We always need to return the accumulator. Thus far we did it implicitly by using an arrow function but, as soon as a code block in involved, we need to explicitly mention what we want to return.
+
+console.log(sums); // {deposits: 25180, withdrawals: -7340}
+
+// We can also destructure `sums` immediately, instead of calling it `sums`. Like so:
+// NOTE: `deposits` was taken so, used totalDeposits instead.
+const { totalDeposits, totalWithdrawals } = accounts
+  .flatMap(acc => acc.movements)
+  .reduce(
+    (sums, cur) => {
+      cur > 0 ? (sums.totalDeposits += cur) : (sums.totalWithdrawals += cur);
+      return sums;
+    },
+    { totalDeposits: 0, totalWithdrawals: 0 }
+  );
+
+console.log(totalDeposits, totalWithdrawals);
+
+/**
+ * This looks fine already but, there is a better way to do what we did
+ * with the ternary operator so, let's see that.
+ */
+
+const sums2 = accounts
+  .flatMap(acc => acc.movements)
+  .reduce(
+    (sums, cur) => {
+      // keeping the code DRY principle
+      sums[cur > 0 ? 'deposits' : 'withdrawals'] += cur;
+      return sums;
+    },
+    { deposits: 0, withdrawals: 0 }
+  );
+
+console.log(sums2);
+
+/**
+ * What matterns here is that we were able to create a brand new object
+ * based on the `reduce()` method.
+ *
+ * This can be very helpful in many situations so, please take time to
+ * review this exercise because, this was a great use case on how to use
+ * something other than a primitive value as the accumulator of the
+ * `reduce()` method.
+ */
+
+/**
+ * Exercise 04:
+ *
+ * The goal of this exercise is to create a simple function to convert
+ * any string to title case.
+ *
+ * Title case means that all of the words in a sentence are capitalized
+ * except for some exceptions.
+ *
+ * Example:
+ * this is a nice title -> This is a Nice Title
+ */
+
+const convertTitleCase = function (title) {
+  // there might be more exceptions but, this is just for example.
+  const exceptions = [
+    'a',
+    'an',
+    'and',
+    'the',
+    'but',
+    'or',
+    'on',
+    'in',
+    'is',
+    'with',
+  ];
+
+  const capitalize = str => str[0].toUpperCase() + str.slice(1);
+
+  const titleCase = title
+    .toLowerCase()
+    .split(' ')
+    .map(word =>
+      // if the word is included in exception, return that word otherwise, capitalize it.
+      exceptions.includes(word) ? word : capitalize(word)
+    )
+    .join(' ');
+
+  // we are capitalizing the entire return string here because that will
+  // allow for us to capitalize the first word of the sentence. This is
+  // for the edge case of example 3 where the sentence starts with "and"
+  // which is an exception word but, it is what the sentence starts with.
+  return capitalize(titleCase);
+};
+
+console.log(convertTitleCase('this is a nice title'));
+console.log(convertTitleCase('this is a LONG title but not too long'));
+console.log(convertTitleCase('and here is another title with an EXAMPLE'));
