@@ -1,4 +1,5 @@
 'use strict';
+
 /***********************************************************************/
 /******************* CONVERTING AND CHECKING NUMBERS *******************/
 /***********************************************************************/
@@ -312,3 +313,266 @@ console.log(Number.isInteger(23 / 0)); // false
  * And parseFloat() should be your go-to whenever you need to read a value
  * out of a string, for example, coming from CSS.
  */
+
+/***********************************************************************/
+/************************** MATH AND ROUNDING **************************/
+/***********************************************************************/
+
+console.log(
+  `/************************** MATH AND ROUNDING **************************/`
+);
+
+/**
+ * Let's now learn about some more mathematical operations and also about
+ * rounding numbers.
+ *
+ * We have already been using lots of mathematical operations, for
+ * example, plus, minus, times, divide, exponential etc. So, we don't
+ * need to go over those again.
+ *
+ * Let's start here with the square root.
+ *
+ * Just like many other functions the square root is part of the math
+ * namespace.
+ *
+ * `Math.sqrt()` - this stands for square root and all we have to do is
+ * to pass in a number and it will give us the square root of that number.
+ */
+
+console.log(Math.sqrt(4)); // 2
+console.log(Math.sqrt(25)); // 5
+
+/**
+ * The same could be achieved by the exponentiation operator as well,
+ * like so:
+ */
+
+console.log(4 ** (1 / 2)); // 2
+console.log(25 ** (1 / 2)); // 5
+
+/**
+ * The same would work for the cubic root.
+ */
+
+console.log(Math.cbrt(8)); // 2
+console.log(8 ** (1 / 3)); // 2
+
+/**
+ * Next up, let's get the maximum value of a couple of values. We use
+ * Math.max() for that.
+ *
+ * So, as the name suggests `Math.max()` would return the maximum
+ * value.
+ */
+
+console.log(Math.max(5, 18, 23, 11, 2)); // 23
+
+/**
+ * The `Math.max()` function actually does type coercion. However, it
+ * does not do parsing.
+ */
+
+console.log(Math.max(5, 18, '23', 11, 2)); // 23 - it does perform type coercion
+console.log(Math.max(5, 18, '23px', 11, 2)); // NaN - it does not do parsing
+
+/**
+ * Just as we have Math.max(), we also have Math.min().
+ */
+
+console.log(Math.min(5, 18, 23, 11, 2)); // 2
+
+/**
+ * Besides a couple of methods, there are also constants on the math
+ * object or on the math namespace.
+ *
+ * For example, if we wanted to calculate the radius of a circle with
+ * 10 pixels, we could do that. For that, we use `Math.PI`
+ */
+
+console.log(Math.PI); // 3.141592653589793
+
+/**
+ * Let's say we get 10px from the user interface.
+ */
+
+// calculating the area of a circle with 10px radius
+console.log(Math.PI * Number.parseFloat('10px') ** 2); // 314.1592653589793
+
+/**
+ * Another thing that is on the Math object is the random() function that
+ * we already have been using a couple of times.
+ *
+ * It is very important to be able to generate good random numbers when
+ * we need them.
+ *
+ * So before, we already created randome dice rolls, like so:
+ */
+
+console.log(Math.trunc(Math.random() * 6) + 1);
+
+/**
+ * Now let's actually generalize this formula so that we can use it from
+ * now on to always generate random integers between two values.
+ */
+
+let randomInt = (min, max) => Math.trunc(Math.random() * (max - min) + 1) + min;
+
+/**
+ * We do (max - min) because the random function generates a number
+ * between 0 and 1
+ *
+ * If we multiply 0 ... 1 by (max - min) then we get a number between
+ * 0 and (max - min)
+ *
+ * Now if we add min to all of it, we get
+ * min ... (max - min + min)
+ *
+ * which is the same as
+ * min ... max
+ *
+ * 0 ... 1 -> 0 ... (max - min) -> min ... max
+ *
+ * This is how we end up with a nice function which will always give us a
+ * number that is going to stay between min and max.
+ *
+ * Let's try it out.
+ */
+
+console.log(randomInt(10, 20));
+
+/**
+ * Next up, let's talk a little bit about rounding and let's start by
+ * rounding integers.
+ *
+ * We have already been using `Math.trunc()` - and what this does is to
+ * simply remove any decimal part.
+ */
+
+console.log(Math.trunc(23.3)); // 23
+
+/**
+ * But, we also have other ways.
+ *
+ * We also have Math.round() and this one will always round to the
+ * nearest integer.
+ */
+
+console.log(Math.round(23.3)); // 23
+console.log(Math.round(23.8)); // 24
+
+/**
+ * Then we also have Math.ceil() - and this one will basically round
+ * it up a number
+ */
+
+console.log(Math.ceil(23.3)); // 24
+console.log(Math.ceil(23.8)); // 24
+
+/**
+ * Then we also have Math.floor() - this one will basically round
+ * it down a number
+ */
+
+console.log(Math.floor(23.3)); // 23
+console.log(Math.floor(23.8)); // 23
+
+/**
+ * By the way, all of these methods, they also do type coercion.
+ *
+ * So, if we pass in a string of number, it will work just the same.
+ */
+
+console.log(Math.floor('23.8')); // 23
+
+/**
+ * Now you might think that Math.floor() and Math.trunc() are very
+ * similar and indeed, they do that sam when we are dealing with positive
+ * numbers.
+ *
+ * Basically, floor() and trunc(), both cut off the decimal part when we
+ * are dealing with positive numbers.
+ *
+ * However, for negative numbers, it doesn't work this way.
+ */
+
+console.log(Math.trunc(-23.3)); // -23
+console.log(Math.floor(-23.3)); // -24
+
+/**
+ * The `Math.trunc()` works like before i.e. the number gets truncated
+ * i.e. it removes the decimal part but, `Math.floor()` now gets rounded
+ * to -24.
+ *
+ * This is because, with negative numbers, the rounding works the other
+ * way around.
+ *
+ * So, actually floor() is a little bit better than trunc() because it
+ * works in all situations, no matter if we are dealing with positive
+ * or negative numbers.
+ *
+ * So, let's replace the Math.trunc() to Math.floor() in our randomInt()
+ * function. So, that it works in all situations even if we give it
+ * negative inputs.
+ */
+
+randomInt = (min, max) => Math.floor(Math.random() * (max - min) + 1) + min;
+
+/**
+ * That was rounding integers.
+ *
+ * Now let's talk about floating point numbers or we can also say
+ * decimals.
+ *
+ * With decimals, it works a little bit in a different way. Let's see
+ * how.
+ *
+ * With decimals, we have to specify the number within a set of
+ * parentheses and then on that number, we call the `toFixed()` method.
+ */
+
+console.log((2.7).toFixed(0)); // 3 - type string
+
+/**
+ * So, toFixed() will always return a string and not a number. That's
+ * important to keep in mind.
+ */
+
+console.log((2.7).toFixed(3)); // 2.700 - type string
+
+/**
+ * Now instead of passing in 0 in the toFixed() function, when we pass
+ * in 3, we get 2.700.
+ *
+ * So, it adds 0s until it has exactly three decimal parts, just like we
+ * specified in the toFixed() function.
+ */
+
+console.log((2.345).toFixed(2)); // 2.35 - type string
+
+/**
+ * Now if we want to convert its result to a number, we simply need to
+ * add a plus sign in the beginning, like so:
+ */
+
+console.log(+(2.345).toFixed(2)); // 2.35 - type number
+
+/**
+ * So, with decimals it works differently than with integers, and that's
+ * because, once again, things in Javascript evolved kind of in a weird
+ * way.
+ *
+ * If the language was designed today, it would be very different but,
+ * this is what we have to work with now.
+ *
+ * Keep in mind that `(2.7).toFixed(3)` works in a similar way to string
+ * methods.
+ *
+ * `2.7` is a number i.e. a primitive data type and primitives do not have
+ * methods so, behind the scenes, JS will do boxing.
+ *
+ * Boxing is to transform the number to a `Number` object, then call the
+ * method on that object. Once the operation is finished, it will convert
+ * it back to a primitive type.
+ */
+
+// Let's go back to our bankist project and apply some of these methods that we learned in this lesson.

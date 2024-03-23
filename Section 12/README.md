@@ -14,6 +14,7 @@
   - [Table of Content](#table-of-content)
   - [Lessons Learned](#lessons-learned)
     - [Converting and Checking Numbers](#converting-and-checking-numbers)
+    - [Math and Rounding](#math-and-rounding)
   - [Author](#author)
 
 ## Lessons Learned
@@ -51,6 +52,68 @@
     - `value` - The value to be tested for finiteness.
   - Return Value:
     - The boolean value true if the given value is a finite number. Otherwise false.
+
+### Math and Rounding
+
+- `Math.sqrt(x)`
+  - The `Math.sqrt()` static method returns the square root of a number.
+  - Parameters:
+    - `x` - A number greater than or equal to 0.
+  - Return Value:
+    - The square root of `x`, a non-negative number. If `x < 0`, returns `NaN`.
+- `Math.cbrt(x)`
+  - The `Math.cbrt()` static method returns the cub root of a number.
+  - Parameters:
+    - `x` - A number.
+  - Return Value:
+    - The cube root of `x`.
+- `Math.max(val1, val2, ... , valN)`
+  - The `Math.max()` static method returns the largest of the numbers given as input parameters, or -Infinity if there are no parameters.
+  - Parameters:
+    - `val1`, `val2`, ... ,`valN` - Zero or more numbers among which the largest value will be selected and returned.
+  - Return Value:
+    - The largest of the given numbers. Returns `NaN` if any of the parameters is or is converted to `NaN`. Returns -Infinity if no parameters are provided.
+- `Math.min(val1, val2, ... , valN)`
+  - The `Math.min()` static method returns the smallest of the numbers given as input parameters, or Infinity if there are no parameters.
+  - Parameters:
+    - `val1`, `val2`, ... ,`valN` - Zero or more numbers among which the lowest value will be selected and returned.
+  - Return Value:
+    - The smallest of the given numbers. Returns `NaN` if any of the parameters is or is converted into `NaN`. Returns Infinity if no parameters are provided.
+- `Math.PI` - The `Math.PI` static data property represents the ratio of the circumference of a circle to its diameter, approximately 3.14159.
+- `Math.random()`
+  - The `Math.random()` static method returns a floating-point, pseudo-random number that's greater than or equal to 0 and less than 1, with approximately uniform distribution over that range -- which you can then scale to your desired range. The implementation selects the initial seed to the random number generation algorithm; it cannot be chosen or reset by the user.
+  - It returns a floating-point, pseudo-random number between 0 (inclusive) and 1 (exclusive).
+- `Math.trunc(x)`
+  - The `Math.trunc()` static method method returns the integer part of a number by removing any fractional digits.
+  - Parameters:
+    `x` - A number.
+  - Return Value:
+    - The integer part of `x`.
+- `Math.round(x)`
+  - The `Math.round()` static method returns the value of a number rounded to the nearest integer.
+  - Parameters:
+    - `x` - A number.
+  - Return Value:
+    - The value of `x` rounded to the nearest integer.
+- `Math.ceil(x)`
+  - The `Math.ceil()` static method always rounds up and returns the smallest integer greater than or equal to a given number.
+  - Parameters
+    - `x` - A number.
+  - Return Value:
+    - The smallest integer greater than or equal to `x`.
+- `Math.floor(x)`
+  - The `Math.floor()` static method always rounds down and returns the largest integer less than or equal to a given number.
+  - Parameters:
+    - `x` - A number.
+  - Return Value:
+    - The largest integer smaller than or equal to `x`.
+- NOTE: All of these methods also do type coercion.
+- `toFixed(digits)`
+  - The `toFixed()` method formats a number using fixed-point notation.
+  - Parameters:
+    - `digits` (optional) - The number of digits to appear after the decimal point; should be a value between 0 and 100, inclusive. If this argument is omitted, it is treated as 0.
+  - Return Value:
+    - A string representing the given number using fixed-point notation.
 
 ## Author
 
