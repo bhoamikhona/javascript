@@ -576,3 +576,84 @@ console.log(+(2.345).toFixed(2)); // 2.35 - type number
  */
 
 // Let's go back to our bankist project and apply some of these methods that we learned in this lesson.
+
+/************************************************************************/
+/************************ THE REMAINDER OPERATOR ************************/
+/************************************************************************/
+
+console.log(
+  `/************************ THE REMAINDER OPERATOR ************************/`
+);
+
+/**
+ * One operator that we did not learn about in the last lesson is the
+ * remainder operator.
+ *
+ * The reason for that is that the remainder operator has actually some
+ * special use cases, and so it deserves a lesson on its own.
+ *
+ * What is the remainder operator?
+ *
+ * As the name says, the remainder operator simply returns the remainder
+ * of a division.
+ *
+ * So let's check that out.
+ */
+
+console.log(5 % 2); // 1
+console.log(5 / 2); // 5 = 2 * 2 + 1
+
+console.log(8 % 3); // 2
+console.log(8 / 3); // 8 = 2 * 3 + 2
+
+/**
+ * Now, one thing that is many times used in programming is to check
+ * whether a certain number is even or odd.
+ *
+ * A number is even if it is divisible by 2, otherwise odd; and divisible
+ * means that when the number is divided 2, the remainder is 0.
+ */
+
+console.log(6 % 2); // 0
+console.log(6 / 2); // 3
+
+console.log(7 % 2); // 1
+console.log(7 / 2); // 3.5
+
+/**
+ * Let's create a function which checks if a number is even or not.
+ */
+
+const isEven = x =>
+  x % 2 === 0 ? console.log('even number') : console.log('odd number');
+
+isEven(6);
+isEven(15);
+
+/**
+ * Of course, this works to check if any number is divisible by any other
+ * number.
+ *
+ * Whenever the results of the remainder operator is 0, then that means
+ * that the first number is completely divisible by the second one.
+ *
+ * Again, this is sometimes very important to know in programming.
+ *
+ * Let's see another example here, involving our application. Not really
+ * in practical terms but, just to have some fun.
+ *
+ * Let's select all of the rows of our movements and add a background
+ * color to all the even rows.
+ */
+
+// labelBalance.addEventListener('click', function () {
+//   [...document.querySelectorAll('.movements__row')].forEach(function (row, i) {
+//     if (i % 2 === 0) row.style.backgroundColor = 'orangered';
+//     if (i % 3 === 0) row.style.backgroundColor = 'blue';
+//   });
+// });
+
+/**
+ * So, whenever you need to do something every Nth time, it might be a
+ * good idea to use the remainder operator for that.
+ */

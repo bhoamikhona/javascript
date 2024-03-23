@@ -15,6 +15,7 @@
   - [Lessons Learned](#lessons-learned)
     - [Converting and Checking Numbers](#converting-and-checking-numbers)
     - [Math and Rounding](#math-and-rounding)
+    - [The Remainder Operator](#the-remainder-operator)
   - [Author](#author)
 
 ## Lessons Learned
@@ -114,6 +115,10 @@
     - `digits` (optional) - The number of digits to appear after the decimal point; should be a value between 0 and 100, inclusive. If this argument is omitted, it is treated as 0.
   - Return Value:
     - A string representing the given number using fixed-point notation.
+
+### The Remainder Operator
+
+- `x % y` - The remainder (`%`) operator returns the remainder left over when one operand is divided by a second operand. It always takes the sign of the dividend.
 
 ## Author
 
