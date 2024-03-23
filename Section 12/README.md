@@ -16,6 +16,7 @@
     - [Converting and Checking Numbers](#converting-and-checking-numbers)
     - [Math and Rounding](#math-and-rounding)
     - [The Remainder Operator](#the-remainder-operator)
+    - [Numeric Separators](#numeric-separators)
   - [Author](#author)
 
 ## Lessons Learned
@@ -119,6 +120,13 @@
 ### The Remainder Operator
 
 - `x % y` - The remainder (`%`) operator returns the remainder left over when one operand is divided by a second operand. It always takes the sign of the dividend.
+
+### Numeric Separators
+
+- The numeric separator allows you to create a visual separation between groups of digits by using underscores (`_`) as separators.
+- NOTE: You cannot use the numeric separator before or after the decimal point, nor can you use it at the start or end of a number.
+- NOTE: When trying to convert from string to number, if a numeric separator is present, you will get NaN.
+- NOTE: When trying to use `parseInt()` to convert a string to a number, and underscore is present, you will only get the number before the underscore, the rest is ignored.
 
 ## Author
 

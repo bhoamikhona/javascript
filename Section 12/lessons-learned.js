@@ -657,3 +657,176 @@ isEven(15);
  * So, whenever you need to do something every Nth time, it might be a
  * good idea to use the remainder operator for that.
  */
+
+/************************************************************************/
+/************************** NUMERIC SEPARATORS **************************/
+/************************************************************************/
+
+console.log(
+  `/************************** NUMERIC SEPARATORS **************************/`
+);
+
+/**
+ * Starting from ES2021, we can use a feature called "Numeric Separators"
+ * to format numbers in a way that is easier for us, or for other
+ * developers to read and to understand.
+ *
+ * Let's say that we wanted to represent a really large number. For
+ * example, the diameter of our solar system.
+ */
+
+let diameter = 287460000000;
+
+/**
+ * Just from looking at this number, it is really difficult to read and
+ * to understand it. Does it mean 28 billion or is it just 2 billion or
+ * really, what is this number? It is really hard to read like this -
+ * there are just too many 0s here.
+ *
+ * Now, to help with this, when we write a number this large in the normal
+ * English language, we usually use a 1000 separator like a comma.
+ *
+ * We would write this number like so: 287,460,000,000
+ *
+ * Then it becomes really easy to immediately see that this means
+ * 287 billion and 460 million.
+ *
+ * Now, fortunately, we can do the name thing in JavaScript as well, using
+ * the new numeric separators.
+ *
+ * Numeric separators are simply underscores that we can place anywhere
+ * that we want in our numbers. This will make it really easy to
+ * understand and to parse numbers that are this large.
+ */
+
+diameter = 287_460_000_000;
+
+/**
+ * Now let's just log to the console to see what JavaScript actually
+ * sees.
+ */
+
+console.log(diameter); // 287460000000
+
+/**
+ * Here we see that the JS engine basically ignores the undescores. It
+ * simply sees the number itself.
+ *
+ * What this means, is that we can actually place the underscores i.e.
+ * the numeric separators anywhere that we want.
+ *
+ * Let's do another example.
+ */
+
+// Using the underscore makes it obvious that the price is in cents.
+const priceCents = 345_99;
+console.log(priceCents); // 34599
+
+/**
+ * Basically, we can use the underscores now to give meanings to certain
+ * parts of our numbers.
+ *
+ * Let's try another one.
+ */
+
+let transferFee1 = 15_00;
+
+/**
+ * Here, it immediately looks like it is $15 and 0 cents. But if we did
+ * the same thing like this:
+ */
+
+let transferFee2 = 1_500;
+
+/**
+ * Then it suddenly looks like 1 thousand 500.
+ *
+ * While, in fact, it is the exact same number. Both of them are exactly
+ * 1500. But, the underscore alone gives them different meanings.
+ *
+ * So, we can use that to our advantage, whenever we write numbers in
+ * our JavaScript code.
+ *
+ * Let's create another variable here called PI, and this one is to show
+ * you some restrictions as to where we can place the underscore.
+ *
+ * 1) We can only place underscores between numbers.
+ */
+
+let PI = 3.14_15;
+console.log(PI);
+
+/**
+ * But the underscore there doesn't really makes sense.
+ *
+ * So, how about we want to place it right after the decimal point?
+ */
+
+// PI = 3._1415; // error
+// console.log(PI);
+
+/**
+ * Now we get an error because that is not allowed.
+ *
+ * It is also not allowed to place it in the right before the decimal
+ * point.
+ */
+
+// PI = 3_.1415; // error
+
+/**
+ * We also cannot place the _ at the beginning of the number, nor can
+ * we place it at the very end.
+ */
+
+// PI = _3.1415; // error
+// PI = 3.1415_; // error
+
+/**
+ * We can also not have two underscore in a row
+ */
+
+// PI = 3.14__15; // error
+
+/**
+ * Now the one final detail that we need to be aware of is that when we
+ * try to convert strings that contain underscores to a number - that
+ * will not work as expected.
+ *
+ * Let's try to use the `Number()` function that we learned before to
+ * convert a string to a number.
+ */
+
+console.log(Number('230000')); // 230000
+
+/**
+ * The above example works just fine, however, if we place an underscore
+ * or a numeric separator in between, we get NaN.
+ */
+
+console.log(Number('230_000')); // NaN
+
+/**
+ * What this means is that you should really only use these numeric
+ * separators, when you are writing down numbers explicitly in code.
+ *
+ * If you need to store a number in a string, for example in an API,
+ * or if you get a number as a string from an API, you should not use
+ * underscore in there, because then JavaScript will not be able to
+ * parse the number correctly out of that string.
+ *
+ * It will not work as expected and you will get the `NaN` that might
+ * introduce bugs into your application.
+ *
+ * The same is true for `parseInt()` function.
+ */
+
+console.log(Number.parseInt('230_000')); // 230
+console.log(Number.parseFloat('230_000')); // 230
+
+/**
+ * Here we do not get NaN but, we only get 230 i.e. only the part that is
+ * before the underscore.
+ *
+ * Everything else will then be ignored.
+ */
