@@ -830,3 +830,213 @@ console.log(Number.parseFloat('230_000')); // 230
  *
  * Everything else will then be ignored.
  */
+
+/***********************************************************************/
+/************************* WORKING WITH BIGINT *************************/
+/***********************************************************************/
+
+console.log(
+  `/************************* WORKING WITH BIGINT *************************/`
+);
+
+/**
+ * Let's now meet one of the primitive data types, that we never talked
+ * about before and that is BigInt.
+ *
+ * BigInt is a special type of integer that was introduced in ES2020 so,
+ * let's quickly take a look at it.
+ *
+ * In the first lesson of this section we learned that numbers are
+ * represented internally as 64 bits. This means that there are exactly
+ * 64 ones and zeros to represent any given number.
+ *
+ * Of these 64 bits, only 53 are used to actually store digits themselves.
+ * The rest are for storing the position of the decimal point and the
+ * sign.
+ *
+ * If there are only 53 bits to store the number, that means that there is
+ * a limit of how big numbers can be, and we can calculate that number.
+ *
+ * To calculate that, we can do 2 raised to 53 minus 1. We subtract 1
+ * because numbers start from 0; and it is 2 because we are working with
+ * base 2 numbers i.e. binary.
+ */
+
+console.log(2 ** 53 - 1); // 9007199254740991
+
+/**
+ * This gigantic number 9007199254740991 is essentially the biggest
+ * number that JavaScript can safely represent.
+ *
+ * This number is so important that it is even stored into the number
+ * namespace as MAX_SAFE_INTEGER
+ */
+
+console.log(Number.MAX_SAFE_INTEGER); // 9007199254740991
+
+/**
+ * Any number that is larger than MAX_SAFE_INTEGER is not safe. This means
+ * that it cannot be represented accurately.
+ *
+ * For example:
+ */
+
+console.log(2 ** 53 + 0); // 9007199254740992
+
+// it should have added 2 to 9007199254740991 here but, it only added 1 to the number
+console.log(2 ** 53 + 1); // 9007199254740992
+
+/**
+ * This means that JavaScript can simply not represent these numbers
+ * accurately.
+ *
+ * So, if we do calculations with numbers that are bigger than
+ * MAX_SAFE_INTEGER, we might lose precision.
+ *
+ * In some numbers it does actually work because JavaScript, behind the
+ * scenes uses some tricks to still represent some of the unsafe
+ * numbers but, again, sometimes it works and sometimes it doesn't.
+ *
+ * That's why we call them unsafe numbers.
+ */
+
+console.log(2 ** 53 + 2); // 9007199254740994
+console.log(2 ** 53 + 3); // 9007199254740996
+console.log(2 ** 53 + 4); // 9007199254740996
+
+/**
+ * This can be a problem sometimes because in some situations we might
+ * need really, really big numbers. Way bigger than the ones above - for
+ * example, for database IDs or when interacting with real 60 bit numbers.
+ *
+ * These 60 bit numbers are actually used in other languages.
+ *
+ * So, we might, for example, from some API, get a number that is larger
+ * than the ones above. Then we have no way of storing that in JavaScript.
+ * Atleast, not until 2019 because starting from ES 2020, a new primitive
+ * was added, which is called BigInt.
+ *
+ * BigInt stands for big integers and it can be used to store numbers as
+ * large as we want.
+ */
+
+// this probably does not have precision because it is larger than MAX_SAFE_INTEGER
+console.log(1614687651646465498646684643168765435348); // 1.6146876516464654e+39
+
+// If we use `n` then it will be a bigInt
+console.log(1614687651646465498646684643168765435348n); // 1614687651646465498646684643168765435348n
+
+/**
+ * The `n` at the end basically transforms the number into a bigInt
+ * number.
+ *
+ * So, it is a huge number but now, JavaScript has a way of finally
+ * displaying it accurately.
+ *
+ * We can also create BigInt by using the BigInt function.
+ */
+
+console.log(BigInt(1614687651646465498646684643168765435348)); // 1614687651646465382056585393973135147008n
+
+/**
+ * Using the BigInt() function gives us a similar result, but not the
+ * same because JavaScript will first have to still represent the
+ * number internally before it can then transform it into a BigInt.
+ *
+ * That's the reason the second number is a bit different.
+ *
+ * So, BigInt() should really be used only for small numbers.
+ */
+console.log(BigInt(3123144)); // 3123144n
+
+/**
+ * This is how we create the BigInt numbers but, let's now see some
+ * operations with these numbers.
+ */
+
+console.log(10000000000000000000000n + 1000000000000000000000n);
+console.log(10000000000000000000000n * 1000000000000000000000n);
+
+/**
+ * What's not possible is to mix BigInt with regular number.
+ */
+
+let huge = 649849651648446798451654n;
+let num = 23;
+
+// console.log(huge + num); // Type Error
+
+/**
+ * This is where we would have to conver the regular number to a bigInt
+ * and this is where we would use the BigInt() constructor function.
+ */
+
+console.log(huge + BigInt(num)); // 649849651648446798451677n
+
+/**
+ * Event the Math operations that we talked about earlier in this section
+ * are not going to work here.
+ *
+ * For example:
+ */
+
+// console.log(Math.sqrt(649849651648446798451654n)); // Type Error
+
+/**
+ * However there are two exceptions to this which are the comparison
+ * operators and the plus operator when working with strings.
+ *
+ * So, let's see that.
+ */
+
+// This still works just as expected.
+console.log(20n > 15); // true
+
+// However, when we do this, we get false - this makes sense because === does not perform type coercion and in fact, the number 20 and bigInt 20 are of two different types.
+console.log(20n === 20);
+
+console.log(typeof 20n); // bigint
+console.log(typeof 20); // number
+
+// this is true because the lose equality operator does perform type coercion.
+console.log(20n == 20); // true
+console.log(20n == '20'); // true
+
+/**
+ * So, that is one exception.
+ *
+ * The other exception is when we do string concatenations.
+ */
+
+console.log(huge + ' is REALLY big!'); // 649849651648446798451654 is REALLY big!
+
+/**
+ * As you see, the number is converted to a stirng, even the bigInt
+ * number.
+ *
+ * Finally,  let's look at what happens with divisions because bigInt
+ * is indeed an integer.
+ *
+ * So, what happens if we do this:
+ */
+
+console.log(10n / 3n); // 3n
+console.log(10 / 3); // 3.33...
+
+/**
+ * With bigInt, it will simply return the closest bigInt. Basically,
+ * it simply cuts the decimal part off.
+ */
+
+console.log(12n / 3n); // 4n
+
+/**
+ * This is all we needed to know in an introduction lesson like this
+ * about BigInt.
+ *
+ * This new primitive type adds some new capabilities to the JavaScript
+ * language, when you really need to work with huge numbers.
+ *
+ * In practice, you will probably not use it very much but, it is still
+ * good to know that bigInt exists and also how it works.
+ */

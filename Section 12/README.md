@@ -17,6 +17,7 @@
     - [Math and Rounding](#math-and-rounding)
     - [The Remainder Operator](#the-remainder-operator)
     - [Numeric Separators](#numeric-separators)
+    - [Working with BigInt](#working-with-bigint)
   - [Author](#author)
 
 ## Lessons Learned
@@ -127,6 +128,19 @@
 - NOTE: You cannot use the numeric separator before or after the decimal point, nor can you use it at the start or end of a number.
 - NOTE: When trying to convert from string to number, if a numeric separator is present, you will get NaN.
 - NOTE: When trying to use `parseInt()` to convert a string to a number, and underscore is present, you will only get the number before the underscore, the rest is ignored.
+
+### Working with BigInt
+
+- `Number.MAX_SAFE_INTEGER` - This static data property represents the maximum safe integer in Javascript `((2 ** 53) - 1)` === 9,007,199,254,740,991, or ~9 quadrillion.
+- `BigInt` values represent numeric values which are too large to be represented by the number primitive.
+- A BigInt value, also sometimes just called a BigInt, is a bigint primitive, created by appending `n` to the end of an integer literal, or by calling the `BigInt()` function (without the `new` operator) and giving it an integer value or string value.
+- `BigInt()` Constructor
+  - The `BigInt(value)` function returns primitive values of type BigInt.
+  - Parameters:
+    - `value` - The numeric value of the object being created. It may be a string, an integer, a boolean, or another `BigInt`.
+  - Return Value:
+    - A `BigInt` value. Number values must be integers and are converted to BigInts. The boolean value `true` becomes `1n`, and `false` becomes `0n`. Strings are parsed as if they are source text for integer literals, which means they can have leading and trailing whitespaces and can be prefixed with `0b`, `0o`, or `0x`.
+- How the math operators work with bigInt and their exceptions.
 
 ## Author
 
