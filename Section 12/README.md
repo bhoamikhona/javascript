@@ -20,6 +20,7 @@
     - [Working with BigInt](#working-with-bigint)
     - [Creating Dates](#creating-dates)
     - [Operations with Dates](#operations-with-dates)
+    - [Internationalizing Dates (Intl)](#internationalizing-dates-intl)
   - [Author](#author)
 
 ## Lessons Learned
@@ -189,6 +190,57 @@
 
 - Calculating/adding/subtracting between two dates
 - [Moment.js](https://momentjs.com/) library
+
+### Internationalizing Dates (Intl)
+
+- Javascript has a new internationalization API. That sounds very fancy, but all it does is to allow us to easily format numbers and strings according to different languages.
+- So, with this new API, we can make our application support different languages for users around the world, which is pretty important.
+- For example, currencies and dates are represented in a completely different way in Europe or in the US or in Asia.
+- There are a lot of language specific things that we can do with the internationalization API but, in this section, we are just briefly going to talk about formatting date and numbers -- starting with dates in this lesson.
+- Intl
+  - The `Intl` namespace object contains several constructors as well as functionality common to the internationalization constructors and other language sensitive functions. Collectively, they comprise the ECMAScript internationalization API, which provides language sensitve string comparison, number formatting, date and time formatting, and more.
+  - Unlike most global objects, `Intl` is not a constructor. You cannot use it with `new` operator or invoke the `Intl` object as a function. All properties and methods of `Intl` are static (just like the `Math` object).
+  - Locales Argument
+    - The `locales` argument is used to determine the locale used ina given operation. The Javascript implementation examines `locales`, and then computes a locale it understands that comes closest to satisfying the expressed preference.
+  - Options Argument
+    - The `options` argument must be an object with properties that vary between constructors and functions. If the `options` argument is not provided or is undefined, default values are used for all properties.
+- `Intl.DateTimeFormat(locales, options)` Constructor
+  - This constructor creates `Intl.DateTimeFormat` objects, and `Intl.DateTimeFormat` object enables language-sensitive date and time formatting.
+  - Parameters:
+    - `locales` (optional) - A string with a BCP 47 language tag, or an array of such strings. The following Unicode extension keys are allowed:
+      - `nu` - Numbering system.
+      - `ca` - Calendar.
+      - `hc` - Hour cycle.
+    - `options` (optional) - An object with some or all of the following properties:
+      - `datestyle`
+      - `timeStyle`
+      - `calendar`
+      - `dayPeriod`
+      - `numberingSystem`
+      - `localeMatcher`
+      - `timeZone`
+      - `hour12`
+      - `hourCycle`
+      - `formatMatcher`
+      - `weekday`
+      - `era`
+      - `year`
+      - `month`
+      - `day`
+      - `hour`
+      - `minute`
+      - `second`
+      - `fractionalSecondDigits`
+      - `timeZoneName`
+    - Return Value:
+      - A new `Intl.DateTimeFormat` Object.
+  - `Intl.DateTimeFormat(locales, options).format(date)`
+    - The `format(date)` method of `Intl.DateTimeFormat` instances formats a date according to the locale and formatting options of this `Intl.DateTimeFormat` object.
+    - It accepts a date parameter to format.
+- `Navigator`
+  - The `Navigator` interface represents the sate and the identity of the user agent. It allows scripts to query it and to register themselves to carry on some activities.
+  - A `Navigator` object can be retrieved using the read-only `window.navigator` property.
+  - `Navigator.language` - This read-only property returns a string representing the preferred language of the user, usually the language of the browser UI.
 
 ## Author
 

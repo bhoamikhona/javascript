@@ -1371,3 +1371,137 @@ console.log(days); // 10
  * So, let's head on over to our bankist app and make the necessary
  * changes.
  */
+
+/***********************************************************************/
+/******************* INTERNATIONALIZING DATES (INTL) *******************/
+/***********************************************************************/
+
+console.log(
+  '/******************* INTERNATIONALIZING DATES (INTL) *******************/'
+);
+
+/**
+ * JavaScript has a new internationalization API. That sounds very fancy
+ * but, all it does is to allow us to easily format numbers and strings
+ * according to different languages.
+ *
+ * With this new API, we can make our applications support different
+ * languages for users around the world which is pretty important.
+ *
+ * For example, currencies or dates are represented in a completely
+ * different way in Europe or in the U.S. or in Asia.
+ *
+ * There is a lot of language specific things that we can do with the
+ * Internationalization API but, in this section, we are just briefly
+ * going to talk about formatting dates and numbers.
+ *
+ * Starting with dates in this lesson.
+ *
+ * In our application, we have dates in two places. First - below
+ * "current balance" and the others are listed along with movements.
+ *
+ * Let's go back to our code and find the place which displays the date
+ * right below the "current balance" label so that we can format that
+ * according to different languages and see what it looks like.
+ *
+ * So, head over to our bankist application for that.
+ */
+
+const todaysDate = new Date(); // Mon Aug 07 2023 01:43:43 GMT+0530 (India Standard Time)
+console.log(todaysDate);
+
+/**
+ * To format a date, we will have to use the Internationalization API for
+ * that -- Its namespace is `Intl`.
+ *
+ * For times and dates, we use DateTimeFormat() method. All we need to
+ * pass into this method is a so-called locale string. This locale is
+ * usually the language then a dash and then a country, e.g. "en-US".
+ *
+ * So this: `new Intl().DateTimeFormat()` will create a so-called
+ * formatter for the language in the country that we passed in as a
+ * parameter.
+ *
+ * We will go through a list of these locale string codes soon.
+ *
+ * So, all of this: `new Intl().DateTimeFormat("en-US")` creates a
+ * formatter, and on that formmater, we can call `format()` method.
+ *
+ * And into the `format()` function, we pass in the date that we want to
+ * format.
+ */
+const formattedDate1 = new Intl.DateTimeFormat('en-US').format(todaysDate);
+
+console.log(formattedDate1); // 8/7/2023
+
+/**
+ * That's it. Let's reload the web-page and see what we have.
+ *
+ * Here you will find the all of the locale strings that you might need
+ * for your projects:
+ * http://www.lingoes.net/en/translator/langcode.htm
+ */
+
+/**
+ * This is the most straightforward way of formatting dates and times but,
+ * we can actually take it to the next level and add some options to also
+ * customize it a little bit.
+ *
+ * For example, we can see that right now, it only displays the date and
+ * not the time so, we can change that by providing an options object
+ * to `DateTimeFormat()` function.
+ *
+ * So, let's define this optional object outside in the global scope and
+ * inside this object, all we have to do is to specify the 'hour'
+ * property and set it to numeric. Same for 'minute'.
+ */
+
+let options = {
+  hour: 'numeric',
+  minute: 'numeric',
+};
+
+/**
+ * Now we have to provide this options object as a second argument into
+ * the DateTimeFormat() function.
+ */
+
+const formattedDate2 = new Intl.DateTimeFormat('en-US', options).format(
+  todaysDate
+);
+
+console.log(formattedDate2); // 1:52 AM
+
+/**
+ * As we see, we get the time, but on the the other hand, the date is gone
+ * so, let's get that back as well.
+ */
+
+options = {
+  hour: 'numeric',
+  minute: 'numeric',
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  weekday: 'short',
+};
+
+const formattedDate3 = new Intl.DateTimeFormat('en-US', options).format(
+  todaysDate
+);
+
+console.log(formattedDate3); // Mon, August 7, 2023 at 2:06 AM
+
+/**
+ * In many situations, it makes more sense to not define the locale
+ * manually, but instead to simply get it from the user's browser.
+ *
+ * That's pretty easy to do as well.
+ */
+
+const locale = navigator.language;
+console.log(locale); // en
+
+/**
+ * Now let's use all of this knowledge in our bankist application.
+ */
