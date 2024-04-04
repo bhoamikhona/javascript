@@ -1274,3 +1274,100 @@ console.log(future); // Mon Nov 19 2040 15:23:00 GMT+0530 (India Standard Time)
  * In the next lesson, we will then sum up what we just learned here to
  * add dates to the bankers application and make our project even better.
  */
+
+/***********************************************************************/
+/************************ OPERATIONS WITH DATES ************************/
+/***********************************************************************/
+
+console.log(
+  `/************************ OPERATIONS WITH DATES ************************/`
+);
+
+/**
+ * Let's now perform some operations with dates.
+ *
+ * One cool thing that we can do with dates is to do calculations with
+ * them.
+ *
+ * For example, we can subtract one date from another date, in order
+ * to calculate how many days have passed between the two dates.
+ *
+ * This works because whenever we attempt to convert a date to a number,
+ * then the result is going to be the timestamp in milliseconds. With
+ * these milliseconds, we can then perform calculations.
+ */
+
+future = new Date(2037, 10, 19, 15, 23);
+console.log(Number(future)); // 2142237180000
+
+// the same thing is going to happen when we use the + operator on it
+console.log(+future); // 2142237180000
+
+/**
+ * So, that does in fact mean that we can now do operations with it.
+ *
+ * If we subtract one date from another, the result is going to be a
+ * number like this one: 2142237180000 i.e. a timestamp in milliseconds
+ * and then we can simply convert those milliseconds back to days, hours,
+ * etc.
+ *
+ * So, let's now create a function that takes two dates and it is going
+ * to return the number of days that pass between the two dates.
+ */
+
+let calcDaysPassed = (date1, date2) => (date2 - date1) / (1000 * 60 * 60 * 24);
+
+let days = calcDaysPassed(new Date(2037, 3, 14), new Date(2037, 3, 24));
+console.log(days); // 10
+
+days = calcDaysPassed(new Date(2037, 3, 14), new Date(2037, 3, 4));
+console.log(days); // -10
+
+// to get rid of the negative value, we can use Math.abs()
+calcDaysPassed = (date1, date2) =>
+  Math.abs(date2 - date1) / (1000 * 60 * 60 * 24);
+
+days = calcDaysPassed(new Date(2037, 3, 14), new Date(2037, 3, 4));
+console.log(days); // 10
+
+/**
+ * This works great but, if you need really precise calculations, for
+ * example, including time changes due to daylight saving changes, and
+ * other weird edge cases, then you should use a date library like
+ * Moment.js
+ *
+ * Moment.js is a library that is available for free for all JavaScript
+ * developers but, for something like this, we should be fine.
+ *
+ * Let's say that one of these days that we pass into calcDaysPassed()
+ * also has time, let's see what happens to the result then.
+ */
+
+days = calcDaysPassed(new Date(2037, 3, 4), new Date(2037, 3, 14, 8));
+console.log(days); // 10.333333333333334
+
+/**
+ * Now we get 10.33 and we might not want that so, in this case, we can
+ * simply use Math.round() on all of the returning values.
+ */
+calcDaysPassed = (date1, date2) =>
+  Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
+
+days = calcDaysPassed(new Date(2037, 3, 4), new Date(2037, 3, 14, 8));
+console.log(days); // 10
+
+/**
+ * Now let's use this function of calcDaysPassed to format and display
+ * the dates in our applicaion in a nicer way in our applciation.
+ *
+ * Basically what we want to do it that if one movement happened today,
+ * then instead of the current date, we want to display "Today". For
+ * yesterday, we wanna display "Yesterday". If it happened day before
+ * yesterday, we wanna say "2 days ago", so on and so forth.
+ *
+ * Pretty sure you might have seen this kind of stuff in many web
+ * application that you use in your daily life.
+ *
+ * So, let's head on over to our bankist app and make the necessary
+ * changes.
+ */

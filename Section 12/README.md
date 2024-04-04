@@ -19,6 +19,7 @@
     - [Numeric Separators](#numeric-separators)
     - [Working with BigInt](#working-with-bigint)
     - [Creating Dates](#creating-dates)
+    - [Operations with Dates](#operations-with-dates)
   - [Author](#author)
 
 ## Lessons Learned
@@ -183,6 +184,11 @@
 - `Date.now()` - This static method returns the number of milliseconds elapsed since the epoch, which is defined as the midnight at the beginning of Jan 1, 1970, UTC.
 - `date.setFullYear()` - This method changes the year, the month, and/or day of the month for this date according to the local time.
 - There are also setHours(), setDate(), setMilliseconds(), setMinutes(), etc. You can go through those in MDN docs.
+
+### Operations with Dates
+
+- Calculating/adding/subtracting between two dates
+- [Moment.js](https://momentjs.com/) library
 
 ## Author
 
