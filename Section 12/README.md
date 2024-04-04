@@ -18,6 +18,7 @@
     - [The Remainder Operator](#the-remainder-operator)
     - [Numeric Separators](#numeric-separators)
     - [Working with BigInt](#working-with-bigint)
+    - [Creating Dates](#creating-dates)
   - [Author](#author)
 
 ## Lessons Learned
@@ -141,6 +142,47 @@
   - Return Value:
     - A `BigInt` value. Number values must be integers and are converted to BigInts. The boolean value `true` becomes `1n`, and `false` becomes `0n`. Strings are parsed as if they are source text for integer literals, which means they can have leading and trailing whitespaces and can be prefixed with `0b`, `0o`, or `0x`.
 - How the math operators work with bigInt and their exceptions.
+
+### Creating Dates
+
+- Javascript `Date` objects represent a single moment in time in platform-independent format. `Date` objects encapsulate an integral number that represents milliseconds since the midnight at the beginning of January 1, 1970, UTC (the epoch).
+- `Date()` Constructor
+  - The `Date()` constructor creates `Date` Objects. when called as a function, it returns a string representing the current time.
+  - Parameters:
+    - `Date(year, monthIndex, day, hours, minutes, seconds, and milliseconds)`
+    - `year` - Integer value representing the year. Values from `0` to `99` map to years `1900` to `1999`. All other values are the actual year.
+    - `monthIndex` - Integer value representing the month, beginning with 0 for Jan to 11 for Dec.
+    - `day` (optional) - Integer value representing the day of the month. Defaults to 1.
+    - `hours` (optional) - Integer value between 0 and 23 representing the hour of the day. Defaults to 0.
+    - `minutes` (optional) - Integer value representing the minute segment of a time. Defaults to 0.
+    - `seconds` (optional) - Integer value representing the second segment of a time. Defaults to 0.
+    - `milisecond` (optional) - Integer value representing the milisecond segment of a time. Defaults to 0.
+  - There are 5 basic forms of the `Date()` constructor:
+    - No Parameters:
+      - When no parameters are provided, the newly-created `Date` object represents the current date and time as of the time of instantiation. The returned date's timestamp is the same as the number returned by `Date.now()`.
+    - Time value or timestamp number
+      - `value` - An integer value representing the timestamp (the number milliseconds since midnight at the beginning of January 1, 1970, UTC - a.k.a. the epoch).
+    - Date String
+      - `dateString` - A string value representing a date, parsed and interpreted using the same algorithm implemented by `Date.parse()`.
+    - Date Object
+      - `dateObject` - An existing `Date` object. This effectively makes a copy of the existing `Date` object with the same date and time. This is equivalent to `new Date(dateObject.valueOf())`, except the `valueOf()` method is not called.
+    - Individual Date and Time Component Values:
+      - year, monthIndex, day, hours, minutes, seconds, and milliseconds.
+  - Return Value:
+    - Calling `new Date()` returns a Date object. If called with an invalid date string, or if the date to be constructed will have a timestamp less than 8,640,000,000,000,000 or greater than 8,640,000,000,000,000 milliseconds, it returns an invalid date.
+- `date.getFullYear()` - This method of `Date` instances returns the year for this date according to local time.
+- `date.getMonth()` - This method returns the month for this date according to the local time, as a zero-based value (where zero indicates the first month of the year).
+- `date.getDate()` - This method returns the day of the month for this date according to local time.
+- `date.getDay()` - This method returns the day of the week for this date according to local time, where 0 represents Sunday.
+- `date.getHours()` - This method returns the hours for this date according to local time.
+- `date.getMinutes()` - This method returns the minutes for this date according to local time.
+- `date.getSeconds()` - This method returns the seconds for this date according to local time.
+- `date.getMilliseconds()` - This method returns the milliseconds for this date according to local time.
+- `date.toISOString()` - this method returns a string representing this date in the date-time-string format, a simplified format based on ISO 8601, which is always 24 or 27 characters long. The timezone is alwasy UTC, as denoted by the suffix `z`.
+- `date.getTime()` - This method returns the number of milliseconds for this date since the epoch, which is defined as the midnight at the beginning of Jan 1, 1970, UTC.
+- `Date.now()` - This static method returns the number of milliseconds elapsed since the epoch, which is defined as the midnight at the beginning of Jan 1, 1970, UTC.
+- `date.setFullYear()` - This method changes the year, the month, and/or day of the month for this date according to the local time.
+- There are also setHours(), setDate(), setMilliseconds(), setMinutes(), etc. You can go through those in MDN docs.
 
 ## Author
 

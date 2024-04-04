@@ -1040,3 +1040,237 @@ console.log(12n / 3n); // 4n
  * In practice, you will probably not use it very much but, it is still
  * good to know that bigInt exists and also how it works.
  */
+
+/**********************************************************************/
+/*************************** CREATING DATES ***************************/
+/**********************************************************************/
+
+console.log(
+  `/*************************** CREATING DATES ***************************/`
+);
+
+/**
+ * When we build real world applications, one type of data that comes up
+ * all the time is dates and times.
+ *
+ * So, let's learn the fundamentals of dates and times in this lesson
+ * so that in the next one, we can then implement them into our
+ * application.
+ *
+ * Dates and time can be a little messy and confusing in JavaScript but,
+ * we will try to make the fundamentals as clear as possible.
+ *
+ * First, we need to create a date and there are exactly 4 ways of
+ * creating dates in JavaScript.
+ *
+ * They all use the new Date() constructor function, but they can
+ * accept different parameters. So, let's see how.
+ */
+
+// Create Date
+
+/**
+ * The first way of creating a date is to use the Date() constructor
+ * with the `new` keyword and we can then assign it to a variable.
+ */
+
+let now = new Date();
+console.log(now); // Wed Apr 03 2024 23:26:05 GMT+0530 (India Standard Time)
+
+/**
+ * We get the current date and time at this very moment.
+ *
+ * The second method of creating a date is to parse the date from a date
+ * string.
+ */
+
+console.log(new Date('Aug 02 2020 18:05:41')); // Sun Aug 02 2020 18:05:41 GMT+0530 (India Standard Time)
+console.log(new Date('December 24, 2015')); // Thu Dec 24 2015 00:00:00 GMT+0530 (India Standard Time)
+
+/**
+ * So, simply providing a string - it will then automatically parse
+ * the time based on that.
+ *
+ * So, JavaScript is pretty smart in parsing out the string that we
+ * provide in the parentheses.
+ *
+ * However, it is generally not a good idea to do this because it can
+ * be quite unreliable. However, if the string was actually created by
+ * JavaScript itself, then of course it is pretty safe.
+ *
+ * Let's try to parse one of the dates string in our accounts object.
+ * This will work because it was JavaScript who created these dates.
+ * NOTE: The Z in the date means UTC i.e. Coordinated Universal Time,
+ * which is basically the time without any time zone in London and also
+ * without daylight savings.
+ */
+
+console.log(new Date(account1.movementsDates[0]));
+
+/**
+ * That was based on a string but, we can also pass in year, month, day,
+ * hour, minute, and even second in this constructor.
+ */
+
+// You might have noticed that we put the value of month as 10 but, we
+// got November which is the 11th month of the year. This means that
+// months are 0 based in JavaScript.
+console.log(new Date(2037, 10, 19, 15, 23, 5)); // Thu Nov 19 2037 15:23:05 GMT+0530 (India Standard Time)
+
+/**
+ * What's cool about this is that JavaScript auto corrects the date.
+ *
+ * So, let's try that again differently. Let's try Nov 31st but, we
+ * already know that November only has 30 days.
+ *
+ * So, if we take a look at our result below, we get the corrected
+ * result.
+ */
+console.log(new Date(2037, 10, 31)); // Tue Dec 01 2037 00:00:00 GMT+0530 (India Standard Time)
+console.log(new Date(2037, 10, 33)); // Thu Dec 03 2037 00:00:00 GMT+0530 (India Standard Time)
+
+/**
+ * So this is sometimes pretty useful.
+ *
+ * Finally, we can also pass into the date constructor function, the
+ * amount of milliseconds passed since the beginning of the Unix time,
+ * which is January 1, 1970.
+ *
+ * So, let's see that:
+ */
+
+// 0 milliseconds after the first Unix time
+console.log(new Date(0)); // Thu Jan 01 1970 05:30:00 GMT+0530 (India Standard Time)
+
+/**
+ * This will actually be pretty useful, even though it looks a bit
+ * strange.
+ *
+ * Let's now create a date that is 3 days after the beginning of Unix
+ * time.
+ */
+
+// Days * Hours * Minutes * Seconds * Milliseconds - this is how we
+// convert days to milliseconds.
+// This number that we calculated here, is called a timestamp. We will
+// see why this is useful, a little bit later.
+let timestamp = 3 * 24 * 60 * 60 * 1000;
+
+console.log(new Date(timestamp)); // Sun Jan 04 1970 05:30:00 GMT+0530 (India Standard Time)
+
+/**
+ * These dates that we created above are in fact, just another type of
+ * special type of object. Therefore, they have their own methods, just
+ * like arrays or maps or strings.
+ *
+ * So, we can use those methods to get or to set components of a date.
+ */
+
+// Working with dates
+let future = new Date(2037, 10, 19, 15, 23);
+console.log(future); // Thu Nov 19 2037 15:23:00 GMT+0530 (India Standard Time)
+
+/**
+ * getFullYear() returns the year of the date provided.
+ *
+ * There is also getYear() but, don't use that one, use getFullYear()
+ * instead.
+ */
+console.log(future.getFullYear()); // 2037
+
+/**
+ * Next up, is getMonth(), and remember that this one is 0 based.
+ *
+ * So, 10 is actually the month number 11.
+ */
+console.log(future.getMonth()); // 10
+
+/**
+ * Then we have getDate() which returns the day of the month, and
+ * getDay() returns the day of the week.
+ *
+ * NOTE: getDay() returns a number which represents the day of the week.
+ * Sunday is number 0.
+ */
+
+console.log(future.getDate()); // 19
+console.log(future.getDay()); // 4
+
+/**
+ * Besides these, we also have 3 more which are getHours(), getMinutes(),
+ * and getSeconds().
+ */
+
+console.log(future.getHours()); // 15
+console.log(future.getMinutes()); // 23
+console.log(future.getSeconds()); // 0
+
+/**
+ * So sometimes, these can be pretty useful to work with the dates.
+ *
+ * Besides that, we can also get a nicely formatted string using the
+ * toISOString() method.
+ */
+
+console.log(future.toISOString()); // 2037-11-19T09:53:00.000Z
+
+/**
+ * We get ISO string which follows some kind of international standard,
+ * and maybe you noticed that it is actually similar to the string that
+ * we used before coming from `account1.movementDates`. They were
+ * generated from toISOString() method.
+ *
+ * So, that's one of the very useful cases - when you want to convert
+ * a particular date object into a string that you can then store
+ * somewhere.
+ *
+ * Finally, we can also get the timestamp for the date. Remember that
+ * the timestamp is the milliseconds, which have passed since January 1,
+ * 1970.
+ */
+console.log(future.getTime()); // 2142237180000
+
+/**
+ * Now we can take the number 2142237180000 and reverse it.
+ *
+ * So, if we wanted, we could now create a new date only based on these
+ * milliseconds, and it will then give us exactly that same time.
+ */
+console.log(new Date(2142237180000)); // Thu Nov 19 2037 15:23:00 GMT+0530 (India Standard Time)
+
+/**
+ * Timestamps are actually so important that there is a special method
+ * that we can use to get the timestamp for right now.
+ *
+ * So, if you simply want the current timestamp for this exact moment,
+ * then you don't even need to create a new date.
+ *
+ * All we have to do is to call Date.now() and that then gives us the
+ * current timestamp.
+ */
+console.log(Date.now()); // 1712210501767
+console.log(new Date(1712210501767)); // Thu Apr 04 2024 11:31:41 GMT+0530 (India Standard Time)
+
+/**
+ * Finally, there are also the set versions of all of these methods.
+ *
+ * Let's look at the one for the year however, we will not go through
+ * all of them here.
+ */
+
+future.setFullYear(2040);
+console.log(future); // Mon Nov 19 2040 15:23:00 GMT+0530 (India Standard Time)
+
+/**
+ * There also exists setMonth(), setDate(), setDay(), etc.
+ *
+ * These also perform auto correction just like we saw in
+ * `new Date(2037, 10, 33)`
+ *
+ * That's basically all the methods that you need to know about dates
+ * and most of them are quite intuitive and all you need to know really
+ * is that there are all these different ways of creating dates.
+ *
+ * In the next lesson, we will then sum up what we just learned here to
+ * add dates to the bankers application and make our project even better.
+ */
