@@ -1662,3 +1662,227 @@ console.log(
  * implement the currencies in our bankist application. So, head over to
  * our bankist app for that.
  */
+
+/**********************************************************************/
+/***************** TIMERS: SETTIMEOUT AND SETINTERVAL *****************/
+/**********************************************************************/
+
+console.log(
+  '/***************** TIMERS: SETTIMEOUT AND SETINTERVAL *****************/'
+);
+
+/**
+ * To finish this section, let's quickly talk about timers in JavaScript.
+ *
+ * We have two kinds of timers.
+ *
+ * First, the setTimeout() timer runs just once, after a defined time,
+ * while the setInterval() timer keeps running basically forever, until
+ * we stop it.
+ *
+ * Basically, we can use setTimeout() to execute some code at some point
+ * in the future.
+ *
+ * So, let's use it to simulate ordering a pizza. When we order a pizza,
+ * it doesn't arrive right away. Instead, it takes some time and we can
+ * simulate that.
+ *
+ * The setTimeout() function receives a callback function, just like some
+ * array methods or DOM event handlers.
+ *
+ * We do not call the callback function in the setTimeout() ourselves. We
+ * simply pass it in as an argument to setTimeout(). It is this function
+ * i.e. setTimeout() who will then call the callback function in the
+ * future.
+ *
+ * When will that future arrive? Well, that's what we specify as the
+ * second argument. We pass in the amount of milliseconds that will
+ * pass until the callback function is called by the setTimeout()
+ * function.
+ *
+ * Let's say we want it to call the callback function after 3 seconds so,
+ * we need to pass 3000.
+ */
+
+setTimeout(() => {
+  console.log(`Here is your pizza. 🍕`);
+}, 3000);
+
+/**
+ * Now if we look at our console and re-load the page, we will see that
+ * "Here is your pizza. 🍕" is logged onto the console after 3 seconds.
+ *
+ * So, with this, we really delayed calling our callback function by
+ * exactly 3 seconds after the page has loaded.
+ *
+ * We can also say that we scheduled this function call for 3 seconds
+ * later.
+ *
+ * Now, what's really important to realize here is that the code
+ * execution does not stop at the point of setTimeout() function.
+ *
+ * So, whenever our code reaches to setTimeout() function, it will call
+ * the setTimeout() function, it will then essentially register the
+ * callback function in the setTimeout() to be called later, and then
+ * the code execution simply continues.
+ *
+ * We can prove that by doing something after the setTimeout().
+ */
+
+console.log(`Waiting...`);
+
+/**
+ * Now if we re-load the web-page, we will immediately see the
+ * "Waiting..." in the console, and only after 3 seconds will we see
+ * "Here is your pizza 🍕".
+ *
+ * This is really important to understand.
+ *
+ * Again, as soon as JavaScript hits the line of code where we call the
+ * setTimeout() function, it will simply basically keep counting the
+ * time in the background, and register its callback function to be
+ * called after that time has elapsed, and then immediately, JavaScript
+ * will move on to the next line, which is where we log "Waiting...".
+ *
+ * This mechanism is called Asynchronous JavaScript, and we will talk
+ * about how exactly all of this works behind the scenes in a special
+ * section just about Asynchronous JavaScript.
+ *
+ * Anyway, what if now we wanted to pass in some arguments into the
+ * callback function of the setTimeout() function? It is not that simple,
+ * right? Because we are not calling that callback function ourselves.
+ * We are not using the set of parentheses to invoke it, therefore we
+ * cannot pass any arguments into the function.
+ *
+ * However, the setTimeout() function actually has a solution for that,
+ * and it works like this:
+ *
+ * Basically, all the arguments that we pass into the setTimeout() after
+ * the `delay` argument will be arguments o the function. Let's see it
+ * in action:
+ */
+
+setTimeout(
+  (ing1, ing2) => {
+    console.log(`Here is your pizza with ${ing1} and ${ing2}. 🍕`);
+  },
+  3000,
+  'olives',
+  'spinach'
+);
+
+/**
+ * Now after 3 seconds, we get the string "Here is your pizza with
+ * olives and spinach. 🍕"
+ *
+ * So, indeed the 3rd argument that we passed in became the first
+ * argument in our callback function in the setTimeout() function; and
+ * the third argument in setTimeout() became the 2nd argument in its
+ * callback function. If we added more, then they would all become the
+ * arguments of its callback function.
+ *
+ * That is essentially how the setTimeout() function works.
+ *
+ * There is just one more detail that we need to see which is the fact
+ * that we can actually cancel the timer, at least until the delay has
+ * actually passed i.e. in our case, before the 3 seconds have passed.
+ *
+ * So, let's see how. To look at this example, first let's create an
+ * array of ingredients to pass into the callback function of
+ * setTimeout().
+ */
+
+let ingredients = ['olives', 'spinach'];
+// ingredients = ['mushrooms', 'onions'];
+
+// setting a variable to setTimeout() so we can use clearTimeout()
+let pizzaTimer = setTimeout(
+  (ing1, ing2) => {
+    console.log(`Here is your pizza with ${ing1} and ${ing2}. 🍕`);
+  },
+  3000,
+  ...ingredients
+);
+
+/**
+ * Now what we want to do is we want to check if the ingredients have
+ * "spinach" - because that's something that many people don't like.
+ *
+ * So, if the ingredients has "spinach" in it then clear timeout.
+ *
+ * Within clearTimeout() we need to pass in the name of the timer. To
+ * do that, we can basically assign our setTimeout timer to a variable.
+ *
+ * Then, we can use that variable in clearTimeout() to basically stop
+ * it.
+ */
+
+if (ingredients.includes('spinach')) clearTimeout(pizzaTimer);
+
+/**
+ * Essentially, we basically stored the result of the setTimeout()
+ * function inside a variable called `pizzaTimer` and then used that
+ * variable to clear timeout i.e. delete the timer.
+ *
+ * Now, since the ingredients array includes "spinach", we will not see
+ * anything on the console.
+ *
+ * But, if it did not include "spinach" then it will work after 3
+ * seconds.
+ *
+ * This is how the setTimeout() function works. That's it, that is all
+ * you need to know about the setTimeout() function. It is pretty
+ * straightforward.
+ *
+ * So, let's now go back to our bankist application and implement a
+ * timer to simulate the approval of a loan.
+ *
+ * When we click on the loan button, we get the amount immediately, as
+ * of now. But, typically a bank takes some time to approve that loan.
+ * So, let's simulate that by taking 2-3 seconds. So, head on over to
+ * our bankist application for that.
+ */
+
+// setInterval()
+/**
+ * Now we also need to learn about setInterval().
+ *
+ * So, we learned about setTimeout() function,, which simply schedules
+ * a function to run after a certain amount of time, but the callback
+ * function is only executed once.
+ *
+ * Now, what if we wanted to run a function over and over again, like
+ * every 5 seconds, or every 10 seconds?
+ *
+ * For that, we have the setInterval() function.
+ *
+ * So, let's use the setInterval() function to basically create a clock
+ * that will display a clock in our console.
+ *
+ * In the setInterval() function, the first argument that we pass in
+ * is a callback function which defines a set of instructions that our
+ * app needs to do. The second argument is the amount of delay that
+ * our app needs to call the callback function.
+ *
+ * So, we will essentially be calling the callback function every
+ * second in our case.
+ *
+ * Let's see what happens.
+ */
+
+setInterval(function () {
+  const now = new Date();
+  console.log(now);
+}, 1000);
+
+/**
+ * If we check our console now, we will see that indeed, once every
+ * second, our callback function is executed.
+ *
+ * Every second, a new date is created and it is logged on to the
+ * console.
+ *
+ * Of course you can make a real clock with this now since you can get
+ * the hour, min, and sec from the Date(). You can even take it as a
+ * challenge.
+ */

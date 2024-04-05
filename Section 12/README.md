@@ -22,6 +22,7 @@
     - [Operations with Dates](#operations-with-dates)
     - [Internationalizing Dates (Intl)](#internationalizing-dates-intl)
     - [Internationalizing Numbers (Intl)](#internationalizing-numbers-intl)
+    - [Timers: setTimeout and setInterval](#timers-settimeout-and-setinterval)
   - [Author](#author)
 
 ## Lessons Learned
@@ -277,6 +278,46 @@
   - The `format(number)` method of `Intl.NumberFormat` instances formats a number according to the locale and formatting options of this `Intl.NumberFormat` object.
   - Parameters:
     - `number` - A `Number`, `BigInt`, or string to format. Strings are parsed in the same way as in number conversion, except that `format()` will use the exact value that the string represents, avoiding loss of precision during implicitly conversion to a number.
+
+### Timers: setTimeout and setInterval
+
+- `setTimeout(callbackFn, delay, param1...paramN)`
+  - The global `setTimeout()` method sets a timer which executes a function or specified piece of code once the timer expires.
+  - Parameters:
+    - `callbackFn` - A function to be executed after the timer expires.
+      - NOTE: Instead of a callback function, you can use `code` as a parameter. It is an alternative syntax that allows you to include a string instead of a function, which is compiled and executed when the timer expires. This syntax is **not recommended**.
+    - `delay` (optional) - The time, in milliseconds that the timer should wait before the specified function or code is executed. If this parameter is omitted, a value of 0 is used, meaning execute "immediately", or more accurately, the next event cycle.
+      - NOTE: In either case, the actual delay may be longer than intended. Visit MDN docs to know why.
+      - NOTE: If the value isn't a numner, implicit type coercion is silently done on the value to convert it to a number -- which can lead to un-expected and surprising results/
+    - `param1, ... , paramN` (optional) - Additional arguments which are passed through the function specified by the callback function.
+  - Return value:
+    - The returned `timeoutID` is a positive integer value which identifies the timer created by the call to `setTimeout()`. This value can be passed to `clearTimeout()` to cancel the timeout.
+    - It is guaranteed that a `timeoutID` value will never be re-used by a subsequent call to `setTimeout()` or `setInterval()` on the same object (a window or a worker). However, different objects use separate pools of IDs.
+- `clearTimeout(timeoutID)`
+  - The global `clearTimeout()` method cancels a timeout previously established by calling `setTimeout()`.
+  - If the parameter provided does not identify a previously established action, this method does nothing.
+  - Parameters:
+    - `timeoutID` - The identifier of the timeout you want to cancel. This ID was returned by the corresponding call to `setTimeout()`.
+    - NOTE: The pool of IDs used by `setTimeout()` and `setInterval()` are
+      shared, which means that you can technically use `clearTimeout()` and `clearInterval()` interchangeably. However, for clarity, you should avoid doing so.
+  - Return value:
+    - None (`undefined`).
+- `setInterval(callbackFn/code, delay, arg0 ... argN)`
+  - The `setInterval()` method, offered on the `Window` and `Worker` interfaces, repeatedly calls a function or executes a code snippet, with a fixed time delay between each call.
+  - This method returns an interval ID which uniquely identifies the interval, so you can remove it later by calling `clearInterval()`.
+  - Parameters:
+    - `callbackFn` - A function to be executed every `delay` milliseconds. The first execution happens after `delay` milliseconds.
+    - NOTE: Parameter `code` - An optional syntax allows you to include a string instead of a function, which is compiled and executed every `delay` milliseconds. This syntax is **not recommended**.
+    - `delay` (optional) - The time, in milliseconds (thousandths of a second), the timer should delay in between executions of the specified function or code. Defaults to 0 if not specified.
+    - `arg0,...,argN` (optional) - Additional arguments which are passed through to the function specified by `callbackFn` once the timer expires.
+  - Return value:
+    - The returned `intervalID` is a numeric, non-zero value which identifies the timer created by the call to `setInterval()`; this value can be passed to `clearInterval()` to cancel the interval.
+- `clearInterval(intervalID)`
+  - The global `clearInterval()` method cancels a timed, repeating action which was previously established by a call to `setInterval()`. If the parameter provided does not identify a previously established action, this method does nothing.
+  - Parameters:
+    - `intervalID` - The identitfier of the repeated action you want to cancel. This ID was returned by the correspoding call to setInterval().
+  - Return value:
+    - None (`undefined`)
 
 ## Author
 
