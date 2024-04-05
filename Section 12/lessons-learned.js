@@ -1870,10 +1870,12 @@ if (ingredients.includes('spinach')) clearTimeout(pizzaTimer);
  * Let's see what happens.
  */
 
-setInterval(function () {
+const interval = setInterval(function () {
   const now = new Date();
   console.log(now);
 }, 1000);
+
+clearInterval(interval);
 
 /**
  * If we check our console now, we will see that indeed, once every
