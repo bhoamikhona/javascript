@@ -16,6 +16,7 @@
 - [Section 10](./Section%2010): A Closer Look at Functions
 - [Section 11](./Section%2011): Working With Arrays
 - [Section 12](./Section%2012): Numbers, Dates, Intl, and Timers
+- [Section 13](./Section%2013): Advanced DOM and Events
 
 ## Projects
 
