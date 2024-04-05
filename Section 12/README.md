@@ -21,6 +21,7 @@
     - [Creating Dates](#creating-dates)
     - [Operations with Dates](#operations-with-dates)
     - [Internationalizing Dates (Intl)](#internationalizing-dates-intl)
+    - [Internationalizing Numbers (Intl)](#internationalizing-numbers-intl)
   - [Author](#author)
 
 ## Lessons Learned
@@ -241,6 +242,41 @@
   - The `Navigator` interface represents the sate and the identity of the user agent. It allows scripts to query it and to register themselves to carry on some activities.
   - A `Navigator` object can be retrieved using the read-only `window.navigator` property.
   - `Navigator.language` - This read-only property returns a string representing the preferred language of the user, usually the language of the browser UI.
+
+### Internationalizing Numbers (Intl)
+
+- The `Intl.NumberFormat` object enables language-sensitive number formatting. It creates a new `NumberFormat` object.
+- The `Intl.NumberFormat()` constructor creates `Intl.NumberFormat` objects.
+- Parameters:
+  - `locales` (optional) - A string with a BCP 47 language tag, or an array of such strings.
+    - `nu` - The numbering system to be used.
+  - `options` (optional) - An object with some or all of the following properties:
+    - `compactDisplay`
+    - `currency`
+    - `currencyDisplay`
+    - `currencySign`
+    - `localeMatcher`
+    - `notation`
+    - `numberingSystem`
+    - `signDisplay`
+    - `style`
+    - `unit`
+    - `unitDisplay`
+    - `useGrouping`
+    - `roundingMode`
+    - `roundingPriority`
+    - `roundingIncrement`
+    - `trailingZeroDisplay`
+    - `minimumIntegerDigits`
+    - `minimumFractionDigits`
+    - `maximumFractionDigits`
+    - `minimumSignificantDigits`
+    - `maximumSignificantDigits`
+  - It returns a new `Intl.NumberFormat` Object.
+- `Intl.NumberFormat().format(number)`
+  - The `format(number)` method of `Intl.NumberFormat` instances formats a number according to the locale and formatting options of this `Intl.NumberFormat` object.
+  - Parameters:
+    - `number` - A `Number`, `BigInt`, or string to format. Strings are parsed in the same way as in number conversion, except that `format()` will use the exact value that the string represents, avoiding loss of precision during implicitly conversion to a number.
 
 ## Author
 

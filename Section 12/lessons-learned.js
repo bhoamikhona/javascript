@@ -1505,3 +1505,160 @@ console.log(locale); // en
 /**
  * Now let's use all of this knowledge in our bankist application.
  */
+
+/***********************************************************************/
+/****************** INTERNATIONALIZING NUMBERS (INTL) ******************/
+/***********************************************************************/
+
+console.log(
+  '/****************** INTERNATIONALIZING NUMBERS (INTL) ******************/'
+);
+
+/**
+ * In the last lesson, we formatted dates using the Internationalization
+ * API. Now, let's actually format regular numbers.
+ *
+ * Let's start by doing some experiments in the console first, before
+ * we move on to our application.
+ */
+
+num = 3884764.23;
+
+/**
+ * Let's do the most basic formatting now using the `new` keyword and
+ * `Intl` namespace.
+ *
+ * `Intl.NumberFormat()` creates a formatter which takes in a locale
+ * string. On this formatter we then call format() method which takes
+ * in the what we actually want to format.
+ */
+console.log(`--- Simple Number Format ---`);
+
+console.log('US: ', new Intl.NumberFormat('en-US').format(num)); // US:  3,884,764.23
+
+/**
+ * The number is not formatted using the dividers/comma/separators. So,
+ * that it is easier to read 3,884,764.23.
+ *
+ * But, let's see how it works in other countries.
+ */
+
+console.log('India: ', new Intl.NumberFormat('hi-IN').format(num)); // India:  38,84,764.23
+console.log('Germany: ', new Intl.NumberFormat('de-DE').format(num)); // Germany:  3.884.764,23
+console.log('Syria: ', new Intl.NumberFormat('ar-SY').format(num)); // Syria:  ٣٬٨٨٤٬٧٦٤٫٢٣
+
+/**
+ * Of course, we can also just use the locale from the browser.
+ */
+console.log(
+  'Navigator Language: ',
+  new Intl.NumberFormat(navigator.language).format(num)
+); // Navigator Language:  3,884,764.23
+
+/**
+ * This is just the most basic formatting but, let's now define an object
+ * here called `options`. `options` is forr formatting, again. But of
+ * course, we have other properties in this obejct.
+ *
+ * It is no longer day or month. Instead, we can specify style.
+ */
+
+console.log(`--- Miles Per Hour Format ---`);
+
+num = 50;
+options = {
+  style: 'unit',
+  unit: 'mile-per-hour',
+};
+
+/**
+ * Now we need to pass in this options object into the NumberFormat()
+ * function as a second argument, so it would apply.
+ */
+
+console.log('US: ', new Intl.NumberFormat('en-US', options).format(num)); // US:  50 mph
+console.log('India: ', new Intl.NumberFormat('hi-IN', options).format(num)); // India:  50 मी॰प्र॰घं॰
+console.log('Germany: ', new Intl.NumberFormat('de-DE', options).format(num)); // Germany:  50 mi/h
+console.log('Syria: ', new Intl.NumberFormat('ar-SY', options).format(num)); // Syria:  ٥٠ ميل/س
+console.log(
+  'Navigator Language: ',
+  new Intl.NumberFormat(navigator.language, options).format(num)
+); // Navigator Language:  50 mph
+
+/**
+ * Of course we try others. For example, for temperatures, there is
+ * Celsius.
+ */
+
+console.log(`--- Celsius Format ---`);
+num = 32;
+
+options = {
+  style: 'unit',
+  unit: 'celsius',
+};
+
+console.log('US: ', new Intl.NumberFormat('en-US', options).format(num)); // US:  32°C
+console.log('India: ', new Intl.NumberFormat('hi-IN', options).format(num)); // India:  32°से॰
+console.log('Germany: ', new Intl.NumberFormat('de-DE', options).format(num)); // Germany:  32°C
+console.log('Syria: ', new Intl.NumberFormat('ar-SY', options).format(num)); // Syria:  ٣٢°م
+console.log(
+  'Navigator Language: ',
+  new Intl.NumberFormat(navigator.language, options).format(num)
+); // Navigator Language:  32°C
+
+/**
+ * Apart from Celsius, we also have percent and currency. Those are
+ * the three different options for the style i.e. unit/percent/currency.
+ *
+ * If we have currency then the unit is completely ignored but, we do
+ * have to define the crrency.
+ */
+
+console.log(`--- Currency Format ---`);
+num = 100000000;
+options = {
+  style: 'currency',
+  unit: 'celsius', // unit is ignored, if the style is currency or percent
+  currency: 'EUR', // It is important to understand that we do indeed have to set the currency here because it is not determined by the locale i.e. it is not defined by the 'en-US' that we passed in NumberFormat(). This is because, it is possible to show Euros in US so, we have to define it manually.
+};
+
+console.log('US: ', new Intl.NumberFormat('en-US', options).format(num)); // US:  €100,000,000.00
+console.log('India: ', new Intl.NumberFormat('hi-IN', options).format(num)); // India:  €10,00,00,000.00
+console.log('Germany: ', new Intl.NumberFormat('de-DE', options).format(num)); // Germany:  100.000.000,00 €
+console.log('Syria: ', new Intl.NumberFormat('ar-SY', options).format(num)); // Syria: ١٠٠٬٠٠٠٬٠٠٠٫٠٠ €
+console.log(
+  'Navigator Language: ',
+  new Intl.NumberFormat(navigator.language, options).format(num)
+); // Navigator Language:  €100,000,000.00
+
+/**
+ * Finally, we can also turn off the grouping.
+ */
+
+console.log(`--- No Grouping Format ---`);
+num = 100000000;
+options = {
+  style: 'currency',
+  unit: 'celsius',
+  currency: 'EUR',
+  useGrouping: false,
+};
+
+console.log('US: ', new Intl.NumberFormat('en-US', options).format(num)); // US:  €100000000.00
+console.log('India: ', new Intl.NumberFormat('hi-IN', options).format(num)); // India:  €100000000.00
+console.log('Germany: ', new Intl.NumberFormat('de-DE', options).format(num)); // Germany:  100000000,00 €
+console.log('Syria: ', new Intl.NumberFormat('ar-SY', options).format(num)); // Syria: ١٠٠٠٠٠٠٠٠٫٠٠ €
+console.log(
+  'Navigator Language: ',
+  new Intl.NumberFormat(navigator.language, options).format(num)
+); // Navigator Language:  €100000000.00
+
+/**
+ * If you are interested in even more properties that you can set in the
+ * options object, then just check out the MDN documentation.
+ *
+ * Now we are going to this knowledge that we learned in this lesson and
+ * implement the currencies in our bankist application. So, head over to
+ * our bankist app for that.
+ */
