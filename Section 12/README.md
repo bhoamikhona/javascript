@@ -4,7 +4,7 @@
 
 ## Demo
 
-- [Live Site](./index.html)
+- [Live Site](https://bhoamikhona.github.io/javascript/Section%2012/index.html)
   - Username: bkk and Pin: 6666
 
 ## Table of Content
@@ -23,6 +23,7 @@
     - [Internationalizing Dates (Intl)](#internationalizing-dates-intl)
     - [Internationalizing Numbers (Intl)](#internationalizing-numbers-intl)
     - [Timers: setTimeout and setInterval](#timers-settimeout-and-setinterval)
+    - [Implementing a Countdown Timer](#implementing-a-countdown-timer)
   - [Author](#author)
 
 ## Lessons Learned
@@ -312,6 +313,9 @@
     - `arg0,...,argN` (optional) - Additional arguments which are passed through to the function specified by `callbackFn` once the timer expires.
   - Return value:
     - The returned `intervalID` is a numeric, non-zero value which identifies the timer created by the call to `setInterval()`; this value can be passed to `clearInterval()` to cancel the interval.
+
+### Implementing a Countdown Timer
+
 - `clearInterval(intervalID)`
   - The global `clearInterval()` method cancels a timed, repeating action which was previously established by a call to `setInterval()`. If the parameter provided does not identify a previously established action, this method does nothing.
   - Parameters:

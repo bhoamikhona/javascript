@@ -15,12 +15,14 @@
 - [Section 09](./Section%2009): Data Structures, Modern Operators, and Strings
 - [Section 10](./Section%2010): A Closer Look at Functions
 - [Section 11](./Section%2011): Working With Arrays
+- [Section 12](./Section%2012): Numbers, Dates, Intl, and Timers
 
 ## Projects
 
 - [Guess The Number](https://bhoamikhona.github.io/javascript/Section%2007/Guess%20The%20Number/index.html)
 - [Modal Window](https://bhoamikhona.github.io/javascript/Section%2007/Modal%20Window/index.html)
 - [The Pig Game](https://bhoamikhona.github.io/javascript/Section%2007/The%20Pig%20Game/index.html)
+- [Bankist Web App](https://bhoamikhona.github.io/javascript/Section%2012/index.html)
 
 ## Author
 
