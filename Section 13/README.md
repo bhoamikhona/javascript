@@ -11,6 +11,7 @@
     - [How The DOM Really Works](#how-the-dom-really-works)
       - [Review: What is the DOM?](#review-what-is-the-dom)
       - [How The DOM API is Organized Behind The Scenes](#how-the-dom-api-is-organized-behind-the-scenes)
+    - [Selecting, Creating, and Deleting Elements](#selecting-creating-and-deleting-elements)
   - [Author](#author)
 
 ## Lessons Learned
@@ -99,6 +100,38 @@
 - There are still some simplifications here but, this is all that really matters.
 - If you want to go event deeper than this, there is still tons of material that you can check out in the MDN documentation and it is really fascinating.
 - But, all that you need to know is in this lesson.
+
+### Selecting, Creating, and Deleting Elements
+
+- Selecting Elements
+  - `document.documentElement` - selecting the HTML document itself
+  - `document.head` - selecting the head of the HTML document
+  - `document.body` - selecting the body of the HTML document
+  - `document.querySelector()`
+  - `document.querySelectorAll()` - returns a node list
+  - `document.getElementById()`
+  - `document.getElementsByTagName()` - returns live HTML collection
+  - `document.getElementsByClassName()` - returns live HTML collection
+  - Live HTML Collection vs. Node List
+- Creating and Selecting Elements
+  - `insertAdjacentHTML()`
+  - `document.createElement()`
+  - `element.prepend(elementToAdd)` - prepend() essentially adds the `elementToAdd` as the first child element inside `element`
+  - `element.append(elementToAdd)` - append() essentially adds the `elementToAdd`
+    > [!NOTE]
+    > If we use prepend() to add an element in the DOM and then use append() for the same element, there won't be two same elements on the webpage. This is because each element is unique. If you want two elements that are same on the webpage, you will have to use `cloneNode()` to clone the element that you want to display on the UI, more than once.
+  - `element.before(elementToAdd)` - adds the `elementToAdd` before the `element` as a sibling
+  - `element.after(elementToAdd)` - adds the `elementToAdd` after the `element` as a sibling
+- Delete Elements
+  - `element.remove()` - deletes the element on which the `remove()` method is called upon.
+  - Before `remove()` method, we used DOM traversing i.e. first selecting the parent element using `parentElement` property and then selecting its child element and removing it by using `removeChild()` method. An example of this: `message.parentElement.removeChild(message)`
+  - `parentElement`
+  - `removeChild()`
+- Others
+  - `classList`
+  - `textContent`
+  - `innerHTML`
+  - `cloneNode()`
 
 ## Author
 
