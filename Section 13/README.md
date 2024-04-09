@@ -14,6 +14,7 @@
     - [Selecting, Creating, and Deleting Elements](#selecting-creating-and-deleting-elements)
     - [Styles, Attributes, and Classes](#styles-attributes-and-classes)
     - [Implementing Smooth Scrolling](#implementing-smooth-scrolling)
+    - [Types of Events and Event Handlers](#types-of-events-and-event-handlers)
   - [Author](#author)
 
 ## Lessons Learned
@@ -219,6 +220,21 @@
       - `block` (optional) - Defines vertical alignment. One of `start`, `center`, `end`, or `nearest`. Defaults to `start`
       - `inline` (optional) - Defines horizontal alignment. One of `start`, `center`, `end`, or `nearest`. Defaults to `nearest`.
   - Returns `undefined`
+
+### Types of Events and Event Handlers
+
+- `mouseenter` event
+- All the events: [MDN Docs](https://developer.mozilla.org/en-US/docs/Web/API/UI_Events)
+- `on-event` properties; example:
+  - `onmouseenter`
+  - `onclick`
+  - NOTE: `on-event` is the old way of listening to events. Now we simply use `addEventListener()`.
+- Two ways of why `addEventListener()` is better than `on-event` property:
+  - `addEventListner()` allows us add multiple event listeners to the same event. So we could use the `addEventListner()` again on the same element, with the same type of event but, change the callback function.
+  - If we did that using `on-event` property, the second one would overrride the first one.
+  - The second advantage of using `addEventListener()` is that we can actually remove those events using `removeEventListener()` if we don't need it anymore - which we cannot do with `on-event` property.
+- `removeEventListener()` - removes an event listener previously registered with `addEventListener()`.
+- Handling events as HTML attributes (this one should not be used)
 
 ## Author
 
