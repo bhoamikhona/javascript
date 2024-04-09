@@ -158,8 +158,8 @@
   - `element.classList.toggle()`
   - `element.classList.contains()`
   - Getting and Setting Classes using `className`
-    - > [!CAUTION]
-    - > Do not using `className` to set classes as it will override existing classes and it only allows us to set one class on any element. Use `element.classList.add()` instead.
+    > [!CAUTION]
+    > Do not using `className` to set classes as it will override existing classes and it only allows us to set one class on any element. Use `element.classList.add()` instead.
   - The `add()`, `remove()`, `toggle()`, and `contains()` methods allow us to add and remove classes based on their names, without interfering with the classes that are already there.
   - Just keep in mind that `contains()` is really called `contains()` and not `includes()` like it is called in arrays.
 
