@@ -1,5 +1,6 @@
 /* The page is NOT responsive. You can implement responsiveness yourself if you wanna have some fun 😃 */
 
+/* CSS Custom Properties */
 :root {
   --color-primary: #5ec576;
   --color-secondary: #ffcb03;

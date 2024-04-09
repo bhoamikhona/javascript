@@ -345,3 +345,385 @@ document
  * adjacent HTML method as well - that we used before in the Bankist
  * application.
  */
+
+/***********************************************************************/
+/******************* STYLES, ATTRIBUTES, AND CLASSES *******************/
+/***********************************************************************/
+
+console.log(
+  `/******************* STYLES, ATTRIBUTES, AND CLASSES *******************/`
+);
+
+/**
+ * We will start working on the project very soon. But, for now, we need
+ * another reference lesson.
+ *
+ * So here, we are going to learn about styles, and attributes, and
+ * classes, and you will be able to keep all of the relevant tools here
+ * in one simple lesson so that you can reference all of them in the
+ * future.
+ *
+ * Some of these tools we will use later in the project but, it is
+ * impossible to create examples for all the functions and methods that
+ * we are going to learn now, but they are still important, so let's go.
+ *
+ * Let's keep working on our cookie message banner.
+ *
+ * We are going to start by talking about styles and we've already set
+ * CSS styles before but, there are still some more things to learn.
+ *
+ * First, let's go back to the basics i.e. set a style on an element.
+ */
+
+// STYLES:
+
+message.style.backgroundColor = '#37383d';
+
+/**
+ * Now the style nicely got applied to our element.
+ *
+ * Again, we didn't have to manually select the `message` element first
+ * because we already had it stored in the `message` variable.
+ *
+ * Now, let's set the width of the `message` element.
+ *
+ * Remember that we have to write the CSS value exactl as we would do in
+ * CSS i.e. we have to always include the unit.
+ */
+
+message.style.width = '120%';
+
+/**
+ * Remember that these styles are actually set as inline styles i.e.
+ * styles directly in the DOM - in the style attribute of the HTML
+ * element.
+ *
+ * You might think that we will be able to read styles using the `style`
+ * property but, let's see what happens.
+ */
+
+// we get nothing
+console.log(message.style.height);
+
+/**
+ * We get nothing.
+ *
+ * This is because using the `style` property like this only works for
+ * inline styles that we set ourselves also using the `style` property.
+ *
+ * So, it will work for the background color because we set that style
+ * using the `style` property as an inline style.
+ */
+
+console.log(message.style.backgroundColor); // rgb(55, 56, 61)
+
+/**
+ * Again, this worked because it is an inline style and a style that
+ * we set using the `style` property i.e. we set it ourselves, manually.
+ *
+ * But, we cannot get a style that is hidden inside of a class or maybe
+ * that doesn't even exist.
+ *
+ * For example, let's say that we wanted to get the color. The color is
+ * defined in the stylesheet but, if we try to log it here, then it is
+ * nowhere to be found.
+ */
+
+// we get nothing
+console.log(message.style.color);
+
+/**
+ * We can still get the styles if we really want to, all we need to do is
+ * to use the `getComputedStyle` function.
+ *
+ * It sounds a bit weird but, this is how it works:
+ */
+
+console.log(getComputedStyle(message));
+
+/**
+ * As you see in the console, we get a huge object which contains all of
+ * the properties with their values.
+ *
+ * So, in practice, we simply take a certain property, like color, from
+ * there.
+ */
+
+console.log(getComputedStyle(message).color); // rgb(187, 187, 187)
+
+/**
+ * These are the computed styles, which means that it is the real style
+ * as it appears on the page - even if we do not declare it in our CSS.
+ *
+ * For example, the `height`. We didn't define it ourselves but, the
+ * browser of course needed to calculate the height to display it and
+ * so, we can then get access to that value.
+ */
+
+console.log(getComputedStyle(message).height); // 50px
+
+/**
+ * Let's say we now wanted to increase the height of the `message`
+ * by 40px. To do that, we could simply get its height and then add
+ * 40 to it like so:
+ */
+
+// note we used Number.parseFloat() because getComputedStyle() returns a string with "px" or unit.
+message.style.height =
+  Number.parseFloat(getComputedStyle(message).height, 10) + 30 + 'px';
+
+/**
+ * So, this getComputedStyle() can come in really handy.
+ *
+ * But now, finally, let's also work with CSS custom properties, which
+ * we usually just call CSS variables.
+ *
+ * CSS custom properties are the ones in the `:root` declaration in the
+ * CSS file.
+ *
+ * They are called custom properties but, they are more like variables.
+ *
+ * The idea of CSS variables is very similar to the idea of variables in
+ * JavaScript.
+ *
+ * So this way, we can change the value in many places all over our CSS
+ * files by simply changing the value in `:root`
+ *
+ * Now, if we can change the value from `:root` then we can also change
+ * the value from JavaScript. So, let's see how.
+ *
+ * Before that, we first need to see where these properties are defined.
+ * They are defined in the document root - in JavaScript that is
+ * equivalent to the document i.e. `document` element.
+ *
+ * Let's say that we want to change the value for --color-primary
+ *
+ * We get that from the document root which is the document element in
+ * JS, we access its `style` property and then call `setProperty()` on it.
+ *
+ * The `setProperty()` method takes two parameters. The first argument
+ * is what we want to change, and the second argument takes in the value
+ * of what we want it to be changed to.
+ */
+
+document.documentElement.style.setProperty('--color-primary', 'orangered');
+
+/**
+ * Now if you look at our UI, everywhere in our style where we used
+ * the --primary-color, the color is now changed.
+ *
+ * So, with this, we can easily change the style of our page, simply by
+ * setting one property.
+ *
+ * That is how we change the value of CSS custom properties.
+ *
+ * Also, we can use the `setProperty()` for all properties but, usually
+ * it is just easier to do it the way we did above. But, we cannot do
+ * that for custom properties so, in that case, we have to use
+ * `setProperty()`.
+ */
+
+// resetting primary color to its original value
+document.documentElement.style.setProperty('--color-primary', '#5ec576');
+
+// ATTRIBUTES
+/**
+ * That's it for styles, let's talk a little bit about attributes now.
+ *
+ * In HTML, just to remember, every element has an attribute e.g.
+ * `src`, `id`, `class` etc.
+ *
+ * So, in JavaScript, we can of course, access and change these different
+ * attributes.
+ *
+ * Let's select the logo and access some of its default attributes.
+ */
+
+const logo = document.querySelector('.nav__logo');
+console.log(logo.alt); // Bankist Logo
+console.log(logo.src); // http://127.0.0.1:5500/Section%2013/img/logo.png
+
+/**
+ * As you see in the console, we get the alternative text and the source
+ * of that image.
+ *
+ * The source might look a bit different than the one we have in the
+ * HTML file but, more on that in a second.
+ *
+ * So, this works because on images, they are supposed to have the `alt`
+ * and the `src` attributes on them and so if we specify them in HTML,
+ * then JS will automatically create these properties on the object,
+ * but if we add some other attribute that is not a standard then
+ * JavaScript, will not automatically create a property on the object.
+ *
+ * So, let's go to the lessons-learned.html file and write a 'designer'
+ * attribute to the logo image.
+ *
+ * If we now try to read `logo.designer`, it is not going to work.
+ */
+
+console.log(logo.designer); // undefined
+
+/**
+ * We get undefined - this is because `designer` is not a standard
+ * property that is expected to be on images.
+ *
+ * Another one that works here and that's a bit different that you might
+ * expect is `className`
+ */
+
+console.log(logo.className); // nav__logo
+
+/**
+ * So, className returns a string value of all the classes in the class
+ * attribute of the element on which it is called upon.
+ *
+ * You might think it should be `class` but, it is `className` for
+ * historical reasons.
+ *
+ * Now, the way we tried above for `designer` attribute does not work
+ * that way but, of course, there is another way of reading its value
+ * from the DOM. It is just a little bit more difficult but, it is not
+ * a problem.
+ *
+ * To do that, we simple have to use `getAttribute()` method, like so:
+ */
+
+console.log(logo.getAttribute('designer')); // bhoami
+
+/**
+ * Just as we can read these values for these attributes, we can also
+ * set them. For example:
+ */
+
+logo.alt = 'Beautiful minimalist logo';
+
+/**
+ * Now if you check the alt text of the logo in the chrome dev tools,
+ * you will the updated alt text.
+ *
+ * There is also the opposite of getAttribute(), which is setAttribute().
+ */
+
+logo.setAttribute('company', 'Bankist');
+
+/**
+ * If we check the HTML in chrome dev tools, we will find the logo with
+ * a new attribute called 'company' and its value set to 'Bankist'.
+ */
+
+/**
+ * Remember that we got a different src in compare to the `src` attribute
+ * on the logo element.
+ */
+
+// src in our HTML: img/logo.png
+// we got: http://127.0.0.1:5500/Section%2013/img/logo.png
+console.log(logo.src);
+
+/**
+ * Basically, the actual `src` is different than what we have in the HTML.
+ *
+ * So, the `src` that we got from `logo.src` is basically the absolute
+ * URL, while what we have in the HTML is just a relative URL i.e.
+ * relative to the folder in which the lessons-learned.html is located.
+ *
+ * If we want to get the `src` which is in the HTML file, then we also
+ * have to use `getAttribute()`.
+ */
+
+console.log(logo.getAttribute('src')); // img/logo.png
+
+/**
+ * Sometimes, you really need the relative one so, make sure you use
+ * `getAttribute()` at that point.
+ *
+ * The same is true for the `href` attributes on anchor tags.
+ */
+
+const link = document.querySelector('.nav__link--btn');
+
+console.log(link.href); // http://127.0.0.1:5500/Section%2013/lessons-learned.html#
+console.log(link.getAttribute('href')); // #
+
+/**
+ * Here, you once again see that you get the absolute URL when you use
+ * `link.href` and you get the relative URL when you use `getAttribute()`.
+ */
+
+// DATA ATTRIBUTES
+/**
+ * Finally, there are also special types of attributes, called data
+ * attributes.
+ *
+ * Data attributes are special kind of attributes that start with the
+ * word data.
+ *
+ * Let's add one to our logo in the lessons-learned.html file.
+ *
+ * The data attribute has to start with the word 'data' and then dash,
+ * and then what ever we want.
+ *
+ * What's special about this is that now this attribute is at logo.dataset
+ */
+
+// Here we use camelCase for version number while, we use kebab-case in
+// HTML for this attribute.
+// So just like property names, we have to convert this into camel case
+// when working in JS - keep that in mind.
+console.log(logo.dataset.versionNumber); // 3.0
+
+/**
+ * So for these special attributes, they are always stored in the dataset
+ * object.
+ *
+ * We use data attributes quite a lot when we work with the UI and
+ * especially when we need to store data in user interface i.e. in the
+ * HTML code.
+ *
+ * We will see how useful that can be throughout the rest of this project
+ * and of the course.
+ */
+
+// CLASSES
+/**
+ * Finally, to finish, let's talk about classes - even though, at this point, we already know
+ * all there is to know about classes.
+ */
+
+logo.classList.add('c', 'd'); // you can add multiple classes
+logo.classList.remove('c', 'd'); // you can remove multiple classes
+logo.classList.toggle('c');
+logo.classList.contains('c');
+
+/**
+ * Just as we can read a class using the `className` property, we can use it to set a class.
+ */
+
+// reading className
+console.log(logo.className); // nav__logo c
+
+// setting class using className - DO NOT USE THIS becuase it will override existing classes
+// this is just for demonstration purposes only.
+logo.className = 'bhoami';
+
+// re-setting original class
+logo.className = 'nav__logo';
+
+/**
+ * Now if you check HTML in chrome dev tools, the classes for logo must be udpated.
+ *
+ * However don't use className to set classes because it will override the existing classes
+ * and also, it allows us to only put one class on any element.
+ *
+ * The add(), remove(), toggle(), and contains() methods allow us to add and remove classes
+ * based on their names, without interfering with the classes that are already there.
+ *
+ * Just keep in mind that contains() is really called contains() and not includes() like it
+ * is called in arrays.
+ *
+ * Hopefully, this lesson will serve as a nice reference for all the different ways of
+ * working with classes, attributes, and styles in JS.
+ *
+ * In the next lesson, we will finally start working with our project.
+ */

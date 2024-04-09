@@ -12,6 +12,7 @@
       - [Review: What is the DOM?](#review-what-is-the-dom)
       - [How The DOM API is Organized Behind The Scenes](#how-the-dom-api-is-organized-behind-the-scenes)
     - [Selecting, Creating, and Deleting Elements](#selecting-creating-and-deleting-elements)
+    - [Styles, Attributes, and Classes](#styles-attributes-and-classes)
   - [Author](#author)
 
 ## Lessons Learned
@@ -132,6 +133,35 @@
   - `textContent`
   - `innerHTML`
   - `cloneNode()`
+
+### Styles, Attributes, and Classes
+
+- Styles
+  - `style` property
+  - `getComputedStyle()`
+  - `setProperty()`
+  - `document.documentElement.style.setProperty('--color-primary', 'red')` - Example to change the property value in the `:root` of CSS.
+- Attributes
+  - Selecting attributes
+    - Example: `document.querySelector('.nav__logo').alt`
+  - Setting custom attributes in DOM and getting them in JS using `getAttribute()`
+  - `setAttribute()`
+  - `link.href` - this will give us absolute URL
+  - `link.getAttribute('href')` - this will give us relative URL
+  - Data Attributes
+    - Setting Data Attributes in DOM, example: `data-version-number="3.0"` (Remember to use kebab case here)
+    - Getting Data Attributes in JS, example: `logo.dataset.versionNumber` (Remember to use camel case here)
+    - All data attributes are stored in `dataset` property
+- Classes
+  - `element.classList.add()` - You can add multiple classes at once separated by comma
+  - `element.classList.remove()` - You can remove multiple classes at once separated by comma
+  - `element.classList.toggle()`
+  - `element.classList.contains()`
+  - Getting and Setting Classes using `className`
+    - > [!CAUTION]
+    - > Do not using `className` to set classes as it will override existing classes and it only allows us to set one class on any element. Use `element.classList.add()` instead.
+  - The `add()`, `remove()`, `toggle()`, and `contains()` methods allow us to add and remove classes based on their names, without interfering with the classes that are already there.
+  - Just keep in mind that `contains()` is really called `contains()` and not `includes()` like it is called in arrays.
 
 ## Author
 
