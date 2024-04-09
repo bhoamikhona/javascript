@@ -13,6 +13,7 @@
       - [How The DOM API is Organized Behind The Scenes](#how-the-dom-api-is-organized-behind-the-scenes)
     - [Selecting, Creating, and Deleting Elements](#selecting-creating-and-deleting-elements)
     - [Styles, Attributes, and Classes](#styles-attributes-and-classes)
+    - [Implementing Smooth Scrolling](#implementing-smooth-scrolling)
   - [Author](#author)
 
 ## Lessons Learned
@@ -163,6 +164,61 @@
 
 > [!CAUTION]
 > Do not using `className` to set classes as it will override existing classes and it only allows us to set one class on any element. Use `element.classList.add()` instead.
+
+### Implementing Smooth Scrolling
+
+- `getBoundingClientRect()`
+  - The `Element.getBoundingClientRect()` method returns a `DOMRect` object providing information about the size of an element and its position relative to the viewport.
+  - It takes no parameters.
+  - The returned value is `DOMRect` which is the smallest rectangle which contains the entire element, including its padding and border-width. The `left`, `right`, `top`, `bottom`, `x`, `y`, `width`, and `height` properties describe the position and size of the overall rectangle in pixels. Properties other than `width` and `height` are relative to the top-left of the viewport.
+
+> [!NOTE]
+> A viewport represents a polygonal (normally rectangular) area in computer graphics that is currently being viewed. In web browser terms, it refers to the part of the document you are viewing which is currently visible in its window (or the screen, if the document is being viewed in full screen mode). Content outside the viewport is not visible onscreen until scrolled into view.
+> The portion of the viewport that is currently visible is called the visual viewport. This can be smaller than the layout viewport, such as when the user has pinched-zoomed. The layout viewport remains the same, but the visual viewport became smaller.
+
+- `window.pageXOffset`
+  - This property returns the pixels a document has scrolled from the upper left corner of the window.
+  - It is equal/alias to `scrollX` property.
+    - The read-only `scrollX` property of the `window` interface returns the number of pixels that the document is currently scrolled horizontally.
+  - This property is read only.
+- `window.pageYOffset`
+  - This property returns the pixels a document has scrolled from the upper left corner of the window.
+  - It is equal to the `scrollY` property.
+    - The read-only `scrollY` property of the `window` interface returns the number of pixels that the document is currently scrolled vertically.
+  - It is read-only property.
+- `clientHeight`
+  - The `element.clientHeight` read-only property is zero for elements with no CSS or inline layout boxes; otherwise, it is the inner height of an element in pixels. It includes padding but excludes borders, margins, and horizontal scrollbars (if present).
+- `clientWidth`
+  - The `element.clientWidth` property is zero for inline elements and elements with no CSS; otherwise it's the inner width of an element in pixels. It includes padding but excludes border, margins, and vertical scrollbars (if present).
+- `window.scrollTo()`
+  - `window.scrollTo()` scrolls to a particular set of coordinates in the document.
+  - Parameters:
+    - `x-coord` is the pixel along the horizontal axis of the document that you want displayed in the upper left.
+    - `y-coord` is the pixel along the vertical axis of the document that you want displayed in the upper left.
+    - - OR -
+    - `options` - A dictionary containing the following parameters:
+      - `top` - specifies the number of pixels along the Y axis to scroll the window or element.
+      - `left` - specifies the number of pixels along the X axis to scroll the window or element.
+      - `behavior` - determines whether scrolling is instant or animates smoothly. This option is a string which must take one of the following values:
+        - `smooth` - scrolling should animate smoothly
+        - `instant` - scrolling should happen instantly in a single jump
+        - `auto` - scroll behavior is determined by the computed value of `scroll-behavior`.
+          - The `scroll-behavior` CSS property sets the behavior for a scrolling box when scrolling is triggered by the navigation or CSSOM scrolling APIs.
+  - It returns `undefined`
+- `scrollIntoView()`
+  - The `Element` interface's `scrollIntoView()` method scrolls the element's ancestor containers such that the element on whcih `scrollIntoView()` is called is visible to the user.
+  - Parameters:
+    - `alignToTop` (optional) - A boolean value.
+      - If `true`, the top of the element will be aligned to the top the visible area of the scrollable ancestor. Corresponds to `scrollIntoViewOptions: {block: "start", inline: "nearest"}`. This is the default value.
+      - If `false`, the bottom of the element will be aligned to the bottom of the visible area of the scrollable ancestor. Coressponds to `scrollIntoViewOptions: {block: "end", inline: "nearest"}`.
+    - `scrollIntoViewOptions` (optional) - An object with the following properties:
+      - `behavior` (optional) - Determines whehther scrolling is instant or animates smoothly. This option is a string which must take one of the following values:
+        - `smooth`
+        - `instant`
+        - `auto`
+      - `block` (optional) - Defines vertical alignment. One of `start`, `center`, `end`, or `nearest`. Defaults to `start`
+      - `inline` (optional) - Defines horizontal alignment. One of `start`, `center`, `end`, or `nearest`. Defaults to `nearest`.
+  - Returns `undefined`
 
 ## Author
 

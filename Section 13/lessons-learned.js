@@ -727,3 +727,380 @@ logo.className = 'nav__logo';
  *
  * In the next lesson, we will finally start working with our project.
  */
+
+/***********************************************************************/
+/******************** IMPLEMENTING SMOOTH SCROLLING ********************/
+/***********************************************************************/
+
+console.log(
+  `/******************** IMPLEMENTING SMOOTH SCROLLING ********************/`
+);
+
+/**
+ * Let's now start working on the Bankist website and we are going to
+ * start by implementing smooth scrolling.
+ *
+ * The functionality that we are going to implement now is when we click
+ * on the "Learn more" button in the header, it will smoothly scroll to
+ * the first section.
+ *
+ * That's it, a simple effect.
+ *
+ * We are going to see two ways of doing this.
+ *
+ * First one is a bit more old school, which will allow us to learn a
+ * couple of interesting things, and then finally, we will learn the
+ * more modern way, which only works in super modern browsers.
+ *
+ * Let's start by selecting the button and the section that we want
+ * to scroll to.
+ */
+
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
+
+/**
+ * Now we need to start by adding an event listener to the button.
+ */
+
+// btnScrollTo.addEventListener('click', function (e) {});
+
+/**
+ * In the first way that we are going to implement, we need to first
+ * get the coordinates of the element that we want to scroll to.
+ *
+ * We get those coordinates by using getBoundingClientRect() method.
+ */
+
+// btnScrollTo.addEventListener('click', function (e) {
+//   const s1coords = section1.getBoundingClientRect();
+//   console.log('s1coords', s1coords);
+// });
+
+/**
+ * Now when we click the button, we get a DOMRect rectangle - it has
+ * these properties:
+ * - The X position - which is measured from the left side
+ * - The Y position - which is measured from the top
+ * - Width of the element
+ * - Height of the element
+ * - and others
+ *
+ * This element is probably not the best one to understand this, so let's
+ * get this rectangle for the button.
+ */
+
+/* 
+btnScrollTo.addEventListener('click', function (e) {
+  // DOMRect for section 1
+  const s1coords = section1.getBoundingClientRect();
+  console.log('s1coords', s1coords);
+
+  // DOMRect for button
+  // NOTE: e.target is essentially the element that was clicked, which is the button
+  console.log(e.target.getBoundingClientRect());
+});
+ */
+
+/**
+ * The getBoundingClientRect() is bsically relative to the visible view
+ * port. This means that if we scroll a little and then click on the
+ * button again, we will get changed values for x and y position that
+ * will be relative to the visible view port at that point.
+ *
+ * In fact, we can also get the current scroll position, like so:
+ */
+
+/* 
+btnScrollTo.addEventListener('click', function (e) {
+  // DOMRect for section 1
+  const s1coords = section1.getBoundingClientRect();
+  console.log('s1coords', s1coords);
+
+  // DOMRect for button
+  // NOTE: e.target is essentially the element that was clicked, which is the button
+  console.log(e.target.getBoundingClientRect());
+
+  // scroll position
+  console.log(`Current scroll (X/Y)`, window.pageXOffset, window.pageYOffset);
+});
+ */
+
+/**
+ * Now if we scroll a little and then click the button, and check the
+ * console, we will get the current scroll position.
+ *
+ * At the very top, those values should be 0, 0
+ *
+ * Basically, the Y position is the distance between the current top of
+ * the view port to the very top of the web page.
+ *
+ * And the X position is the distance between the current left of the
+ * view port to the very left of the web page.
+ *
+ * Sometimes, it is very important to know those in certain applications.
+ *
+ * We can also read the height and width of the view port.
+ *
+ * NOTE: Viewport represents the area in computer graphics being currently
+ * viewed. In web browser terms, it is generally the same as the browser
+ * window, excluding the UI menu bar, etc. That is the part of the
+ * document you are viewing.
+ */
+
+/* 
+btnScrollTo.addEventListener('click', function (e) {
+  // DOMRect for section 1
+  const s1coords = section1.getBoundingClientRect();
+  console.log('s1coords', s1coords);
+
+  // DOMRect for button
+  // NOTE: e.target is essentially the element that was clicked, which is the button
+  console.log(e.target.getBoundingClientRect());
+
+  // scroll position
+  console.log(`Current scroll (X/Y)`, window.pageXOffset, window.pageYOffset);
+
+  // height and width of the viewport
+  console.log(
+    `height/width viewport`,
+    document.documentElement.clientHeight,
+    document.documentElement.clientWidth
+  );
+});
+ */
+
+/**
+ * Now if we change the viewport height/width and click the button, we
+ * will see its height and width at that point.
+ *
+ * So, by now, we get all kinds of interesting information about
+ * coordinates, scrolling, and dimensions of the view port.
+ *
+ * Anyway, the goal of the actually getting these coordinates to is
+ * because we need them to scroll to the first section when we click the
+ * button.
+ *
+ * Essentially, we need those coordinates so we can tell JS, where to
+ * scroll to.
+ *
+ * So, in order to do that, we will use a method called `window.scrollTo()`
+ * `window.scrollTo()` is a global function that is available on the
+ * window object, and its first argument is the left position and the
+ * second argument is the top position.
+ *
+ * So, in our case, we need the left and top position of the section1,
+ * and we can get that from `section1.getBoundingClientRect()`.
+ */
+
+/* 
+btnScrollTo.addEventListener('click', function (e) {
+  // DOMRect for section 1
+  const s1coords = section1.getBoundingClientRect();
+  console.log('s1coords', s1coords);
+
+  // DOMRect for button
+  // NOTE: e.target is essentially the element that was clicked, which is the button
+  console.log(e.target.getBoundingClientRect());
+
+  // scroll position
+  console.log(`Current scroll (X/Y)`, window.pageXOffset, window.pageYOffset);
+
+  // height and width of the viewport
+  console.log(
+    `height/width viewport`,
+    document.documentElement.clientHeight,
+    document.documentElement.clientWidth
+  );
+
+  // Scrolling
+  window.scrollTo(s1coords.left, s1coords.top);
+});
+ */
+
+/**
+ * Now if we click the button, it works. We are at the top of section1.
+ *
+ * However, if we scroll some and then click the button, it doesn't scroll
+ * as we expected it to.
+ *
+ * That's because, `s1coords.top` is always relative to the viewport, not
+ * to the document. So, not to the top of the page.
+ *
+ * Basically, `s1coords.top` is relative to top edge of the view port,
+ * not to the top of HTML doc.
+ *
+ * So, it works when we are at the very top of the HTML doc. That's
+ * because the y-position in DOMRect of the section1 is the same as the
+ * top in its DOMRect - which is basically the distance between the
+ * top of the section1 and top of the viewport/HTML doc.
+ *
+ * But, if we scroll, then the distance between the top of section1 and
+ * the top of viewport is a lot less. So, it only scrolls that much less
+ * of a distance. While, in fact, we want it to scroll all the way to
+ * the top of section1.
+ *
+ * This might all be a bit confusing so, you might have to play around
+ * with it on your own to really get the hang of it. Otherwise, it is
+ * going to be hard to make sense of it.
+ *
+ * But, the solution to this problem is to simply add the current scroll
+ * position to the top value of the RectDOM.
+ *
+ * With that, we will then determine the position of the section1, not
+ * relative to viewport but, relative to the top of the page.
+ */
+
+/* 
+btnScrollTo.addEventListener('click', function (e) {
+  // DOMRect for section 1
+  const s1coords = section1.getBoundingClientRect();
+  console.log('s1coords', s1coords);
+
+  // DOMRect for button
+  // NOTE: e.target is essentially the element that was clicked, which is the button
+  console.log(e.target.getBoundingClientRect());
+
+  // scroll position
+  console.log(`Current scroll (X/Y)`, window.pageXOffset, window.pageYOffset);
+
+  // height and width of the viewport
+  console.log(
+    `height/width viewport`,
+    document.documentElement.clientHeight,
+    document.documentElement.clientWidth
+  );
+
+  // Scrolling
+  window.scrollTo(
+    s1coords.left + window.pageXOffset,
+    s1coords.top + window.pageYOffset
+  );
+});
+ */
+
+/**
+ * Now it works just as expected.
+ *
+ * So, by doing this, we basically determined the absolute position of
+ * the section1 element relative to the document i.e. the entire webpage.
+ *
+ * That is important to note. So, if you need the absolute position of
+ * any element relative to the webpage, then you calculate it using
+ * top of the DOMRect and window.pageYOffset - similarly for the
+ * horizontal positioning.
+ *
+ * Now, we can make this even better because, there is a way of making
+ * this animation nice and smooth.
+ *
+ * To achieve that, we need to pass in an object instead of an argument
+ * to the `scrollTo()` method, like so:
+ *
+ * The properties of this object would be left, top, and behavior.
+ */
+
+/* 
+btnScrollTo.addEventListener('click', function (e) {
+  // DOMRect for section 1
+  const s1coords = section1.getBoundingClientRect();
+  console.log('s1coords', s1coords);
+
+  // DOMRect for button
+  // NOTE: e.target is essentially the element that was clicked, which is the button
+  console.log(e.target.getBoundingClientRect());
+
+  // scroll position
+  console.log(`Current scroll (X/Y)`, window.pageXOffset, window.pageYOffset);
+
+  // height and width of the viewport
+  console.log(
+    `height/width viewport`,
+    document.documentElement.clientHeight,
+    document.documentElement.clientWidth
+  );
+
+  // Scrolling
+  // window.scrollTo(
+  //   s1coords.left + window.pageXOffset,
+  //   s1coords.top + window.pageYOffset
+  // );
+
+  // Smooth Scrolling
+  window.scrollTo({
+    left: s1coords.left + window.pageXOffset,
+    top: s1coords.top + window.pageYOffset,
+    behavior: 'smooth',
+  });
+});
+ */
+
+/**
+ * Now if we try it out, it works.
+ *
+ * The browser automatically figures out the speed it should go to make
+ * it look really nice.
+ *
+ * So, this was kind of the old school way of doing it where we had to
+ * manually calculate all of the values and then saying where we want
+ * to scroll to.
+ *
+ * But, there is a more modern way and it works like this:
+ *
+ * We simply take the element that we want to scroll to, and that is
+ * section1, and on that, we call `scrollIntoView()`. In this method
+ * we pass in an object which specifies the behavior and we set that
+ * behavior to smooth. And that's actually it.
+ */
+
+btnScrollTo.addEventListener('click', function (e) {
+  // DOMRect for section 1
+  const s1coords = section1.getBoundingClientRect();
+  console.log('s1coords', s1coords);
+
+  // DOMRect for button
+  // NOTE: e.target is essentially the element that was clicked, which is the button
+  console.log(e.target.getBoundingClientRect());
+
+  // scroll position
+  console.log(`Current scroll (X/Y)`, window.pageXOffset, window.pageYOffset);
+
+  // height and width of the viewport
+  console.log(
+    `height/width viewport`,
+    document.documentElement.clientHeight,
+    document.documentElement.clientWidth
+  );
+
+  // Scrolling
+  // window.scrollTo(
+  //   s1coords.left + window.pageXOffset,
+  //   s1coords.top + window.pageYOffset
+  // );
+
+  // Smooth Scrolling
+  // window.scrollTo({
+  //   left: s1coords.left + window.pageXOffset,
+  //   top: s1coords.top + window.pageYOffset,
+  //   behavior: 'smooth',
+  // });
+
+  // New way of smooth scrolling
+  section1.scrollIntoView({ behavior: 'smooth' });
+});
+
+/**
+ * Now we don't need any of the old school way, and it works the same
+ * without any of the weird calculations/positions.
+ *
+ * But, this modern way only works for modern browsers, so if you only
+ * need to support those, then you are 100% fine using only
+ * `scrollIntoView()` method.
+ *
+ * But it is still good to know everything that we learned in the old
+ * school method.
+ *
+ * By the way, these `clientHeight` and `clientWidth` are not counting
+ * with the scroll bars. It is just dimensions of the view port, that are
+ * actually available for the content - and that excludes any scroll
+ * bars.
+ */
