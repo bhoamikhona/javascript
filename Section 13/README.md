@@ -15,6 +15,7 @@
     - [Styles, Attributes, and Classes](#styles-attributes-and-classes)
     - [Implementing Smooth Scrolling](#implementing-smooth-scrolling)
     - [Types of Events and Event Handlers](#types-of-events-and-event-handlers)
+    - [Event Propagation: Bubbling and Capturing](#event-propagation-bubbling-and-capturing)
   - [Author](#author)
 
 ## Lessons Learned
@@ -235,6 +236,48 @@
   - The second advantage of using `addEventListener()` is that we can actually remove those events using `removeEventListener()` if we don't need it anymore - which we cannot do with `on-event` property.
 - `removeEventListener()` - removes an event listener previously registered with `addEventListener()`.
 - Handling events as HTML attributes (this one should not be used)
+
+### Event Propagation: Bubbling and Capturing
+
+<!-- Theory Lesson -->
+
+- JavaScript events have a very important property. They have a so-called <ins>capturing phase</ins> and a <ins>bubbling phase</ins>.
+- So, what does that mean? Let's find out.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/92ee7d7f-3932-4573-be6f-451f707f554c)
+- Here (in the image above) we have a very simple HTML document and a DOM tree, but only for the anchor element that is highlight with the red border.
+- So, here we can see exactly all the parent elements of that red anchor element.
+- That's because we are going to simulate what exactly happens with an event when someone clicks on that link.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/d5a0c80a-aaf2-4e9a-b5a7-5dbdf04691b6)
+- Let's now say that a click happens on the link; and as we already know, the DOM then generate a click event right away.
+- However, this event is actually not generated at the target element i.e. at the element where the event happened, in this case, the click on the anchor element.
+- Instead, the event is actually generated at the root of the document, so at the very top of the DOM tree.
+- From there, the so-called capturing phase happens, where the event then travels all the way down from the document root to the target element.
+- As the event travels down the tree, it will pass through every single parent element of the target element.
+- So, in example, it first goes to HTML element, then body element, then section, then paragraph, then finally to anchor tag where it finally reaches its target.
+- As soon as the event reaches the target, the target phase begins, where events can be handled right at the target.
+- And as we already know, we do that with event listeners, such as this one:
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/ab15f539-c47a-4a79-b902-edb1c0ba6d85)
+- So, event listners wait for a certain event to happen on a certain element, and as soon as the event occurs, it runs the attached callback function.
+- In this example, it will simply create an alert window.
+- Again, this happens during target phase.
+- After reaching the target, the event then actually travels all the way up to the document root again in the so-called bubbling phase.
+- So, we say that the events bubble up from the target to the document root.
+- And just link in the capturing phase, the event passes through all its parent elements, and really just the parents, not through any sibling elements.
+- So, as an event travels down and up the tree, they pass through all the parent elements, but not through any sibling element.
+- Now you might be wondering why is this so important? Why are we learning about all this detail?
+- It is indeed important because basically, it is as if the event also happened in each of the parent elements.
+- So again, as the event bubbles through the parent element, it is as if the event happened right in that very element.
+- What this means is that we attach the event listener, also for example, to the section element, then we would get the exact same alert window for the section element as well.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/062d3f8d-8aca-44be-a8bf-1a1e3176e9f1)
+- So, we would have handled the exact same event twice; once at its target, and once at one of its parent element.
+- This behavior will allow us to implement really powerful patterns, as we will see throughout the rest of the section.
+- So, this is very, very important to uderstand.
+- Now, by default, events can only be handled in the target, and in the bubbling phase. However, we can set up event listeners in a way that they listen to events in the capturing phase instead.
+- Also, not all types of events that do have a capturing and bubbling phase. Some of them are created right on the target element, and so we can only handle them there.
+- But most of the events do capture and bubble, just like we learned in this lesson.
+- We can also say that the events propagate, which is really what capturing and bubbling is.
+- It is events propagating from one place to another.
+- Hopefully, all this made sense, and we will see all of it in action, in the next lesson.
 
 ## Author
 
