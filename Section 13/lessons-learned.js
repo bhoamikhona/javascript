@@ -1286,5 +1286,349 @@ setTimeout(() => h1.removeEventListener('mouseenter', logH1), 3000);
  * remove event listeners in case we don't need them anymore.
  *
  * Next up, you will learn the most important property of events, which
- * is bubbling. So, let's move on to it.
+ * is bubbling. So, let's move on to it. (Theory Lesson)
+ */
+
+/***********************************************************************/
+/******************** EVENT PROPAGATION IN PRACTICE ********************/
+/***********************************************************************/
+
+console.log(
+  `/******************** EVENT PROPAGATION IN PRACTICE ********************/`
+);
+
+/**
+ * Let's now see event propagation in practice, and mainly event
+ * bubbling.
+ *
+ * We are going to do that by attaching event handlers to the "Features"
+ * navigation link and all of its parent elements.
+ *
+ * Then, as we click on the link, we will give all of these elements
+ * random background colors, and this will then allow us to visiualize
+ * exactly how event bubbling is happening.
+ *
+ * It will make sense once we see it actually working. So, let's start
+ * by creating random color.
+ *
+ * A color is just a string, like RGB, and the the values between 0 and
+ * 255. Example: rgb(30, 255, 189)
+ */
+
+// get a random number between min and max
+const randomInt = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1) + min);
+
+// get a random color
+const randomColor = () =>
+  `rgb(${randomInt(0, 255)}, ${randomInt(0, 255)}, ${randomInt(0, 255)})`;
+
+console.log(randomColor());
+
+/**
+ * Now let's attach the event handler to the "Features" link in navbar,
+ * and its parent elements as well.
+ */
+
+const navLink = document.querySelector('.nav__link');
+const navLinks = document.querySelector('.nav__links');
+const nav = document.querySelector('.nav');
+
+// navLink.addEventListener('click', function (e) {
+//   // remember that in an event handler, the this keyword always points
+//   // to the element on whcih that event handler is attached.
+//   this.style.backgroundColor = randomColor();
+// });
+
+/**
+ * As of now, when we click on the "Features" link, its background color
+ * changes. The background color changes ONLY of the link.
+ *
+ * But, let's now attach the event listener to the its parent element
+ * and see what happens.
+ */
+
+// navLinks.addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+// });
+
+// nav.addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+// });
+
+/**
+ * Now even its parent elements' background colors are changing.
+ *
+ * So, based on what we learned in the last lesson, why do you think
+ * that is happening?
+ *
+ * Well, just as we learned before, the event actually happens at the
+ * document root and from there it then travels down to the target
+ * element.
+ *
+ * The target in this case is the "Features" link.
+ *
+ * Then, from there, it bubbles up; and bubbling up means that basically,
+ * it is as if the event had also happened in all of the parent elements.
+ *
+ * That is the reason why the particular event on the navLink is now
+ * also being handled by the event listener on navLinks and nav.
+ *
+ * So, it is as if the click event on the "Features" link had also
+ * happened on the navLinks and nav element.
+ *
+ * So, all three events are now handling the same event which happened
+ * on the "Features" link.
+ *
+ * Now, what do you think happens when we click on the navLinks i.e.
+ * outside of navLink?
+ *
+ * The "features" link itself remains unchanged but, the background color
+ * of navLinks and nav changes.
+ *
+ * So, from navLinks, the event only bubbles up to its parent elements.
+ *
+ * Great!
+ *
+ * Let's now dig a little bit deeper and talk about the event targets.
+ * Let's add a console.log() to each of these events.
+ */
+
+// navLink.addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+
+//   // e.target is essentially where the event originated i.e. where it first happened.
+//   // it is not the element on which the event handler was attached. It
+//   // is where the event first happened.
+//   console.log('LINK', e.target);
+// });
+
+// navLinks.addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+//   console.log('CONTAINER', e.target);
+// });
+
+// nav.addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+//   console.log('NAV', e.target);
+// });
+
+/**
+ * Now watch what happens when we click on the "Features" link.
+ *
+ * Again, all the three elements got a random background color, and as
+ * you see, the `e.target` is always the same on each one.
+ *
+ * That target is of course, the element where the click first happened.
+ *
+ * And it appears in all three handlers because all of them are
+ * essentially handling the exact same event.
+ *
+ * So, the `e` i.e. the event argument that each of these event listeners
+ * receive is the exact same event. Again, this is because of event
+ * bubbling.
+ *
+ * So, the event originates from the "Features" link but then, it bubbles
+ * up to its parent element, which is navLinks, and from there to its
+ * next parent element, and from there, it will travel even further up
+ * in the DOM tree.
+ *
+ * So, we can handle that event in all of the parent elements and that
+ * is exactly what we did here.
+ *
+ * Now besides `e.target`, there is also `e.currentTarget`; and the
+ * currentTarget is indeed, the element on which the event handler is
+ * attached.
+ */
+
+// navLink.addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+//   console.log('LINK', e.target, e.currentTarget);
+// });
+
+// navLinks.addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+//   console.log('CONTAINER', e.target, e.currentTarget);
+// });
+
+// nav.addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+//   console.log('NAV', e.target, e.currentTarget);
+// });
+
+/**
+ * Now if you check, the current target is not the same in each element.
+ * It represents the element on which the handler is attached.
+ *
+ * So, you might have noticed that the currentTarget is exactly the same
+ * as the `this` keyword in the event handlers.
+ *
+ * This is because the `this` keyword is also pointing to the element
+ * on which the event listener is attached to.
+ */
+
+// navLink.addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+//   console.log('LINK', e.target, e.currentTarget);
+//   console.log(e.currentTarget === this); // true
+// });
+
+// navLinks.addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+//   console.log('CONTAINER', e.target, e.currentTarget);
+//   console.log(e.currentTarget === this); // true
+// });
+
+// nav.addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+//   console.log('NAV', e.target, e.currentTarget);
+//   console.log(e.currentTarget === this); // true
+// });
+
+/**
+ * All of this is important to know when you really want to gain a
+ * deep understanding of the DOM and how it works.
+ *
+ * If you check the console, we get `true` for e.currentTarget === this
+ * on each element. So, they are going to be exactly the same in any
+ * event handler.
+ */
+
+/**
+ * Another thing that we need to know is that we can actually stop the
+ * event propagation. Let's see how.
+ *
+ * All we have to do is to simply call on the event,
+ * `e.stopPropagation()`
+ */
+
+// navLink.addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+//   console.log('LINK', e.target, e.currentTarget);
+//   console.log(e.currentTarget === this); // true
+
+//   // stopping event propagation - commenting it because it is not a good practice to stop propagation.
+//   // e.stopPropagation();
+// });
+
+// navLinks.addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+//   console.log('CONTAINER', e.target, e.currentTarget);
+//   console.log(e.currentTarget === this); // true
+// });
+
+// nav.addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+//   console.log('NAV', e.target, e.currentTarget);
+//   console.log(e.currentTarget === this); // true
+// });
+
+/**
+ * So, if we try to the click on the "Features" link now, let's see
+ * what happens.
+ *
+ * Now the two parent elements did not change their background colors,
+ * which means that the event never arrived at those elements.
+ *
+ * That's why they weren't handled there, and again, that is because
+ * we stopped the propagation at the navLink. So, the propagation
+ * phase then never happened for this event. Therefore, these events
+ * never reached the navLinks and nav elements.
+ *
+ * In practice, it is usually not a good idea to stop propagation, but
+ * we saw it here in case we really need it sometime.
+ *
+ * Stopping the event propagation like this can sometimes fix problems
+ * in very complex appplications with many handlers for the same events,
+ * but in general, it is not really a good idea to stop the propagation
+ * of events.
+ *
+ * So, as we just saw, the three event handlers that we set up receive
+ * events from the target elements and also from the bubbling phase.
+ *
+ * In other words, the event handler functions are listening for click
+ * events that happen on the event itself or one of the parent elements;
+ * and they are also listening for events bubbling up from their child
+ * elements and that's the reason why the color changes in all of the
+ * parent elements.
+ *
+ * So, the two phases that we just described are phase 2 and phase 3 from
+ * the last lesson.
+ *
+ * But now, what about the capture phase - which was phase 1?
+ *
+ * As we learned, events are capturned when they come down from the
+ * document root all way to the target, but our event handlers are not
+ * picking up these events during the capture phase.
+ *
+ * As mentioned before, the `addEventListener()` is only listening for
+ * events in the bubbling phase, but not in the capturing phase.
+ *
+ * That is the default behavior of the `addEventListener()` method,
+ * and the reason for that is that the capturing phase is usually
+ * irrelevant for us. It is just not that useful.
+ *
+ * On the other hand, the bubbling phase can be very useful for something
+ * called event delegation. That's is something that we are going to do
+ * in the next lesson.
+ *
+ * However, if we really do want to catch events during the capturing
+ * phase, we can define a third parameter in the `addEventListener()`
+ * function. The third parameter will take true or false. If we set it
+ * to true, then the event handler will no longer listen to bubbling
+ * events, but instead, to capturing events.
+ *
+ * In practice, that's going to look the same but as we take a look in
+ * the console log, the nav will be first one appearing instead of
+ * navLink, since we set the third parameter to true in nav.
+ *
+ * The reason for that is that the nav element is now actually
+ * listening for events as it travels down from the DOM, while the
+ * others are listening for the event, as it travels back up - that
+ * happens later so, the nav is the first one to show up.
+ */
+
+navLink.addEventListener('click', function (e) {
+  this.style.backgroundColor = randomColor();
+  console.log('LINK', e.target, e.currentTarget);
+  console.log(e.currentTarget === this); // true
+
+  // e.stopPropagation();
+});
+
+navLinks.addEventListener('click', function (e) {
+  this.style.backgroundColor = randomColor();
+  console.log('CONTAINER', e.target, e.currentTarget);
+  console.log(e.currentTarget === this); // true
+});
+
+// setting the third parameter to true
+// this means that it will listen to capturing events and not to bubbling events
+nav.addEventListener(
+  'click',
+  function (e) {
+    this.style.backgroundColor = randomColor();
+    console.log('NAV', e.target, e.currentTarget);
+    console.log(e.currentTarget === this); // true
+  },
+  true
+);
+
+/**
+ * They are all still working with the same event. They are simply
+ * doing it in different phases of the event propagation.
+ *
+ * If that sounds confusing, please look at the last lesson again.
+ *
+ * NOTE: By default, the third parameter of the addEventListener()
+ * is set to false.
+ *
+ * As mentioned before, capturing is rarely used these days. And the
+ * only reason why both capturing and bubbling exist are for historical
+ * reasons - from the time where different browsers implemented different
+ * versions of JavaScript.
+ *
+ * Anyway, what really matters is that you understand why the three
+ * elements, nav, navLinks, and navLink, get three different background
+ * colors, even though the click only happend on the navLink element.
  */

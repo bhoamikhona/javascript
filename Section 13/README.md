@@ -16,6 +16,7 @@
     - [Implementing Smooth Scrolling](#implementing-smooth-scrolling)
     - [Types of Events and Event Handlers](#types-of-events-and-event-handlers)
     - [Event Propagation: Bubbling and Capturing](#event-propagation-bubbling-and-capturing)
+    - [Event Propagation in Practice](#event-propagation-in-practice)
   - [Author](#author)
 
 ## Lessons Learned
@@ -278,6 +279,17 @@
 - We can also say that the events propagate, which is really what capturing and bubbling is.
 - It is events propagating from one place to another.
 - Hopefully, all this made sense, and we will see all of it in action, in the next lesson.
+
+### Event Propagation in Practice
+
+- `e.currentTarget`
+- `e.target` vs. `e.currentTarget`
+- How the bubbling and capturing phase actually look like in practice.
+- stopping event propagation using `e.stopPropagation` - do not use it as it is a bad practice to stop propagation.
+  - Stopping propagation like this can sometimes fix problems in very complex applications with many event handlers for the same events, but in general, it is not really a good idea to stop the propagation of events.
+- Using the third parameter of the `addEventListener()` function to make it listen for events in capturing phase instead of bubbling phase.
+  - By default, it is set to `false`.
+  - Listening for events in capturing phase is rarely used but, listening for them in bubbling phase could be useful for something called <ins>event delegation</ins>, which we will learn about in the next lesson.
 
 ## Author
 
