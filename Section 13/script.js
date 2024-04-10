@@ -8,6 +8,7 @@ const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const header = document.querySelector('.header');
+const navLinks = document.querySelector('.nav__links');
 
 const openModal = function (e) {
   e.preventDefault();
@@ -64,4 +65,16 @@ btnScrollTo.addEventListener('click', function (e) {
 
   // modern scrolling
   section1.scrollIntoView({ behavior: 'smooth' });
+});
+
+// Using Event Delegation to set smooth scrolling for nav links
+navLinks.addEventListener('click', function (e) {
+  e.preventDefault();
+  console.log(e.target);
+
+  if (e.target.classList.contains('nav__link')) {
+    const id = e.target.getAttribute('href');
+    console.log(id);
+    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+  }
 });

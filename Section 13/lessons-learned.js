@@ -1632,3 +1632,278 @@ nav.addEventListener(
  * elements, nav, navLinks, and navLink, get three different background
  * colors, even though the click only happend on the navLink element.
  */
+
+/**********************************************************************/
+/*********** EVENT DELEGATION: IMPLEMENTING PAGE NAVIGATION ***********/
+/**********************************************************************/
+
+console.log(
+  `/*********** EVENT DELEGATION: IMPLEMENTING PAGE NAVIGATION ***********/`
+);
+
+/**
+ * Let's now use the power of event bubbling to implement something
+ * called event delegation.
+ *
+ * So, what we are going to do, is to implement a smooth scrolling
+ * bahavior in the navigation, so that when we click on one of the nav
+ * links then it automatically scroll smoothly to the corresponding
+ * section.
+ *
+ * Right now, if we click one of those links, it moves to the
+ * corresponding section but, we want it to happen smoothly.
+ *
+ * So, let's not go ahead, and use event delegation to implement this
+ * navigation.
+ *
+ * First, let's implement this without using event delegation so that
+ * we can see the problem in the approach that we have been using so
+ * far.
+ *
+ * To begin, let's select all of the three links in the nav links.
+ */
+
+// const allNavLinks = document.querySelectorAll('.nav__link');
+
+// allNavLinks.forEach(function (el) {
+//   el.addEventListener('click', function (e) {
+//     console.log('link');
+//   });
+// });
+
+/**
+ * Now you already start to see the problem, which is that be default,
+ * clicking on one of these nav links, wills croll to the position in
+ * HTML.
+ *
+ * That's because of the so-called anchors.
+ *
+ * <a class="nav__link" href="#section--1">Features</a>
+ *
+ * The `href="#section--1"` are called anchors i.e. the # and the name.
+ * This will automatically move the page to the element which has the
+ * ID of it.
+ *
+ * So, we need to prevent that from happening; and for that, we can
+ * use `e.preventDefault()`
+ */
+
+// const allNavLinks = document.querySelectorAll('.nav__link');
+
+// allNavLinks.forEach(function (el) {
+//   el.addEventListener('click', function (e) {
+//     e.preventDefault();
+//     console.log('link');
+//   });
+// });
+
+/**
+ * Now we are no longer scrolling to the page, and the URL is also not
+ * changing.
+ *
+ * So, that problem is fixed and so now, let's implement the smooth
+ * scrolling.
+ *
+ * The anchor however, is still going to be very useful. This is because
+ * we can take the value of the `href` attribute and select the element
+ * we want to scroll to.
+ *
+ * This is because, if we think about, `#section--1` pretty much looks
+ * like a selector for an ID.
+ */
+
+// const allNavLinks = document.querySelectorAll('.nav__link');
+
+// allNavLinks.forEach(function (el) {
+//   el.addEventListener('click', function (e) {
+//     e.preventDefault();
+
+//     // this refers to the current element
+//     // we used getAttribute() because we want the relative path, we don't want the absolute path
+//     const id = this.getAttribute('href');
+//     console.log(id);
+//   });
+// });
+
+/**
+ * The `id` now pretty much looks like a selector already. So now, we
+ * can take and select an element based on it, and then simply smooth
+ * scroll to that element.
+ *
+ * So for that, we are going to use `scrollIntoView()` method.
+ */
+
+// const allNavLinks = document.querySelectorAll('.nav__link');
+
+// allNavLinks.forEach(function (el) {
+//   el.addEventListener('click', function (e) {
+//     e.preventDefault();
+
+//     const id = this.getAttribute('href');
+
+//     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+//   });
+// });
+
+/**
+ * That's it.
+ *
+ * That works beautifully.
+ *
+ * Now, as you see, this works just fine but, the problem is that it is
+ * not really efficient.
+ *
+ * We are adding the exact same event handler callback function once to
+ * each of the three links in the navigation.
+ *
+ * So, the exact same function is now attached to the three elements,
+ * and that is kind of unnecessary.
+ *
+ * Of course, it would be fine for only three elements, but what if we
+ * had 1000, or 10,000 elements?
+ *
+ * If we were to attach an event handler callback function to 10,000
+ * elements like we did above then we would be effectively creating
+ * 10,000 copies of the exact same function.
+ *
+ * So, that would certainly impact the performance. So, it is just not
+ * a clean solution in that case and so, the better solution in that
+ * case is without a doubt, to use event delegation.
+ *
+ * In event delegation, we use the fact that event bubble up; and we
+ * do that by putting the event listener on a common parent of all the
+ * elements that we are interested in.
+ *
+ * In our case, that is the navLinks element.
+ *
+ * So, we will put our event handler on the navLinks element and then
+ * when a user clicks on one of the links, the event is generated, and
+ * bubble up, just as we saw in the last lesson.
+ *
+ * Then, we can basically catch that event in the common parent element,
+ * and handle it there. This is because we also know where the event
+ * actually originate by using `event.target` property.
+ *
+ * So, that's what event delegation is and let's go ahead and implement
+ * it.
+ *
+ * In event delegation, we basically need two steps:
+ * 1) We add the event listener to a common parent element of all the
+ * elements that we are interested in.
+ * 2) In that event listener, determine what element originated the
+ * event - so that we can then work with that element where the event
+ * was actually created.
+ */
+
+// Event Delegation
+// 1) Add event listener to common parent element
+// 2) Determine what element originated the event
+
+/* 
+// adding the event listener to common parent element
+navLinks.addEventListener('click', function (e) {
+  // figuring out where the event originated - this is stored in e.target
+  console.log(e.target);
+});
+ */
+
+/**
+ * So, e.target becomes really, really useful now in this strategy,
+ * because we can now use this information to see where exactly this
+ * event happened.
+ *
+ * Now if we click on any link, we can then see where the even occured
+ * in the log.
+ *
+ * Also, if we click inside the navLinks but outside navLink, we can
+ * see where the click happened, which is navLinks and not any particular
+ * navLink. This part is important to notice because we actually
+ * only want to work with the click that happened on one of the links.
+ * But the click that happened on navLinks is not at all relevant.
+ */
+
+// // adding the event listener to common parent element
+// navLinks.addEventListener('click', function (e) {
+//   // figuring out where the event originated - this is stored in e.target
+//   console.log(e.target);
+// });
+
+/**
+ * Now we need a matching strategy here in order to match only the
+ * elements that we are actually interested in.
+ *
+ * In this case, the best way to do that is to simply check if the
+ * `target` has `nav__link` class.
+ *
+ * NOTE: Matching strategy can be one of the hardest things to come up
+ * with, when you use this technique.
+ */
+
+// navLinks.addEventListener('click', function (e) {
+//   console.log(e.target);
+
+//   if (e.target.classList.contains('nav__link')) {
+//     console.log('link');
+//   }
+// });
+
+/**
+ * Now we only get "link" in the console if we click on one of the
+ * navLink but, if we click outside of those, we get nothing.
+ *
+ * So now, we basically, successfully only selected the link elements
+ * itslef.
+ *
+ * Now we can do exactly what we did before.
+ */
+
+navLinks.addEventListener('click', function (e) {
+  e.preventDefault();
+  console.log(e.target);
+
+  if (e.target.classList.contains('nav__link')) {
+    const id = e.target.getAttribute('href');
+    console.log(id);
+    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
+/**
+ * So as you see, we still get the same sections as logged to the
+ * consoel, and it scrolls to exactly where we want it to go.
+ *
+ * So, this works beautifully, and we successfully implemented event
+ * delegation, which is a lot better, and a lot more efficient than
+ * simply attaching the same event handler to multiple elements.
+ *
+ * Instead, we simply added one big event handler function to the parent
+ * element of all the elements that we are interested in, and then we
+ * simply determined where the click event came from.
+ *
+ * We also needed a matching strategy because we wanted to ignore clicks
+ * that did not happen right on one of the nav links.
+ *
+ * And coming up with a matching strategy is probably the hardest part
+ * of implementing event delegation.
+ *
+ * But there will be plenty of example in the rest of the course and
+ * it will make a lot more sense to you at some point.
+ *
+ * Hopefully, you are now convinced that event delegation is a much
+ * better strategy, even though it requires a little bit more work than
+ * the first implementation that we did.
+ *
+ * In fact, there is actually an even more important use case of event
+ * delegation, which is when we are working with elements that are not
+ * yet on the page on runtime i.e. by the time the page loads.
+ *
+ * A great example of that are buttons that are dynamically added while
+ * using the application.
+ *
+ * It is not possible to add event handlers onto elements that do not
+ * exist, but we will still be able to handle events on elements that
+ * don't exist at the beginning by using event delegation one more
+ * time.
+ *
+ * And we will actually do it later in this section.
+ */

@@ -17,6 +17,7 @@
     - [Types of Events and Event Handlers](#types-of-events-and-event-handlers)
     - [Event Propagation: Bubbling and Capturing](#event-propagation-bubbling-and-capturing)
     - [Event Propagation in Practice](#event-propagation-in-practice)
+    - [Event Delegation: Implementing Page Navigation](#event-delegation-implementing-page-navigation)
   - [Author](#author)
 
 ## Lessons Learned
@@ -290,6 +291,35 @@
 - Using the third parameter of the `addEventListener()` function to make it listen for events in capturing phase instead of bubbling phase.
   - By default, it is set to `false`.
   - Listening for events in capturing phase is rarely used but, listening for them in bubbling phase could be useful for something called <ins>event delegation</ins>, which we will learn about in the next lesson.
+
+### Event Delegation: Implementing Page Navigation
+
+- When we add an event listener to multiple elements using the for loop, for 3 elements it doesn't feel like much but, if you have large amount of elements like that, then it become in-efficient because it is almost like creating an event handler for all of those elements.
+- Event Delegation is a solution to the inefficiency.
+- It takes the advantage of events bubbling up the DOM tree to target the events that occured and keeping only big event handler.
+- The way it works is that you select a parent element of all of those elements in which you want to use the event handler on.
+- Example:
+
+```html
+<nav class="nav">
+  <a href="#section1" class="nav__link">link 1</a>
+  <a href="#section2" class="nav__link">link 2</a>
+  <a href="#section3" class="nav__link">link 3</a>
+</nav>
+```
+
+- So, in the example above, you select the nav element itself, which is the parent element of all the links on which you want to set the event handler on; and you add the event handler on the nav element instead of the links.
+- Now whenever a click happens on the nav link, the event bubbles up through its parents and one of its parent is the nav itself - that is where you catch the event and define in the event handler what you need to happen.
+- So, the two steps of event delegation are:
+  - Add event listener to a common parent element
+  - Determine what element orginated the event.
+    - You can do that by `event.target` property
+- One other thing that you want to keep in mind is "matching strategy" which might be the most difficult part of this whole thing.
+- So, since you are adding the event listener on the parent element and not on the link itself, you want to separate out the events that actually happen on the link vs the ones that happen inside the navbar but outside the link.
+- To do that, in most cases you could use a unique class name to all the ones that you want to target but, in other cases, you might have to figure out how to do that depending on the situation you have at hand.
+- Also, there is an even more important use case of event delegation, which is when we are working with elements that are not yet on the page on runtime i.e. by the time the page loads.
+- A great example of that are buttons that are dynamically added while using the application.
+- This is a great example because it is not possible to add event handlers onto elements that do not exist, but we will still be able to handle events on elements that don't exist at the beginning by using event delegation. We will see this in action, later in this section.
 
 ## Author
 
