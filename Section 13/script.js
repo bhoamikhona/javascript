@@ -1,14 +1,17 @@
 'use strict';
 
-///////////////////////////////////////
-// Modal window
-
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const header = document.querySelector('.header');
 const navLinks = document.querySelector('.nav__links');
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+
+///////////////////////////////////////
+// Modal window
 
 const openModal = function (e) {
   e.preventDefault();
@@ -32,6 +35,7 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
+///////////////////////////////////////
 // cookie message
 const message = document.createElement('div');
 message.classList.add('cookie-message');
@@ -49,6 +53,7 @@ document
     message.remove();
   });
 
+///////////////////////////////////////
 // Smooth Scrolling to Section 01
 
 const btnScrollTo = document.querySelector('.btn--scroll-to');
@@ -67,6 +72,7 @@ btnScrollTo.addEventListener('click', function (e) {
   section1.scrollIntoView({ behavior: 'smooth' });
 });
 
+///////////////////////////////////////
 // Using Event Delegation to set smooth scrolling for nav links
 navLinks.addEventListener('click', function (e) {
   e.preventDefault();
@@ -77,4 +83,28 @@ navLinks.addEventListener('click', function (e) {
     console.log(id);
     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
   }
+});
+
+///////////////////////////////////////
+// Tabbed Component
+
+tabsContainer.addEventListener('click', function (e) {
+  const clicked = e.target.closest('.operations__tab');
+
+  // guard clause
+  if (!clicked) return;
+
+  // remove active class from tab button and then add that active class to one that user clicked on.
+  tabs.forEach(function (t) {
+    t.classList.remove('operations__tab--active');
+    clicked.classList.add('operations__tab--active');
+  });
+
+  // remove active class from all the content areas
+  tabsContent.forEach(c => c.classList.remove('operations__content--active'));
+
+  // add the active class to the content related to the button on which the user clicked on
+  document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
+    .classList.add('operations__content--active');
 });

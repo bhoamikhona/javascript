@@ -2164,3 +2164,317 @@ console.log(h1.parentElement.children);
  * them all the time, especially, when we are doing some more complex
  * event delegation like we will do throughout the rest of the section.
  */
+
+/***********************************************************************/
+/********************* BUILDING A TABBED COMPONENT *********************/
+/***********************************************************************/
+
+console.log(
+  `/********************* BUILDING A TABBED COMPONENT *********************/`
+);
+
+/**
+ * In this lesson, we are going to implement a very popular component
+ * which is a tabbed component.
+ *
+ * You will see tabbed components on many websites these days so, it is
+ * great to learn how to build one yourself.
+ *
+ * A tabbed component can appear in many different ways, but what they
+ * all have in common is that they have some kind of tabs and when you
+ * click on them, the content in the content area will change.
+ *
+ * So, let's go ahead and implement one of our own.
+ *
+ * For this component, we actually need a bunch of HTML. So, let's take
+ * a look at at that first. (head over to the HTML file for that)
+ *
+ * Also, take a look at the CSS because a lot CSS will also be involved
+ * here.
+ *
+ * As we click on one of the tabs, we will not create any new content.
+ * What we will do instead is to hide the other tabs.
+ */
+
+// Tabbed Component
+
+/**
+ * We will start by selecting the tabs and other necessary components.
+ */
+
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+
+/**
+ * We have our selections nicely done and now we can actually work on
+ * the functionality.
+ *
+ * Let's start by adding event handlers to the tab buttons because that
+ * is the action that we actually want to handle in this component.
+ *
+ * We could use forEach() to go over tabs and attach an event handler
+ * on all of them, like so:
+ */
+
+// tabs.forEach(t => t.addEventListener('click', () => console.log('TAB')));
+
+/**
+ * Indeed, we get "TAB" logged to the console.
+ *
+ * However, we already learned in the last lesson that doing what we did
+ * here is bad practice because what we had 200 tabs? Then we would have
+ * 200 copies of the exact same callback function (of the event handler).
+ *
+ * That would simply slow down the page and it is not desirable.
+ *
+ * So, let's comment it out and use event delegation instead.
+ *
+ * Remember for event delegation, we need to attach the event handler
+ * on the common parent element of all the elements that we are
+ * interested in.
+ *
+ * In our case, it is the `tabsContainer`. So, let's attach our event
+ * handler to that element instead.
+ */
+
+tabsContainer.addEventListener('click', function (e) {
+  /**
+   * Now we need to work on our matching strategy. So, let's figure out
+   * which button was clicked.
+   *
+   * For that, let's create an element called "clicked" that we can then
+   * use to work with.
+   */
+  let clicked = e.target;
+  console.log(clicked);
+
+  /**
+   * With e.target there is a problem. The numbers on the button are
+   * inside of a span element so, when we click on that, we get the
+   * span element instead of the button element.
+   *
+   * So, we are not actually clicking on the ubtton but, we still need
+   * the button.
+   *
+   * So, no matter if we click on the button itself or on the span
+   * element, we actually need the button itself. This is because, from
+   * that button, we will need to read the `data-tab` attribute.
+   *
+   * This is because the `data-tab` contains the number of tab which is
+   * going to be useful later to we can show right content in relation
+   * to the tab that was clicked. So this is where the data attribute
+   * becomes really important to store information in the DOM.
+   *
+   * Basically, we need a way of finding the button element whenever we
+   * click on the span element.
+   *
+   * One simple way to fix it (which would not really fix it) is to do
+   * DOM traversing and simply select the parent element.
+   *
+   * We can move up the DOM tree and instead of simply taking `e.target`,
+   * we can use the parent element of that.
+   *
+   * So, let's see what happens then?
+   */
+
+  clicked = e.target.parentElement;
+  console.log(clicked);
+
+  /**
+   * Now indeed, when we click the number, we get the button element of
+   * that span.
+   *
+   * Now the problem appears that when we click on the button itself,
+   * because now we get the parent of the button instead. That is not
+   * what we want.
+   *
+   * We basically want the button no matter if we click on the number
+   * i.e. the span element or the button itself.
+   *
+   * So, we need a way of selecting the parent element that is always
+   * a tab.
+   *
+   * Can you think of a special method that we learned previously to
+   * do that? The solution is in our previous lesson of DOM traversing.
+   *
+   * We want to go upwards but, we want to specify that we want to select
+   * an operations tab. So, we can use the `closest()` method for
+   * exactly that.
+   *
+   * Remember in the last lesson we mentioned that `closest()` become
+   * very helpful in event delegation? Well, this is one of those cases.
+   *
+   * So, this method makes it really easy for us to dynamically get the
+   * element that we are interested in.
+   *
+   * So, instead of always selecting the parentElement, we will search
+   * basically for the closest operations tab. That is exactly the
+   * query that we will need for the closest() method.
+   */
+  clicked = e.target.closest('.operations__tab');
+  console.log(clicked);
+
+  /**
+   * This should now fix our problem.
+   *
+   * Now, no matter if we click the number span or the button itself,
+   * we get the button element, which is the one we are looking for.
+   *
+   * This works because now it is looking for the closest parent with
+   * the class name of "operations__tab" which is the button itself.
+   *
+   * Now, let's do something with the selected tab.
+   *
+   * So, the tab that is currently active has a bit of a different
+   * styling as you can see on the UI.
+   *
+   * That's because the active tab has a class called
+   * "operations__content--active".
+   *
+   * So, we can simply add that to the tab button that just clicked.
+   */
+  // clicked.classList.add('operations__tab--active');
+
+  /**
+   * Now if you click on one of the tabs, you will see that it
+   * "activates" that particular tab.
+   *
+   * Of course, the other tabs will have to be "de-activated" but we will
+   * take care of that in a second.
+   *
+   * For now, watch what happens when we actually click on the tab
+   * container itself i.e. outside of the tab buttons but inside of the
+   * tab container.
+   *
+   * We get null (type error)
+   *
+   * That's because null is the result of the `closest()` method when
+   * there is no matching parent element to be found.
+   *
+   * So, when we click in the container, there is going to be no parent
+   * with the class of `operations__tab` going to be found, therefore,
+   * we get null.
+   *
+   * So, we need to fix that in our code now, and basically ignore
+   * any clicks that happen in that area i.e. ignore clicks in the area
+   * where the result is going to be null.
+   *
+   * We can do that by checking if there is "no" clicked then return
+   * immediately.
+   */
+
+  // guard clause
+  if (!clicked) return;
+
+  // clicked.classList.add('operations__tab--active');
+
+  /**
+   * This is something that we haven't done before.
+   *
+   * So, what we are doing here is called guard clause.
+   *
+   * Guard clause is basically an if statement which will return early
+   * if some condition is matched.
+   *
+   * In this case, when there is nothing clicked then we want to
+   * immediately finish this function.
+   *
+   * In this case, when we have `null`, which is a falsy value will
+   * become true in the if statement and the function will return
+   * immediately, and none of the code that is after it will be executed.
+   *
+   * But of course, if the `clicked` does exist then the return statement
+   * in the if statement will not be executed and the rest of the code
+   * will be executed just fine.
+   *
+   * Now whenever we click outside of the tab buttons but inside the
+   * tab container, nothing happens. Of course we still get `null` as
+   * the value but, it is no longer throwing an error.
+   *
+   * This is because JS is no longer trying to add a class to `clicked`
+   * when we click outside, in the tab container.
+   *
+   * Now, let's take care of basically putting all "de-activating" other
+   * buttons when one of them is clicked.
+   *
+   * Basically, we should remove the "operations__tab--active" class
+   * from the ones that we want to "de-activate".
+   *
+   * The solution to that is that before we add this class to anyone,
+   * we will simply remove it on all of the tabs.
+   *
+   * This is something that we do quite usually i.e. basically clearing
+   * the class on all of them and only then adding it afterwards on
+   * one of them.
+   */
+
+  // remove active class from tab button and then add that active class to one that user clicked on.
+  tabs.forEach(function (t) {
+    t.classList.remove('operations__tab--active');
+    clicked.classList.add('operations__tab--active');
+  });
+
+  /**
+   * Finally, now let's activate the content area itself because that
+   * is the amin part that we are interested in.
+   *
+   * Remember that the information about which content area should be
+   * displayed is in the data attribute i.e. `data-tab` which is stored
+   * in the button.
+   *
+   * So if we press the second tab then the data-tab is equal to 2 and
+   * that means that we want to select the element which has the class
+   * of `operations__content--2`.
+   *
+   * So, let's do that.
+   */
+
+  // document
+  //   .querySelector(`.operations__content--${clicked.dataset.tab}`)
+  //   .classList.add('operations__content--active');
+
+  /**
+   * Now those contents show up one below another whenever we click on
+   * a tab.
+   *
+   * So, indeed we successfully read the value from the data-tab
+   * attribute.
+   *
+   * Of course this is not quite finished yet because we want the other
+   * ones to be hidden. That's the whole idea of this component.
+   *
+   * Basically, all we need to do is to do that same that we did for the
+   * tab buttons i.e. removing the "active" class for all of them before
+   * adding it to the one we are interested in.
+   */
+
+  // remove active class from all the content areas
+  tabsContent.forEach(c => c.classList.remove('operations__content--active'));
+
+  // add the active class to the content related to the button on which the user clicked on.
+  document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
+    .classList.add('operations__content--active');
+});
+
+/**
+ * Now our component should be working as expected.
+ *
+ * RECAP:
+ *
+ * The whole idea when we build components like this is to just add and
+ * remove classes as necessary to manipulate the content to our needs.
+ *
+ * That's the exact same thing that we did with the modal window.
+ *
+ * If you take a look at its code, it is a bit similar to the tabbed
+ * component i.e. to hide and display modal window.
+ *
+ * With the tabbed component, the code is a bit more complex but, the
+ * idea is the same. It is to work with classes that have some styles
+ * for showing and hiding the classes.
+ *
+ * So if you are not familiar with CSS, then it is important that you
+ * check that out to build these components and the same goes for HTML.
+ */

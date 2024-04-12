@@ -19,6 +19,7 @@
     - [Event Propagation in Practice](#event-propagation-in-practice)
     - [Event Delegation: Implementing Page Navigation](#event-delegation-implementing-page-navigation)
     - [DOM Traversing](#dom-traversing)
+    - [Building a Tabbed Component](#building-a-tabbed-component)
   - [Author](#author)
 
 ## Lessons Learned
@@ -338,6 +339,10 @@
   - Can only get direct siblings in JS.
   - `previousElementSibling` property
   - `nextElementSibling` property
+
+### Building a Tabbed Component
+
+- The concept of guard clause.
 
 ## Author
 
