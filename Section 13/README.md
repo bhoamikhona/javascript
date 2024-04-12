@@ -18,6 +18,7 @@
     - [Event Propagation: Bubbling and Capturing](#event-propagation-bubbling-and-capturing)
     - [Event Propagation in Practice](#event-propagation-in-practice)
     - [Event Delegation: Implementing Page Navigation](#event-delegation-implementing-page-navigation)
+    - [DOM Traversing](#dom-traversing)
   - [Author](#author)
 
 ## Lessons Learned
@@ -320,6 +321,23 @@
 - Also, there is an even more important use case of event delegation, which is when we are working with elements that are not yet on the page on runtime i.e. by the time the page loads.
 - A great example of that are buttons that are dynamically added while using the application.
 - This is a great example because it is not possible to add event handlers onto elements that do not exist, but we will still be able to handle events on elements that don't exist at the beginning by using event delegation. We will see this in action, later in this section.
+
+### DOM Traversing
+
+- Traversing Downward i.e. selecting child elements of an element
+  - Using `querySelector()` and `querySelectorAll()` on elements instead of document.
+  - `childNodes` property
+  - `children` property
+  - `firstElementChild` property
+  - `lastElementChild` propert
+- Traversing Upwards i.e. selecting parents of an element
+  - `parentNode` property
+  - `parentElement` property
+  - `closes()` method
+- Traversing Sideways i.e. Selecting siblings
+  - Can only get direct siblings in JS.
+  - `previousElementSibling` property
+  - `nextElementSibling` property
 
 ## Author
 

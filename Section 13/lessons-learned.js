@@ -1,8 +1,8 @@
 'use strict';
 
-/************************************************************************/
-/************** SELECTING, CREATING, AND DELETING ELEMENTS **************/
-/************************************************************************/
+/**********************************************************************/
+/************* SELECTING, CREATING, AND DELETING ELEMENTS *************/
+/**********************************************************************/
 
 console.log(
   `/************** SELECTING, CREATING, AND DELETING ELEMENTS **************/`
@@ -1140,7 +1140,7 @@ console.log(
  * and let's use the h1 element this time.
  */
 
-const h1 = document.querySelector('h1');
+let h1 = document.querySelector('h1');
 
 /**
  * We already know about addEventListener() but, in this lesson, we
@@ -1906,4 +1906,261 @@ navLinks.addEventListener('click', function (e) {
  * time.
  *
  * And we will actually do it later in this section.
+ */
+
+/**********************************************************************/
+/*************************** DOM TRAVERSING ***************************/
+/**********************************************************************/
+
+console.log(
+  `/*************************** DOM TRAVERSING ***************************/`
+);
+
+/**
+ * This lesson is going to be about traversing the DOM.
+ *
+ * DOM traversing is basically walking through the DOM. Which means that
+ * we can select an element based on another element.
+ *
+ * This is very important because sometimes, we need to select elements
+ * relative to a certain other element.
+ *
+ * For example, a direct child or a direct parent element.
+ *
+ * Or sometimes we don't even know the structure of the DOM at runtime.
+ *
+ * And in all of these cases, we need DOM traversing.
+ *
+ * This lesson is going to be another very nice reference lesson for you.
+ *
+ * Let's now work with the h1 element and from here, we are going to go
+ * downwards, upwards, and also sideways.
+ *
+ * So, let's quickly select this element.
+ */
+
+h1 = document.querySelector('h1');
+
+/**
+ * Let's start by going downwards i.e. selecting child elements.
+ *
+ * So, the first way of doing that is to use `querySelector()` because
+ * we already know that `querySelector()` also works on elements, not
+ * only on the document.
+ */
+
+// going downwards i.e. selecting child elements of h1
+console.log(h1.querySelectorAll('.highlight'));
+
+/**
+ * Indeed, that selected all the elements with the highlight class that
+ * are the children of h1 element.
+ *
+ * This would work no matter how deep these child elements would be
+ * inside of the h1 element.
+ *
+ * Also, if there were other elements with the class "highlight" on this
+ * page that were not a child of the h1 element, those won't be
+ * selected because they are not a child of h1 element.
+ *
+ * So these are the two points that are important to note here about
+ * `querySelector()` and `querySelectorAll()`.
+ */
+
+/**
+ * Sometimes, all we need are the direct children, and for that, we can
+ * use `h1.childNodes`
+ */
+
+console.log(h1.childNodes);
+
+/**
+ * Now let's take a look at the console and we will see that here we
+ * get all kinds of stuff.
+ *
+ * We get text, comments, and even elements. This is because we already
+ * know that nodes can be anything so they can be text or elements or
+ * even comments as we have in our log.
+ *
+ * So, this really gives us, every single node of every single type that
+ * there exists.
+ *
+ * But many times we are simply interested in the elements themselves.
+ *
+ * If we wanted text we could've used `textContent` or `innerHTML`
+ * property instead.
+ *
+ * So, `childNodes` is not that used. Instead, we can use `children`,
+ * like so:
+ */
+console.log(h1.children);
+
+/**
+ * This then gives us an HTMLCollection which, remember, is a live
+ * collection i.e. it is updated and in our case, we only get three
+ * elements that are actually inside of the h1 which are <br> and two
+ * <span> elements.
+ *
+ * But keep in mind that `children` only works for direct children.
+ *
+ * Finally, there is also first and last element child.
+ *
+ * These names might be a bit confusing but, they are due to the messy
+ * nature of JavaScript with all of the different things being
+ * implemented at different points in time. Therefore, it was difficult
+ * to keep consistent naming conventions.
+ *
+ * Anyway, let's use `firstElementChild` property.
+ */
+
+h1.firstElementChild.style.color = 'white';
+
+/**
+ * Now only the first child of the h1 element get the while color.
+ *
+ * We can also do `lastElementChild`
+ */
+
+h1.lastElementChild.style.color = 'black';
+
+/**
+ * Now let's go upwards i.e. selecting parents.
+ *
+ * For direct parent it is actually very straightforward.
+ * So, it is `parentNode` which is very similar to `childNodes`.
+ */
+
+console.log(h1.parentNode); // we get the div with class header__title
+
+/**
+ * In the console we can see that the header__title is the direct parent
+ * of the h1 element that is why, that's what we get.
+ *
+ * Then there is also `parentElement`, which is usually what we are
+ * interested in but, in this case, it is simply the same. This is
+ * because the header__title element is also a node in this case.
+ */
+
+console.log(h1.parentElement); // we get the div with class header__title
+
+/**
+ * However, most of the time we actually need a parent element which
+ * is not a direct parent.
+ *
+ * Or in other words, we might need to find a parent element no matter
+ * how far away it is in the DOM tree.
+ *
+ * For that, we have the closest() method.
+ *
+ * Let's say that on a page, we had mutliple headers i.e. multiple
+ * elements with a class of header, but for some reason, we only wanted
+ * to find the one that is the parent element of h1.
+ *
+ * For that we can use `closest()`. So, the closest() method receives a
+ * query string just like `querySelector()` and `querySelectorAll()`.
+ */
+
+// using css custom property as value here
+h1.closest('.header').style.background = 'var(--gradient-secondary)';
+
+/**
+ * Indeed, it worked.
+ *
+ * So, it selected the closest parent element that has the class header
+ * to our h1 element and then it simply applied the style to that
+ * element.
+ *
+ * So, this is a very important one and we are going to use it all the
+ * time especially for event delegation. So, take a note of that, or
+ * just keep it in mind.
+ *
+ * Now, if this selector passed in the closest() actually matches the
+ * element on which we are calling closest(), then that's actually the
+ * element that's going to be returned.
+ */
+
+h1.closest('h1').style.background = 'var(--gradient-primary)';
+
+/**
+ * Now you'll see that indeed, the h1 element itself has been affected.
+ *
+ * So, we can think of `closest()` as basically being the opposite of
+ * `querySelector()`. They both receive a query string as an input but,
+ * querySelector() finds children, no matter how deep in the DOM tree,
+ * while the closest() method finds parents - also no matter how far
+ * up in the DOM tree.
+ *
+ * So, it is a very important method to keep in mind, and now let's go
+ * sideways i.e. selecting siblings.
+ */
+
+// Going Sideways i.e. Selecting siblings.
+
+/**
+ * For some reason in JavaScript, we cna only access direct siblings.
+ *
+ * Basically, only the previous and the next one.
+ */
+
+console.log(h1.previousElementSibling);
+console.log(h1.nextElementSibling);
+
+/**
+ * In our case, the previous sibling element is null and it makes sense
+ * because if we look at the DOM, there is nothing there. This is because
+ * h1 is the first child of its parent element, therefore it doesn't
+ * have a previous sibling.
+ *
+ * However, it does have a next sibling and so we get back the
+ * <h4> element which comes right after our h1 element.
+ *
+ * Also, just like before, we also have the same properties for nodes.
+ */
+
+console.log(h1.previousSibling);
+console.log(h1.nextSibling);
+
+/**
+ * Here the previousSibling and nextSibling are actually text.
+ *
+ * But it is not important because most of time, we are going to be
+ * working with elements anyway.
+ *
+ * Now if we really need all the siblings and not just the previous and
+ * the next one, then we can use the trick of moving up to the parent
+ * element and then read all the children from there.
+ */
+
+console.log(h1.parentElement.children);
+
+/**
+ * Now we get all the children, and that of course also includes itself.
+ *
+ * Now just for fun, let's actually do something with them here. So, we
+ * get an HTMLCollection, which is not an array but, it is still an
+ * iterable that we can spread into an array.
+ *
+ * Then we can loop over and it do something using forEach() method.
+ */
+
+// creating an array from all the sibling elements and looping over it
+[...h1.parentElement.children].forEach(function (el) {
+  // comparison between elements work just fine
+  if (el !== h1) {
+    el.style.transform = 'scale(0.5)';
+  }
+});
+
+/**
+ * Indeed, all the other siblings now, except for the h1 itself, are
+ * now 50% smaller than what they used to be.
+ *
+ * So, this is how we can work with all the sibling elements of one
+ * element.
+ */
+
+/**
+ * That's the fundamentals of DOM traversing; and we are going to need
+ * them all the time, especially, when we are doing some more complex
+ * event delegation like we will do throughout the rest of the section.
  */
