@@ -20,6 +20,7 @@
     - [Event Delegation: Implementing Page Navigation](#event-delegation-implementing-page-navigation)
     - [DOM Traversing](#dom-traversing)
     - [Building a Tabbed Component](#building-a-tabbed-component)
+    - [Passing Arguments to Event Handlers](#passing-arguments-to-event-handlers)
   - [Author](#author)
 
 ## Lessons Learned
@@ -343,6 +344,14 @@
 ### Building a Tabbed Component
 
 - The concept of guard clause.
+
+### Passing Arguments to Event Handlers
+
+- `mouseover` event
+- `mouseout` event
+- `mouseenter` event
+- `mouseleave` event
+- Passing arguments into event handlers
 
 ## Author
 

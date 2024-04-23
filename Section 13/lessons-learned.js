@@ -1332,7 +1332,7 @@ console.log(randomColor());
 
 const navLink = document.querySelector('.nav__link');
 const navLinks = document.querySelector('.nav__links');
-const nav = document.querySelector('.nav');
+let nav = document.querySelector('.nav');
 
 // navLink.addEventListener('click', function (e) {
 //   // remember that in an event handler, the this keyword always points
@@ -2477,4 +2477,474 @@ tabsContainer.addEventListener('click', function (e) {
  *
  * So if you are not familiar with CSS, then it is important that you
  * check that out to build these components and the same goes for HTML.
+ */
+
+/***********************************************************************/
+/***************** PASSING ARGUMENTS TO EVENT HANDLERS *****************/
+/***********************************************************************/
+
+console.log(
+  `/***************** PASSING ARGUMENTS TO EVENT HANDLERS *****************/`
+);
+
+/**
+ * Let's now create a nice effect on our page navigation, where all the
+ * links fade out when we hover over one of them, except for the link
+ * that we are actually hovering over.
+ *
+ * This will teach us something really valuable, which is how to pass
+ * arguments into event handler functions.
+ *
+ * Let's start by taking a look at our HTML. We have nav__link elements,
+ * and those are the elements that we are going to be working with.
+ */
+
+// Menu fade animation.
+
+/**
+ * Now, of course, we do not want to attach an event listener to each
+ * of the nav__link elements. We already know that we should do event
+ * delegation here instead.
+ *
+ * So, let's find a common parent element of all of the links, and also,
+ * including the logo in the navbar.
+ *
+ * So, if we were only working with nav__link elements, then we would
+ * have chosen nav__links element. But we also want to work with the
+ * logo so, we will instead use the entire navigation as our parent
+ * container on which we will handler the event that is going to bubble
+ * up from the links.
+ *
+ * So, keep in mind that all of this works because event bubble up from
+ * their target.
+ *
+ * So, let's select the navbar (which has the class .nav) and store it
+ * in a variable.
+ */
+
+nav = document.querySelector('.nav');
+
+/**
+ * Let's now attach an event listener to the navbar.
+ *
+ * But this time, we are not going to use the `click` event. Instead,
+ * we will use the `mouseover` event.
+ *
+ * Previously, we used the `mouseenter` event. The `mouseenter` and
+ * `mouseover` events are pretty similar with the big difference that
+ * `mouseenter` does not bubble.
+ *
+ * But here, we need the event to actually bubble so that it can even
+ * reach the navbar therefore, we use `mouseover`.
+ *
+ * There are also opposite events of `mouseover` and `mouseenter` and we
+ * use them to basically undo what we do on hover.
+ *
+ * The opposite of `mouseenter` is `mouseleave`; and the opposite of
+ * `mouseover` is `mouseout`.
+ *
+ * So, we are also going to need that one, so let's do that as well.
+ */
+
+// nav.addEventListener('mouseover', function (e) {});
+// nav.addEventListener('mouseout', function (e) {});
+
+/**
+ * As always, if you want to know more, you can check out the MDN docs.
+ *
+ * Now we have our parent element and as always, we need to match the
+ * element that we are actually looking for. In our case, it is the
+ * elements with the `nav__link` class.
+ *
+ * So, let's simply check for that.
+ */
+
+// nav.addEventListener('mouseover', function (e) {
+//   if (e.target.classList.contains('nav__link')) {
+//   }
+// });
+
+// nav.addEventListener('mouseout', function (e) {});
+
+/**
+ * So as you see, we are not using the `closest()` method. That's because
+ * there are simply no child-elements that we could accidentally click
+ * in the `nav__link` elements.
+ *
+ * That was the reason why we needed the closest method in the tabs
+ * component because we had the tab button but, we could have also
+ * clicked on the span element inside the tab button. Therefore, we had
+ * the need there to find the closest element i.e. closest button to
+ * both of those places.
+ *
+ * But here, that is not necessary. So therefore, a simple check, like
+ * we have here is enough.
+ *
+ * So now, we can store the e.target into a variable called `link`.
+ */
+
+// nav.addEventListener('mouseover', function (e) {
+//   if (e.target.classList.contains('nav__link')) {
+//     const link = e.target;
+//   }
+// });
+
+// nav.addEventListener('mouseout', function (e) {});
+
+/**
+ * Next up, we need to select all the sibling elements. Basically, all
+ * the other links.
+ *
+ * And remember that we can do that by going to the parent and then
+ * selecting the children from there.
+ *
+ * Now in this case, the parent of `nav__link` is `nav__item` and the
+ * only thing that `nav__item` includes is always just one link.
+ *
+ * So you see that each of the link is actually inside of one nav__item.
+ *
+ * So now, we would have to move up manually, not just once, but twice.
+ *
+ * So, instead of doing that, we will again use the closest method.
+ *
+ * Again, instead of moving up manually, like one or two steps, we can
+ * simply search for a parent which matches a certain query.
+ *
+ * That is a bit more robust because even if we would then at some point,
+ * maybe change the structure of the HTML, then our JavaScript would
+ * keep working.
+ *
+ * Here when we are trying to get all the sibling elements, we are
+ * targetting the nav element. Even though nav is not the closest parent
+ * i.e. there is another parent to all the nav__link elements, which is
+ * nav__links but, it is no problem of choose an even higher up parent
+ * like we are doing here.
+ *
+ * Now that we have a parent for all the sibling elements, we then
+ * select all of its children elements that have the class of `nav__link`
+ * so, these are going to be the siblings of the link where we are
+ * hovering over.
+ *
+ * NOTE: These sibling links will also include the link that we are
+ * hovering over.
+ *
+ * As we already learned before, we can use query selector on an
+ * element to search for a certain query only in that element.
+ */
+
+// nav.addEventListener('mouseover', function (e) {
+//   if (e.target.classList.contains('nav__link')) {
+//     const link = e.target;
+//     const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+//   }
+// });
+
+// nav.addEventListener('mouseout', function (e) {});
+
+/**
+ * Now let's also select the logo.
+ *
+ * And we could select it manually by its class name but, let's just
+ * suppose that there are many navigations on thispage.
+ *
+ * So, again, to make the solution really robust, it is best to simply
+ * move up to the closest parent, in this case, the navigation and from
+ * there, we simply select the image.
+ *
+ * So this then would not only work for this navigation but, it will
+ * also work on others.
+ */
+
+// nav.addEventListener('mouseover', function (e) {
+//   if (e.target.classList.contains('nav__link')) {
+//     const link = e.target;
+//     const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+//     const logo = link.closest('.nav').querySelector('img');
+//   }
+// });
+
+// nav.addEventListener('mouseout', function (e) {});
+
+/**
+ * Now we have all our elements selected, now we just ened to change
+ * the opacity of the siblings and of the link selected.
+ *
+ * Before we set the opacity for the siblings, we will use the if
+ * statement to check if the element is the targetted element or not
+ * since the `siblings` also include the target link.
+ *
+ * We also want to fade the logo out when we hover over one of the links.
+ */
+
+// nav.addEventListener('mouseover', function (e) {
+//   if (e.target.classList.contains('nav__link')) {
+//     const link = e.target;
+//     const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+//     const logo = link.closest('.nav').querySelector('img');
+
+//     siblings.forEach(el => {
+//       if (el !== link) {
+//         el.style.opacity = 0.5;
+//       }
+//     });
+//     logo.style.opacity = 0.5;
+//   }
+// });
+
+// nav.addEventListener('mouseout', function (e) {});
+
+/**
+ * Now if you try it on the UI, you will see that it works.
+ *
+ * Now the thing is the it doesn't go back.
+ *
+ * So, once we have the opacity at 0.5, it will not automatically go
+ * back to the opacity of 1, which is the original one.
+ *
+ * That's why we have the mouseout event to basically undo what we do
+ * in the mouseover event.
+ *
+ * So, let's copy everything from the mouseover event and paste it
+ * inside the mouseout event and change the opacity to 1.
+ */
+
+// nav.addEventListener('mouseover', function (e) {
+//   if (e.target.classList.contains('nav__link')) {
+//     const link = e.target;
+//     const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+//     const logo = link.closest('.nav').querySelector('img');
+
+//     siblings.forEach(el => {
+//       if (el !== link) {
+//         el.style.opacity = 0.5;
+//       }
+//     });
+//     logo.style.opacity = 0.5;
+//   }
+// });
+
+// nav.addEventListener('mouseout', function (e) {
+//   if (e.target.classList.contains('nav__link')) {
+//     const link = e.target;
+//     const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+//     const logo = link.closest('.nav').querySelector('img');
+
+//     siblings.forEach(el => {
+//       if (el !== link) {
+//         el.style.opacity = 1;
+//       }
+//     });
+//     logo.style.opacity = 1;
+//   }
+// });
+
+/**
+ * Now if we try it out in our UI, it works just the way we want it to.
+ *
+ * Of course it doesn't work with the logo because the entire effect
+ * only works if the target contains the nav__link class.
+ *
+ * But that wasn't the point anyway. We just wanted it to work on any of
+ * the links.
+ *
+ * Notice that the "open account" button is also a link. So, it also
+ * works on that one.
+ *
+ * So our effect is working already but this is very repititive.
+ * The code in `mouseover` and `mouseout` events are exactly the same
+ * except for the values of opacity.
+ *
+ * So, let's refactor this code. Usually, refactoring works by creating
+ * a new function. So, let's do that here.
+ *
+ * We will need some arguments here but more about that later.
+ *
+ * First, what we need to do is to compare the two pieces of code that
+ * we are trying to refactor and then figure out what is the same and
+ * what is different.
+ *
+ * In this case, it is pretty simple.
+ *
+ * All the changes that we need are the values of opacity.
+ *
+ * So, we can simple take the code from the event listener and create
+ * an argument or a parameter for that opacity.
+ *
+ * And we can then pass that opacity into the function.
+ *
+ * Of course we still the `event` parameter, and then we need the
+ * `opacity`.
+ *
+ * With this, we refactored our code nicely here.
+ */
+
+let handleHover = function (e, opacity) {
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+    const logo = link.closest('.nav').querySelector('img');
+    siblings.forEach(el => {
+      if (el !== link) {
+        el.style.opacity = opacity;
+      }
+    });
+    logo.style.opacity = opacity;
+  }
+};
+
+/**
+ * But now, how do we actually use this function?
+ *
+ * Usually, when we have the event handler as a separate function, all
+ * we do is to pass in that function without invoking it and it works.
+ *
+ * Just like we did below:
+ */
+
+// nav.addEventListener('mouseover', handleHover);
+// nav.addEventListener('mouseout', handleHover);
+
+/**
+ * But now, the problem is that we actually want to pass in values into
+ * the handleHover() function. So, we need to tell the handleHover()
+ * function the value of opacity.
+ *
+ * Also, we need a way of passing the `event`.
+ *
+ * You might think that we could simply pass in parameters like we
+ * usually do i.e. using a set of parentheses, like so:
+ */
+
+// nav.addEventListener('mouseover', handleHover(e, 0.5));
+// nav.addEventListener('mouseout', handleHover(e, 1));
+
+/**
+ * But this does not work.
+ *
+ * The first problem that occurs is that `e` is not defined but, the
+ * main problem is that the `addEventListener()` expects a callback
+ * function as the second parameter.
+ *
+ * When we use the parentheses, we are essentially invoking the function.
+ * So, the value will then be the value returned from that function call;
+ * in our case that is `undefined` because we aren't returning anything
+ * from handleHover(). But, by doing that, the second parameter will no
+ * longer be a function, it will become the value that is returning from
+ * the function call.
+ *
+ * So, this is simply not going to work.
+ *
+ * So, we went over this many times, but it is always good to remember
+ * that JavaScript indeeds expects a callback function as the second
+ * parameter in the `addEventListener()` - and not just some other
+ * regular value which would be the result of calling the function, like
+ * we did above.
+ *
+ * The solution to this problem would be to still have a callback
+ * function as the second parameter to the `addEventListener()`, like
+ * a regular one, which JS will then call for us whenever the event
+ * happens.
+ *
+ * Then, in that callback function, we could then actually call the
+ * function with the event and opacity, like so:
+ */
+
+// nav.addEventListener('mouseover', function (e) {
+//   handleHover(e, 0.5);
+// });
+
+// nav.addEventListener('mouseout', function (e) {
+//   handleHover(e, 1);
+// });
+
+/**
+ * This works because here we are basically calling the function
+ * manually.
+ *
+ * So, the handleHover() will only execute as soon as JS executes the
+ * callback function in the event handler.
+ *
+ * So, here we are back to working because here we are back to passing
+ * in a real function.
+ *
+ * Now it should be working again, and indeed it does.
+ *
+ * So, that is the second version of our code working but, we can do
+ * even better and remove the anonymous callback functions altogether.
+ *
+ * We can do that by using the bind() method that we already studied
+ * before.
+ *
+ * Remember that the bind() method creates a copy of the function that
+ * it is called on, and it will set the `this` keyword in the function
+ * call to whatever value that we pass into bind().
+ *
+ * So, let's do that.
+ */
+
+handleHover = function (e) {
+  console.log(this); // checking the `this` keyword
+  console.log(e.currentTarget); // checking the current target
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+    const logo = link.closest('.nav').querySelector('img');
+    siblings.forEach(el => {
+      if (el !== link) {
+        el.style.opacity = this;
+      }
+    });
+    logo.style.opacity = this;
+  }
+};
+
+// Passing "argument" into handler
+nav.addEventListener('mouseover', handleHover.bind(0.5));
+nav.addEventListener('mouseout', handleHover.bind(1));
+
+/**
+ * This is going to work because `handleHover.bind(0.5)` and
+ * `handleHover.bind(1)` are going to be a function, because bind()
+ * returns a new function.
+ *
+ * In this function that is returned by bind() the `this` keyword will
+ * be set to 0.5 and 1 respectively.
+ *
+ * To check, we can log the `this` keyword in the handleHover() function.
+ *
+ * Now you see indeed, that it is 1 or 0.5
+ *
+ * Also, remember that usually the `this` keyword is equal to the
+ * current target.
+ *
+ * So, let's check that as well.
+ *
+ * The currentTarget has remained unaltered.
+ *
+ * By default the `this` keyword is the same as the current target i.e.
+ * the element on which the event listener is attached to, but when we
+ * set the `this` keyword manyally, of course, it becomes whatever we
+ * set it to.
+ *
+ * So now, just like before, instead of `opacity`, we can set the value
+ * of opacity as `this` because that holds the value of `opacity`.
+ *
+ * So, essentially, we used the bind() method here to pass an argument
+ * into a handler function.
+ *
+ * So, any handler function can only ever have one real argument and that
+ * is the `event`.
+ *
+ * But, if we want to pass additional values into the handler function,
+ * then we need to use the `this` keyword like we just did here.
+ *
+ * And if we wanted multiple values, then we could of course, pass in
+ * an array or an object instead of passing just one value in the bind()
+ * method.
+ *
+ * So, this is kind of a workaround into the fact that the handler
+ * function can only take one argument.
+ *
+ * So, it is really nice effect and as mentioned before, it also taught
+ * us how we can pass arguments, essentially, into handler functions.
  */
