@@ -353,6 +353,12 @@
 - `mouseleave` event
 - Passing arguments into event handlers
 
+### Implementing a Sticky Navigation: The Scroll Event
+
+- Event listener on `window`
+- `scroll` event
+- `scrollY` property on `window`
+
 ## Author
 
 - [@bhoamikhona](https://github.com/bhoamikhona)

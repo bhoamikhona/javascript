@@ -2948,3 +2948,124 @@ nav.addEventListener('mouseout', handleHover.bind(1));
  * So, it is really nice effect and as mentioned before, it also taught
  * us how we can pass arguments, essentially, into handler functions.
  */
+
+/**********************************************************************/
+/********* IMPLEMENTING A STICKY NAVIGATION: THE SCROLL EVENT *********/
+/**********************************************************************/
+
+console.log(
+  `/********* IMPLEMENTING A STICKY NAVIGATION: THE SCROLL EVENT *********/`
+);
+
+/**
+ * Let's implement another pretty common feature on webpages, which is
+ * that the navigation bar becomes attached to the top of the page after
+ * we scroll to a certain point.
+ *
+ * This is called a sticky navigation so, let's build one for our site.
+ *
+ * We basically add a CSS class called `sticky` from our CSS file
+ * whenever we scroll upto a certain point.
+ *
+ * All the CSS `sticky` class does is to set the position to fixed and
+ * changes the background color to transparent white.
+ *
+ * To implement this, we are going to use the `scroll` event for now.
+ *
+ * So, there is a better way to do what we are going ot do now but, let's
+ * start by working with the `scroll` event because sometimes that is
+ * good to know as well.
+ *
+ * The `scroll` event is available on `window` and NOT the `document`.
+ *
+ * This event will be fired off each time that we scroll our page.
+ *
+ * Let's start by actually taking a look at the event - just so we can
+ * see that it does actually fires each time that we scroll.
+ */
+
+// window.addEventListener('scroll', function (e) {
+//   console.log(e);
+// });
+
+/**
+ * As you can see in the log, we scroll just a little bit and it creates
+ * a ton of events. So, the scroll event is not really efficient and
+ * usually it should be avoided.
+ *
+ * But for now, let's use that.
+ *
+ * Let's start by getting our current scroll position.
+ *
+ * The scroll position is really on the `window` object and not at the
+ * `event`.
+ */
+
+window.addEventListener('scroll', function () {
+  console.log(window.scrollY);
+});
+
+/**
+ * As you see in the console, each time we scroll, the scroll event is
+ * fired and we get the current scroll position.
+ *
+ * Remember that the scroll position that we get is basically from the
+ * top of the view port to the very top of the webapge.
+ *
+ * That's why in the beginning we start at 0 because now the visible part
+ * of the site is exactly also at the top of the page.
+ *
+ * So, remember that to make the navigation sticky, we will add the
+ * `sticky` class from the CSS file.
+ *
+ * But now the question is, when exactly should the navigation actually
+ * become sticky?
+ *
+ * It should happen as soon as we reach the first section.
+ *
+ * We cannot hardcode that value because the scroll position value that
+ * we get is dependent on the size of the viewport.
+ *
+ * Therefore, we need to calculate it dynamically. So, how do we do that?
+ *
+ * Remember that we can determine the position of the first section.
+ */
+
+const initialCoords = section1.getBoundingClientRect(); // current top value of section 1
+
+/**
+ * Let's now use this value to add the sticky class.
+ *
+ * So, whenever the position of `window.scrollY` is greater than the
+ * initial coordinates at the top, then we want to add the sticky class.
+ *
+ * If not then we want to remove it.
+ */
+
+window.addEventListener('scroll', function () {
+  if (this.window.scrollY > initialCoords.top) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+});
+
+/**
+ * Indeed, it works.
+ *
+ * So, this works just fine for now, but as mentioned before, this is
+ * pretty bad for performance.
+ *
+ * So, using the scroll event for performing a certain action at a
+ * certain position of the apge is really not the way to go.
+ *
+ * That's because the scroll event fires all the time, no matter how
+ * small the change is.
+ *
+ * That makes for a pretty bad performance, especially for mobile.
+ *
+ * On a modern computer you are of course not going to notice anything
+ * but, if you are using this page on an older smartphone, then it is
+ * not going to be so nice.
+ *
+ * So, in the next lesson, we are going to take a look at a better
+ * and way more efficient tool, which is the intersection observer
+ * API.
+ */
