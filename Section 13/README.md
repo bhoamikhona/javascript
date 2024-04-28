@@ -21,6 +21,8 @@
     - [DOM Traversing](#dom-traversing)
     - [Building a Tabbed Component](#building-a-tabbed-component)
     - [Passing Arguments to Event Handlers](#passing-arguments-to-event-handlers)
+    - [Implementing a Sticky Navigation: The Scroll Event](#implementing-a-sticky-navigation-the-scroll-event)
+    - [A Better Way: The Intersection Observer API](#a-better-way-the-intersection-observer-api)
   - [Author](#author)
 
 ## Lessons Learned
@@ -358,6 +360,15 @@
 - Event listener on `window`
 - `scroll` event
 - `scrollY` property on `window`
+
+### A Better Way: The Intersection Observer API
+
+- `new IntersectionObserver()`
+  - callback function
+  - options object
+  - `IntersectionObserverEntry`
+    - `intersectionRatio` property
+    - `isIntersecting` property
 
 ## Author
 

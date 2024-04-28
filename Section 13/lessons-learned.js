@@ -54,7 +54,7 @@ console.log(document.body); // body element
  */
 
 // this will return the first element that matches the passed selector
-const header = document.querySelector('.header');
+let header = document.querySelector('.header');
 console.log(header);
 
 /**
@@ -3001,9 +3001,9 @@ console.log(
  * `event`.
  */
 
-window.addEventListener('scroll', function () {
-  console.log(window.scrollY);
-});
+// window.addEventListener('scroll', function () {
+//   console.log(window.scrollY);
+// });
 
 /**
  * As you see in the console, each time we scroll, the scroll event is
@@ -3031,7 +3031,7 @@ window.addEventListener('scroll', function () {
  * Remember that we can determine the position of the first section.
  */
 
-const initialCoords = section1.getBoundingClientRect(); // current top value of section 1
+// const initialCoords = section1.getBoundingClientRect(); // current top value of section 1
 
 /**
  * Let's now use this value to add the sticky class.
@@ -3042,10 +3042,10 @@ const initialCoords = section1.getBoundingClientRect(); // current top value of 
  * If not then we want to remove it.
  */
 
-window.addEventListener('scroll', function () {
-  if (this.window.scrollY > initialCoords.top) nav.classList.add('sticky');
-  else nav.classList.remove('sticky');
-});
+// window.addEventListener('scroll', function () {
+//   if (this.window.scrollY > initialCoords.top) nav.classList.add('sticky');
+//   else nav.classList.remove('sticky');
+// });
 
 /**
  * Indeed, it works.
@@ -3068,4 +3068,378 @@ window.addEventListener('scroll', function () {
  * So, in the next lesson, we are going to take a look at a better
  * and way more efficient tool, which is the intersection observer
  * API.
+ */
+
+/***********************************************************************/
+/************* A BETTER WAY: THE INTERSECTION OBSERVER API *************/
+/***********************************************************************/
+
+console.log(
+  `/************* A BETTER WAY: THE INTERSECTION OBSERVER API *************/`
+);
+
+/**
+ * Let's now implement the same sticky navigation that we implemented
+ * in the last lesson but this time, using the new intersection observer
+ * API.
+ *
+ * What is the intersection observer API and why is it so helpful?
+ *
+ * This API allows our code to basically observe changes to the way
+ * that a certain target element intersects another element, or the
+ * way it intersects with the viewport.
+ *
+ * From this definition alone, you might be able to see that this will
+ * be useful in implementing the sticky navigation.
+ *
+ * Let's start this lesson by learning how the intersection observer
+ * API actually works, without the sticky navigation. This is because,
+ * in the beginning, this can seem a bit intimidating and confusing.
+ *
+ * To use the intersection observer API, we need to start by creating a
+ * new intersection observer. We do it like so:
+ */
+
+// new IntersectionObserver();
+
+/**
+ * Within `IntersectionObserver()` function, we will need to pass in
+ * an object of options and and a callback function. But let's leave
+ * that for a bit later.
+ *
+ * Let's first store the result of calling `IntersectionObserver()` into
+ * a variable - let's call it `observer`.
+ */
+
+// let observer = new IntersectionObserver();
+
+/**
+ * Now we have to use this `observer` to basically observe a certain
+ * target. To do that, we call a method called `observe()` on `observer`.
+ *
+ * We pass in the target element into `observe()` method. In our case,
+ * the target element will be `section1`.
+ */
+
+// observer.observe(section1);
+
+/**
+ * This will make more sense when we start creating the options and the
+ * callback so, let's start by options.
+ *
+ * The options objects, as its first property, needs `root`. This root
+ * is the element that the target is intersecting.
+ *
+ * Again, `section1` is the target and the root element will be the
+ * element that we want our target element to intersect.
+ *
+ * This will all make more sense when you see it in action.
+ *
+ * For the value of `root`, we could now select an element or as an
+ * alternative, we can write `null`, and then we will be able to observe
+ * our target element intersecting the entire viewport.
+ *
+ * Viewport meaning the entire rectangle area which shows the current
+ * portion of the page.
+ *
+ * The second property is `threshold`. Threshold is basically the
+ * percentage of intersection at which the observer callback will be
+ * called. This might be confusing but, let's just set it to 10% which
+ * is 0.1 and then when we have the obsCallback function working, we
+ * will see what actually happens in practice.
+ */
+
+// let obsCallback = function (entries, observer) {};
+// let obsOptions = {
+//   root: null,
+//   threshold: 0.1,
+// };
+
+// // we pass in the callback function and options object into IntersectionObserver()
+// let observer = new IntersectionObserver(obsCallback, obsOptions);
+// observer.observe(section1);
+
+/**
+ * The observer callback function will get called each time that the
+ * observed element i.e. our target element is intersecting the root
+ * element at the threshold that we defined.
+ *
+ * Take a note of this because it is actually a bit difficult to figure
+ * it out from reading the documentation.
+ *
+ * In our current example, whenever the first section i.e. our target
+ * is intersecting the viewport (viewport because that is the root) at
+ * 10% (10% because that's the threshold), then the observer callback
+ * function will be called and it doesn't matter if we are scrolling up
+ * or down.
+ *
+ * This callback function will be called with two arguments viz entires
+ * and the observer object itself. So, we pass in the entire observer
+ * instance itself in the callback. So, let's specify them:
+ */
+
+// let obsCallback = function (entries, observer) {};
+// let obsOptions = {
+//   root: null,
+//   threshold: 0.1,
+// };
+
+// // we pass in the callback function and options object into IntersectionObserver()
+// let observer = new IntersectionObserver(obsCallback, obsOptions);
+// observer.observe(section1);
+
+/**
+ * In this case, we are only interested in the entries but sometimes,
+ * using the observer is also useful.
+ *
+ * We can also have multiple thresholds i.e. we can pass in an array
+ * for the value of threshold, and we will do that in a minute.
+ *
+ * So, the `entries` that we pass into the observer callback is threshold
+ * entires.
+ *
+ * In this case, we only have one element as threshold but, let's create
+ * a more general function already which basically loops over the
+ * entries so that we can take a look at all of them.
+ */
+
+// let obsCallback = function (entries, observer) {
+//   entries.forEach(entry => {
+//     console.log(entry);
+//   });
+// };
+
+// let obsOptions = {
+//   root: null,
+//   threshold: 0.1,
+// };
+
+// // we pass in the callback function and options object into IntersectionObserver()
+// let observer = new IntersectionObserver(obsCallback, obsOptions);
+// observer.observe(section1);
+
+/**
+ * Now if we take a look at the console, we already get an intersection
+ * observer entry.
+ *
+ * This is not really interesting yet, because this is just the first
+ * one that we got and we can see that the ratio in the intersection is
+ * at 0 but, let's see in a second what that actually means.
+ *
+ * So, as we scroll through the page and as soon as we hit our target,
+ * we get our first real entry in the console which appeared because
+ * our target element came into the viewport.
+ *
+ * Our target element is the whole section 1 and once it appears in
+ * the viewport, you essentially see that it starts intersecting with the
+ * viewport.
+ *
+ * So, our observer is observing that, and if you expand the intersection
+ * observer entry, you will see the intersection ratio at the time
+ * that the callback was called which is 0.1... and that's exactly the
+ * 10% threshold that we defined in our options object.
+ *
+ * We also get the `isIntersecting` property, which in our case is true,
+ * and that is because indeed, our target i.e. the whole section 1 is
+ * now intersecting the viewport.
+ *
+ * And we are looking for the viewport because we set the `root` to
+ * `null`.
+ *
+ * Now if we move below section 1 and scroll back up again, we see
+ * another intersection entry. The intersection ratio in that one is
+ * close to 10% but not 10 - it is below 10 and that is why the
+ * `isIntersecting` property is `false`.
+ *
+ * You can see why this is more efficient. It is because we only get
+ * to see this kind of event in the situation that we are actually
+ * interested in. In this case, that is the threshold of 10%.
+ *
+ * As we keep scrolling, and go completely out of section1 view, we
+ * get another intersection where `isIntersection` is false. That's
+ * because we no longer have 10% visible.
+ *
+ * So, you can think of threshold as the percentage that we want to have
+ * visible in our root.
+ *
+ * This is the very fundamentals of how the intersection observer API
+ * works, and it is a bit confusing and it takes time to figure it all
+ * out so probably, the best idea for a beginner is to pause this lesson
+ * at this point and explore a little bit on your own.
+ *
+ * So, you can use different threshold values and maybe use different
+ * targets or roots as well.
+ *
+ * So, it would be a good idea to experiment more with this.
+ *
+ * What we are going to do now is to specify an array to specify
+ * different thresholds, and one of them is going to be zero, and the
+ * other one 0.2 i.e. 20%
+ *
+ * So, 0% means that our callback will trigger each time that the target
+ * element moves completely out of the view, and also as soon as it
+ * enters the view.
+ *
+ * That's because the callback function will be called when the threshold
+ * is passed when moving into the view and moving out of the view, and
+ * this is really important to remember.
+ *
+ * On the other hand, if we passed 1 as a threshold value, then that
+ * means that the callback will only be called when 100% of the target
+ * element is actually visible in the viewport.
+ *
+ * In the case of section1 , that is impossible because section1 is
+ * already bigger than the viewport.
+ *
+ * Let's now experiment with 0 as the threshold.
+ *
+ * We get intersection event right away, and the intersection ratio is
+ * exactly at 0, but it is already intersection and so it is because
+ * basically the threshold was already passed.
+ *
+ * Then we get another intersection for 0 when the section is completely
+ * out of the viewport.
+ */
+
+// let obsCallback = function (entries, observer) {
+//   entries.forEach(entry => {
+//     console.log(entry);
+//   });
+// };
+
+// let obsOptions = {
+//   root: null,
+//   // threshold: [0, 1, 0.2],
+//   threshold: [0, 0.2],
+// };
+
+// // we pass in the callback function and options object into IntersectionObserver()
+// let observer = new IntersectionObserver(obsCallback, obsOptions);
+// observer.observe(section1);
+
+/**
+ * So this is how the intersection observer API works, and let's now
+ * quickly use it in order to implement the sticky navigation, because,
+ * at this point, you might already be able to imagine how useful this
+ * can be for implementing sticky navigation in an easy way.
+ *
+ * Let's think about it. When do we want our navigation to be sticky?
+ *
+ * We want it to be sticky when the header moves completely out of the
+ * view.
+ *
+ * So this time, we are going to observe the header element.
+ */
+
+// header = document.querySelector('.header');
+
+// const stickyNav = function (entries) {
+//   const [entry] = entries;
+//   console.log(entry);
+
+//   // adding the sticky class when it is NOT intersecting i.e. when the section is not in the view port
+//   // removing the sticky class when it is intersecting i.e. when the section is in the viewport
+//   if (!entry.isIntersecting) nav.classList.add('sticky');
+//   else nav.classList.remove('sticky');
+// };
+
+// const headerObserver = new IntersectionObserver(stickyNav, {
+//   root: null,
+//   threshold: 0,
+// });
+// headerObserver.observe(header);
+
+/**
+ * Now if you check the UI, it should work.
+ *
+ * But we are not actually done yet because, we are going to make it a
+ * bit different, a bit better.
+ *
+ * We want the navbar to appear when the distance between the start
+ * of the section1 and the top of the viewport is the same as the height
+ * of the navbar.
+ *
+ * This way, the navigation won't overlap the section1 right in the
+ * beginning.
+ *
+ * So, let's implement it and thankfully, it is a bit wasy to do and
+ * we can do it by specifying another property in the options which
+ * is `rootMargin`.
+ *
+ * This `rootMargin` (for example 90) is a box of 90 pixels that will be
+ * applied outside of the target element.
+ *
+ * NOTE: The unit for this has to be px, unfortunately rem or % does
+ * not work here.
+ */
+
+// header = document.querySelector('.header');
+
+// const stickyNav = function (entries) {
+//   const [entry] = entries;
+//   console.log(entry);
+
+//   // adding the sticky class when it is NOT intersecting i.e. when the section is not in the view port
+//   // removing the sticky class when it is intersecting i.e. when the section is in the viewport
+//   if (!entry.isIntersecting) nav.classList.add('sticky');
+//   else nav.classList.remove('sticky');
+// };
+
+// const headerObserver = new IntersectionObserver(stickyNav, {
+//   root: null,
+//   threshold: 0,
+//   rootMargin: '-90px',
+// });
+// headerObserver.observe(header);
+
+/**
+ * Now if you look at the UI, you will that the navigation appeared
+ * exactly 90px before the threshold.
+ *
+ * Play around with it because it is important to understand what
+ * happens with positive and negative rootMargin. It is an important
+ * property as we need it in many situations.
+ *
+ * One final detail, let's calculate the `rootMargin` dynamically instead
+ * of hard coding it.
+ *
+ * For that, we can use again the `getBoundingClientRect()` function.
+ * This is because if you have a responsive website, then probably the
+ * size of all your elements will change at certain points and then
+ * it is not a good idea to hardcode 90px.
+ */
+
+header = document.querySelector('.header');
+const navHeight = nav.getBoundingClientRect().height;
+
+const stickyNav = function (entries) {
+  const [entry] = entries;
+  console.log(entry);
+
+  // adding the sticky class when it is NOT intersecting i.e. when the section is not in the view port
+  // removing the sticky class when it is intersecting i.e. when the section is in the viewport
+  if (!entry.isIntersecting) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+};
+
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`,
+});
+headerObserver.observe(header);
+
+/**
+ * Now it works regardless of how small/big the view port is.
+ *
+ * It works beautifullyy and correctly in all situations and this is
+ * a lot more performant and a lot better than the solution from the
+ * last lesson.
+ *
+ * So, play around with this and we have two more examples with the
+ * intersection observer API coming up and so that's going to be another
+ * great opportunity to learn how this API really works.
+ *
+ * This is important because it is important to do certain things at
+ * certain positions of the page i.e. things related to scrolling.
  */
