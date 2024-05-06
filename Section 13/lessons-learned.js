@@ -62,7 +62,7 @@ console.log(header);
  * `document.querySelectorAll()`.
  */
 
-const allSections = document.querySelectorAll('.section');
+let allSections = document.querySelectorAll('.section');
 console.log(allSections);
 
 /**
@@ -3443,3 +3443,32 @@ headerObserver.observe(header);
  * This is important because it is important to do certain things at
  * certain positions of the page i.e. things related to scrolling.
  */
+
+/**********************************************************************/
+/******************** REVEALING ELEMENTS ON SCROLL ********************/
+/**********************************************************************/
+
+console.log(
+  `/******************** REVEALING ELEMENTS ON SCROLL ********************/`
+);
+
+allSections = document.querySelectorAll('.section');
+
+const revealSection = function (entries, observer) {
+  const [entry] = entries;
+  console.log(entry);
+
+  if (!entry.isIntersecting) return;
+  entry.target.classList.remove('section--hidden');
+  observer.unobserve(entry.target);
+};
+
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.15,
+});
+
+allSections.forEach(function (section) {
+  sectionObserver.observe(section);
+  section.classList.add(`section--hidden`);
+});

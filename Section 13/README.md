@@ -23,6 +23,7 @@
     - [Passing Arguments to Event Handlers](#passing-arguments-to-event-handlers)
     - [Implementing a Sticky Navigation: The Scroll Event](#implementing-a-sticky-navigation-the-scroll-event)
     - [A Better Way: The Intersection Observer API](#a-better-way-the-intersection-observer-api)
+    - [Revealing Elements on Scroll](#revealing-elements-on-scroll)
   - [Author](#author)
 
 ## Lessons Learned
@@ -369,6 +370,10 @@
   - `IntersectionObserverEntry`
     - `intersectionRatio` property
     - `isIntersecting` property
+
+### Revealing Elements on Scroll
+
+- Using the Intersection observer API on multiple elements at once.
 
 ## Author
 
