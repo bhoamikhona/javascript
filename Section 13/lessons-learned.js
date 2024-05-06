@@ -3472,3 +3472,11 @@ allSections.forEach(function (section) {
   sectionObserver.observe(section);
   section.classList.add(`section--hidden`);
 });
+
+/***********************************************************************/
+/************************* LAZY LOADING IMAGES *************************/
+/***********************************************************************/
+
+console.log(
+  `/************************* LAZY LOADING IMAGES *************************/`
+);
