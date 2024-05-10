@@ -3574,3 +3574,148 @@ allSections.forEach(function (section) {
  * So, to that, in the revealSection() function, after removing the
  * 'section--hidden' class, we can simply unobserve them.
  */
+
+/***********************************************************************/
+/************************* LAZY LOADING IMAGES *************************/
+/***********************************************************************/
+
+console.log(
+  `/************************* LAZY LOADING IMAGES *************************/`
+);
+
+/**
+ * One of the most important things when building any website is
+ * performance; and images have by far the biggest impact on page
+ * loading.
+ *
+ * So, it is very important that images are optimized on any page.
+ *
+ * For that, we an use a strategy called lazy loading images.
+ *
+ * So, in this lesson we will learn how to implement that strategy in
+ * JavaScript.
+ *
+ * The main ingredient to the lazy loading strategy is that we have a
+ * very low resolution image, which is really small and which is loaded,
+ * right in the beginning.
+ *
+ * The dimensions of this small is only 200px x 120px and it is only 16kb
+ * and the original one is almost half a megabyte.
+ *
+ * The original image then we reference in the <img> element as a
+ * `data-src` attribute's value.
+ *
+ * `data-src` is a special `data` attribute that we learned about
+ * earlier in this section.
+ *
+ * So, it is not a standard HTML attribute and any other attribute would
+ * workbut instead, we used one of the special `data` attributes that
+ * we can do ourselves.
+ *
+ * The idea is that as we scroll to one of the low resolution images,
+ * whose value of the `src` tag is the low resolution image, we will then
+ * replace its value with the path to the high-resolution image which is
+ * specified in the `data-src` attribute.
+ *
+ * We then also remove the `lazy-img` css class which gives the image
+ * a blurry effect.
+ *
+ * NOTE: The blurry effect is added to hide the fact that the image is
+ * low-resolution as it will look very ugly and pixelated otherwise.
+ *
+ * So, let's implement it and it is not that hard, using the intersection
+ * observer API.
+ *
+ * NOTE: That this one is really great for performance while the other
+ * things that we did so far are more visual things. This one really
+ * impacts how we website works and especially for the users who might
+ * have slow internet connection or low data plan or a slow cell phone.
+ *
+ * Let's start by selecting our images, and let's call them imgTargets
+ */
+
+// selecting all the images which has the attribute of `data-src`
+const imgTargets = document.querySelectorAll('img[data-src]');
+console.log(imgTargets);
+
+// loadImg callback function
+const loadImg = function (entries, observer) {
+  const [entry] = entries;
+  console.log(entry);
+
+  if (!entry.isIntersecting) return;
+
+  // Replace src value with data-src value
+  entry.target.src = entry.target.dataset.src;
+
+  // Remove the blur effect
+  /**
+   * How do we remove the css class which gives our image a blurry
+   * effect?
+   *
+   * It is a little bit tricky because the replacing the value of the
+   * `src` attribute happens behind the scenes.
+   *
+   * So, JS finds the new image that it should load and displays on the
+   * UI and it does that behind the scenes.
+   *
+   * Once it is finished loading that image, it will emit the load event.
+   *
+   * The load event is just like any other event so, we can just listen
+   * for it and then do something on that image.
+   *
+   * This is important to do because if we remove the blur effect right
+   * after the value of the `src` attribute was replaced, and if the
+   * user has slow internet, the image will still be pixelated, as the
+   * image would still be loading. Therefore, we only remove the blur
+   * after the image has completely loaded and emits the `load` event.
+   */
+
+  // on the target image, adding event listener, and listening for the load event
+  entry.target.addEventListener('load', function () {
+    entry.target.classList.remove('lazy-img');
+  });
+
+  /**
+   * As the last step, we can now just stop observing these images
+   * because it is not longer necessary as they already did our task of
+   * loading.
+   */
+  observer.unobserve(entry.target);
+};
+
+// creating img observer
+const imgObserver = new IntersectionObserver(loadImg, {
+  root: null,
+  threshold: 0,
+  rootMargin: `200px`,
+});
+
+imgTargets.forEach(img => imgObserver.observe(img));
+
+/**
+ * Hopefully, after this lesson, you are convinced that it is really
+ * important to implement this kind of functionality into your websites.
+ *
+ * All you really need to do is to generate the placeholder images and
+ * blur them a little bit and then implement the sort of "lazy-load"
+ * logic, which really isn't too much work.
+ *
+ * Now, ideally, we don't want our users to notice that we are
+ * lazy-loading the images. All of that should basically happen in the
+ * background without our users noticing that.
+ *
+ * So, we should probably makes these images load a bit earlier.
+ *
+ * To do that, we can specify a `rootMargin` in observer options.
+ *
+ * `rootMargin` is something that we also did with sticky navigation
+ * to make it load a bit before the threshold was actually reached,
+ * and here we are doing the same thing.
+ *
+ * So, exactly 200px before any of the images is loaded, it should
+ * already start loading.
+ *
+ * By doing that, we don't see any delay in loading when we browse the
+ * page.
+ */

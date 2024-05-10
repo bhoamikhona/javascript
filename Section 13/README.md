@@ -24,6 +24,7 @@
     - [Implementing a Sticky Navigation: The Scroll Event](#implementing-a-sticky-navigation-the-scroll-event)
     - [A Better Way: The Intersection Observer API](#a-better-way-the-intersection-observer-api)
     - [Revealing Elements on Scroll](#revealing-elements-on-scroll)
+    - [Lazy Loading Images](#lazy-loading-images)
   - [Author](#author)
 
 ## Lessons Learned
@@ -415,6 +416,20 @@ const callback = function (entries, observer) {
 ### Revealing Elements on Scroll
 
 - Using the Intersection observer API on multiple elements at once.
+
+### Lazy Loading Images
+
+- Impact of images on page loading and how we can optimize it using lazy-loading.
+- How to dynamically change the `src` path of an `<img>` element.
+- `load` event - emitted by `<img>` once they are loaded
+- `rootMargin`
+  - In the Intersection Observer API, in the options object, the `rootMargin` propert is defined exactly the same as the `margin` CSS property.
+  - In that, it can take 1 value to apply margin to all sides or multiple values to give individual values to each side.
+  - The `rootMargin` will be added to the container viewport. So, in essence we can shrink/grow our view port with this value.
+  - With a `rootMargin` of 50px our viewport is now considered to be 50px larger so once the element is 50px from being within the viewport it will be considered intersecting.
+  - Using a positive `rootMargin` is really useful when you need to lazy load images, or do soemthing like infinite scrolling since you can load all data before it becomes visible to the user.
+  - You can also do negative margins to shrink the viewport.
+- To understand the Intersection Observer API further, read this [article](https://blog.webdevsimplified.com/2022-01/intersection-observer/).
 
 ## Author
 
