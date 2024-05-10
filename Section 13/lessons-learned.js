@@ -3719,3 +3719,65 @@ imgTargets.forEach(img => imgObserver.observe(img));
  * By doing that, we don't see any delay in loading when we browse the
  * page.
  */
+
+/**********************************************************************/
+/**************** BUILDING A SLIDER COMPONENT: PART 01 ****************/
+/**********************************************************************/
+
+console.log(
+  `/**************** BUILDING A SLIDER COMPONENT: PART 01 ****************/`
+);
+
+const slides = document.querySelectorAll('.slide');
+const btnLeft = document.querySelector('.slider__btn--left');
+const btnRight = document.querySelector('.slider__btn--right');
+
+// This variable (curSlide) keeps track of the current slide index. It
+// is initialized to 0, indicating the first slide.
+let curSlide = 0;
+
+// This constant (maxSlide) stores the total number of slides by getting
+// the length of the slides NodeList.
+const maxSlide = slides.length;
+
+// This function moves the slides to the specified slide number. It
+// calculates the transformation value for each slide to shift them
+// horizontally. It's called initially to position the slides.
+const goToSlide = function (slideNum) {
+  slides.forEach(
+    (s, i) => (s.style.transform = `translateX(${100 * (i - slideNum)}%)`)
+  );
+};
+
+// This line calls the goToSlide function to initially position the
+// slides at index 0.
+goToSlide(0);
+
+// This function handles the logic for moving to the next slide. It
+// increments the curSlide variable and calls goToSlide with the new
+// index.
+const nextSlide = function () {
+  if (curSlide === maxSlide - 1) {
+    curSlide = 0;
+  } else {
+    curSlide++;
+  }
+
+  goToSlide(curSlide);
+};
+
+// This function handles the logic for moving to the previous slide. It
+// decrements the curSlide variable and calls goToSlide with the new
+// index.
+const prevSlide = function () {
+  if (curSlide === 0) {
+    curSlide = maxSlide - 1;
+  } else {
+    curSlide--;
+  }
+
+  goToSlide(curSlide);
+};
+
+btnRight.addEventListener('click', nextSlide);
+btnLeft.addEventListener('click', prevSlide);

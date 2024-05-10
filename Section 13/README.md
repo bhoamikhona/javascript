@@ -25,6 +25,7 @@
     - [A Better Way: The Intersection Observer API](#a-better-way-the-intersection-observer-api)
     - [Revealing Elements on Scroll](#revealing-elements-on-scroll)
     - [Lazy Loading Images](#lazy-loading-images)
+    - [Building a Slider Component: Part 01](#building-a-slider-component-part-01)
   - [Author](#author)
 
 ## Lessons Learned
@@ -430,6 +431,8 @@ const callback = function (entries, observer) {
   - Using a positive `rootMargin` is really useful when you need to lazy load images, or do soemthing like infinite scrolling since you can load all data before it becomes visible to the user.
   - You can also do negative margins to shrink the viewport.
 - To understand the Intersection Observer API further, read this [article](https://blog.webdevsimplified.com/2022-01/intersection-observer/).
+
+### Building a Slider Component: Part 01
 
 ## Author
 
