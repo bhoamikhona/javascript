@@ -367,9 +367,50 @@
 - `new IntersectionObserver()`
   - callback function
   - options object
+    - `root`
+    - `threshold`
   - `IntersectionObserverEntry`
     - `intersectionRatio` property
     - `isIntersecting` property
+- First we created an observer which receives two arguments
+  - a callback function
+  - object (options of object)
+
+```javascript
+const observer = new IntersectionObserver(callback, options);
+```
+
+- Now, this observer will observe a target element i.e. section1 in our case
+
+```javascript
+observer.observe(section1);
+```
+
+- Now, we need an intersecting element i.e. root property, which is inside the options object.
+
+```javascript
+const options = {
+  root: null, // default case or viewport
+  threshold: 0.2,
+};
+```
+
+- Now, this `threshold` property can hold either a single value or an array of values.
+- With an array of multiple values, the callback function will be called whenever there is an intersection at any of those thresholds provided.
+- Here, 0.2 means when the target element (`section1`) is 20% visible on our viewport (intersecting element), call this callback function.
+- That's why `isIntersecting` value is `true` (`isIntersecting: true`).
+- If target element is (`section1`) less than 20% visible in our viewport (intersecting element), the value of `isIntersecting` value will get `false` (`insIntersecting: false`)
+
+```javascript
+const callback = function (entries, observer) {
+  entries.forEach(entry => {
+    console.log(entry);
+  });
+};
+```
+
+> [!NOTE]
+> Options object and callback function must be written before observer otherwise code will not get executed.
 
 ### Revealing Elements on Scroll
 

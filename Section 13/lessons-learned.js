@@ -3452,31 +3452,125 @@ console.log(
   `/******************** REVEALING ELEMENTS ON SCROLL ********************/`
 );
 
+/**
+ * Let's implement another really cool and modern feature using the
+ * intersection observer API.
+ *
+ * This time we are going to reveal elements as we scroll close to them.
+ *
+ * This effect can give you pages a very nice touch.
+ *
+ * You can, in fact, easily implement it without any external library.
+ *
+ * We basically reveal each section as we approach it.
+ *
+ * The animation itself comes from CSS.
+ *
+ * So, once more, we will actually achieve this by simply adding a class
+ * to each of the sections as we approach them - and we will do that
+ * by using the observer API.
+ *
+ * Let's create a new observer
+ */
+
+// selecting all sections
 allSections = document.querySelectorAll('.section');
 
+// callback function
+/**
+ * We only have on threshold. So, let's get that entry from entries using
+ * destructuring.
+ *
+ * In the entry, the `target` property becomes important as it tells us
+ * which element was intersected. This is important because we want to
+ * make exactly that section visible, not all the sections.
+ *
+ * But we are observing all the sections using our observer.
+ *
+ * So now, we need a way of knowing, which is the section that actually
+ * intersected the viewport.
+ *
+ * That is what we can use the taget for.
+ *
+ * So, we select the current target and remove the 'section--hidden'
+ * class from it to make our animation work.
+ *
+ * Now, the first section is already there on the first load of the page.
+ * That's because of the very first entry that always get printed in the
+ * beginning.
+ *
+ * But, if we look at `isIntersecting` property of that entry, it says
+ * `false`, so let's use that to our advantage and fix the problem.
+ */
 const revealSection = function (entries, observer) {
   const [entry] = entries;
   console.log(entry);
 
   if (!entry.isIntersecting) return;
+
   entry.target.classList.remove('section--hidden');
   observer.unobserve(entry.target);
 };
 
+/**
+ * We want to observe 4 sections in this case.
+ *
+ * And it is indeed possible to observe them all using the same observer.
+ *
+ * Let's select all the sections and then we will observe them as
+ * multiple targets, all using the `sectionObserver` that we created
+ * below.
+ */
 const sectionObserver = new IntersectionObserver(revealSection, {
   root: null,
   threshold: 0.15,
 });
 
+/**
+ * Now we can loop over `allSections` node list using forEach()
+ *
+ * We use forEach() whenever we want to do something which does not
+ * involve creating a new array.
+ *
+ * In the callback function of forEach(), we will simply observe all
+ * the sections.
+ *
+ * Now, while we are looping over all the sections, we will add the
+ * `section--hiden` class on all of them so that, on the initial
+ * load of the page, the sections are not visible.
+ */
+
 allSections.forEach(function (section) {
   sectionObserver.observe(section);
-  section.classList.add(`section--hidden`);
+  section.classList.add('section--hidden');
 });
 
-/***********************************************************************/
-/************************* LAZY LOADING IMAGES *************************/
-/***********************************************************************/
-
-console.log(
-  `/************************* LAZY LOADING IMAGES *************************/`
-);
+/**
+ * Now we will go back to the new IntersectionObserver() and set the
+ * options values.
+ *
+ * The first property in the options would be `root`, which we will set
+ * to null as it will then take the viewport as the root.
+ *
+ * The second property is threshold and we will set it to something
+ * greater than 0. That's because we don't want it to show the section
+ * right as it enters the viewport, but a little bit later.
+ *
+ * Let's say 15% which is 0.15
+ *
+ * That was the setup.
+ *
+ * Now, let create the logic in the revealSection() function. So, let's
+ * go there.
+ *
+ * Now, we can do one more small improvement, which is to now unobserve
+ * the section elements because, if you look in the console, if we keep
+ * scrolling even after all the sections are visible, the observer
+ * keeps observing the section.
+ *
+ * But, they are no longer necessary because they already did all the
+ * work they needed to.
+ *
+ * So, to that, in the revealSection() function, after removing the
+ * 'section--hidden' class, we can simply unobserve them.
+ */
