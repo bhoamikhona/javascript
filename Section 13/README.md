@@ -28,6 +28,7 @@
     - [Building a Slider Component: Part 01](#building-a-slider-component-part-01)
     - [Building a Slider Component: Part 02](#building-a-slider-component-part-02)
     - [Lifecycle DOM Events](#lifecycle-dom-events)
+    - [Efficient Script Loading: defer and async](#efficient-script-loading-defer-and-async)
   - [Author](#author)
 
 ## Lessons Learned
@@ -445,6 +446,80 @@ const callback = function (entries, observer) {
   - `load`
   - `beforeunload`
 - `e.returnValue`
+
+### Efficient Script Loading: defer and async
+
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/49f65cac-2489-406f-b071-ccf4d779dd44)
+- To finish this section, let's take a quick look at different ways of loading a JavaScript script in HTML.
+- So, up to this point, we have always used the regular way of including JavaScript files into our HTML.
+- However, we can also add the `async` attribute to the script tag or the `defer` attribute.
+- These attributes are going to influence the way in which the JavaScript file is fetched, which basically means downloaded and then executed.
+- In the HTML, we can write the script tag in the document head, or usually at the end of the body.
+- So, these are the two situations that we are going to be comparing in this lesson.
+- So, when we include a script without any attribute in the head, what will the page loading process look like over time?
+  - Well, as the user loads the page and receives the HTML, the HTML code will start to be parsed by the browser and parsing the HTML is basically building the DOM tree from the HTML elements.
+  - Then at a certain posint, it will find our script tag, start to fetch the script, and then execute it.
+  - Now, during all this time, the HTML parsing will actually stop. So, it will be waiting for the script to get fetched and executed.
+  - Only after that, the rest of the HTML can be parsed.
+  - And at the end of that parsing, the DOM content loaded event will finally get fired, as we learned in the last lesson.
+  - Now, this is not ideal at all. We don't want the browser to be just sitting there doing nothing, because this can have a huge impact on the pages performance.
+  - Plus, in this case, the script will actually be executed before the DOM is ready.
+  - So again, this is not ideal. So, never do this i.e. never include the script in the head without any attribute.
+  - That's why we usually always put the script tag at the end of the body, so that all the HTML is already parsed, when it finally reaches the script tag.
+- What happens when you put the script tag at the end of the body?
+  - In this situation, this is how the page loading process loooks like:
+  - The HTML is parsed, then the script tag is found at the end of the document, then the script is fetched, and then finally, the script gets executed.
+  - This is much better.
+  - So, if you didn't know why we always put the script at the end of the body, well, now you know.
+  - However, this is still not perfect, because the script could have been downloaded before, while the HTML was still being parsed.
+  - So, what about the `async` attribute?
+- What does the process look like with the `async` attribute?
+  - This is what the loading process looks like when we use the `async` script loading in the head of the document:
+    - The difference is that the script is loaded at the same time as the HTML is parsed so, in an asynchronous way, so that's already an advantage.
+    - However, the HTML parsing still stops for the script execution.
+    - So, the script is actually downloaded asynchronously. But then it's executed right away in a synchronous way.
+    - So, the HTML code has to wait for being parsed.
+    - But anyway, as you can see form the length of the diagrams in the image above, this still makes page loading time shorter.
+- But now, what about the `defer` attribute?
+  - Well, when defering what happens is that the script is still loaded asynchronously.
+  - But the execution of the script is deferred until the end of the HTML parsing.
+  - So, in practice, loading time is similar to the `async` attribute, but with the key difference that with `defer`, the HTML parsing is never interupted, because the script is only executed at the end.
+  - Any many times, this is exactly what we want.
+- Now you might be wondering why there is nothing to show for `async` and `defer` when the script is mentioned in the body.
+  - The reason for that is that they simply don't make sense there.
+  - Because, in the body, fetching and executing the script always happens after parsing the HTML anyway.
+  - So, `async` and `defer` have no practical effect there. They will make no difference.
+- Now there are, of course, use cases for all these strategies. So let's compare them, except, of course, the regular loading in the head, which is completely ruled out.
+  - ![image](https://github.com/bhoamikhona/javascript/assets/50435319/4dabdfe8-02cc-471d-ab61-c32acf15907b)
+  - Let's now compare the `async` and the `defer` attributes a little better.
+  - One important thing about loading an `async` script is that the DOM content loaded event will not wait for the script to be downloaded and executed.
+  - So usually, DOM content loaded, waits for all script to execute but, scripts loaded with `async` are an exception.
+  - With `async`, `DOMContentLoaded` is fired off as soon as the HTML finishes parsing.
+  - This might actually happen when a big script takes a long time to load.
+  - Using `defer` on the other hand, forces the `DOMContentLoaded` event to only get fired after the whole script has been downloaded and executed. So, this is a more traditional way that this event works.
+  - Another very important aspect is that `async` scripts are not guaranteed to be executed in the exact order that they are declared in the code.
+  - So, the script that arrives first get executed first.
+  - On the other hand, using `defer`, that is not the case.
+  - So, using the `defer` attribute guarantees that the scripts are actually executed in the order that they are declared or written in the code. That is usually what we want to happen.
+- In conclusion, using `defer` in the HTML head is overall the best solution. So, you should use it for your own scripts and for scripts where the order of execution is important.
+- For example, if your script relies on some third party library that you need to include, you will include that library before your own script, so that your script can then use the library's code. And in this case, you have to use `defer` and not `async` because `defer` will guarantee the correct order of execution.
+- Now, for third party scripts, where the order does not matter, for example, an analytics software like Google Analytics, or an ad script, or something like that, then in this case, you should totally use `async`.
+- So, for any code that your own code will not need to interact with, `async` is just fine. So, it is a good use case for this kind of scripts.
+- You can use different loading strategies for different scripts in your web application or website.
+
+> [!NOTE]
+> Only modern browsers support `async` and `defer`.
+>
+> They will basically get ignored in older browsers.
+>
+> So, if you need to support old browsers, then you need to put your script tag at the end of the body and not in the head.
+>
+> That's because, this is not a JavaScript feature, but an HTML 5 feature.
+>
+> So, you really can't work around this limitation, like you can do with modern JavaScript features by transpiling, or poly-filling.
+
+- So, this should give you a pretty good idea about different ways of loading JavaScript scripts.
+- So, let's quickly move over to the code and implement this.
 
 ## Author
 
