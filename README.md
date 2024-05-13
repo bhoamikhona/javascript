@@ -24,6 +24,7 @@
 - [Modal Window](https://bhoamikhona.github.io/javascript/Section%2007/Modal%20Window/index.html)
 - [The Pig Game](https://bhoamikhona.github.io/javascript/Section%2007/The%20Pig%20Game/index.html)
 - [Bankist Web App](https://bhoamikhona.github.io/javascript/Section%2012/index.html)
+- [Bankist Marketing Website](https://bhoamikhona.github.io/javascript/Section%2013/index.html)
 
 ## Author
 

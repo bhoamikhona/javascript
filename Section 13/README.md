@@ -2,6 +2,8 @@
 
 **About:** At this point of the course, you are already pretty good at working with the DOM. But, there are still a ton of things to learn. So, to do that, in this section, we will build a beautiful website project with a lot of different components and visual effects that require pretty advanced DOM manipulation techniques. After this section, you will have all the tools that you need in order implement any visual component or effect that you can imagine. Many of the things that we are going to learn in this section could also be added to a webpage simply by using a third party library but, you want to master JavaScript and the DOM. Therefore, you need to know how to do things yourself. So, let's go learn advanced DOM manipulation now.
 
+- [Live Site](https://bhoamikhona.github.io/javascript/Section%2013/index.html)
+
 ## Table of Content
 
 - [Section 13: Advanced DOM and Events](#section-13-advanced-dom-and-events)
