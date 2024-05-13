@@ -3907,3 +3907,160 @@ const slider = function () {
 };
 
 slider();
+
+/**********************************************************************/
+/************************ LIFECYCLE DOM EVENTS ************************/
+/**********************************************************************/
+
+console.log(
+  `/************************ LIFECYCLE DOM EVENTS ************************/`
+);
+
+/**
+ * Now to close off this section, let's take a quick look at a couple of
+ * different events that occur in the DOM during a webpage's life cycle.
+ *
+ * And when we say lifecycle, we mean right from the moment that the
+ * page is first accessed, until the user leaves it.
+ *
+ * The first event that we need to talk about is `DOMContentLoaded`.
+ * This event is fired by the document as soon as the HTML is completely
+ * parsed, which means that the HTML has been downloaded and been
+ * converted to the DOM tree.
+ *
+ * Also, all scripts must be downloaded and executed before the DOM
+ * content loaded event can happen.
+ *
+ * Of course we can listen to that event, and since it happens on the
+ * document, we can call the `addEventListener()` method on the document.
+ */
+
+// DOM content loaded event
+// document.addEventListener('DOMContentLoaded', function () {});
+
+/**
+ * This event does not wait for images and other external resources to
+ * load.
+ *
+ * Just the HTML and JavaScript need to be loaded.
+ *
+ * Let's now take a look at this event.
+ */
+
+document.addEventListener('DOMContentLoaded', function (e) {
+  console.log('HTML parsed and DOM tree built!', e);
+});
+
+/**
+ * So, inside this event handler, we can now execute code that should
+ * only be executed after the DOM is available.
+ *
+ * Infact, we want all our code only to be executed after the DOM is
+ * ready.
+ *
+ * So, does that mean that we should wrap our entire code into an
+ * event listener like the one we have here?
+ *
+ * So with a function like this, no, we don't need to do that.
+ *
+ * That's because we have the `<script>` tag, which is the one that
+ * importas our JavaScript into the HTML, at the end of the body.
+ *
+ * So basically, it is the last thing that is going to be read in the
+ * HTML.
+ *
+ * So, the browser will only find our script when the rest of the HTML
+ * is already parsed anyway.
+ *
+ * So, when we have the `<script>` tag at the end of the HTML, then we
+ * do not need to listen for the DOM content loaded event.
+ *
+ * There are also other ways of loading the JavaScript file with the
+ * `<script>` tag but, we are going to talk about that in the next
+ * lesson.
+ *
+ * Now, if you are coming to vanilla JavaScript from jQuery then you are
+ * probably used to wrapping all your code into a document ready
+ * function, which in jQuery.
+ *
+ * So, the ready function is equivalent to the DOM content loaded in
+ * vanilla JavaScript.
+ *
+ * But again, no such thing is necessary in regular JS.
+ *
+ * Next up, there is also the `load` event and the `load` event is fired
+ * by the `window` as soon as not only the HTML is parsed, but also all
+ * the images and external resources like CSS files are also loaded.
+ *
+ * Basically when the complete page has finished loading is when this
+ * event gets fired.
+ *
+ * So as always, we can also listen to that.
+ */
+
+window.addEventListener('load', function (e) {
+  console.log('Page fully loaded', e);
+});
+
+/**
+ * Finally, the last event that we need to know about is `beforeunload`
+ * event, which also gets fired on the `window`
+ */
+
+// window.addEventListener('beforeunload', function () {});
+
+/**
+ * This event is created immediately before a user is about to leave a
+ * page.
+ *
+ * For example, after clicking the close button in the browser tab.
+ *
+ * So, we can basically use this event to ask users if they are 100%
+ * sure that they want to leave the page.
+ *
+ * In some browsers, to make this work, we need to call preventDefault().
+ *
+ * In Chrome it is not necessary but, some browsers require it.
+ *
+ * In order to display a leaving confirmation, we need to set the return
+ * value on the event to an empty string.
+ *
+ * It might look weird but, this is for historical reasons.
+ */
+
+window.addEventListener('beforeunload', function (e) {
+  e.preventDefault();
+  console.log(e);
+  e.returnValue = '';
+});
+
+/**
+ * Now if you try to close the tab, you will get a pop-up which asks you
+ * if you are sure that you want to leave the page.
+ *
+ * NOTE: You will first have to interact with the page for it to work.
+ *
+ * A long time ago, developers were actually able to customize the
+ * message that was displayed in this pop-up but then, many people
+ * started to abuse it so now, we can only see it as a generic message.
+ *
+ * This can sometimes be useful but, sometimes it is also a bit too much.
+ *
+ * NOTE: Please don't abuse this kind of feature becase a message like
+ * this is of course pretty intrusive and it should only be displayed
+ * when necessary.
+ *
+ * The only time you should propmt the user, if they really want to
+ * leave is for example, when the user is leaving in the middle of
+ * filling out the form, or like writing a blog post or something like
+ * that. So, a situation in which data could actually be lost by
+ * accident.
+ *
+ * That is all we had to learn about in this lesson. So, the 3 events
+ * that can be quite helpful in some situations. Especially the
+ * `beforeunload` event.
+ *
+ * In the next lesson, to finish this section, we will take a closer
+ * look at `DOMContentLoaded` event and different ways of loading
+ * scripts in HTML.
+ */

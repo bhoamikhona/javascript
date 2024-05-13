@@ -27,6 +27,7 @@
     - [Lazy Loading Images](#lazy-loading-images)
     - [Building a Slider Component: Part 01](#building-a-slider-component-part-01)
     - [Building a Slider Component: Part 02](#building-a-slider-component-part-02)
+    - [Lifecycle DOM Events](#lifecycle-dom-events)
   - [Author](#author)
 
 ## Lessons Learned
@@ -436,6 +437,14 @@ const callback = function (entries, observer) {
 ### Building a Slider Component: Part 01
 
 ### Building a Slider Component: Part 02
+
+### Lifecycle DOM Events
+
+- Events
+  - `DOMContentLoaded`
+  - `load`
+  - `beforeunload`
+- `e.returnValue`
 
 ## Author
 
