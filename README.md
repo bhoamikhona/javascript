@@ -17,6 +17,7 @@
 - [Section 11](./Section%2011): Working With Arrays
 - [Section 12](./Section%2012): Numbers, Dates, Intl, and Timers
 - [Section 13](./Section%2013): Advanced DOM and Events
+- [Section 14](./Section%2014): Object-Oriented Programming (OOP) With JavaScript
 
 ## Projects
 
