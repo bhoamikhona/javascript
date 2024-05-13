@@ -26,6 +26,7 @@
     - [Revealing Elements on Scroll](#revealing-elements-on-scroll)
     - [Lazy Loading Images](#lazy-loading-images)
     - [Building a Slider Component: Part 01](#building-a-slider-component-part-01)
+    - [Building a Slider Component: Part 02](#building-a-slider-component-part-02)
   - [Author](#author)
 
 ## Lessons Learned
@@ -433,6 +434,8 @@ const callback = function (entries, observer) {
 - To understand the Intersection Observer API further, read this [article](https://blog.webdevsimplified.com/2022-01/intersection-observer/).
 
 ### Building a Slider Component: Part 01
+
+### Building a Slider Component: Part 02
 
 ## Author
 

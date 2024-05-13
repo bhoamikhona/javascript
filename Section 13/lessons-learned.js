@@ -3728,6 +3728,7 @@ console.log(
   `/**************** BUILDING A SLIDER COMPONENT: PART 01 ****************/`
 );
 
+/*
 const slides = document.querySelectorAll('.slide');
 const btnLeft = document.querySelector('.slider__btn--left');
 const btnRight = document.querySelector('.slider__btn--right');
@@ -3781,3 +3782,128 @@ const prevSlide = function () {
 
 btnRight.addEventListener('click', nextSlide);
 btnLeft.addEventListener('click', prevSlide);
+*/
+
+/**********************************************************************/
+/**************** BUILDING A SLIDER COMPONENT: PART 02 ****************/
+/**********************************************************************/
+
+console.log(
+  `/**************** BUILDING A SLIDER COMPONENT: PART 02 ****************/`
+);
+
+/**
+ * This function initializes the slider when the script runs
+ */
+const slider = function () {
+  const slides = document.querySelectorAll('.slide');
+  const btnLeft = document.querySelector('.slider__btn--left');
+  const btnRight = document.querySelector('.slider__btn--right');
+  const dotContainer = document.querySelector('.dots');
+
+  /**
+   * curSlide: keeps track of the current slide
+   * maxSlide: stores the total number of slides
+   */
+  let curSlide = 0;
+  const maxSlide = slides.length;
+
+  // Functions
+
+  /**
+   * This function dynamically generates dots for each slide and appends
+   * them to the dot container.
+   */
+  const createDots = function () {
+    slides.forEach(function (_, i) {
+      dotContainer.insertAdjacentHTML(
+        'beforeend',
+        `<button class="dots__dot" data-slide="${i}"></button>`
+      );
+    });
+  };
+
+  /**
+   * This function manages the active state of dots by adding or
+   * removing a CSS class.
+   */
+  const activateDot = function (slide) {
+    document
+      .querySelectorAll('.dots__dot')
+      .forEach(dot => dot.classList.remove('dots__dot--active'));
+
+    document
+      .querySelector(`.dots__dot[data-slide="${slide}"]`)
+      .classList.add('dots__dot--active');
+  };
+
+  /**
+   * This function moves the slide horizontally by adjusting their
+   * transform property. It takes a parameter which indicate the slide
+   * to navigate to.
+   */
+  const goToSlide = function (slideNum) {
+    slides.forEach(
+      (s, i) => (s.style.transform = `translateX(${100 * (i - slideNum)}%)`)
+    );
+  };
+
+  /**
+   * The nextSlide() and prevSlide() update the curSlide variable and
+   * then call `goToSlide()` and `activateDot()` to move to the next
+   * or previous slide respectively.
+   */
+  const nextSlide = function () {
+    if (curSlide === maxSlide - 1) {
+      curSlide = 0;
+    } else {
+      curSlide++;
+    }
+
+    goToSlide(curSlide);
+    activateDot(curSlide);
+  };
+
+  const prevSlide = function () {
+    if (curSlide === 0) {
+      curSlide = maxSlide - 1;
+    } else {
+      curSlide--;
+    }
+
+    goToSlide(curSlide);
+    activateDot(curSlide);
+  };
+
+  /**
+   * This function sets up the initial state of the slider by calling
+   * goToSlide() to move to the first slide, `createDots()` to create
+   * navigation dots, and `activateDots()` to activate the dot
+   * corresponding to the first slide.
+   */
+  const init = function () {
+    goToSlide(0);
+    createDots();
+    activateDot(0);
+  };
+  init();
+
+  // Event Handlers
+  btnRight.addEventListener('click', nextSlide);
+  btnLeft.addEventListener('click', prevSlide);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') prevSlide();
+    if (e.key === 'ArrowRight') nextSlide();
+  });
+
+  dotContainer.addEventListener('click', function (e) {
+    if (e.target.classList.contains('dots__dot')) {
+      const { slide } = e.target.dataset;
+      goToSlide(slide);
+      activateDot(slide);
+    }
+  });
+};
+
+slider();
