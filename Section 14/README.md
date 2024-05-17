@@ -22,6 +22,7 @@
         - [Constructor Functions](#constructor-functions)
         - [ES6 Classes](#es6-classes)
         - [Object.create()](#objectcreate)
+    - [Constructor Functions and the new Operator](#constructor-functions-and-the-new-operator)
   - [Author](#author)
 
 ## Lessons Learned
@@ -442,6 +443,211 @@ writePost() {
 - However, it is not as used as the other two methods as we will see over the next couple of lessons.
 - Now, to finish, one more important thing to keep in mind is that the four principles of OOP that we learned in the last lesson viz abstraction, encapsulation, inheritance, and polymorphism are still valid and important with prototypal inheritance.
 - Throughout this section, we will of course learn how to use and implement these principles.
+
+### Constructor Functions and the new Operator
+
+- Let's finally implement OOP now, starting with constructor functions.
+- We actually kind of used OOP before, but in a very limited way because, we had no way of programmatically creating objects.
+- So, all we did was to use some simple object literals.
+- But now, all of that changes with constructor functions.
+- We can use constructor function to build an object using a function.
+- A constructor function is actually a completely normal function.
+- The only difference between a regular function and a function that we call constructor function, is that we call a constructor function with the `new` operator.
+- Let's now create a constructor function for a person.
+- In OOP, there is this convention that constructor functions always start with a capital letter. So, we should follow that convention too.
+- In fact, other built-in constructors like array or map, follow that convention as well.
+- In this example, we are using function express but, function declaration will also work.
+- An arrow function will not work as a function constructor. That's because it doesn't have its own `this` keyword and we need that.
+- So, only function declarations and function expression work.
+
+```javascript
+const Person = function () {};
+```
+
+- Now remember that this function is basically going to produce an object and in this case, for a person.
+- So, we want a person to have a `firstName` and `birthYear` so, we specify those as parameters in our constructor function so that we can then pass in the name and the birth year.
+
+```javascript
+const Person = function (firstName, birthYear) {};
+```
+
+- Now let's call this function.
+- As mentioned previously, the only difference between a regular function, and a constructor function is that we call the constructor using the `new` keyword.
+
+```javascript
+const Person = function (firstName, birthYear) {};
+
+new Person('Bhoami', 1995);
+```
+
+- This `new` operator is a very special operator because what it does is to call the `Person()` function but, it does a whole lot more than just that.
+- So, let's see what exactly happens when we call a function with a `new` operator:
+- Behind the scenes, there happen 4 steps:
+  - 1. New empty object is created
+  - 2. Function is called - In this function call, the `this` keyword will be set to the newly created object (in step 1)
+    - Basically, in the execution context of the `Person()` function, the `this` keyword will point to the newly created empty object from step 1.
+    - Remember that all of this happens because we are calling the function using the `new` operator.
+  - 3. The newly created object is linked to a prototype. (more about this in next lesson)
+  - 4. The last step is that the object that was created in the beginning is then automatically returned from the constructor function.
+    - So, the function automatically returns the empty object from the beginning.
+    - But actually, at this point, the object no longer needs to be empty.
+    - And this is actually the trick of making the constructor function work.
+- So, let's log the `this` keyword inside the `Person()` constructor function.
+
+```javascript
+const Person = function (firstName, birthYear) {
+  console.log(this);
+};
+
+new Person('Bhoami', 1995);
+```
+
+- We already know that the `this` keyword should be the empty object that was created in step 1. Because the `this` keyword inside the constructor function will be exactly the empty object.
+- Again, that's because we are calling it with the `new` keyword.
+- This is what we get from the log: `Person {}`
+- The browser console is actually already telling us that it is basically of the type `Person`. So, it just the name of the constructor function.
+- Now, let's use this knowledge to our advantage because, we already know that in the end of this function, the `this` keyword will basically be returned.
+- So, whatever we add to that empty object, will then be returned from the constructor function.
+- That returned object, is going to be the object, that we are trying to build here.
+- So, all we need to do is to now take that `firstName` parameter, so the value that we receive, and then create a property on the `this` keyword with the same name and then set it to that value, like so:
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  // we can do the same with birthYear
+  this.birthYear = birthYear;
+};
+
+new Person('Bhoami', 1995);
+```
+
+- Now let's store the returning value from the constructor function into a variable, and look at it in the console.
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  // we can do the same with birthYear
+  this.birthYear = birthYear;
+};
+
+const bhoami = new Person('Bhoami', 1995);
+console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995}
+```
+
+- This is what we get: `Person {firstName: 'Bhoami', birthYear: 1995}` in the console.
+- Let's quickly recap what just happened here:
+  - We are calling the constructor function with the `new` keyword or the `new` operator.
+  - Therefore, a new empty object is created right away.
+  - Then the function is called and the `this` keyword in that function is set to a newly created empty object.
+  - Then, in the function, we start to set properties to that object.
+  - We give those properties the exact same name as the parameters that we are passing in the constructor function.
+  - Of course, they could have any other name, it doesn't have to be the same name as our arguments/parameters but, this is kind of a convention.
+  - So, if we pass in `firstName` then we should also create a property called `firstName`.
+  - So then, by the end of the function, our `this` keyword now has two new properties that we set inside the constructor function's body.
+  - Then in step 4, that object that was created in the beginning, is then automatically returned from the function.
+  - So, at this point, that is the object with the two properties - that's going to be the result of this function call.
+- Now, we can use this constructor function to create as many different objects as we want.
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  // we can do the same with birthYear
+  this.birthYear = birthYear;
+};
+
+const bhoami = new Person('Bhoami', 1995);
+console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995}
+
+const jonas = new Person('Jonas', 1991);
+console.log(jonas); // Person {firstName: 'Jonas', birthYear: 1991}
+
+const matilda = new Person('Matilda', 2017);
+console.log(matilda); // Person {firstName: 'Matilda', birthYear: 2017}
+```
+
+- So, as you can see, we can really create as many objects now, based on the constructor function, as we like.
+- So, this is a bit like the analogy from before, where the constructor function is now like a blueprint for a house, and then each of these objects that we create through the constructor function will be the actual house in the real world.
+- So, in this case, the actual objects with actual data in them.
+- So, each of them i.e. `bhoami`, `jonas`, and `matilda` are their own object that we created programmatically, using a constructor function.
+- Now remember from one of the previous lessons, that in classical OOP, an object created from a class is called an instance.
+- Now, we didn't technically create a class here because, as we discussed before, JS doesn't really have classes in the sense of traditional OOP.
+- However, we did create an object from a constructor function. Actually 3 objects.
+- And constructor functions have been used since the beginning of JavaScript to kind of simulate classes.
+- So, therefore, we can still say that `bhoami` is an instance of `Person()`. The same goes for `jonas` and `matilda`.
+- In fact, there is even an operator that we can use to test for that.
+- The operator is `instanceof`
+
+```javascript
+const Person = function (firstName, birthYear) {
+  // Instance properties
+  this.firstName = firstName;
+  // we can do the same with birthYear
+  this.birthYear = birthYear;
+};
+
+const bhoami = new Person('Bhoami', 1995);
+console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995}
+
+const jonas = new Person('Jonas', 1991);
+console.log(jonas); // Person {firstName: 'Jonas', birthYear: 1991}
+
+const matilda = new Person('Matilda', 2017);
+console.log(matilda); // Person {firstName: 'Matilda', birthYear: 2017}
+
+const jay = 'Jay';
+
+console.log(bhoami instanceof Person); // true
+console.log(jay instanceof Person); // false
+```
+
+- The `instanceof` will return `true` or `false`.
+- Since we are talking about instances here. We can say that the `this.firstName` and `this.birthYear` in the constructor function will be the instance properties.
+- That's because the properties `firstName` and `birthYear` will be available on all the instances that are created through the `Person()` constructor function.
+- That's for properties but now, what about methods? What if we wanted to add a method to our objects?
+- Well, just like we added properties, we can of course also add methods.
+- So, let's create a method `calcAge()`
+
+```javascript
+const Person = function (firstName, birthYear) {
+  // Instance properties
+  this.firstName = firstName;
+  // we can do the same with birthYear
+  this.birthYear = birthYear;
+
+  // creating a method - this works but this is a bad practice - never create a function inside of the constructor function
+  this.calcAge = function () {
+    console.log(2037 - this.birthYear);
+  };
+};
+
+const bhoami = new Person('Bhoami', 1995);
+console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995}
+
+const jonas = new Person('Jonas', 1991);
+console.log(jonas); // Person {firstName: 'Jonas', birthYear: 1991}
+
+const matilda = new Person('Matilda', 2017);
+console.log(matilda); // Person {firstName: 'Matilda', birthYear: 2017}
+
+const jay = 'Jay';
+
+console.log(bhoami instanceof Person); // true
+console.log(jay instanceof Person); // false
+```
+
+- So, we can create a method inside the constructor function as we did in the example above but, it is a bad practice.
+- We should never create a method inside of a constructor function.
+- That's because imagine we are going to create a 100s or even 1000s or 10,000s objects of the constructor function. Then what would happen is that each of these objects would carry around the method.
+- So, if we had a 1000 objects, we would essentially create a thousand copies of `calcAge()` function.
+- That would be terrible for the performance of our code. So, don't create a method inside of the constructor function.
+- But instead, to solve this problem, we are going to use prototypes and prototype inheritance just like we discussed in the last lesson.
+- That's it!
+- These are the basics of constructor functions.
+- Just note that function constructors are not really a feature of the JS language.
+- Instead, they are simply a pattern that has been developed by other developers, and now, simply everyone uses it.
+- So, the real magic here is the `new` operator.
+- So, the most important thing to understand from this lesson, are really the four steps that happen behind the scenes when we use the `new` operator.
+- So, make sure you understand them and then in the next lesson, we will work with prototypes and finally see the magic of prototypal inheritance in action.
 
 ## Author
 
