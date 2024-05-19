@@ -24,6 +24,7 @@
         - [Object.create()](#objectcreate)
     - [Constructor Functions and the new Operator](#constructor-functions-and-the-new-operator)
     - [Prototypes](#prototypes)
+    - [Prototypal Inheritance and The Prototype Chain](#prototypal-inheritance-and-the-prototype-chain)
   - [Author](#author)
 
 ## Lessons Learned
@@ -1066,6 +1067,88 @@ console.log(bhoami.hasOwnProperty('species')); // false
 ```
 
 - Sometimes, this method can be quite helpful in certain situations.
+
+### Prototypal Inheritance and The Prototype Chain
+
+- Let's now consolidate the knowledge that we got over the last two lessons in a nice diagram that brings everything together that we know so far.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/4a55f2e5-2660-4c16-8c12-8e756540813c)
+- Everything starts with the `Person()` constructor function that we have been developing.
+- This constructor function has a prototype property which is an object and inside that object, we defined the `calcAge()` method.
+- And `Person.prototype` itself actually also has a reference back to person which is the `constructor` property.
+- So, essentially `Person.prototype.constructor` is going to point back to person itself.
+- Remember that `Person.prototype` is actually not the prototype of `Person()` but of all the objects that are created through the `Person()` function.
+- Speaking of created objects, let's now analyze how an object is created using the `new` operator and the constructor function.
+- So, when we call a function, any function with the `new` operator, the first thing that is going to happen is that a new empty object is created instantly.
+- Then the `this` keyword and the function call is set to the newly created object.
+- So, inside the function's execution context, this is now the new empty object and that's why in the function's code we set the `firstName` and `birthYear` properties on the `this` keyword because doing so, will ultimately set them on the new object.
+- Next comes the magical step.
+- Now the new object is linked to the constructor function's prototype property, in this case, `Person.prototype`.
+- This happens internally by addng the `__proto__` property to the new object.
+
+> [!WARNING]
+>
+> `__proto__` is deprecated. Instead use `Object.getPrototypeOf()`
+>
+> We also have `Object.setPrototypeOf()`.
+
+- So, `Person.prototype` is now the new object's prototype which is denoted in the `__proto__` property of `jonas` (the example in the image above).
+- Again, `__proto__` always points to the an object's prototype and that is true for all objects in JavaScript.
+- Finally, the new object is automatically returned from the function unless we explicitly return something else.
+- But in a constructor function like `Person()`, we usually never do that.
+- With this, the result of the `new` operator and the `Person()` constructor function is a new object that we just created programmatically and that is now stored in the `jonas` variable.
+- This whole process, is how it works with functions constructors and also with ES6 classes but not with the `Object.create` syntax, that we are going to use later.
+- So, just keep this in mind once we reach the `Object.create` lectures.
+- Why does this work this way and why is this technique so powerful and useful?
+- To answer that, let's see `jonas.calcAge()` line of code.
+- Here we are attempting to call the `calcAge()` function on the `jonas` object.
+- However, JS can actually not find the `calcAge()` function directly in the `jonas` object.
+- It is simply not there and we already observed this behavior in the last lesson.
+- So, what happens now, in this situation?
+- Well, if a property or a method cannot be found in a certain object, JS will look into its prototype and there it is.
+- So, there is the `calcAge()` function that we were looking for and so JS will simply use that one.
+- That's how the `calcAge()` function can run correctly and return a result.
+- And the behavior that we just described is what we already called <ins>Prototypal Inheritance</ins> or <ins>Delegation</ins>.
+- So, the `jonas` object inherited the `calcAge()` method from its prototype or in other words, it delegated the `calcAge()` functionality to its prototype.
+- The beauty of this is that we can create as many `Person` objects as we like and all of them will then inherit this method.
+- So we can call this `calcAge()` method on all the `Person` objects without the method being directly attached to all the objects, themselves.
+- And this is essentially for code performance.
+- Just imagine that we had a 1,000 objects in the code and if all of them would have to carry the `calcAge()` function around, then that would certainly impact performance.
+- So instead, they can all simply use the `calcAge()` function from their common prototype.
+- Now the fact that `jonas` is connected to a prototype and the ability of looking up methods and properties in a properties in a prototype is what we call the <ins>prototype chain</ins>.
+- So the `jonas` object and it's prototype basically form a prototype chain but actually, the prototype chain does not end here.
+- So, let's understand the prototype chain a bit better by zooming out and looking at the whole picture.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/65ecc186-5660-4bc5-a24e-c69245b99201)
+- Here is the diagram that we already had with the `Person()` function constructor and its prototype property and the `jonas` object linked to its prototype via the `__proto__` property.
+- Now, remember that `Person.prototype` itself is also an object, and all objects in JS have a prototype.
+- Therefore, `Person.prototype` itself must also have a prototype.
+- And the `prototype` of `Person.prototype` is `Object.prototype`.
+- Why is that?
+- Well, `Person.prototype` is just a simple object. Which means that it has been built by the built-in `Object()` constructor function.
+- And this is actually the function that is called behind the scenes whenever we create an object literal. So, just an object with curly braces.
+- Essentially, the curly braces are just like a short-cut to writing `new Object()`.
+- Anyway, what matters here is that `Person.prototype` itself needs to have a prototype and since it has been created by the `Object()` constructor function, its prototype is going to be `Object.prototype`.
+- It is the same logic as with the `jonas` object.
+- Since `jonas` is built with `Person()`, `Person.prototype` is the prototype of `jonas`.
+- Now thsi entire series of links betweent he objects is what is called the <ins>prototype chain</ins> and `Object.prototype` is usually the top of the prototype chain - which means that its prototype is `null`.
+- So, its `__proto__` property will simply point to `null` - which then marks the end of the prototype chain.
+- So, in a certain way, the prototype chain is very similar to the scope chain but with prototypes.
+- So, in the scope chain, whenever JS can't find a certain variable in a certain scope, it looks up into the next scope and a scope chain and tries to find the variable there.
+- On the other hand, in the prototype chain, whenever JS cannot find a certain property or method in a certain object, it is going to look up in the next prototype in the prototype chain and see if it can find it there.
+- So again, the prototype chain is pretty similar to the scope chain but, instead of working with scopes, it works with properties and methods in objects.
+- Now, let's see another example of a method lookup. To do that we call the `hasOwnProperty()` method on the `jonas` object.
+- So, just like before, JS is going to start by trying to find the called method on the object itself.
+- But of course, it can't find the `hasOwnProperty()` method on `jonas`.
+- So, according to how the `prototype` chain works, it will then look into its prototype, which is `Person.prototype`.
+- Now we didn't defin any `hasOwnProperty()` method there either. So, JS is not going to find it there.
+- Therefore, it will move up even further in the prototype chain and now look into the `Object.prototype`.
+- `Object.prototype` does actually contain a bunch of built-in methods and `hasOwnProperty()` is one of them.
+- Great! So, JS can then take it and run it on the `jonas` object as if the `hasOwnProperty()` had been defined directly on `jonas`.
+- Remember that the method has not been copied to the `jonas` object.
+- Instead, it simply inherited the method from `Object.prototype` through the prototype chain.
+- This is, in a nutshell, the magic of prototypes and a prototype chain.
+- this will actually become even more interesting and useful once we add inheritance between two different kinds of objects or two different classes, so to say.
+- For example, having a `Student` class inherit from a `Person` class just like we learned in one of the 4 pillars of OOP.
+- So, there is a lot of exciting stuff ahead, so let's move on.
 
 ## Author
 
