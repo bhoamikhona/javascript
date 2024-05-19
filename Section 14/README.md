@@ -23,6 +23,7 @@
         - [ES6 Classes](#es6-classes)
         - [Object.create()](#objectcreate)
     - [Constructor Functions and the new Operator](#constructor-functions-and-the-new-operator)
+    - [Prototypes](#prototypes)
   - [Author](#author)
 
 ## Lessons Learned
@@ -648,6 +649,423 @@ console.log(jay instanceof Person); // false
 - So, the real magic here is the `new` operator.
 - So, the most important thing to understand from this lesson, are really the four steps that happen behind the scenes when we use the `new` operator.
 - So, make sure you understand them and then in the next lesson, we will work with prototypes and finally see the magic of prototypal inheritance in action.
+
+### Prototypes
+
+- Now it is time to finally start using prototypes, and after this, you will feel like a real pro-developer.
+- We will continue with the example from the previous lesson.
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+const bhoami = new Person('Bhoami', 1995);
+console.log(bhoami);
+
+console.log(bhoami instanceof Person);
+```
+
+- But now we are going to talk about prototypes.
+- We talked about prototypes, prototypal inheritance, and delegation earlier already but, how does all of that actually work?
+- It can be summarized like this:
+  - First, each and every function in JS automatically has a property called `prototype`, and that includes constructor functions.
+  - Every object that is created by a certain constructor function will get access to all the methods and properties that we define on the constructors prototype property.
+  - In our case, it would be `Person.prototype`.
+  - So, all the objects that are created through the constructor function will inherit i.e. they will get access to all the methods and properties that are defined on the `prototype` property.
+- Let's now actually add a method to this `prototype` property. Since `prototype` is an object, we can use the dot operator to add a method to it.
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+const bhoami = new Person('Bhoami', 1995);
+console.log(bhoami);
+
+console.log(bhoami instanceof Person);
+
+// taking a look at the prototype property:
+console.log(Person.prototype);
+
+// Adding a method to the prototype object
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+// taking a look at the prototype property after adding the calcAge() method
+console.log(Person.prototype);
+```
+
+- Each object created by `Person` constructor function will now get access to all the methods of its `prototype` property.
+- So, we should be able to use `calcAge()` on `bhoami` object.
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+const bhoami = new Person('Bhoami', 1995);
+console.log(bhoami);
+
+console.log(bhoami instanceof Person);
+
+// taking a look at the prototype property:
+console.log(Person.prototype);
+
+// Adding a method to the prototype object
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+// taking a look at the prototype property after adding the calcAge() method
+console.log(Person.prototype);
+
+// using calcAge() on `bhoami` object
+bhoami.calcAge(); // 42
+```
+
+- Indeed, we get to the correct age. So, it worked!
+- So we can now use the `calcAge()` method on the `bhoami` object even though it is not really on the object itself.
+- So, if we log the `bhoami` object, you will see that it contains `birthYear` and `firstName` but, it does not contain `calcAge()`.
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+const bhoami = new Person('Bhoami', 1995);
+console.log(bhoami);
+
+console.log(bhoami instanceof Person);
+
+// taking a look at the prototype property:
+console.log(Person.prototype);
+
+// Adding a method to the prototype object
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+// taking a look at the prototype property after adding the calcAge() method
+console.log(Person.prototype);
+
+// using calcAge() on `bhoami` object
+bhoami.calcAge(); // 42
+
+console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995, calcAge: ƒ}
+```
+
+- But still, we have access to it because of prototypal inheritance.
+- The same will work for other objects as well.
+- So, that effectively solves the problem that we talked about in the last lesson.
+- In a nutshell, this is how we implement very basic prototypal inheritance in JavaScript in practice.
+- So we just observed that `bhoami` and `jonas` objects are kind of somehow connected to the `Person()`. That's why they can have access to the methods in the `prototype` property of `Person()`.
+- But, how and why does this actually work?
+- It works because any object always has access to the methods and properties from its prototype.
+- And the prototype of `bhoami` and `jonas` is `Person.prototype`.
+- We can confirm that because each object has a special property called `__proto__`. This might look weird but, it is just how it works.
+
+> [!WARNING]
+>
+> `__proto__` is deprecated. Instead use `Object.getPrototypeOf()`
+>
+> We also have `Object.setPrototypeOf()`.
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+const bhoami = new Person('Bhoami', 1995);
+console.log(bhoami);
+
+console.log(bhoami instanceof Person);
+
+// taking a look at the prototype property:
+console.log(Person.prototype);
+
+// Adding a method to the prototype object
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+// taking a look at the prototype property after adding the calcAge() method
+console.log(Person.prototype);
+
+// using calcAge() on `bhoami` object
+bhoami.calcAge(); // 42
+
+console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995, calcAge: ƒ}
+
+// prototype of bhoami
+console.log(bhoami.__proto__);
+console.log(Object.getPrototypeOf(bhoami));
+```
+
+- So, here we get the prototype of `bhoami`.
+- It is not the prototype property but, it is simply the prototype.
+- In this, we see the `calcAge()` function and that's why `bhoami` is able to use it.
+- So the prototype of `bhoami` object is essentially the `prototype` property of the constructor function.
+- So, let's check that as well.
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+const bhoami = new Person('Bhoami', 1995);
+console.log(bhoami);
+
+console.log(bhoami instanceof Person);
+
+// taking a look at the prototype property:
+console.log(Person.prototype);
+
+// Adding a method to the prototype object
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+// taking a look at the prototype property after adding the calcAge() method
+console.log(Person.prototype);
+
+// using calcAge() on `bhoami` object
+bhoami.calcAge(); // 42
+
+console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995, calcAge: ƒ}
+
+// prototype of bhoami
+console.log(bhoami.__proto__);
+console.log(Object.getPrototypeOf(bhoami));
+
+// confirming that prototype of `bhoami` is the same as `Person()` prototype property
+console.log(bhoami.__proto__ === Person.prototype); // true
+console.log(Object.getPrototypeOf(bhoami) === Person.prototype); // true
+```
+
+- Indeed, it is true.
+- But, what we just learned was probably a bit confusing.
+- Shouldn't the `Person.prototype` be the `prototype` of the `Person` i.e. should the `prototype` property not be the prototype of `Person()`.
+- Actually no. THis is the confusing part. The `Person.prototype` is not actually the prototype of `Person()`.
+- Instead, it is what is going to be used as the prototype of all the objects that are created with the `Person()` constructor function.
+- So that is a subtle but important difference that you need to keep in mind.
+- In fact, what we just said is confirmed by the comparison we just did above.
+- There are actually other built-in methods that we can use to prove it by using `isPrototypeOf()` method like so:
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+const bhoami = new Person('Bhoami', 1995);
+console.log(bhoami);
+
+console.log(bhoami instanceof Person);
+
+// taking a look at the prototype property:
+console.log(Person.prototype);
+
+// Adding a method to the prototype object
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+// taking a look at the prototype property after adding the calcAge() method
+console.log(Person.prototype);
+
+// using calcAge() on `bhoami` object
+bhoami.calcAge(); // 42
+
+console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995, calcAge: ƒ}
+
+// prototype of bhoami
+console.log(bhoami.__proto__);
+console.log(Object.getPrototypeOf(bhoami));
+
+// confirming that prototype of `bhoami` is the same as `Person()` prototype property
+console.log(bhoami.__proto__ === Person.prototype); // true
+console.log(Object.getPrototypeOf(bhoami) === Person.prototype); // true
+
+console.log(Person.prototype.isPrototypeOf(bhoami)); // true
+```
+
+- This confirms one more time that `Person.prototype` is indeed the prototype of `bhoami`.
+- The same would be true for any other object created using the `Person()` constructor function.
+- But, `Person.prototype` is not the prototype of `Person()`, we can confirm that as well:
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+const bhoami = new Person('Bhoami', 1995);
+console.log(bhoami);
+
+console.log(bhoami instanceof Person);
+
+// taking a look at the prototype property:
+console.log(Person.prototype);
+
+// Adding a method to the prototype object
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+// taking a look at the prototype property after adding the calcAge() method
+console.log(Person.prototype);
+
+// using calcAge() on `bhoami` object
+bhoami.calcAge(); // 42
+
+console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995, calcAge: ƒ}
+
+// prototype of bhoami
+console.log(bhoami.__proto__);
+console.log(Object.getPrototypeOf(bhoami));
+
+// confirming that prototype of `bhoami` is the same as `Person()` prototype property
+console.log(bhoami.__proto__ === Person.prototype); // true
+console.log(Object.getPrototypeOf(bhoami) === Person.prototype); // true
+
+// Person.prototype is the prototype of `bhoami` or any other object created by Person() constuctor function
+console.log(Person.prototype.isPrototypeOf(bhoami)); // true
+
+// Person.prototype is not the prototype of Person
+console.log(Person.prototype.isPrototypeOf(Person)); // false
+```
+
+- This very common confusion comes from bad naming of the `prototype` property.
+- So, the fact that it is called `prototype` implies that it is a `prototype` of `Person()` but, as we just learned, it is actually not.
+- Probably shouldn't be called "prototype" but instead, something like `prototypeOfLinkedObjects` or something similar.
+- So, if it makes things easier then you can think of the `prototype` property as `prototypeOfLinkedObjects` property; even though of course it is not called that.
+- So, take some time to really understand what the `prototype` of what object actually is here.
+- Anyway, where does this `__proto__` property on `bhoami` actually comes from?
+- Remember the `new` operator that we talked about? It contains the step number 3 where the newly created empty object is linked to `prototype`.
+- So basically, it is the step number 3 which will create the `__proto__` property and sets its calue to the `prototype` property of the function that is being called.
+- So, this is how JavaScript knows internally that the `bhoami` object is connected to `Person.prototype`.
+- In fact, when we check the object created from the constructor function i.e. `console.log(bhoami)`, we will see the `prototype` on the console.
+- So, we are essentially trying to understand what the `__proto__` property is, what is the `prototype` of the constructor and how they are all linked - because this is one of the most important things, and also one of the most difficult things to understand in JavaScript.
+- There will also be a couple of diagrams in the next lesson that will basically bring all this knowledge together in an easier to understand way.
+- Now, another thing that we need to learn is that we can also set properties on the prototype, not just methods.
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+const bhoami = new Person('Bhoami', 1995);
+console.log(bhoami);
+
+console.log(bhoami instanceof Person);
+
+// taking a look at the prototype property:
+console.log(Person.prototype);
+
+// Adding a method to the prototype object
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+// taking a look at the prototype property after adding the calcAge() method
+console.log(Person.prototype);
+
+// using calcAge() on `bhoami` object
+bhoami.calcAge(); // 42
+
+console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995, calcAge: ƒ}
+
+// prototype of bhoami
+console.log(bhoami.__proto__);
+console.log(Object.getPrototypeOf(bhoami));
+
+// confirming that prototype of `bhoami` is the same as `Person()` prototype property
+console.log(bhoami.__proto__ === Person.prototype); // true
+console.log(Object.getPrototypeOf(bhoami) === Person.prototype); // true
+
+// Person.prototype is the prototype of `bhoami` or any other object created by Person() constuctor function
+console.log(Person.prototype.isPrototypeOf(bhoami)); // true
+
+// Person.prototype is not the prototype of Person
+console.log(Person.prototype.isPrototypeOf(Person)); // false
+
+// creating a property on the prototype
+Person.prototype.species = 'Homo Sapiens';
+
+console.log(bhoami);
+console.log(bhoami.species); // Homo Sapiens
+```
+
+- Now if we take a look at `bhoami` or any other object created using `Person()`, then in its `prototype` you will see the `species` property.
+- So, we can then do `bhoami.species` and then the `bhoami` object will then inherit the `species` property from the `prototype`.
+- However, when we take a look at `bhoami`, the `species` is not really directly in the object, so it is not its own property.
+- Own properties are only the ones that are declared directly on the object itself - not including the inherited properties.
+- In JS, there is a way of checking for that using the `hasOwnProperty()` method.
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+const bhoami = new Person('Bhoami', 1995);
+console.log(bhoami);
+
+console.log(bhoami instanceof Person);
+
+// taking a look at the prototype property:
+console.log(Person.prototype);
+
+// Adding a method to the prototype object
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+// taking a look at the prototype property after adding the calcAge() method
+console.log(Person.prototype);
+
+// using calcAge() on `bhoami` object
+bhoami.calcAge(); // 42
+
+console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995, calcAge: ƒ}
+
+// prototype of bhoami
+console.log(bhoami.__proto__);
+console.log(Object.getPrototypeOf(bhoami));
+
+// confirming that prototype of `bhoami` is the same as `Person()` prototype property
+console.log(bhoami.__proto__ === Person.prototype); // true
+console.log(Object.getPrototypeOf(bhoami) === Person.prototype); // true
+
+// Person.prototype is the prototype of `bhoami` or any other object created by Person() constuctor function
+console.log(Person.prototype.isPrototypeOf(bhoami)); // true
+
+// Person.prototype is not the prototype of Person
+console.log(Person.prototype.isPrototypeOf(Person)); // false
+
+// creating a property on the prototype
+Person.prototype.species = 'Homo Sapiens';
+
+console.log(bhoami);
+console.log(bhoami.species); // Homo Sapiens
+
+// checking for properties that are directly on the object itself
+console.log(bhoami.hasOwnProperty('firstName')); // true
+
+// this is false because this property is not really inside of `bhoami` object. It simply has access to it because of its prototype.
+console.log(bhoami.hasOwnProperty('species')); // false
+```
+
+- Sometimes, this method can be quite helpful in certain situations.
 
 ## Author
 
