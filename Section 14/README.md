@@ -25,6 +25,9 @@
     - [Constructor Functions and the new Operator](#constructor-functions-and-the-new-operator)
     - [Prototypes](#prototypes)
     - [Prototypal Inheritance and The Prototype Chain](#prototypal-inheritance-and-the-prototype-chain)
+    - [Prototypal Inheritance on Built-in Objects](#prototypal-inheritance-on-built-in-objects)
+      - [Building a custom property/method on Array prototype](#building-a-custom-propertymethod-on-array-prototype)
+      - [Looking at Prototypes of More Built-In Objects](#looking-at-prototypes-of-more-built-in-objects)
   - [Author](#author)
 
 ## Lessons Learned
@@ -758,7 +761,7 @@ console.log(Person.prototype);
 // using calcAge() on `bhoami` object
 bhoami.calcAge(); // 42
 
-console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995, calcAge: ƒ}
+console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995}
 ```
 
 - But still, we have access to it because of prototypal inheritance.
@@ -802,7 +805,7 @@ console.log(Person.prototype);
 // using calcAge() on `bhoami` object
 bhoami.calcAge(); // 42
 
-console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995, calcAge: ƒ}
+console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995}
 
 // prototype of bhoami
 console.log(bhoami.__proto__);
@@ -840,7 +843,7 @@ console.log(Person.prototype);
 // using calcAge() on `bhoami` object
 bhoami.calcAge(); // 42
 
-console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995, calcAge: ƒ}
+console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995}
 
 // prototype of bhoami
 console.log(bhoami.__proto__);
@@ -885,7 +888,7 @@ console.log(Person.prototype);
 // using calcAge() on `bhoami` object
 bhoami.calcAge(); // 42
 
-console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995, calcAge: ƒ}
+console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995}
 
 // prototype of bhoami
 console.log(bhoami.__proto__);
@@ -927,7 +930,7 @@ console.log(Person.prototype);
 // using calcAge() on `bhoami` object
 bhoami.calcAge(); // 42
 
-console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995, calcAge: ƒ}
+console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995}
 
 // prototype of bhoami
 console.log(bhoami.__proto__);
@@ -983,7 +986,7 @@ console.log(Person.prototype);
 // using calcAge() on `bhoami` object
 bhoami.calcAge(); // 42
 
-console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995, calcAge: ƒ}
+console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995}
 
 // prototype of bhoami
 console.log(bhoami.__proto__);
@@ -1037,7 +1040,7 @@ console.log(Person.prototype);
 // using calcAge() on `bhoami` object
 bhoami.calcAge(); // 42
 
-console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995, calcAge: ƒ}
+console.log(bhoami); // Person {firstName: 'Bhoami', birthYear: 1995}
 
 // prototype of bhoami
 console.log(bhoami.__proto__);
@@ -1149,6 +1152,47 @@ console.log(bhoami.hasOwnProperty('species')); // false
 - this will actually become even more interesting and useful once we add inheritance between two different kinds of objects or two different classes, so to say.
 - For example, having a `Student` class inherit from a `Person` class just like we learned in one of the 4 pillars of OOP.
 - So, there is a lot of exciting stuff ahead, so let's move on.
+
+### Prototypal Inheritance on Built-in Objects
+
+- `constructor` property
+  - Returns a reference to the constructor function that created the instance object.
+  - Note that the value of this property is a reference to the function itself, not a string containing the function's name.
+  - Any object (with the exception of `null` prototype objects) will have a `constructor` property on its `[[Prototype]]`. Objects created with literals will also have a `constructor` property that points to the constructor type for that object -- for example, array literals create `Array` objects, and object literals create plain objects.
+- `console.dir()`
+  - It is a static method which displays a list of the properties of the specified JavaScript object.
+  - In browser console, the output is presented as a hierarchical listing with disclosure triangles that let you see the contents of child objecs.
+  - In other words, `console.dir()` is the way to see all the properties of a specified JS object in the console.
+
+#### Building a custom property/method on Array prototype
+
+- We know at this point that any array inherits all their methods from its prototype.
+- Therefore, we can use that knowledge to extend the functionality of arrays even further.
+- So, all we would have to do is to say `Array.prototype` then use the dot operator on it and add a new method to the Array prototype and then all the arrays will inherit it.
+
+```javascript
+const arr = [3, 2, 4, 3, 4, 2, 1, 1, 5, 6];
+
+Array.prototype.unique = function () {
+  return [...new Set(this)];
+};
+
+console.log(arr.unique()); // [3, 2, 4, 1, 5, 6]
+```
+
+- However, what we did here i.e. extending the prototype of a built-in object is generally not a good idea.
+- If you are working on a small project on your own then you might be able to get away with it but, really, don't get into the habit of doing this for multiple reasons.
+- The first reason is that the next version of JS might add a method with the same name that we are adding but, it might work in a different way.
+- So, your code will then use that new method, which remember, works differently, thereby breaking your code.
+- The second reason why you shouldn't do this is because when you work on a team of developers, then this is really going to be a bad idea, because if multiple developers implement the same method with a different name then that's just going to create so many bugs that it is not worth doing this.
+- So, it is just a nice and fun experiment but in practice, you really shouldn't do it.
+
+#### Looking at Prototypes of More Built-In Objects
+
+- HTML Elements:
+  - Remember that all DOM elements are behind the scenes objects so, we can check their prototypes as well using the `__proto__` property.
+- Functions
+  - Functions are also objects in JS so, we can take a look at their prototype as well using `__proto__`
 
 ## Author
 
