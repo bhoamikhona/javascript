@@ -267,3 +267,44 @@ bmw.brake();
 
 mercedes.accelerate();
 mercedes.brake();
+
+/***********************************************************************/
+/***************************** ES6 CLASSES *****************************/
+/***********************************************************************/
+
+console.log(
+  `/***************************** ES6 CLASSES *****************************/`
+);
+
+// class expression
+const PersonClExpr = class {};
+
+// class declaration
+class PersonClDecl {}
+
+class PersonCl {
+  constructor(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  }
+
+  // Methods will be added to .prototype property
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  greet() {
+    console.log(`Hey ${this.firstName}`);
+  }
+}
+
+const jessica = new PersonCl('Jessica', 1996);
+console.log(jessica); // PersonCl {firstName: 'Jessica', birthYear: 1996}
+jessica.calcAge(); // 41
+console.log(jessica.__proto__ === PersonCl.prototype); // true
+
+// PersonCl.prototype.greet = function () {
+//   console.log(`Hey ${this.firstName}`);
+// };
+
+jessica.greet();

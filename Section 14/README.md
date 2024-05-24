@@ -28,6 +28,7 @@
     - [Prototypal Inheritance on Built-in Objects](#prototypal-inheritance-on-built-in-objects)
       - [Building a custom property/method on Array prototype](#building-a-custom-propertymethod-on-array-prototype)
       - [Looking at Prototypes of More Built-In Objects](#looking-at-prototypes-of-more-built-in-objects)
+    - [ES6 Classes](#es6-classes-1)
   - [Author](#author)
 
 ## Lessons Learned
@@ -436,7 +437,7 @@ writePost() {
 - The ES6 release introduced classes into JavaScript.
 - So now, ES6 classes are actually the more modern way of doing OOP in JS.
 - However, keep in mind that these are actually not the kind of classes that we talked about in the last lesson and earlier in this lesson.
-- They are instead just so-called <ins>synthetic sugar</ins> over constructor functions.
+- They are instead just so-called <ins>syntactic sugar</ins> over constructor functions.
 - This means that ES6 classes are basically just a layer of abstraction over constructor functions.
 - So, it is really just a nicer syntax that makes it easier for newcomers to do OOP in JS.
 - But, behind the scenes, ES6 classes are actually implemented with constructor functions.
@@ -857,7 +858,7 @@ console.log(Object.getPrototypeOf(bhoami) === Person.prototype); // true
 - Indeed, it is true.
 - But, what we just learned was probably a bit confusing.
 - Shouldn't the `Person.prototype` be the `prototype` of the `Person` i.e. should the `prototype` property not be the prototype of `Person()`.
-- Actually no. THis is the confusing part. The `Person.prototype` is not actually the prototype of `Person()`.
+- Actually no. This is the confusing part. The `Person.prototype` is not actually the prototype of `Person()`.
 - Instead, it is what is going to be used as the prototype of all the objects that are created with the `Person()` constructor function.
 - So that is a subtle but important difference that you need to keep in mind.
 - In fact, what we just said is confirmed by the comparison we just did above.
@@ -1086,7 +1087,7 @@ console.log(bhoami.hasOwnProperty('species')); // false
 - So, inside the function's execution context, this is now the new empty object and that's why in the function's code we set the `firstName` and `birthYear` properties on the `this` keyword because doing so, will ultimately set them on the new object.
 - Next comes the magical step.
 - Now the new object is linked to the constructor function's prototype property, in this case, `Person.prototype`.
-- This happens internally by addng the `__proto__` property to the new object.
+- This happens internally by adding the `__proto__` property to the new object.
 
 > [!WARNING]
 >
@@ -1193,6 +1194,212 @@ console.log(arr.unique()); // [3, 2, 4, 1, 5, 6]
   - Remember that all DOM elements are behind the scenes objects so, we can check their prototypes as well using the `__proto__` property.
 - Functions
   - Functions are also objects in JS so, we can take a look at their prototype as well using `__proto__`
+
+### ES6 Classes
+
+- We learned how to implement prototypal inheritance with constructor functions and then manually setting methods on the constructor function's prototype property.
+- But now it is time to turn our attention to ES6 classes, which essentially allow us to do the exact same thing but using a nicer and more modern syntax.
+- As mentioned earlier, classes in JS do not work like traditional classes in other languages like Java or C++.
+- Instead, classes in JS are just syntactic sugar over what we learned in the last few lessons.
+- They still implement prototypal inheritance behind the scenes but with a syntax that makes more sense to people coming from other programming languages. That was the basic goal of adding classes to JS.
+- Anyway, let's now implement `Person()` using a class:
+
+```javascript
+class PersonCl {}
+```
+
+- This is a class declaration but, just like in functions, we also have class expressions.
+
+```javascript
+// class expression
+const PersonClExpr = class {};
+
+// class declaration
+class PersonClDecl {}
+```
+
+- You can pick whichever you like the most.
+- It is just like a function declaration or function expression but, without any arguments. This is because, in fact, classes are just a special type of functions.
+- So, although we use the `class` keyword here, behind the scenes, classes are still functions, and therefore, we have class expressions and class declarations.
+- For now, let's continue with class declaration.
+- Inside the class, the first thing that we need to do is to add the constructor method.
+
+```javascript
+const PersonCl {
+  constructor() {}
+}
+```
+
+- The constructor method actually works in a pretty similar way as a constructor function, as we studied previously but this one is actually a method of `class`.
+- In fact, it needs to be called `constructor()` - that is the rule.
+- But just like in constructor functions, we pass in arguments basically for the properties that we want the object to have.
+
+```javascript
+const PersonCl {
+  constructor(firstName, birthYear) {}
+}
+```
+
+- Now, the act of creating a new object actually also works in the exact same way as before i.e. using the `new` operator.
+- Therefore, whenever we create a new object using the `new` operator, this `constructor()` will automatically be called.
+- Let's try that:
+
+```javascript
+const PersonCl {
+  constructor(firstName, birthYear) {}
+}
+
+const jessica = new PersonCl('Jessica', 1989);
+```
+
+- As you see, everything about creating a new instance is exactly the same as ebfore. We also use the `new` keyword.
+- Therefore, just like before, the `this` keyword inside of the constructor will also be set to the newly created empty object.
+- So, just like before, we set the properties of the object like this:
+
+```javascript
+const PersonCl {
+  constructor(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  }
+}
+
+const jessica = new PersonCl('Jessica', 1989);
+console.log(jessica);
+```
+
+- Basically, when we create a new instance, then it is the `constructor()` method inside the class that is going to be called and it will return a new object and then that object will be stored into `jessica`.
+- So, now we have the properties that will be stored in the new object that we want to create.
+- Now it is time for the methods.
+- The methods we simply write like this:
+  - So we simply add it inside the class. It is very easy and convenient.
+
+```javascript
+const PersonCl {
+  constructor(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  }
+
+  calcAge () {
+    console.log(2037 - this.birthYear)
+  }
+}
+
+const jessica = new PersonCl('Jessica', 1989);
+console.log(jessica);
+```
+
+- What's important to understand here is that all of these methods that we write in the class, outside of the `constructor()` method, will be on the prototype of the objects, and not on the object themselves.
+- So, this is really just like before, prototypal inheritance.
+- We can confirm that by inspecting the `jessica` object on the console and checking it's prototype.
+
+```javascript
+class PersonCl {
+  constructor(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  }
+
+  // Methods will be added to .prototype property
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+}
+
+const jessica = new PersonCl('Jessica', 1996);
+console.log(jessica); // PersonCl {firstName: 'Jessica', birthYear: 1996}
+jessica.calcAge(); // 41
+console.log(jessica.__proto__ === PersonCl.prototype); // true
+```
+
+- So, as you see, `PersonCl` acts just like any other function constructor but, the only difference is that this code looks a bit nicer.
+- So, with this syntax, we don't have to manually mess with the prototype property.
+- All we have to do is to write the methods inside the class but, outside the `constructor()` method. Then they will automatically be added to the `prototype` property of the class basically.
+- We can take this demonstration even further but also adding a method manually to the prototype.
+
+```javascript
+class PersonCl {
+  constructor(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  }
+
+  // Methods will be added to .prototype property
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+}
+
+const jessica = new PersonCl('Jessica', 1996);
+console.log(jessica); // PersonCl {firstName: 'Jessica', birthYear: 1996}
+jessica.calcAge(); // 41
+console.log(jessica.__proto__ === PersonCl.prototype); // true
+
+PersonCl.prototype.greet = function () {
+  console.log(`Hey ${this.firstName}`);
+};
+
+jessica.greet();
+```
+
+- So, as you see, this works.
+- This is just one more proof that the class really just hides the true nature of the prototypal inheritance in JS.
+- We could also add greet() directly in the class, like shown below.
+- Notice that there are no commas between two functions added in the class.
+
+```javascript
+class PersonCl {
+  constructor(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  }
+
+  // Methods will be added to .prototype property
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  greet() {
+    console.log(`Hey ${this.firstName}`);
+  }
+}
+
+const jessica = new PersonCl('Jessica', 1996);
+console.log(jessica); // PersonCl {firstName: 'Jessica', birthYear: 1996}
+jessica.calcAge(); // 41
+console.log(jessica.__proto__ === PersonCl.prototype); // true
+
+// PersonCl.prototype.greet = function () {
+//   console.log(`Hey ${this.firstName}`);
+// };
+
+jessica.greet();
+```
+
+- So, this is great for people who are coming from another language and have experience with object-oriented programming, because it is going to be a bit easier for these developers to start writing object-oriented code in JavaScript.
+- Now, if you are one of these developers, then please make sure that before just starting to use classes, you really, truly understand function constructors and the prototype, and the whole prototype chain logic.
+- Important things to keep in mind:
+  - First, classes are not hoisted, even if they are class declarations.
+    - Function declarations are hoisted, which means that we can use them before they are declared in the code but, with classes, that doesn't work.
+  - Second, just like functions, classes are also first-class citizens.
+    - This means that we can pass them into functions and also return them from functions.
+    - This because, as mentioned earlier, classes are really just a special kind of function behind the scenes.
+  - Third, the body of a class is always executed in strict mode.
+    - So, even if we didn't activate the strict mode for our entire script, all the code that is in the class will be executed in strict mode.
+- So, keep these points in mind if you want to work with classes.
+- Now you might ask if you should use contructor functions, like we have been doing or is it better to use classes?
+  - The first remark here is that constructor functions are not like old or deprecated syntax.
+  - It is 100% fine to keep using them.
+  - Therefore, this is more a question of personal preference.
+- Should you use classes without understanding prototypal inheritance, then the answer is no.
+- Some people actually say that classes are really bad in general and that no one should ever be using them simply because they hide the true nature of JavaScript.
+- But, it is absolutely okay to use classes in your code, as long as you understand everything that we learned so far about prototype and prototypal inheritance.
+- So, you cannot skip that part, because you want to become an expert in JS, and also, you want to feel comfortable while writing your code and that essentially means to understand exactly what your code does.
+- So, if you want to be confident, you need to understand.
+- What a good benefit of using class is that it visually puts all the code that belongs to certain class into one nice block.
+- With constructors, it might look like a big mess.
+- But in the end, it all comes down to personal preference.
 
 ## Author
 
