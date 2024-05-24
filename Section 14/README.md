@@ -30,6 +30,7 @@
       - [Looking at Prototypes of More Built-In Objects](#looking-at-prototypes-of-more-built-in-objects)
     - [ES6 Classes](#es6-classes-1)
     - [Setters and Getters](#setters-and-getters)
+    - [Static Methods](#static-methods)
   - [Author](#author)
 
 ## Lessons Learned
@@ -1867,6 +1868,91 @@ console.log(walter);
 - Now, we don't need to use getters and setters, and many people actually don't, but it is nice to use these features and especially when we need a validation like we did above.
 - Next up, we are going to take a look at yet another feature of classes, which is static methods.
 - So, let's check that out now.
+
+### Static Methods
+
+- In this lesson, we are quickly going to talk about static methods.
+- A good example to understand what a static method actually is, is the built-in `Array.from()` method. This method essentially converts any array like structure to a real array.
+- For example:
+
+```javascript
+const arr = Array.from(document.querySelectorAll('h1'));
+console.log(arr);
+```
+
+- Remember that `querySelectorAll()` return a node list.
+- Indeed, we get an array.
+- That's not the point here. The point is that this `from()` method is really a method that is attached to the `Array()` constructor.
+- So, we could not use the `from()` method on a Array.
+- So, this: `[1, 2, 3].from()` is not going to work.
+
+```javascript
+const arr = Array.from(document.querySelectorAll('h1'));
+console.log(arr);
+
+// [1, 2, 3].from(); // not going to work
+```
+
+- So, `from()` is not a function. This is because the `from()` method is really attached t the entire `Array()` constructor and not to the prototype property of the constructor.
+- Therefore, all the arrays do not inherit this method.
+- So, `Array.from()` is basically a simple function, but it is a function that is attached to the `Array()` constructor.
+- The reason for that is simply, so that developers know that it is related to Arrays.
+- We also say that the `from()` method is in the `Array` namespace.
+  - NOTE: We used the `namespace` before when we were learning about `Intl` and `Number.parseInt()`, etc.
+  - These are good examples of static methods.
+- We usually use these kind of methods as helpers, that should be related to certain constructor.
+- So, you can imagine that it should be pretty easy to implement static methods or selfs.
+- So, let's do that for both, our constructor function and also for the class.
+
+```javascript
+const Person2 = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person2.hey = function () {
+  console.log('Hey there! 👋');
+
+  //  the `this` keyword is the entire constructor function and the reason
+  // for that is because that is exactly the object that is calling this
+  // method.
+  console.log(this);
+};
+
+// static method attached to constructor
+Person2.hey();
+
+// static method cannot be called on an instance because it is simply
+// not in the prototype of the object
+const arya = new Person2('Arya', 1995);
+// arya.hey(); // error
+```
+
+- To create a static method in class, all we need to do is to use the `static` keyword.
+- The other methods that we add are called <ins>instance methods</ins>.
+  - The methods that are supposed to be in the prototype of the object and those that are not getters or setters.
+  - They are called instance methods because all instances have access to them.
+
+```javascript
+const PersonCl3 = class {
+  constructor(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  }
+
+  // Static Method
+  static hey() {
+    console.log('Hey there! 👋');
+
+    // the `this` keyword points to this entire class
+    console.log(this);
+  }
+};
+
+PersonCl3.hey();
+```
+
+- Keep in mind that these static methods are not available on the instances, and sometimes they are still useful to implement some kind of helper function about a class or about a constructor function.
 
 ## Author
 

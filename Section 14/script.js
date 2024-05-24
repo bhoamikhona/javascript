@@ -371,3 +371,54 @@ console.log(jennifer.fullName); // Jennifer Davis
 
 const walter = new PersonCl2('Walter', 1965);
 console.log(walter);
+
+/************************************************************************/
+/**************************** STATIC METHODS ****************************/
+/************************************************************************/
+
+console.log(
+  `/**************************** STATIC METHODS ****************************/`
+);
+
+/////////////////////////////
+// Constructor Function
+const Person2 = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person2.hey = function () {
+  console.log('Hey there! 👋');
+
+  //  the `this` keyword is the entire constructor function and the reason
+  // for that is because that is exactly the object that is calling this
+  // method.
+  console.log(this);
+};
+
+// static method attached to constructor
+Person2.hey();
+
+// static method cannot be called on an instance because it is simply
+// not in the prototype of the object
+const arya = new Person2('Arya', 1995);
+// arya.hey(); // error
+
+/////////////////////////////
+// Class
+const PersonCl3 = class {
+  constructor(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  }
+
+  // Static Method
+  static hey() {
+    console.log('Hey there! 👋');
+
+    // the `this` keyword points to this entire class
+    console.log(this);
+  }
+};
+
+PersonCl3.hey();
