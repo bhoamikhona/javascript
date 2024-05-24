@@ -308,3 +308,66 @@ console.log(jessica.__proto__ === PersonCl.prototype); // true
 // };
 
 jessica.greet();
+
+/***********************************************************************/
+/************************* SETTERS AND GETTERS *************************/
+/***********************************************************************/
+
+console.log(
+  `/************************* SETTERS AND GETTERS *************************/`
+);
+
+const account = {
+  owner: 'Bhoami',
+  movements: [200, 530, 120, 300],
+  get latest() {
+    return this.movements.slice(-1).pop();
+  },
+
+  set latest(mov) {
+    this.movements.push(mov);
+  },
+};
+
+console.log(account.latest); // 300
+account.latest = 50;
+console.log(account.movements); // [200, 530, 120, 300, 50]
+
+class PersonCl2 {
+  constructor(fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  }
+
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  greet() {
+    console.log(`Hey ${this.fullName}`);
+  }
+
+  get age() {
+    return 2037 - this.birthYear;
+  }
+
+  // Set a property that already exists
+  set fullName(name) {
+    if (name.includes(' ')) this._fullName = name;
+    else console.log(`${name} is not a full name!`);
+  }
+
+  get fullName() {
+    return this._fullName;
+  }
+}
+
+const jennifer = new PersonCl2('Jennifer Davis', 1996);
+
+console.log(jennifer.age);
+console.log(jennifer);
+console.log(jennifer._fullName); // Jennifer Davis
+console.log(jennifer.fullName); // Jennifer Davis
+
+const walter = new PersonCl2('Walter', 1965);
+console.log(walter);

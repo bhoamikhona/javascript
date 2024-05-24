@@ -29,6 +29,7 @@
       - [Building a custom property/method on Array prototype](#building-a-custom-propertymethod-on-array-prototype)
       - [Looking at Prototypes of More Built-In Objects](#looking-at-prototypes-of-more-built-in-objects)
     - [ES6 Classes](#es6-classes-1)
+    - [Setters and Getters](#setters-and-getters)
   - [Author](#author)
 
 ## Lessons Learned
@@ -1400,6 +1401,472 @@ jessica.greet();
 - What a good benefit of using class is that it visually puts all the code that belongs to certain class into one nice block.
 - With constructors, it might look like a big mess.
 - But in the end, it all comes down to personal preference.
+
+### Setters and Getters
+
+- Let's now talk about a feature that is actually common to all objects in JavaScript, and that's getters and setters.
+- Every object in JavaScritp can have setter and getter properties.
+- We call these special properties <ins>assessor properties</ins>, while the more normal properties are called <ins>data properties</ins>.
+- So getters and setters are basically functions that get and set a value, just as their names suggests but, on the outside they still look like regular properties.
+- So first, let take a look at getters and setters in a simple object literal.
+
+```javascript
+const account = {
+  owner: 'Bhoami',
+  movements: [200, 530, 120, 300],
+};
+```
+
+- To add a getter to this object, we can start by basically writing a normal method.
+- Let's say that we want a method to get the latest movement so, let's call it "latest". Then, to transform it into a getter, we simply prepend the keyword `get`.
+
+```javascript
+const account = {
+  owner: 'Bhoami',
+  movements: [200, 530, 120, 300],
+  get latest() {
+    return this.movements.slice(-1).pop();
+  },
+};
+```
+
+- Now we can use this getter like shown below:
+  - So, we simply use it like a property. We don't call the method but instead, we write it as if it was just a property.
+
+```javascript
+const account = {
+  owner: 'Bhoami',
+  movements: [200, 530, 120, 300],
+  get latest() {
+    return this.movements.slice(-1).pop();
+  },
+};
+
+console.log(account.latest); // 300
+```
+
+- Indeed, that returns 300.
+- So, this can be very useful when we want to read something as a property, but still need to do some calculations before.
+- Now, we can do the same as a setter by using the `set` keyword.
+- So, let's create a setter method which basically adds a new movement to the `movements` array.
+- And any setter method needs to have exactly one parameter. In our case, it will simply be a movement.
+
+```javascript
+const account = {
+  owner: 'Bhoami',
+  movements: [200, 530, 120, 300],
+  get latest() {
+    return this.movements.slice(-1).pop();
+  },
+
+  set latest(mov) {
+    this.movements.push(mov);
+  },
+};
+
+console.log(account.latest); // 300
+```
+
+- Now, it is not mandatory to specify a setter when we have a getter for the same property.
+- Just a getter or just a setter would be enough.
+- So, how do we use the setter now?
+- If it was a regular method then we would have done this: `account.latest(50)`.
+- But now, this is like a property, not a method.
+- So, we can simply set it just like we would set any other property, like so:
+
+```javascript
+const account = {
+  owner: 'Bhoami',
+  movements: [200, 530, 120, 300],
+  get latest() {
+    return this.movements.slice(-1).pop();
+  },
+
+  set latest(mov) {
+    this.movements.push(mov);
+  },
+};
+
+console.log(account.latest); // 300
+account.latest = 50;
+console.log(account.movements); // [200, 530, 120, 300, 50]
+```
+
+- So now if we look at the `movements` array, it will give us the complete array along with '50'.
+- So in a nutshell, this is how getters and setters work for any regular object in JavaScript.
+- However, classes do also have getters and setters, and they do indeed work in the exact same way.
+- So, let's try them out with the person class example. We can add a getter for the age property.
+
+```javascript
+const account = {
+  owner: 'Bhoami',
+  movements: [200, 530, 120, 300],
+  get latest() {
+    return this.movements.slice(-1).pop();
+  },
+
+  set latest(mov) {
+    this.movements.push(mov);
+  },
+};
+
+console.log(account.latest); // 300
+account.latest = 50;
+console.log(account.movements); // [200, 530, 120, 300, 50]
+
+class PersonCl2 {
+  constructor(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  }
+
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  greet() {
+    console.log(`Hey ${this.firstName}`);
+  }
+
+  get age() {
+    return 2037 - this.birthYear;
+  }
+}
+```
+
+- This is similar to the `calcAge()` method but, that doesn't matter. All we need to understand is how the getters and setters work in a class.
+- Now we can essentially read the age of any object using a property.
+
+```javascript
+const account = {
+  owner: 'Bhoami',
+  movements: [200, 530, 120, 300],
+  get latest() {
+    return this.movements.slice(-1).pop();
+  },
+
+  set latest(mov) {
+    this.movements.push(mov);
+  },
+};
+
+console.log(account.latest); // 300
+account.latest = 50;
+console.log(account.movements); // [200, 530, 120, 300, 50]
+
+class PersonCl2 {
+  constructor(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  }
+
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  greet() {
+    console.log(`Hey ${this.firstName}`);
+  }
+
+  get age() {
+    return 2037 - this.birthYear;
+  }
+}
+
+const jennifer = new PersonCl2('Jennifer', 1996);
+
+console.log(jennifer.age);
+console.log(jennifer);
+```
+
+- So, as you see, we get the result that we expected.
+- So, the getter is indeed just like any other regular method that we set on the prototype.
+- In fact, we can confirm that by looking at `jennifer` object.
+- Now, what we did so far was a very simple use case of a getter.
+- But, setters and getters can actually be very useful for data validation.
+- Let's see an example, let's try some validation with the name.
+- To do that, we will first take a fullName instead of firstName in Person class.
+
+```javascript
+const account = {
+  owner: 'Bhoami',
+  movements: [200, 530, 120, 300],
+  get latest() {
+    return this.movements.slice(-1).pop();
+  },
+
+  set latest(mov) {
+    this.movements.push(mov);
+  },
+};
+
+console.log(account.latest); // 300
+account.latest = 50;
+console.log(account.movements); // [200, 530, 120, 300, 50]
+
+class PersonCl2 {
+  constructor(fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  }
+
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  greet() {
+    console.log(`Hey ${this.fullName}`);
+  }
+
+  get age() {
+    return 2037 - this.birthYear;
+  }
+}
+
+const jennifer = new PersonCl2('Jennifer', 1996);
+
+console.log(jennifer.age);
+console.log(jennifer);
+```
+
+- Now, we are to expect a full name which basically contains a space between first name and last name.
+- Now we can create a setter for the `fullName` property which will check if it is actually a full name.
+
+```javascript
+const account = {
+  owner: 'Bhoami',
+  movements: [200, 530, 120, 300],
+  get latest() {
+    return this.movements.slice(-1).pop();
+  },
+
+  set latest(mov) {
+    this.movements.push(mov);
+  },
+};
+
+console.log(account.latest); // 300
+account.latest = 50;
+console.log(account.movements); // [200, 530, 120, 300, 50]
+
+class PersonCl2 {
+  constructor(fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  }
+
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  greet() {
+    console.log(`Hey ${this.fullName}`);
+  }
+
+  get age() {
+    return 2037 - this.birthYear;
+  }
+
+  set fullName(name) {
+    if (name.includes(' ')) this.fullName = name;
+    else alert(`${name} is not a full name!`);
+  }
+}
+
+const jennifer = new PersonCl2('Jennifer Davis', 1996);
+
+console.log(jennifer.age);
+console.log(jennifer);
+```
+
+- In this case, what is important to understand is that we are creating a property name that does already exist.
+- So, `fullName` is already a property that we are trying to set inside the `constructor()` method but then, we also have the setter.
+- So now what is going to happen is that each time this code is executed, so whenever we set the `fullName` inside the constructor then actually the setter method `fullName()` is going to be executed.
+- So, the name that we pass in as `fullName` in the `constructor()` method, will then become `name` in the setter method `set fullname()`.
+- Right now, we get an error and it is very cryptic error. What happens here is that there is a conflict.
+- Right now both the setter function and the constructor function are trying to set the exact same property name.
+- That gives origin to this weird error.
+- So, what we do instead is to create a new property name inside the setter method, and the convention of doing that is adding an underscore at the start of the property name.
+- Again, this is just a convention, it is not a JS feature. It is really just a different variable name to avoid the naming conflict.
+- However, now when we do this, we are actually creating a new variable.
+
+```javascript
+const account = {
+  owner: 'Bhoami',
+  movements: [200, 530, 120, 300],
+  get latest() {
+    return this.movements.slice(-1).pop();
+  },
+
+  set latest(mov) {
+    this.movements.push(mov);
+  },
+};
+
+console.log(account.latest); // 300
+account.latest = 50;
+console.log(account.movements); // [200, 530, 120, 300, 50]
+
+class PersonCl2 {
+  constructor(fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  }
+
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  greet() {
+    console.log(`Hey ${this.fullName}`);
+  }
+
+  get age() {
+    return 2037 - this.birthYear;
+  }
+
+  set fullName(name) {
+    if (name.includes(' ')) this._fullName = name;
+    else alert(`${name} is not a full name!`);
+  }
+}
+
+const jennifer = new PersonCl2('Jennifer Davis', 1996);
+
+console.log(jennifer.age);
+console.log(jennifer);
+console.log(jennifer._fullName); // Jennifer Davis
+console.log(jennifer.fullName); // undefined - it simply does not exist
+```
+
+- So, if we try to look at `jennifer` object, the property that exists is `_fullName`.
+- Now we cannot do `jennifer.fullName` because that simply doesn't exist.
+- To fix this, we now also need to create a getter for the `fullName` property. It will simply return `_fullName`.
+
+```javascript
+const account = {
+  owner: 'Bhoami',
+  movements: [200, 530, 120, 300],
+  get latest() {
+    return this.movements.slice(-1).pop();
+  },
+
+  set latest(mov) {
+    this.movements.push(mov);
+  },
+};
+
+console.log(account.latest); // 300
+account.latest = 50;
+console.log(account.movements); // [200, 530, 120, 300, 50]
+
+class PersonCl2 {
+  constructor(fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  }
+
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  greet() {
+    console.log(`Hey ${this.fullName}`);
+  }
+
+  get age() {
+    return 2037 - this.birthYear;
+  }
+
+  // Set a property that already exists
+  set fullName(name) {
+    if (name.includes(' ')) this._fullName = name;
+    else alert(`${name} is not a full name!`);
+  }
+
+  get fullName() {
+    return this._fullName;
+  }
+}
+
+const jennifer = new PersonCl2('Jennifer Davis', 1996);
+
+console.log(jennifer.age);
+console.log(jennifer);
+console.log(jennifer._fullName); // Jennifer Davis
+console.log(jennifer.fullName); // Jennifer Davis
+```
+
+- Now when we log `jennifer.fullName` we get the result that we want.
+- Of course, the actual property that is still in the `jennifer` object is `_fullName` because that's what we do in the setter.
+- But then, we can also compute the `fullName` just as we can compute the `age`.
+- So this pattern is important to understand whenever we try to set a property that already exists.
+- Now let's try another name with just `firstName`
+
+```javascript
+const account = {
+  owner: 'Bhoami',
+  movements: [200, 530, 120, 300],
+  get latest() {
+    return this.movements.slice(-1).pop();
+  },
+
+  set latest(mov) {
+    this.movements.push(mov);
+  },
+};
+
+console.log(account.latest); // 300
+account.latest = 50;
+console.log(account.movements); // [200, 530, 120, 300, 50]
+
+class PersonCl2 {
+  constructor(fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  }
+
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  greet() {
+    console.log(`Hey ${this.fullName}`);
+  }
+
+  get age() {
+    return 2037 - this.birthYear;
+  }
+
+  // Set a property that already exists
+  set fullName(name) {
+    if (name.includes(' ')) this._fullName = name;
+    else console.log(`${name} is not a full name!`);
+  }
+
+  get fullName() {
+    return this._fullName;
+  }
+}
+
+const jennifer = new PersonCl2('Jennifer Davis', 1996);
+
+console.log(jennifer.age);
+console.log(jennifer);
+console.log(jennifer._fullName); // Jennifer Davis
+console.log(jennifer.fullName); // Jennifer Davis
+
+const walter = new PersonCl2('Walter', 1965);
+console.log(walter);
+```
+
+- Now we get a log which says that it is not a full name.
+- And if we inspect the `walter` object, it doesn't have any name. It only has `birthYear`.
+- But if we change it to a full name then we will get `_fullName` in the object.
+- So, this is another nice feature of classes that can be very useful sometimes.
+- Now, we don't need to use getters and setters, and many people actually don't, but it is nice to use these features and especially when we need a validation like we did above.
+- Next up, we are going to take a look at yet another feature of classes, which is static methods.
+- So, let's check that out now.
 
 ## Author
 
