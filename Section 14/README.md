@@ -31,6 +31,7 @@
     - [ES6 Classes](#es6-classes-1)
     - [Setters and Getters](#setters-and-getters)
     - [Static Methods](#static-methods)
+    - [Object.create](#objectcreate-1)
   - [Author](#author)
 
 ## Lessons Learned
@@ -1953,6 +1954,198 @@ PersonCl3.hey();
 ```
 
 - Keep in mind that these static methods are not available on the instances, and sometimes they are still useful to implement some kind of helper function about a class or about a constructor function.
+
+### Object.create
+
+- We learned about constructor functions and ES6 classes. But there is also a third way of implementing prototypal inheritance aka delegation.
+- That third way is to use `Object.create` which works in a pretty different way than constructor functions and classes work.
+- With `Object.create` there is still the idea of prototypal inheritance. However, there are no prototype properties involved and also, no constructor functions, and no `new` operator.
+- Instead, we can use `Object.create` to essentially manually set the prototype of an object, that we want.
+- So, if we can set the prototype to any object, let's actually create an object that we want to be the prototype of all the person object.
+- Essentially, let's re-create the `Person` class from earlier.
+- It is going to be a simple object literal.
+
+```javascript
+const PersonProto = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+};
+```
+
+- That's it. That is all the methods that we want the person object to inherit.
+- Now all we need to do is to actually create a person object with the `PersonProto` object as the prototype.
+- For that, we can use the `Object.create`.
+
+```javascript
+const PersonProto = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+};
+
+const steven = Object.create(PersonProto);
+```
+
+- Now `Object.create(PersonProto)` will return a brand new object that is linked to the prototype that we pass in `Object.create`.
+- So `steven` is now an empty object and it will be linked to the `PersonProto` object, which will be its prototype.
+- We can see that in the console.
+
+```javascript
+const PersonProto = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+};
+
+const steven = Object.create(PersonProto);
+console.log(steven);
+console.log(steven.__proto__);
+```
+
+- Again, for now the `steven` object is empty but, it has the `PersonProto` prototype with `calcAge()` method in it.
+- But now, we don't have any properties on the object yet.
+- So, let's quickly fix that.
+- Right now we are adding properties into `steven` object like we would in any other object literal. It is not ideal but, we will fix that in a minute. This is because we want a programmatic way of creating new object, instead of having to do it like this.
+- But for now, we are just worried about the prototypes and the prototype chain.
+
+```javascript
+const PersonProto = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+};
+
+const steven = Object.create(PersonProto);
+console.log(steven);
+console.log(steven.__proto__);
+
+steven.name = 'Steven';
+steven.birthYear = 2002;
+```
+
+- We should now be able to call the `calcAge()` method on `steven`.
+
+```javascript
+const PersonProto = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+};
+
+const steven = Object.create(PersonProto);
+console.log(steven);
+console.log(steven.__proto__);
+
+steven.name = 'Steven';
+steven.birthYear = 2002;
+
+steven.calcAge();
+```
+
+- As you see, it worked just like before. So, we implemented prototypal inheritance, but in a completely different way.
+- Now, just to make sure that we are all on the same page, let's make sure that we really understand this big difference.
+- So, let's look at a diagram of what's really going on here.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/76cba196-5fab-42ab-9a93-572597a95eab)
+- On the right side, we have the way it works where the constructor functions, just as we have been doing it up until this point.
+- So, when we use the `new` operator in the constructor functions or classes, it automatically sets the prototype of the instances to the constructor's `prototype` property.
+- This happens automatically.
+- On the other hand, with `Object.create` we can set the prototype of objects manually to any object that we want.
+- In our example, we manually set the prototype of `steven` object to the `PersonProto` object.
+- That's it.
+- Now the two objects are effectively linked through the proto property just like before.
+- So now looking at properties or methods in a prototype chain works just like it worked in function constructors or classes.
+- So the prototype chain, in fact, looks exactly the same here.
+- The big difference is that we didn't need any constructor function, and no prototype property at all, to achieve the exact same thing.
+- So, this is actually a bit more straightforward, and a bit more natural, and it might also be easier to understand.
+- However, the reason that we are learning this `Object.create` technique right at the end is because, in practice i.e. in the real world, this is actually the least used way of implementing prototypal inheritance.
+- However, it is still very important to know exactly how `Object.create` works, because you will still stumble upon this in the real world.
+- More importantly, we will need `Object.create` to link prototypes in the next lesson, in order to implement inheritance between classes. With that, we will take OOP to a whole new level, and the `Object.create` function is going to be crucial in that, as we will see.
+- Now that we know exactly what is going on here, let's quickly create another person.
+
+```javascript
+const PersonProto = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+};
+
+const steven = Object.create(PersonProto);
+console.log(steven);
+console.log(steven.__proto__);
+
+steven.name = 'Steven';
+steven.birthYear = 2002;
+
+steven.calcAge();
+
+const sarah = Object.create(PersonProto);
+```
+
+- But now, in order to set properties on `sarah` object, let's do it in a better way than what we did with `steven` object.
+- The way that we did with `steven` object is a little weird and it goes against the spirit of creating object programmatically.
+- So, if we are serious about using `Object.create`, we should implement a function that basically does this work for us.
+- So, let's create a new method and it can have any name but, we will call it `init()`. This method is going to be similar to the constructor that we have in classes.
+
+```javascript
+const PersonProto = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+const steven = Object.create(PersonProto);
+console.log(steven);
+console.log(steven.__proto__);
+
+steven.name = 'Steven';
+steven.birthYear = 2002;
+
+steven.calcAge();
+
+const sarah = Object.create(PersonProto);
+```
+
+- So, as you see, the `init()` function looks a bit like the constructor function that we created earlier.
+- However, this has actually nothing to do with any constructor function, because we are not using the `new operator to call it. We will simply call it using `sarah.init()`
+
+```javascript
+const PersonProto = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+const steven = Object.create(PersonProto);
+console.log(steven);
+console.log(steven.__proto__);
+
+steven.name = 'Steven';
+steven.birthYear = 2002;
+
+steven.calcAge();
+
+const sarah = Object.create(PersonProto);
+sarah.init('Sarah', 1979);
+sarah.calcAge();
+```
+
+- Here, the `this` keyword in the `init()` function will also point to the `sarah` object now, but it does so because we explicitly called `init()` on `sarah`.
+- So again, this has nothing to do with constructor functions that we saw earlier, and it is also completely different from the constructor method that we have in ES6 classes.
+- This is just a manual way of basically initializing the object.
+- Essentially, this is how `Object.create` works.
+- So, the big takeaway is that `Object.create` creates a new object, and the prototype of that object will be the object that we pass in.
+- This is very important to understand because, in the future, when we will implement true class inheritance since we will need `Object.create` for that.
 
 ## Author
 

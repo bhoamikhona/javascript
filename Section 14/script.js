@@ -422,3 +422,21 @@ const PersonCl3 = class {
 };
 
 PersonCl3.hey();
+
+/***********************************************************************/
+/**************************** OBJECT.CREATE ****************************/
+/***********************************************************************/
+
+console.log(
+  `/**************************** OBJECT.CREATE ****************************/`
+);
+
+const PersonProto = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+};
+
+const steven = Object.create(PersonProto);
+console.log(steven);
+console.log(steven.__proto__);
