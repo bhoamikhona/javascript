@@ -1894,7 +1894,7 @@ console.log(arr);
 // [1, 2, 3].from(); // not going to work
 ```
 
-- So, `from()` is not a function. This is because the `from()` method is really attached t the entire `Array()` constructor and not to the prototype property of the constructor.
+- So, `from()` is not a function. This is because the `from()` method is really attached the entire `Array()` constructor and not to the prototype property of the constructor.
 - Therefore, all the arrays do not inherit this method.
 - So, `Array.from()` is basically a simple function, but it is a function that is attached to the `Array()` constructor.
 - The reason for that is simply, so that developers know that it is related to Arrays.
