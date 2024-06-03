@@ -565,3 +565,62 @@ ford.brake();
 
 ford.speedUS = 50;
 console.log(ford);
+
+/************************************************************************/
+/********* INHERITANCE BETWEEN "CLASSES": CONSTRUCTOR FUNCTIONS *********/
+/************************************************************************/
+
+console.log(
+  `/********* INHERITANCE BETWEEN "CLASSES": CONSTRUCTOR FUNCTIONS *********/`
+);
+
+const PersonInherit = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+const Student = function (firstName, birthYear, course) {
+  Person.call(this, firstName, birthYear); // using call() to set `this` keyword
+  this.course = course;
+};
+
+// Linking prototypes
+Student.prototype = Object.create(Person.prototype);
+
+Student.prototype.introduce = function () {
+  console.log(`My name is ${this.name} and I study ${this.course}`);
+};
+
+const mike = new Student('Mike', 1998, 'Computer Science');
+console.log(mike);
+mike.introduce();
+
+// this should work now
+mike.calcAge();
+
+// inspecting everything in the console
+console.log(mike);
+console.log(mike.__proto__);
+console.log(mike.__proto__.__proto__);
+console.dir(Student.prototype.constructor); // fix this
+
+// this is true because Student is the constructor function of mike
+console.log(mike instanceof Student);
+
+/**
+ * But if we try the same thing with Person, that should also be true.
+ *
+ * This is because we linked the prototypes together using
+ * Object.create()
+ */
+console.log(mike instanceof Person);
+
+// Of course mike is also an instance of Object because it is also in
+// its prototype chain.
+console.log(mike instanceof Object);
+
+Student.prototype.constructor = Student; // fixed

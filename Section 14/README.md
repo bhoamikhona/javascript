@@ -32,6 +32,7 @@
     - [Setters and Getters](#setters-and-getters)
     - [Static Methods](#static-methods)
     - [Object.create](#objectcreate-1)
+    - [Inheritance Between "Classes": Constructor Functions](#inheritance-between-classes-constructor-functions)
   - [Author](#author)
 
 ## Lessons Learned
@@ -2146,6 +2147,402 @@ sarah.calcAge();
 - Essentially, this is how `Object.create` works.
 - So, the big takeaway is that `Object.create` creates a new object, and the prototype of that object will be the object that we pass in.
 - This is very important to understand because, in the future, when we will implement true class inheritance since we will need `Object.create` for that.
+
+### Inheritance Between "Classes": Constructor Functions
+
+- Over the last couple of lecutres, we explored how prototypal inheritance works in JavaScript.
+- We did that using a couple of different techniques viz constructor functions, ES6 classes, and `Object.create()` function.
+- All of these techniques basically allow objects to inherit methods from its prototype.
+- But now it is time to turn our attention to more real inheritance i.e. in the way that we learned in the first lesson of this section.
+- So what we are talking about is real inheritance between classes and not just prototypal inheritance between instances and a prototype property like we have been doing so far.
+
+> [!NOTE]
+>
+> We are using class terminology here because it simply makes it easier to understand what we are going to do.
+>
+> Of course, you already know that real classes do not exist in JavaScript.
+
+- Here is what we are going to do:
+  - We will create a `Student` class and make it inherit from the `Person` class that we have been using so far.
+  - So, `Person` will be the parent class and `Student` will be the child class.
+  - This is because a student is basically a sub-type of a person i.e. student is also a person but, it is a more specific type of person. So, it is an ideal class.
+  - This is really useful because with this inheritance set up, we can have specific methods for the student, but then, the student can also use generic `Person` methods, like the `calcAge()` method that we have been using.
+  - That's basically the idea of inheritance that we are going to implement in this lesson.
+- Just like before, we will start implementing this using constructor functions.
+- So, in this lesson, we will inherit between classes using constructor functions, and this is going to be a bit of a work but, it will allow you to understand exactly how we set up a prototype chain in order to allow inheritance between the prototype properties of two different constructor functions.
+- In the next lesson, we will do same thing using ES6 classes, which, as you expect, is a lot easier.
+- Finally, we will go back to using `Object.create()` as well.
+- Let's get started.
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+```
+
+- Here we have the `Person` function constructor that we have been working with in the beginning of the section and also the `calcAge()` method that we set up on the `prototype` property of `Person`.
+- So, it is just a copy of what we already did.
+- Now, let's continue building a constructor function for the `Student`.
+- Usually we want a child class to have the same functionality as the parent calss, but with some additional functionality.
+- So usually we pass in the same arguments, but then also some additional ones.
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+const Student = function (firstName, birthYear, course) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+  this.course = course;
+};
+```
+
+- So, you see that the `Student` class has the same kind of data that a `Person` class has but, it also has an additional property of `course`.
+- Now let's create a new student.
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+const Student = function (firstName, birthYear, course) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+  this.course = course;
+};
+
+const mike = new Student('Mike', 1998, 'Computer Science');
+console.log(mike);
+```
+
+- Let's now add a method as well.
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+const Student = function (firstName, birthYear, course) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+  this.course = course;
+};
+
+Student.prototype.introduce = function () {
+  console.log(`My name is ${this.name} and I study ${this.course}`);
+};
+
+const mike = new Student('Mike', 1998, 'Computer Science');
+console.log(mike);
+mike.introduce();
+```
+
+- That works just fine.
+- However, there is one thing that we can and should improve in our `Student` constructor function.
+- Right now, the `firstName` and `birthYear` part of the constructor function is basically a simple copy of the `Person` constructor function.
+- And as you know, having duplicate code is never a good idea.
+  - First, because it violets the DRY principle.
+  - Second because, imagine that the implementation of `Person` changes in the future, then that change will not be reflected in the `Student`.
+- So, instead of having the duplicate code in `Student`, let's simply call the `Person()` function, like so:
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+const Student = function (firstName, birthYear, course) {
+  Person(firstName, birthYear); // Error
+  this.course = course;
+};
+
+Student.prototype.introduce = function () {
+  console.log(`My name is ${this.name} and I study ${this.course}`);
+};
+
+const mike = new Student('Mike', 1998, 'Computer Science');
+console.log(mike);
+mike.introduce();
+```
+
+- Do you think that this will work?
+  - No, we get an TypeError.
+- Why is that?
+- The problem here is that we are calling the `Person()` constructor function as a regular function call.
+- So, we are not using the `new` operator to call the `Person()` function constructor. Therefore it is just a regular function call.
+- Remember that in a regular function call the `this` keyword is set to `undefined`.
+- That's we get the error which states "Cannot set property 'firstName' of undefined".
+- So, instead of calling the `Person()` function inside the `Student` constructor, we need to manually set the `this` keyword as well.
+- To do that, we can simply use the `call()` method.
+- The `call()` method will indeed call the `Person()` function, but we will be able to specify the `this` keyword as the first argument in the function.
+- In our case, we want the `this` keyword in the `Person()` the same as the `this` keyword in the `Student` function. So, that is what we will pass in.
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+const Student = function (firstName, birthYear, course) {
+  Person.call(this, firstName, birthYear); // using call() to set `this` keyword
+  this.course = course;
+};
+
+Student.prototype.introduce = function () {
+  console.log(`My name is ${this.name} and I study ${this.course}`);
+};
+
+const mike = new Student('Mike', 1998, 'Computer Science');
+console.log(mike);
+mike.introduce();
+```
+
+- If we check it now, then it is back to working.
+- So, this a much better and robust solution.
+- So far, this is what we have built:
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/cd3ee561-5bfa-4eae-b979-e365ed296944)
+- It is simply the `Student` constructor function and its prototype property; and then the `mike` object linked to its prototype.
+- The prototype is of course, the constructor function's prototype property.
+- This link between instance and prototype has been made manually by creating the `mike` object with the `new` operator.
+- So, all of this is what we have already learned so, this is nothing new at this point.
+- Now, a student is also a person so we want `Student` and `Person` to be connected like this:
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/05d530eb-df00-4f60-9fcf-ba579ac1aab1)
+- So, we really want the `Student` class to be the child class and inherit from the `Person` class, which will then function as the parent class.
+- This way, all instances of student could also get access to methods from the person's `prototype` property, like `calcAge()` method through the prototype chain.
+- That's the whole idea of inheritance i.e. child classes can share behavior from their parent classes.
+- So, looking at the diagram above, basically what we want to do is to make `Person.prototype`, the prototype of `Student.prototype`.
+- In other words, we want to set the `__proto__` property of `Student.prototype` to `Person.prototype`.
+- We are going to have to create this connection manually.
+- To do that i.e. to link the two prototype objects, we are going to use `Object.create()` because, defining prototypes manually is exactly what `Object.create()` does.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/9659b7dd-4f41-49ec-9f61-b2485d76a7b5)
+- So, let's do that.
+- It is important that you do this at exactly this point of the code.
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+const Student = function (firstName, birthYear, course) {
+  Person.call(this, firstName, birthYear); // using call() to set `this` keyword
+  this.course = course;
+};
+
+// do it exactly at this point, we will learn why later
+Student.prototype = Object.create(Person.prototype);
+
+Student.prototype.introduce = function () {
+  console.log(`My name is ${this.name} and I study ${this.course}`);
+};
+
+const mike = new Student('Mike', 1998, 'Computer Science');
+console.log(mike);
+mike.introduce();
+```
+
+- With this, the `Student.prototype` object is now an object that inherits from `Person.prototype`.
+- We have to do this connection before we add any methods to the prototype object of student.
+- This is because `Object.create()` will return an empty object.
+- So, at that point `Student.prototype` is empty so then onto that empty object, we can add methods like the `introduce()` method.
+- But if we used `Object.create()` after had already added `introduce()` then `Object.create()` would have overridden those methods that we had already added to the `prototype` object of `Student`.
+- Now, you might be wondering why we even needed `Object.create()`? Why didn't we just do this: `Student.prototype = Person.prototype`?
+- This might look like it is the logical way to do to but, in fact, this doesn't work at all.
+- Let's understand why:
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/9672559b-f4a0-4867-b720-bc01ba6bd50c)
+- So, if we did `Student.prototype = Person.prototype` then we will not end up with a prototype chain that we need.
+- Instead, we would end up with what we see in the image above - which is completely worng prototype chain.
+- That's becase here we are actually saying that the `Student`'s prototype property and `Person`'s prototype property should be the exact same object.
+- But in fact that's just not what we want.
+- What we do want is the `Person`'s prototype object to be the prototype of `Student.prototype`.
+- So, we want to inherit from it, but it should not be the exact same object.
+- That's why we need `Object.create()`.
+- With all this, we should now be able to use `calcAge()` on `mike`.
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+const Student = function (firstName, birthYear, course) {
+  Person.call(this, firstName, birthYear); // using call() to set `this` keyword
+  this.course = course;
+};
+
+// Linking prototypes
+Student.prototype = Object.create(Person.prototype);
+
+Student.prototype.introduce = function () {
+  console.log(`My name is ${this.name} and I study ${this.course}`);
+};
+
+const mike = new Student('Mike', 1998, 'Computer Science');
+console.log(mike);
+mike.introduce();
+
+// this should work now
+mike.calcAge();
+```
+
+- So, this works just fine so, let's actually analyze what happened here.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/2cb4d3a8-a7cf-433c-8734-77b5040d503b)
+- We already know that this worked because of the prototype chain, but let's see exactly how.
+- When we do `mike.calcAge()`, we are effectively doing a property or a method lookup.
+- So, that is JS trying to find the requested property or method.
+- In this case, as we know, the `calcAge()` method is of course not directly on the `mike` object.
+- It is also not in `mike`'s prototype. That's where we defined the `introduce()` method but not `calcAge()`.
+- So just like before, whenever we try to access a method, that's not on the object's prototype, then JavaScript will look up even further in the prototype chain and see if it can find a method i.e. in the parent prototype.
+- That's exactly what happens here.
+- JS will finally find the `calcAge()` in `Person.prototype`, which is exactly where we defined it.
+- That's the whole reason why we set up the prototype chain like this so that the `mike` object can inherit whatever methods are in its parent class basically.
+- So in summary, we are now able to call a method that is on a `Person`'s prototype property, on a student object, and it still works.
+- That is the power of inheritance.
+- Since we are already here, let's also quickly complete the prototype chain.
+- Just like before, `Object.prototype` will sit on top of the prototype chain.
+- So of course we could still call a method like `hasOwnProperty()` on `mike` object too.
+- It doesn't matter how far away in the prototype chain a method is.
+- With this, we now have a full picture of how inheritance between classes works with function constructors.
+- Of course, with ES6 classes, it works exactly the same internally. All that changes is the syntax.
+- So when we do the same thing in the next lesson using ES6 classes, then keep in mind that it is going to work just like what we describe here.
+- Now to finish this lesson, let's quickly inspect all of this in the console.
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+const Student = function (firstName, birthYear, course) {
+  Person.call(this, firstName, birthYear); // using call() to set `this` keyword
+  this.course = course;
+};
+
+// Linking prototypes
+Student.prototype = Object.create(Person.prototype);
+
+Student.prototype.introduce = function () {
+  console.log(`My name is ${this.name} and I study ${this.course}`);
+};
+
+const mike = new Student('Mike', 1998, 'Computer Science');
+console.log(mike);
+mike.introduce();
+
+// this should work now
+mike.calcAge();
+
+// inspecting everything in the console
+console.log(mike);
+console.log(mike.__proto__);
+console.log(mike.__proto__.__proto__);
+console.dir(Student.prototype.constructor); // fix this
+```
+
+- We need to fix this:
+- When we take a look at `console.dir(Student.prototype.constructor)` then ideally, it should point back to `Student`.
+- But in the cosole, it apparently points back to `Person`.
+- So, JS now thinks that the constructor of `Student.prototype` is `Person` and the reason for that is that we set the `prototype` property of the `Student` using `Object.create()`.
+- So this makes it so that the constructor fo `Student.prototype` is still `Person`.
+- So, we need to fix it because sometimes it is important to rely on the `constructor` property. So, if we want to rely on that, it should indeed be correct.
+- But that is easy to fix.
+- We can just say `Student.prototype.constructor = Student`.
+
+```javascript
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+const Student = function (firstName, birthYear, course) {
+  Person.call(this, firstName, birthYear); // using call() to set `this` keyword
+  this.course = course;
+};
+
+// Linking prototypes
+Student.prototype = Object.create(Person.prototype);
+
+Student.prototype.introduce = function () {
+  console.log(`My name is ${this.name} and I study ${this.course}`);
+};
+
+const mike = new Student('Mike', 1998, 'Computer Science');
+console.log(mike);
+mike.introduce();
+
+// this should work now
+mike.calcAge();
+
+// inspecting everything in the console
+console.log(mike);
+console.log(mike.__proto__);
+console.log(mike.__proto__.__proto__);
+console.dir(Student.prototype.constructor); // fix this
+
+// this is true because Student is the constructor function of mike
+console.log(mike instanceof Student);
+
+/**
+ * But if we try the same thing with Person, that should also be true.
+ *
+ * This is because we linked the prototypes together using
+ * Object.create()
+ */
+console.log(mike instanceof Person);
+
+// Of course mike is also an instance of Object because it is also in
+// its prototype chain.
+console.log(mike instanceof Object);
+
+Student.prototype.constructor = Student; // fixed
+```
+
+- So here, we just proved that our prototype chain is in fact set up the way that we intended it to be.
 
 ## Author
 
