@@ -33,6 +33,7 @@
     - [Static Methods](#static-methods)
     - [Object.create](#objectcreate-1)
     - [Inheritance Between "Classes": Constructor Functions](#inheritance-between-classes-constructor-functions)
+    - [Inheritance Between "Classes": ES6 Classes](#inheritance-between-classes-es6-classes)
   - [Author](#author)
 
 ## Lessons Learned
@@ -2543,6 +2544,227 @@ Student.prototype.constructor = Student; // fixed
 ```
 
 - So here, we just proved that our prototype chain is in fact set up the way that we intended it to be.
+
+### Inheritance Between "Classes": ES6 Classes
+
+- Let's now go ahead and implement the exact same thing we did in the last lesson, but this time using ES6 classes instead of constructor functions.
+
+```javascript
+class PersonCl {
+  constructor(fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  }
+
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  greet() {
+    console.log(`Hey ${this.fullName}`);
+  }
+
+  get age() {
+    return 2037 - this.birthYear;
+  }
+
+  set fullName(name) {
+    if (name.includes(' ')) this._fullName = name;
+    else console.log(`${name} is not a full name`);
+  }
+
+  get fullName() {
+    return this._fullName;
+  }
+
+  static hey() {
+    console.log(`Hey there 👋`);
+  }
+}
+```
+
+- Here again we have the initial `Person` class that we built a bit earlier so that now we can inherit from it.
+- Now, let's create the student class.
+
+```javascript
+class Student {}
+```
+
+- As we already know, the class syntax hides a lot of the details that are actually happening behind the scenes, because classes are really just a layer of abstraction over constructor functions.
+- But that's no problem because we already learned how inheritance between classes actually work behind the scenes.
+- That's what we did in the last lesson and the coding challenge. So, now that we know how it works, we are ready to implement the same thing using classes, even though that hides, how it actually works behind the scenes.
+- To implement inheritance between ES6 classes, we only need two ingredients. We need the `extend` keyword and the `super` function.
+- So, to make the `Student` class inherit from the `Person` class, all we need to do is to say is `class Student extends Person{}`
+
+```javascript
+class Student extends Person {}
+```
+
+- That's actually it.
+- So this `extends` keyword alone will then link the prototypes behind the scenes without us even having to think about that.
+- Then of course, we still need a constructor, and this one will, just link before, receive the same arguments as the parent class, but then some additional ones.
+
+```javascript
+class Student extends Person {
+  constructor(fullName, birthYear, course) {}
+}
+```
+
+- Now here we don't even need to use `call()` like we did before.
+- What we do instead is to call the `super()` function.
+- So, `super()` is basically the constructor function of the parent class.
+- So, the idea is still similar to what we did in the constructor function, but here it all happens automatically.
+- We don't need to specify the name of the parent class again because that is already mentioned along with the `extends` keyword.
+- All we need to do is to pass in the arguments of the parent class into the `super()` class.
+
+```javascript
+class Student extends Person {
+  constructor(fullName, birthYear, course) {
+    // Always needs to happen first
+    super(fullName, birthYear);
+  }
+}
+```
+
+- Note that using the `super()` class and passing the parameters of the parent class in it always needs to happen first.
+- This is because the call to the `super()` function is responsible for creating the `this` keyword in the subclass.
+- Therefore, without using the `super()` function, we won't be able to do this: `this.course = course`.
+
+```javascript
+class Student extends Person {
+  constructor(fullName, birthYear, course) {
+    // Always needs to happen first
+    super(fullName, birthYear);
+    this.course = course;
+  }
+}
+```
+
+- So, always first call the `super()` i.e. the parent class constructor and from there, we will then be able to access the `this` keyword.
+- Now of course we could actually have no other properties at all i.e. it is not necessary/mandatory.
+- The same goes for the additional parameter in the constructor function.
+- In that case, the new `Student` class would simply have new methods and share all the properties with the parent class.
+- So what we are doing here is really just an example, but the possibilities are endless.
+- And actually, if didn't have to do this: `this.course = course` then we wouldn't even need the constructor function at all.
+- In that case, the super function would automatically be called with all the arguments that are passed into the constructor.
+- It would work like this:
+
+```javascript
+class Student extends Person {
+  // no constructor function
+}
+
+const martha = new Student('Martha Jones', 2012);
+console.log(martha); // Student {_fullName: 'Martha Jones', birthYear: 2012}
+```
+
+- So as you see, we would end up with a student with the full name and a birth year, just as specified.
+- Anyway, this was just to demonstrate that if you don't need any new properties, then you don't even need to bother writing a constructor method in the child class.
+- But now let's just go back to our original example.
+
+```javascript
+class Student extends Person {
+  constructor(fullName, birthYear, course) {
+    // Always needs to happen first
+    super(fullName, birthYear);
+    this.course = course;
+  }
+}
+
+const martha = new Student('Marth Jones', 2012, 'Computer Science');
+console.log(martha); // Student {_fullName: 'Martha Jones', birthYear: 2012, course: "Computer Science"}
+```
+
+- Now let's add the `introduce()` method to our `Student` class.
+
+```javascript
+class Student extends Person {
+  constructor(fullName, birthYear, course) {
+    // Always needs to happen first
+    super(fullName, birthYear);
+    this.course = course;
+  }
+
+  introduce() {
+    console.log(`My name is ${this.fullName} and I study ${this.course}`);
+  }
+}
+
+const martha = new Student('Marth Jones', 2012, 'Computer Science');
+console.log(martha); // Student {_fullName: 'Martha Jones', birthYear: 2012, course: "Computer Science"}
+
+martha.introduce(); // My name is Martha Jones and I study Computer Science
+```
+
+- The same should work for the `calcAge()` method that is in the parent class.
+
+```javascript
+class Student extends Person {
+  constructor(fullName, birthYear, course) {
+    // Always needs to happen first
+    super(fullName, birthYear);
+    this.course = course;
+  }
+
+  introduce() {
+    console.log(`My name is ${this.fullName} and I study ${this.course}`);
+  }
+}
+
+const martha = new Student('Marth Jones', 2012, 'Computer Science');
+console.log(martha); // Student {_fullName: 'Martha Jones', birthYear: 2012, course: "Computer Science"}
+
+martha.introduce(); // My name is Martha Jones and I study Computer Science
+
+martha.calcAge(); // 25
+
+console.dir(martha);
+```
+
+- Indeed, that works too.
+- Just check the prototype chain on the developer console to confirm that it is the same as before when we manually created it.
+- Finally, just like we did in our previous challege, let's override the `calcAge()` method.
+
+```javascript
+class Student extends Person {
+  constructor(fullName, birthYear, course) {
+    // Always needs to happen first
+    super(fullName, birthYear);
+    this.course = course;
+  }
+
+  introduce() {
+    console.log(`My name is ${this.fullName} and I study ${this.course}`);
+  }
+
+  calcAge() {
+    console.log(
+      `I'm ${
+        2037 - this.birthYear
+      } years old, but as a student I feel more like ${
+        2037 - this.birthYear + 10
+      }`
+    );
+  }
+}
+
+const martha = new Student('Marth Jones', 2012, 'Computer Science');
+console.log(martha); // Student {_fullName: 'Martha Jones', birthYear: 2012, course: "Computer Science"}
+
+martha.introduce(); // My name is Martha Jones and I study Computer Science
+
+martha.calcAge(); // I'm 25 years old, but as a student I feel more like 35
+
+console.dir(martha);
+```
+
+- Indeed, this new method overrode the one that was already there in the prototype chain.
+- That's because this new `calcAge()` method appears first in the prototype chain.
+- Therefore, it is essentially overriding the method coming from the parent class.
+- We can also say that this new `calcAge()` method is shadowing the one that is in the parent class.
+- That's it, that is all we had to learn about implementing classes using actual ES6 classes.
+- Just to finish this part of inheritance between classes, just know this mechanism of inheritance that we explored can actually be very problematic and dangerous in real world when we are designing software.
+- However, that's a topic for another day and we will talk about it a little bit when we talk about functional programming.
 
 ## Author
 
