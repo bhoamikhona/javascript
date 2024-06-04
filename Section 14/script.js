@@ -864,3 +864,61 @@ acc1.approveLoan(1000); // this should not be accessible - but it is
 console.log(acc1.pin);
 
 console.log(acc1);
+/***********************************************************************/
+/*********** ENCAPSULATION: PROTECTED PROPERTIES AND METHODS ***********/
+/***********************************************************************/
+
+console.log(
+  `/*********** ENCAPSULATION: PROTECTED PROPERTIES AND METHODS ***********/`
+);
+
+class Account2 {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this._pin = pin;
+    // protected property
+    this._movements = [];
+    this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  getMovements() {
+    return this._movements;
+  }
+
+  deposit(val) {
+    this._movements.push(val);
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+  }
+
+  _approveLoan(val) {
+    return true;
+  }
+
+  requestLoan(val) {
+    if (this._approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan approved`);
+    }
+  }
+}
+
+const acc2 = new Account2('Bhoami', 'INR', 1111);
+
+acc2.deposit(250);
+acc2.withdraw(140);
+acc2.requestLoan(1000);
+// acc2.approveLoan(1000);
+
+// console.log(acc2.pin);
+console.log(acc2._movements); // still accessible if we use the underscore
+
+// not this is the correct way of getting the movements:
+console.log(acc2.getMovements());
+
+console.log(acc2);

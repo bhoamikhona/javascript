@@ -36,6 +36,7 @@
     - [Inheritance Between "Classes": ES6 Classes](#inheritance-between-classes-es6-classes)
     - [Inheritance Between "Classes": Object.create](#inheritance-between-classes-objectcreate)
     - [Another Class Example](#another-class-example)
+    - [Encapsulation: Protected Properties and Methods](#encapsulation-protected-properties-and-methods)
   - [Author](#author)
 
 ## Lessons Learned
@@ -3281,6 +3282,241 @@ console.log(acc1);
 - It is kind of an internal method that only the `requestLoan` method should be able to use.
 - The reason why we are learning all this is basically to justify that we really need data encapsulation and data privacy.
 - So, in the next lesson, we will finally start implementing data privacy and data encapsulation.
+
+### Encapsulation: Protected Properties and Methods
+
+- In the last lesson we implemented a new class which showed us the need for encapsulation and data privacy.
+- So, let's now tackle this very important principle of object oriented programming.
+- First, remember that encapsulation basically means to keep some properties and methods private inside the class so that they are not accessible from outside of the class.
+- Then the rest of the methods are basically exposed as a public interface, which we can also call API.
+- So this is essential to do in anything more than a toy application.
+- There are two big reasosns why we need encapsulation an data privacy.
+  - First - it is to prevent code from outside of the class to accidentally manipulate the data inside the class.
+  - The second reason is that when we expose only a small interface i.e. a small API consisting only of a few public methods then we can change all the other internal methods with more confidence.
+    - Because in this case, we can be sure that external code does not rely on the private methods.
+    - Therefore our code will not break when we do internal changes.
+    - That's what encapsulation and data privacy are and the reasons for it. So, let's now implement it.
+- However JavaScript classes actually do not yet support real data privacy and encapsulation.
+- Now there is a proposal to add truly private class fields and methods to the language, but it is not completely ready yet.
+- However, in the next lesson, we will still see it because it is really cool but, even when this feature ships in the browser, it will take some time until you can use it with confidence.
+- So, in this lesson, we will basically fake encapsulation by simply using a convention.
+
+```javascript
+class Account {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.pin = pin;
+    this.movements = [];
+    this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  deposit(val) {
+    this.movements.push(val);
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+  }
+
+  approveLoan(val) {
+    return true;
+  }
+
+  requestLoan(val) {
+    if (this.approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan approved`);
+    }
+  }
+}
+
+const acc1 = new Account('Bhoami', 'INR', 1111);
+
+acc1.deposit(250);
+acc1.withdraw(140);
+acc1.requestLoan(1000);
+acc1.approveLoan(1000);
+
+console.log(acc1.pin);
+
+console.log(acc1);
+```
+
+- The first candidate to protect here is the `movements` array that we have been talking about.
+- The movevments are mission critical data and here we will protect that data so that no one can accidentally manipulate it.
+- For now, all we will do is to add the `_` in front of the property and that's it.
+
+```javascript
+class Account {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.pin = pin;
+    // protected property
+    this._movements = [];
+    this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  deposit(val) {
+    this._movements.push(val);
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+  }
+
+  approveLoan(val) {
+    return true;
+  }
+
+  requestLoan(val) {
+    if (this.approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan approved`);
+    }
+  }
+}
+
+const acc1 = new Account('Bhoami', 'INR', 1111);
+
+acc1.deposit(250);
+acc1.withdraw(140);
+acc1.requestLoan(1000);
+acc1.approveLoan(1000);
+
+console.log(acc1.pin);
+
+console.log(acc1);
+```
+
+- Again, this does not actually make the property truly private because it is just a convention.
+- So, it something that developers agree to use and then everyone does it this way.
+- But since it is not truly private, we call it <ins>protected</ins>.
+- Now if we wanted to get the movements outside of the class we could still do this: `console.log(acc1._movements)`
+- So, that's what we were just trying to say - which is that the data is of course still accessible if we use the `_` outside as well. But atleast now everyone on your team (including yourself) will know that this property is not supposed to be touched outside of the class.
+- So, you can still do it but at least you will know that it is wrong.
+- Now, if we still wanted to give access to movements array from the outside then we would have to implement a public method for that. So, let's do that.
+
+```javascript
+class Account {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.pin = pin;
+    // protected property
+    this._movements = [];
+    this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  getMovements() {
+    return this._movements;
+  }
+
+  deposit(val) {
+    this._movements.push(val);
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+  }
+
+  approveLoan(val) {
+    return true;
+  }
+
+  requestLoan(val) {
+    if (this.approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan approved`);
+    }
+  }
+}
+
+const acc1 = new Account('Bhoami', 'INR', 1111);
+
+acc1.deposit(250);
+acc1.withdraw(140);
+acc1.requestLoan(1000);
+acc1.approveLoan(1000);
+
+console.log(acc1.pin);
+console.log(acc1._movements); // still accessible if we use the underscore
+
+// not this is the correct way of getting the movements:
+console.log(acc1.getMovements());
+
+console.log(acc1);
+```
+
+- Now everyone cans still access the movements but they cannot override them.
+- So, they cannot set the movements unless of course they use the underscore with the convention but then they will at least know that it is wrong to access the property.
+- Next we could also protect the pin - which is also something that doesn't make sense to be accessible from the outside.
+- Like this, we can protect everthing in the constructor but, for now we are good to go - especially since this is just an example.
+- To finish, let's also just protect the approved loan method.
+
+```javascript
+class Account {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this._pin = pin;
+    // protected property
+    this._movements = [];
+    this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  getMovements() {
+    return this._movements;
+  }
+
+  deposit(val) {
+    this._movements.push(val);
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+  }
+
+  _approveLoan(val) {
+    return true;
+  }
+
+  requestLoan(val) {
+    if (this._approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan approved`);
+    }
+  }
+}
+
+const acc1 = new Account('Bhoami', 'INR', 1111);
+
+acc1.deposit(250);
+acc1.withdraw(140);
+acc1.requestLoan(1000);
+// acc1.approveLoan(1000);
+
+// console.log(acc1.pin);
+console.log(acc1._movements); // still accessible if we use the underscore
+
+// not this is the correct way of getting the movements:
+console.log(acc1.getMovements());
+
+console.log(acc1);
+```
+
+- This is how we protect fields from unwanted access.
+- Now, as mentioned before, of course, developers need to know about this convention and need to follow it because otherwise everything will still be public.
+- In the next lesson, we are actually going to talk about truly private fields and methods. So, with that, we will then fix this problem for good.
 
 ## Author
 
