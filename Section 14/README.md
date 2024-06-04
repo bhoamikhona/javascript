@@ -34,6 +34,7 @@
     - [Object.create](#objectcreate-1)
     - [Inheritance Between "Classes": Constructor Functions](#inheritance-between-classes-constructor-functions)
     - [Inheritance Between "Classes": ES6 Classes](#inheritance-between-classes-es6-classes)
+    - [Inheritance Between "Classes": Object.create](#inheritance-between-classes-objectcreate)
   - [Author](#author)
 
 ## Lessons Learned
@@ -2765,6 +2766,223 @@ console.dir(martha);
 - That's it, that is all we had to learn about implementing classes using actual ES6 classes.
 - Just to finish this part of inheritance between classes, just know this mechanism of inheritance that we explored can actually be very problematic and dangerous in real world when we are designing software.
 - However, that's a topic for another day and we will talk about it a little bit when we talk about functional programming.
+
+### Inheritance Between "Classes": Object.create
+
+- Finally, let's now take a look at how we can use `Object.create()` in order to implement a complex prototype chain - similar to what we implemented before with classes and constructor functions.
+
+```javascript
+const PersonProto1 = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+const steven = Object.create(PersonProto1);
+```
+
+- Here we have an object that we have already worked on before, and it will serve as a prototype to create a new person using `Object.create()`.
+- So basically, it will be our parent class.
+- We already know that `Object.create()` is a bit easier to use and to understand so it shouldn't be hard to implement a similar hierarchy between a person and student.
+- So `PersonProto` object used to be the prototype of all the new `Person` objects.
+- But now we basically want to add another prototype in the middle of the chain i.e. between `PersonProto` and the object.
+- So, what we are going to do is to make `StudentProto` inherit directly from `PersonProto`.
+- So, we are going to create an object that will be the prototype of students, and it will be an empty object for now - and its prototype will be `PersonProto`.
+
+```javascript
+const PersonProto1 = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+const steven = Object.create(PersonProto1);
+
+const StudentProto1 = Object.create(PersonProto1);
+```
+
+- That's it. Now we can use the `StudentProto` to create new students. So, let's do that.
+
+```javascript
+const PersonProto1 = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+steven = Object.create(PersonProto1);
+
+const StudentProto1 = Object.create(PersonProto1);
+const jay = Object.create(StudentProto1);
+console.log(jay);
+```
+
+- So now the `StudentProto` object that we just created earlier, is now the prototype of the `jay` object.
+- And the `PersonProto` object is in turn the prototype of `StudentProto`.
+- Therefore, `PersonProto` is a parent prototype of `jay`, which means that it is in the prototype chain.
+- That might sound confusing so, let's make sure that we understand it, using the diagram below:
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/eabc5113-309c-487f-bfac-890ac0948ba1)
+- It all starts with the `PersonProto` object, which used to be the prototype of all person objects.
+- But now using `Object.create()`, we make it so that `PersonProto` will actually become the prototype of `StudentProto`.
+- What this does does is that now, basically, student inherits from person.
+- So with this, we already established the parent class relationship that we were looking for.
+- Now to finish, all we have to do is to use `Object.create()` again, but this time to create a new actual student object.
+- Of course we make the student, in our case `jay`, inherit from `StudentProto`.
+- Like this, we created a nice and simple prototype chain.
+- So, `jay` inherits from `StudentProto`, which in turn, inherits from `PersonProto`, and therefore the `jay` object will be able to use all the methods that are contained in `StudentProto` and `PersonProto`.
+- Now with the scope chain correctly established, let's also add an init method to `StudentProto`, just like we did in `ParentProto`. This is so we don't have to manually specify the properties on any new student object.
+
+```javascript
+const PersonProto1 = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+steven = Object.create(PersonProto1);
+
+const StudentProto1 = Object.create(PersonProto1);
+StudentProto1.init = function (firstName, birthYear, course) {};
+
+const jay = Object.create(StudentProto1);
+console.log(jay);
+```
+
+- Now we can use the same trick that we used before, where we use the constructor functions.
+- So, what I mean is to take advantage of the `init` method so that we don't have to write the same code again.
+- Basically, the child prototype can re-use the `init` method inside `StudentProto` from the `PersonProto`.
+
+```javascript
+const PersonProto1 = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+steven = Object.create(PersonProto1);
+
+const StudentProto1 = Object.create(PersonProto1);
+StudentProto1.init = function (firstName, birthYear, course) {
+  // we use call() because we will need to manually set the `this` keyword
+  PersonProto1.init.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+const jay = Object.create(StudentProto1);
+jay.init('Jay', 2010, 'Computer Science');
+console.log(jay);
+```
+
+- That works!
+- Let's now add the `introduce()` method.
+
+```javascript
+const PersonProto1 = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+steven = Object.create(PersonProto1);
+
+const StudentProto1 = Object.create(PersonProto1);
+StudentProto1.init = function (firstName, birthYear, course) {
+  // we use call() because we will need to manually set the `this` keyword
+  PersonProto1.init.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+StudentProto1.introduce = function () {
+  console.log(`My name is ${this.firstName} and I study ${this.course}`);
+};
+
+const jay = Object.create(StudentProto1);
+jay.init('Jay', 2010, 'Computer Science');
+console.log(jay);
+jay.introduce();
+```
+
+- That also works, and now, as you expect, we should also be able to call `jay.calcAge()` because that method is in the prototype chain.
+
+```javascript
+const PersonProto1 = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+steven = Object.create(PersonProto1);
+
+const StudentProto1 = Object.create(PersonProto1);
+StudentProto1.init = function (firstName, birthYear, course) {
+  // we use call() because we will need to manually set the `this` keyword
+  PersonProto1.init.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+StudentProto1.introduce = function () {
+  console.log(`My name is ${this.firstName} and I study ${this.course}`);
+};
+
+const jay = Object.create(StudentProto1);
+jay.init('Jay', 2010, 'Computer Science');
+console.log(jay);
+jay.introduce();
+jay.calcAge();
+```
+
+- It works.
+- Check the prototype chain using the console.
+- Once you do that, you will see that it is exactly the prototype chain that we just saw earlier in the diagram.
+- That's it.
+- So, in this version, we don't even worry about constructor functions anymore, and also not about the prototype properties, and not about the `new` operator.
+- So, it is really just objects linked to other objects, and it is all really simple and beautiful.
+- In fact, some people think that this pattern is a lot better than basically trying to fake classes in JavaScript, because faking classes in a way that they exist in other languages like Java or C++ is exactly what we do by using constructor functions, and even ES6 classes.
+- But here, in this technique that we just learned with `Object.create()`, we are, in fact, not faking classes.
+- All we are doing is simply linking objects together, where some objects then serve as the prototypes of other objects.
+- Anyway, it still super important and valuable that you learn all of these three techniques now, because you will see them all in the real-world still.
+- This also allows you to think about this on your own and choose the style that you like the best.
+
+> [!NOTE]
+>
+> In the real-world, and especially in modern JavaScript, you will mostly see ES6 classes being used now.
+>
+> So, since we are preparing for the real-world, we will start using classes from this point on.
 
 ## Author
 

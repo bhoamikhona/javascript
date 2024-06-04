@@ -29,7 +29,7 @@ console.log(jonas); // Person {firstName: 'Jonas', birthYear: 1991}
 const matilda = new Person('Matilda', 2017);
 console.log(matilda); // Person {firstName: 'Matilda', birthYear: 2017}
 
-const jay = 'Jay';
+let jay = 'Jay';
 
 console.log(bhoami instanceof Person); // true
 console.log(jay instanceof Person); // false
@@ -442,7 +442,7 @@ const PersonProto = {
   },
 };
 
-const steven = Object.create(PersonProto);
+let steven = Object.create(PersonProto);
 console.log(steven);
 console.log(steven.__proto__);
 
@@ -764,3 +764,41 @@ martha.introduce(); // My name is Martha Jones and I study Computer Science
 martha.calcAge(); // I'm 25 years old, but as a student I feel more like 35
 
 console.dir(martha);
+
+/************************************************************************/
+/************* INHERITANCE BETWEEN "CLASSES": OBJECT.CREATE *************/
+/************************************************************************/
+
+console.log(
+  `/************* INHERITANCE BETWEEN "CLASSES": OBJECT.CREATE *************/`
+);
+
+const PersonProto1 = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+steven = Object.create(PersonProto1);
+
+const StudentProto1 = Object.create(PersonProto1);
+StudentProto1.init = function (firstName, birthYear, course) {
+  // we use call() because we will need to manually set the `this` keyword
+  PersonProto1.init.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+StudentProto1.introduce = function () {
+  console.log(`My name is ${this.firstName} and I study ${this.course}`);
+};
+
+jay = Object.create(StudentProto1);
+jay.init('Jay', 2010, 'Computer Science');
+console.log(jay);
+jay.introduce();
+jay.calcAge();
