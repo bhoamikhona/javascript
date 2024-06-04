@@ -35,6 +35,7 @@
     - [Inheritance Between "Classes": Constructor Functions](#inheritance-between-classes-constructor-functions)
     - [Inheritance Between "Classes": ES6 Classes](#inheritance-between-classes-es6-classes)
     - [Inheritance Between "Classes": Object.create](#inheritance-between-classes-objectcreate)
+    - [Another Class Example](#another-class-example)
   - [Author](#author)
 
 ## Lessons Learned
@@ -2983,6 +2984,303 @@ jay.calcAge();
 > In the real-world, and especially in modern JavaScript, you will mostly see ES6 classes being used now.
 >
 > So, since we are preparing for the real-world, we will start using classes from this point on.
+
+### Another Class Example
+
+- There are a few more things that we need to learn about classes.
+- So, let's actually create a new class now and as an example, we are going to use the bank account that we implemented before, in the Bankist app.
+- So, let's create the class and its constructor function.
+
+```javascript
+class Account {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.pin = pin;
+  }
+}
+```
+
+- Now let's create a new account.
+
+```javascript
+class Account {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.pin = pin;
+  }
+}
+
+const acc1 = new Account('Bhoami', 'INR', 1111);
+console.log(acc1);
+```
+
+- Now, what about the movements array and maybe also the locale?
+- So, we want to start with an empty array for movements, always.
+- As for locale, we want to get it from the `navigator.language`.
+- So, how should we do that? Do we add another parameter in the constructor function and always pass in an empty array in all accounts that we create?
+
+```javascript
+class Account {
+  constructor(owner, currency, pin, movements) {
+    this.owner = owner;
+    this.currency = currency;
+    this.pin = pin;
+    this.movements = movements;
+  }
+}
+
+const acc1 = new Account('Bhoami', 'INR', 1111, []);
+console.log(acc1);
+```
+
+- That would work, however, it doesn't make sense to pass in an empty array as a parameter into all the new accounts that we want to create.
+- Instead, we can simply do this:
+
+```javascript
+class Account {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.pin = pin;
+    this.movements = [];
+  }
+}
+
+const acc1 = new Account('Bhoami', 'INR', 1111);
+console.log(acc1);
+```
+
+- So, this is something that we didn't do before but ofcourse, we can create even more properties that are not based on any inputs.
+- The same we can now do for the locale and set it to `navigator.language`.
+
+```javascript
+class Account {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.pin = pin;
+    this.movements = [];
+    this.locale = navigator.language;
+  }
+}
+
+const acc1 = new Account('Bhoami', 'INR', 1111);
+console.log(acc1);
+```
+
+- In fact, we can even execute any code in the constructor that we want.
+
+```javascript
+class Account {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.pin = pin;
+    this.movements = [];
+    this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+}
+
+const acc1 = new Account('Bhoami', 'INR', 1111);
+console.log(acc1);
+```
+
+- So when someone opens an account, they are greeted with the message that we are printing inside the constructor.
+- But now, what about the deposits and withdrawals? Basically, what about the movements?
+- We could simply push values into the movements array like so:
+
+```javascript
+class Account {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.pin = pin;
+    this.movements = [];
+    this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+}
+
+const acc1 = new Account('Bhoami', 'INR', 1111);
+
+acc1.movements.push(250);
+acc1.movements.push(-140);
+
+console.log(acc1);
+```
+
+- If we take a look at our account now, of course we will see the new movements there.
+- However, it is not a good idea to do this at all.
+- Instead of interacting with properties like we did above, it is a lot better to create methods that interact with these properties.
+- And that is especially true for important properties, such as the movements.
+- This will, for sure, avoid bugs in the future, as your application grows.
+- So, let's now create a deposit and a withdrawal method in the class.
+
+```javascript
+class Account {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.pin = pin;
+    this.movements = [];
+    this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  // Public Interface of our Objects
+  deposit(val) {
+    this.movements.push(val);
+  }
+
+  /**
+   * We are calling deposit here because the withdraw method works in
+   * the same way.
+   *
+   * Also, of course we can call other methods inside of a certain
+   * method. But, we will still need to use the `this` keyword in order
+   * to access the other method
+   */
+  withdraw(val) {
+    this.deposit(-val);
+  }
+}
+
+const acc1 = new Account('Bhoami', 'INR', 1111);
+
+// acc1.movements.push(250);
+// acc1.movements.push(-140);
+acc1.deposit = 250;
+acc1.withdraw = 140;
+
+console.log(acc1);
+```
+
+- Indeed, our movements array looks just the same as before, but now we are actually using the public interface that we built here.
+- So, basically these methods of deposit and withdraw are interface to our objects, and we also call this API (we talked about it in the beginning of this section).
+- So, this is a lot better than having to manipulate these properties outside of the object, as we did above.
+- Also, the `withdraw()` method abstracts the fact that a withdrawal is basically a negative movement.
+- Now, still there is nothing stopping someone on our team from interacting with movements array directly and potentially making mistakes and introducing bugs.
+- So, simply the fact that we have these methods doesn't make it impossible to use `acc1.movements.push(250)`.
+- The same goes, for example, for pin. So, of course we can access the pin from outside of the account. But it probably shouldn't be accessible from outside of the class.
+
+```javascript
+class Account {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.pin = pin;
+    this.movements = [];
+    this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  // Public Interface of our Objects
+  deposit(val) {
+    this.movements.push(val);
+  }
+
+  /**
+   * We are calling deposit here because the withdraw method works in
+   * the same way.
+   *
+   * Also, of course we can call other methods inside of a certain
+   * method. But, we will still need to use the `this` keyword in order
+   * to access the other method
+   */
+  withdraw(val) {
+    this.deposit(-val);
+  }
+}
+
+const acc1 = new Account('Bhoami', 'INR', 1111);
+
+// acc1.movements.push(250);
+// acc1.movements.push(-140);
+acc1.deposit = 250;
+acc1.withdraw = 140;
+
+console.log(acc1);
+
+// pin accessible outside of the class
+console.log(acc1.pin);
+```
+
+- This is actually a very real and very important concern. It is not just something theoretical.
+- The same of course, goes for methods.
+- Let's say we have a `requestLoan` method in our class.
+- We could make the approval of the loan based on some condition, and that condition could come from some other method, let's say `approveLoan`.
+  - It will simply return true, as this is just an example and we don't want to implement any complex logic right now.
+
+```javascript
+class Account {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.pin = pin;
+    this.movements = [];
+    this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  // Public Interface of our Objects
+  deposit(val) {
+    this.movements.push(val);
+  }
+
+  /**
+   * We are calling deposit here because the withdraw method works in
+   * the same way.
+   *
+   * Also, of course we can call other methods inside of a certain
+   * method. But, we will still need to use the `this` keyword in order
+   * to access the other method
+   */
+  withdraw(val) {
+    this.deposit(-val);
+  }
+
+  approveLoan(val) {
+    return true;
+  }
+
+  requestLoan(val) {
+    if (this.approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan approved`);
+    }
+  }
+}
+
+const acc1 = new Account('Bhoami', 'INR', 1111);
+
+// acc1.movements.push(250);
+// acc1.movements.push(-140);
+acc1.deposit = 250;
+acc1.withdraw = 140;
+
+// pin accessible outside of the class - this shouldn't happen
+console.log(acc1.pin);
+acc1.requestLoan(1000);
+acc1.approveLoan(1000); // this should not be accessible - but it is
+
+console.log(acc1);
+```
+
+- Now in the public interface, we only want `requestLoan` available.
+- We only want to be able to do this: `acc1.requestLoan(1000)`.
+- Once we do that, we see that our loan was approved and it was pushed into the movements array.
+- But of course, we are also able to do this: `acc1.approveLoan(1000)`. This method doesn't do anything but in the real world, we should not even be allowed to access this kind of method.
+- It is kind of an internal method that only the `requestLoan` method should be able to use.
+- The reason why we are learning all this is basically to justify that we really need data encapsulation and data privacy.
+- So, in the next lesson, we will finally start implementing data privacy and data encapsulation.
 
 ## Author
 

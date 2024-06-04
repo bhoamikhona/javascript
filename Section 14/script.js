@@ -802,3 +802,65 @@ jay.init('Jay', 2010, 'Computer Science');
 console.log(jay);
 jay.introduce();
 jay.calcAge();
+
+/***********************************************************************/
+/************************ ANOTHER CLASS EXAMPLE ************************/
+/***********************************************************************/
+
+console.log(
+  `/************************ ANOTHER CLASS EXAMPLE ************************/`
+);
+
+class Account {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.pin = pin;
+    this.movements = [];
+    this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  // Public Interface of our Objects
+  deposit(val) {
+    this.movements.push(val);
+  }
+
+  /**
+   * We are calling deposit here because the withdraw method works in
+   * the same way.
+   *
+   * Also, of course we can call other methods inside of a certain
+   * method. But, we will still need to use the `this` keyword in order
+   * to access the other method
+   */
+  withdraw(val) {
+    this.deposit(-val);
+  }
+
+  approveLoan(val) {
+    return true;
+  }
+
+  requestLoan(val) {
+    if (this.approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan approved`);
+    }
+  }
+}
+
+const acc1 = new Account('Bhoami', 'INR', 1111);
+
+// acc1.movements.push(250);
+// acc1.movements.push(-140);
+acc1.deposit(250);
+acc1.withdraw(140);
+acc1.requestLoan(1000);
+acc1.approveLoan(1000); // this should not be accessible - but it is
+
+// pin accessible outside of the class - this shouldn't happen
+console.log(acc1.pin);
+
+console.log(acc1);
