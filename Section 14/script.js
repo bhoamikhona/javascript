@@ -1005,3 +1005,74 @@ console.log(acc3);
 
 // calling static public method
 Account3.helper();
+
+/**********************************************************************/
+/************************** CHAINING METHODS **************************/
+/**********************************************************************/
+
+console.log(
+  `/************************** CHAINING METHODS **************************/`
+);
+
+class Account4 {
+  locale = navigator.language;
+
+  #movements = [];
+  #pin;
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.#pin = pin;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  getMovements() {
+    return this.#movements;
+  }
+
+  deposit(val) {
+    this.#movements.push(val);
+    // here we are returning `this` because it points to the current object i.e. the account that is calling this method
+    return this;
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+    return this;
+  }
+
+  requestLoan(val) {
+    if (this.#approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan approved`);
+      return this;
+    }
+  }
+
+  #approveLoan(val) {
+    return true;
+  }
+
+  static helper() {
+    console.log('Helper');
+  }
+}
+
+const acc4 = new Account4('Bhoami', 'INR', 1111);
+
+acc4.deposit(250);
+acc4.withdraw(140);
+acc4.requestLoan(1000);
+console.log(acc4._movements);
+console.log(acc4.getMovements());
+console.log(acc4);
+
+Account3.helper();
+
+// Chaining Methods - this should work now
+acc4.deposit(300).deposit(500).withdraw(35).requestLoan(25000).withdraw(4000);
+
+console.log(acc4);
+console.log(acc4.getMovements());

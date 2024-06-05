@@ -38,6 +38,7 @@
     - [Another Class Example](#another-class-example)
     - [Encapsulation: Protected Properties and Methods](#encapsulation-protected-properties-and-methods)
     - [Encapsulation: Private Class Fields and Methods](#encapsulation-private-class-fields-and-methods)
+    - [Chaining Methods](#chaining-methods)
   - [Author](#author)
 
 ## Lessons Learned
@@ -3935,6 +3936,151 @@ Account3.helper();
 - As mentioned before, there are also static version for public fields, private fields, and private methods but, we are not going to see them right now because they are really less important.
 - But if you want, you can easily test them out by yourself.
 - That's it, this is how we implement encapsulation and data privacy using the new class fields.
+
+### Chaining Methods
+
+- Do you remember how we chained array methods one after another, for example filter(), map(), and reduce()?
+- By chaining these methods, we could first filter an array, then map the result, and fianlly reduce the results of the map, all in one line of code.
+- We can actually implement the same ability of chaining methods in the methods of our class. So, let's do that now.
+- And actually, it is extremely easy to do. All we have to do is to return the object itself at the end of a method that we want to be chainable.
+- Let's say that we want to deposit an amount in our account and right after, we want to make another deposit to the same account. So, we would like to call deposit again, right away.
+- Then, immediately after that, we want to withdraw an amount from the same account.
+- Maybe we also want to request a loan in the middle of this and then finally make another withdrawal.
+
+```javascript
+class Account4 {
+  locale = navigator.language;
+
+  #movements = [];
+  #pin;
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.#pin = pin;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  getMovements() {
+    return this.#movements;
+  }
+
+  deposit(val) {
+    this.#movements.push(val);
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+  }
+
+  requestLoan(val) {
+    if (this.#approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan approved`);
+    }
+  }
+
+  #approveLoan(val) {
+    return true;
+  }
+
+  static helper() {
+    console.log('Helper');
+  }
+}
+
+const acc4 = new Account4('Bhoami', 'INR', 1111);
+
+acc4.deposit(250);
+acc4.withdraw(140);
+acc4.requestLoan(1000);
+console.log(acc4._movements);
+console.log(acc4.getMovements());
+console.log(acc4);
+
+Account3.helper();
+
+// Chaining Methods - right now this isn't going to work
+acc4.deposit(300).deposit(500).withdraw(35).requestLoan(25000).withdraw(4000);
+```
+
+- Right now this is not going to work. The problem is that the first chained method i.e. `acc4.deposit(300)` will work but, it will return `undefiend` since that method is currently not returning anything so, the rest of the chain will break.
+- Because the second `deposit()` is calling on `undefined`.
+- So, what we need to do is to make the `deposit()` method return the account on which we are calling it.
+- So, let's do that.
+
+```javascript
+class Account4 {
+  locale = navigator.language;
+
+  #movements = [];
+  #pin;
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.#pin = pin;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  getMovements() {
+    return this.#movements;
+  }
+
+  deposit(val) {
+    this.#movements.push(val);
+    // here we are returning `this` because it points to the current object i.e. the account that is calling this method
+    return this;
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+    return this;
+  }
+
+  requestLoan(val) {
+    if (this.#approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan approved`);
+      return this;
+    }
+  }
+
+  #approveLoan(val) {
+    return true;
+  }
+
+  static helper() {
+    console.log('Helper');
+  }
+}
+
+const acc4 = new Account4('Bhoami', 'INR', 1111);
+
+acc4.deposit(250);
+acc4.withdraw(140);
+acc4.requestLoan(1000);
+console.log(acc4._movements);
+console.log(acc4.getMovements());
+console.log(acc4);
+
+Account3.helper();
+
+// Chaining Methods - this should work now
+acc4.deposit(300).deposit(500).withdraw(35).requestLoan(25000).withdraw(4000);
+
+console.log(acc4);
+console.log(acc4.getMovements());
+```
+
+- Now that we are returning the current object i.e. `this`, the method chaining should work.
+- So, returning `this` will essentially make the method chainable; and this makes most sense in method that actually set some property.
+  - The doposit and withdraw, and even the requestLoan methods set a value to the movements - which is why it makes sense.
+- So, now if we look in console, the movements array for acc4 should be updated, and our code should have worked.
+- With this, we learned all there is to learn about OOP in JS.
+- In the next lesson, we have an overview/summary of the ES6 class syntax and then a final coding challenge for this section.
 
 ## Author
 
