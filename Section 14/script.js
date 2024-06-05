@@ -1,8 +1,8 @@
 'use strict';
 
-/************************************************************************/
-/************** CONSTRUCTOR FUNCTIONS AND THE NEW OPERATOR **************/
-/************************************************************************/
+/**********************************************************************/
+/************* CONSTRUCTOR FUNCTIONS AND THE NEW OPERATOR *************/
+/**********************************************************************/
 
 console.log(
   `/************** CONSTRUCTOR FUNCTIONS AND THE NEW OPERATOR **************/`
@@ -34,9 +34,9 @@ let jay = 'Jay';
 console.log(bhoami instanceof Person); // true
 console.log(jay instanceof Person); // false
 
-/************************************************************************/
-/****************************** PROTOTYPES ******************************/
-/************************************************************************/
+/**********************************************************************/
+/***************************** PROTOTYPES *****************************/
+/**********************************************************************/
 
 console.log(
   `/****************************** PROTOTYPES ******************************/`
@@ -91,9 +91,9 @@ console.log(bhoami.hasOwnProperty('firstName')); // true
 // this is false because this property is not really inside of `bhoami` object. It simply has access to it because of its prototype.
 console.log(bhoami.hasOwnProperty('species')); // false
 
-/************************************************************************/
-/************** PROTOTYPAL INHERITANCE ON BUILT-IN OBJECTS **************/
-/************************************************************************/
+/**********************************************************************/
+/************* PROTOTYPAL INHERITANCE ON BUILT-IN OBJECTS *************/
+/**********************************************************************/
 
 console.log(
   `/************** PROTOTYPAL INHERITANCE ON BUILT-IN OBJECTS **************/`
@@ -372,9 +372,9 @@ console.log(jennifer.fullName); // Jennifer Davis
 const walter = new PersonCl2('Walter', 1965);
 console.log(walter);
 
-/************************************************************************/
-/**************************** STATIC METHODS ****************************/
-/************************************************************************/
+/**********************************************************************/
+/*************************** STATIC METHODS ***************************/
+/**********************************************************************/
 
 console.log(
   `/**************************** STATIC METHODS ****************************/`
@@ -537,6 +537,7 @@ CarCl = class {
   brake() {
     this.speed -= 5;
     console.log(`${this.make} is going at ${this.speed} km/h`);
+    return this;
   }
 
   get speedUS() {
@@ -566,9 +567,9 @@ ford.brake();
 ford.speedUS = 50;
 console.log(ford);
 
-/************************************************************************/
-/********* INHERITANCE BETWEEN "CLASSES": CONSTRUCTOR FUNCTIONS *********/
-/************************************************************************/
+/**********************************************************************/
+/******** INHERITANCE BETWEEN "CLASSES": CONSTRUCTOR FUNCTIONS ********/
+/**********************************************************************/
 
 console.log(
   `/********* INHERITANCE BETWEEN "CLASSES": CONSTRUCTOR FUNCTIONS *********/`
@@ -694,9 +695,9 @@ tesla.brake();
 tesla.accelerate();
 console.log(tesla);
 
-/************************************************************************/
-/************** INHERITANCE BETWEEN "CLASSES": ES6 CLASSES **************/
-/************************************************************************/
+/**********************************************************************/
+/************* INHERITANCE BETWEEN "CLASSES": ES6 CLASSES *************/
+/**********************************************************************/
 
 console.log(
   `/************** INHERITANCE BETWEEN "CLASSES": ES6 CLASSES **************/`
@@ -765,9 +766,9 @@ martha.calcAge(); // I'm 25 years old, but as a student I feel more like 35
 
 console.dir(martha);
 
-/************************************************************************/
-/************* INHERITANCE BETWEEN "CLASSES": OBJECT.CREATE *************/
-/************************************************************************/
+/**********************************************************************/
+/************ INHERITANCE BETWEEN "CLASSES": OBJECT.CREATE ************/
+/**********************************************************************/
 
 console.log(
   `/************* INHERITANCE BETWEEN "CLASSES": OBJECT.CREATE *************/`
@@ -1076,3 +1077,68 @@ acc4.deposit(300).deposit(500).withdraw(35).requestLoan(25000).withdraw(4000);
 
 console.log(acc4);
 console.log(acc4.getMovements());
+
+/***********************************************************************/
+/************************* CODING CHALLENGE 04 *************************/
+/***********************************************************************/
+
+console.log(
+  `/************************* CODING CHALLENGE 04 *************************/`
+);
+
+/**
+ * TODO 01:
+ *
+ * Re-create challenge 03, but this time using ES6 classes: create an
+ * `EVCl` child class of `CarCl` class.
+ */
+class EVCl extends CarCl {
+  #charge;
+  constructor(make, speed, charge) {
+    super(make, speed);
+    this.#charge = charge;
+  }
+
+  chargeBattery(chargeTo) {
+    this.#charge = chargeTo;
+    console.log(`${this.make}'s battery charged upto ${this.#charge}%`);
+    return this;
+  }
+
+  accelerate() {
+    this.speed += 20;
+    this.#charge -= 1;
+    console.log(
+      `${this.make} going at ${this.speed} km/h, with a charge of ${
+        this.#charge
+      }`
+    );
+    return this;
+  }
+}
+/**
+ * TODO 02:
+ *
+ * Make the 'charge' property private.
+ */
+
+/**
+ * TODO 03:
+ *
+ * Implement the ability to chain the 'accelerate' and 'chargeBattery'
+ * methods of this class, and also update the 'brake' method in the
+ * 'CarCl' class. Then experiment with chaining!
+ *
+ * TEST DATA 01: 'Rivian' going at 120 km/h, with a charge of 23%
+ */
+
+const rivian = new EVCl('Rivian', 120, 23);
+
+rivian.accelerate();
+rivian.brake();
+rivian.chargeBattery(90);
+
+rivian.accelerate().brake().chargeBattery(20);
+
+console.log(rivian);
+console.log(rivian.speedUS);
