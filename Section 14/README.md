@@ -39,6 +39,7 @@
     - [Encapsulation: Protected Properties and Methods](#encapsulation-protected-properties-and-methods)
     - [Encapsulation: Private Class Fields and Methods](#encapsulation-private-class-fields-and-methods)
     - [Chaining Methods](#chaining-methods)
+    - [ES6 Classes Summary](#es6-classes-summary)
   - [Author](#author)
 
 ## Lessons Learned
@@ -4081,6 +4082,52 @@ console.log(acc4.getMovements());
 - So, now if we look in console, the movements array for acc4 should be updated, and our code should have worked.
 - With this, we learned all there is to learn about OOP in JS.
 - In the next lesson, we have an overview/summary of the ES6 class syntax and then a final coding challenge for this section.
+
+### ES6 Classes Summary
+
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/49b077e3-e87f-4f7a-98ab-a49e60e5acc3)
+- So, as we reach the end of this section, let's quickly review all the terminology around classes because there is so many different things going on.
+- Since classes are probably the way you are going to implement OOP yourself, it is always good to have a nice overview of everything that we can do with them.
+- In the image above, we have a huge class which essentially contains all the features that we studied about, over the last couple of lessons.
+- extends keyword:
+  - It sets up an inheritance between the two classes, and it will also automatically set up the prototype chain for us, so we don't have to do anything manually.
+- Public fields:
+  - It is very similar to just a property that we define in a constructor and it is available on every created object i.e. every instance created by the class.
+- Private fields:
+  - Private fields are almost the saem as public fields but they are not accessible outside of the class. Therefore, they are perfect for data privacy and encapsulation.
+- Static public field:
+  - We also have static public fields, and these are fields or properties that are available only on the class.
+- Constructor method:
+  - The constructor method is automatically called by the new operator whenever we create a new instance of the class.
+  - The constructor method is mandatory in any regular class, but it might be omitted in a child class if we want it to have the exact same number and the exact same name of parameters.
+  - We can also re-define a private field inside of the constructor.
+- Super class:
+  - Inside the constructor, there is the call to the parent class i.e. the super class. This of course is only necessary whenever we are writing a child class.
+  - Remember that this one needs to happen before we access the `this` keyword in the constructor.
+- Instance property:
+  - Just like public fields, the property is also available on each created object.
+  - But the difference between this one and the public field is that we set the instance properties based on input data of the constructor.
+  - Basically, rhese properties are more personalized and unique for each object while the fields are usually for something that is common to all objects.
+- Public Method
+- Private Method
+- Protected Method/Fields (convention)
+- Getter Method
+  - A getter method is basically a method that allows to get a value out of an object by simply writing a property instead of writing a method.
+- Setter Method
+  - If you have a setter for a property that is already defined in the constructor, then you need to create a new property with the underscore in front of it (convention).
+  - Then in the getter with the same name, you also need to return that new property.
+- Static Method:
+  - A static method is available only on the class.
+  - It cannot access the instance properties not the methods, but only the static ones.
+  - For example, the static public field that is defined in the image, at the top, will of course be accessible in a static method of the class.
+  - Usually, we use the static methods as helper methods for the class.
+- `new` operator
+  - Used to create a new object for the class.
+- REMEMBER:
+  - Classes are just syntactic sugar over constructor functions.
+  - Classes are not hoisted.
+  - Classes are first-class citizens.
+  - Class body is always executed in strict mode.
 
 ## Author
 
