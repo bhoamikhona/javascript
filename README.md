@@ -18,6 +18,7 @@
 - [Section 12](./Section%2012): Numbers, Dates, Intl, and Timers
 - [Section 13](./Section%2013): Advanced DOM and Events
 - [Section 14](./Section%2014): Object-Oriented Programming (OOP) With JavaScript
+- [Section 15](./Section%2015): Mapty App: OOP, Geolocation, External Libraries, and More!
 
 ## Projects
 
@@ -26,6 +27,7 @@
 - [The Pig Game](https://bhoamikhona.github.io/javascript/Section%2007/The%20Pig%20Game/index.html)
 - [Bankist Web App](https://bhoamikhona.github.io/javascript/Section%2012/index.html)
 - [Bankist Marketing Website](https://bhoamikhona.github.io/javascript/Section%2013/index.html)
+- [Mapty](https://bhoamikhona.github.io/javascript/Section%2015/index.html)
 
 ## Author
 
