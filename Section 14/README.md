@@ -37,6 +37,7 @@
     - [Inheritance Between "Classes": Object.create](#inheritance-between-classes-objectcreate)
     - [Another Class Example](#another-class-example)
     - [Encapsulation: Protected Properties and Methods](#encapsulation-protected-properties-and-methods)
+    - [Encapsulation: Private Class Fields and Methods](#encapsulation-private-class-fields-and-methods)
   - [Author](#author)
 
 ## Lessons Learned
@@ -3517,6 +3518,423 @@ console.log(acc1);
 - This is how we protect fields from unwanted access.
 - Now, as mentioned before, of course, developers need to know about this convention and need to follow it because otherwise everything will still be public.
 - In the next lesson, we are actually going to talk about truly private fields and methods. So, with that, we will then fix this problem for good.
+
+### Encapsulation: Private Class Fields and Methods
+
+- Let's now implement truly private class fields and methods.
+- Private class fields and methods are actually a part of a bigger proposal for improving and changing JavaScript classes which is simply called Class fields.
+- Why is this called Class fields?
+- In traditional OOP languages like Java and C++, properties are usually called fields.
+- So what this means is that with this new proposal, JS is moving away from the idea that classes are just syntactic sugar over constructor function.
+- Because with this new class features classes actually start to have abilities that we didn't previously have with constructor functions.
+- Let's now start exploring them.
+- So, in this proposal, there are actually 4 different kinds of fields and methods, and actually it's even 8.
+- But in this lesson, we are just going to focus on 4 viz:
+  - Public fields
+  - Private fields
+  - Public methods
+  - Private methods
+- So essentially, there is a public and a private version of both fields and methods.
+- Let's now start with public fields.
+- We can think of a field as a property that will be on all instances.
+- That's why we can also call it a public instance field.
+- Basically, in our example, the two fields could be the movements and the locale. Because these are basically two properties that are going to be on all the objects that we create with this class. Since we do not pass in values for them, the movements array and the locale will always be set for all the instances.
+- So, let's now add them as public fields.
+- That works like this:
+
+```javascript
+class Account3 {
+  /**
+   * Here the semi-colon is necessary (even if you find it weird, it has
+   * to be there)
+   *
+   * Also, it looks like a variable but, we don't have to declare it
+   * using `const` or `let`.
+   *
+   * This is how we simply define a public field.
+   *
+   * NOTE that public fields are added to instances and not to prototypes
+   */
+  // 1) Public fields
+  locale = navigator.language;
+  _movements = [];
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this._pin = pin;
+    // this._movements = [];
+    // this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  getMovements() {
+    return this._movements;
+  }
+
+  deposit(val) {
+    this._movements.push(val);
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+  }
+
+  _approveLoan(val) {
+    return true;
+  }
+
+  requestLoan(val) {
+    if (this._approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan approved`);
+    }
+  }
+}
+
+const acc3 = new Account3('Bhoami', 'INR', 1111);
+
+acc3.deposit(250);
+acc3.withdraw(140);
+acc3.requestLoan(1000);
+
+console.log(acc3._movements);
+
+console.log(acc3.getMovements());
+
+console.log(acc3);
+```
+
+- When we re-load the page now, you will see that it works just like before.
+- So, we still have the locale and the movements but, they are not public fields.
+- But in our final object, that doesn't make any difference because again, these public fields are going to be present on all the instances that we are creating through the class.
+- So, they are not on the prototype - this is important to understand.
+- So, all the methods will always be added to the prototype but, the public fields are added to the instances.
+- Again, having the public fields outside the constructor function (unlike the methods which are added to the prototype) is the same as them being written inside the constructor. Therefore, these public fields are also referenceable via the `this` keyword.
+- So, that's public fields.
+- Next up, let's talk about private fields.
+- Private fields is the one that we have been waiting for.
+- With private fields we can now make it so, that properties are truly not accessible from the outside.
+- Let's start by now finally making the movements array private.
+- To make it private, we will remove the underscore and replace it with `#` symbol. That is what makes it a private field.
+- Now if we try to use this private field outside of the class, we will get a syntax error
+
+```javascript
+class Account3 {
+  /**
+   * Here the semi-colon is necessary (even if you find it weird, it has
+   * to be there)
+   *
+   * Also, it looks like a variable but, we don't have to declare it
+   * using `const` or `let`.
+   *
+   * This is how we simply define a public field.
+   *
+   * NOTE that public fields are added to instances and not to prototypes
+   */
+  // 1) Public field
+  locale = navigator.language;
+
+  // 2) Private field
+  #movements = [];
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this._pin = pin;
+    // this._movements = [];
+    // this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  getMovements() {
+    return this.#movements;
+  }
+
+  deposit(val) {
+    this.#movements.push(val);
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+  }
+
+  _approveLoan(val) {
+    return true;
+  }
+
+  requestLoan(val) {
+    if (this._approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan approved`);
+    }
+  }
+}
+
+const acc3 = new Account3('Bhoami', 'INR', 1111);
+
+acc3.deposit(250);
+acc3.withdraw(140);
+acc3.requestLoan(1000);
+console.log(acc3._movements);
+console.log(acc3.getMovements());
+console.log(acc3);
+
+// console.log(acc1.#movements); // error
+```
+
+- Basically, JS thinks that we are trying to implement the private class field outside of the class and that's the reason for the syntax error.
+- But what matters is the fact that we cannot access it outside of the class.
+- Ofcourse the `movements` property from before now no longer exist.
+- Anyway, the movements are now truly private and are no longer accessible outside (atleast not by their property).
+- The next candidate to make private is the pin. In the last lesson we protected it but now, just like movements, we want to convert it to a truly private field.
+- However, this time the situation is a bit different. Because now we are actually setting the pin based on the input value to the constructor.
+- However, we cannot define fields to the constructor. The fields really need to be outside of any method.
+- To work around that, what we have to do is to create a private field with hash outside and don't set it to anything.
+- It is essentially just like creating an empty variable.
+- So in the beginning, it will be set to undefined and then we re-define it inside the constructor.
+
+```javascript
+class Account3 {
+  /**
+   * Here the semi-colon is necessary (even if you find it weird, it has
+   * to be there)
+   *
+   * Also, it looks like a variable but, we don't have to declare it
+   * using `const` or `let`.
+   *
+   * This is how we simply define a public field.
+   *
+   * NOTE that public fields are added to instances and not to prototypes
+   */
+  // 1) Public field
+  locale = navigator.language;
+
+  // 2) Private field
+  #movements = [];
+  #pin; // undefined
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.#pin = pin; // redefine
+    // this._movements = [];
+    // this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  // 3) Public Methods
+  getMovements() {
+    return this.#movements;
+  }
+
+  deposit(val) {
+    this.#movements.push(val);
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+  }
+
+  _approveLoan(val) {
+    return true;
+  }
+
+  requestLoan(val) {
+    if (this._approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan approved`);
+    }
+  }
+}
+
+const acc3 = new Account3('Bhoami', 'INR', 1111);
+
+acc3.deposit(250);
+acc3.withdraw(140);
+acc3.requestLoan(1000);
+console.log(acc3._movements);
+console.log(acc3.getMovements());
+console.log(acc3);
+
+// console.log(acc1.#movements); // error
+// console.log(acc1.#pin); // error
+```
+
+- So, one more time we can see that these class fields are really just like any other property. That's why after they are first defined, we can redefine them and set it to the value that we receive.
+- Also, the pin is now a private field so if we try to access it outside of the class, we will get an error.
+- So that is truly private class fields and again, they are going to be available on the instances themselves - not on the prototype.
+- Next up we have public methods.
+- But that is nothing new at this point.
+- All the methods that we have been using in the class are indeed public methods.
+- Therefore, let's move on to our final point - which is private methods.
+- Private method, as already mentioned before, are very useful to hide the implementation details from the outside.
+- That's why in the previous lessom, we already made the `approveLoan` method protected with underscore.
+- But to make it private, the syntax is the same as private fields.
+
+```javascript
+class Account3 {
+  /**
+   * Here the semi-colon is necessary (even if you find it weird, it has
+   * to be there)
+   *
+   * Also, it looks like a variable but, we don't have to declare it
+   * using `const` or `let`.
+   *
+   * This is how we simply define a public field.
+   *
+   * NOTE that public fields are added to instances and not to prototypes
+   */
+  // 1) Public field
+  locale = navigator.language;
+
+  // 2) Private field
+  #movements = [];
+  #pin; // undefined
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.#pin = pin; // redefine
+    // this._movements = [];
+    // this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  // 3) Public Methods
+  getMovements() {
+    return this.#movements;
+  }
+
+  deposit(val) {
+    this.#movements.push(val);
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+  }
+
+  requestLoan(val) {
+    if (this.#approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan approved`);
+    }
+  }
+
+  // 4) Private Methods
+  #approveLoan(val) {
+    return true;
+  }
+}
+
+const acc3 = new Account3('Bhoami', 'INR', 1111);
+
+acc3.deposit(250);
+acc3.withdraw(140);
+acc3.requestLoan(1000);
+console.log(acc3._movements);
+console.log(acc3.getMovements());
+console.log(acc3);
+
+// console.log(acc1.#movements); // error
+// console.log(acc1.#pin); // error
+```
+
+- Now if we look at the account in the console, we will see another property called private methods there, and in there you will find the `#approveLoan` method.
+- So, we talked about the following 4 features:
+  - Public field
+  - Private field
+  - Public methods
+  - Private methods
+- Now, besides these 4 there are also the static version of the same form.
+- That's why in beginning, we mentioned that there are actually 8 new features.
+- And actually, we already used the static public version before, which works by simply adding the `static` keyword in front of the method.
+  - Usually we use `static` for helper functions because these static methods will not be available on all the instances but, on the class itself.
+
+```javascript
+class Account3 {
+  /**
+   * Here the semi-colon is necessary (even if you find it weird, it has
+   * to be there)
+   *
+   * Also, it looks like a variable but, we don't have to declare it
+   * using `const` or `let`.
+   *
+   * This is how we simply define a public field.
+   *
+   * NOTE that public fields are added to instances and not to prototypes
+   */
+  // 1) Public field
+  locale = navigator.language;
+
+  // 2) Private field
+  #movements = [];
+  #pin; // undefined
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.#pin = pin; // redefine
+    // this._movements = [];
+    // this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  // 3) Public Methods
+  getMovements() {
+    return this.#movements;
+  }
+
+  deposit(val) {
+    this.#movements.push(val);
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+  }
+
+  requestLoan(val) {
+    if (this.#approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan approved`);
+    }
+  }
+
+  // 4) Private Methods
+  #approveLoan(val) {
+    return true;
+  }
+
+  // 5) Static Public
+  static helper() {
+    console.log('Helper');
+  }
+}
+
+const acc3 = new Account3('Bhoami', 'INR', 1111);
+
+acc3.deposit(250);
+acc3.withdraw(140);
+acc3.requestLoan(1000);
+console.log(acc3._movements);
+console.log(acc3.getMovements());
+console.log(acc3);
+
+// console.log(acc1.#movements); // error
+// console.log(acc1.#pin); // error
+
+// calling static public method
+Account3.helper();
+```
+
+- As mentioned before, there are also static version for public fields, private fields, and private methods but, we are not going to see them right now because they are really less important.
+- But if you want, you can easily test them out by yourself.
+- That's it, this is how we implement encapsulation and data privacy using the new class fields.
 
 ## Author
 

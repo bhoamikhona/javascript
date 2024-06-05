@@ -922,3 +922,86 @@ console.log(acc2._movements); // still accessible if we use the underscore
 console.log(acc2.getMovements());
 
 console.log(acc2);
+
+/***********************************************************************/
+/*********** ENCAPSULATION: PRIVATE CLASS FIELDS AND METHODS ***********/
+/***********************************************************************/
+
+console.log(
+  `/*********** ENCAPSULATION: PRIVATE CLASS FIELDS AND METHODS ***********/`
+);
+
+class Account3 {
+  /**
+   * Here the semi-colon is necessary (even if you find it weird, it has
+   * to be there)
+   *
+   * Also, it looks like a variable but, we don't have to declare it
+   * using `const` or `let`.
+   *
+   * This is how we simply define a public field.
+   *
+   * NOTE that public fields are added to instances and not to prototypes
+   */
+  // 1) Public field
+  locale = navigator.language;
+
+  // 2) Private field
+  #movements = [];
+  #pin; // undefined
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.#pin = pin; // redefine
+    // this._movements = [];
+    // this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  // 3) Public Methods
+  getMovements() {
+    return this.#movements;
+  }
+
+  deposit(val) {
+    this.#movements.push(val);
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+  }
+
+  requestLoan(val) {
+    if (this.#approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan approved`);
+    }
+  }
+
+  // 4) Private Methods
+  #approveLoan(val) {
+    return true;
+  }
+
+  // 5) Static Public
+  static helper() {
+    console.log('Helper');
+  }
+}
+
+const acc3 = new Account3('Bhoami', 'INR', 1111);
+
+acc3.deposit(250);
+acc3.withdraw(140);
+acc3.requestLoan(1000);
+console.log(acc3._movements);
+console.log(acc3.getMovements());
+console.log(acc3);
+
+// console.log(acc1.#movements); // error
+// console.log(acc1.#pin); // error
+
+// calling static public method
+Account3.helper();
