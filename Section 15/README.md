@@ -24,9 +24,88 @@
   - [Project Overview](#project-overview)
   - [Table of Content](#table-of-content)
   - [Lessons Learned](#lessons-learned)
+    - [How to Plan a Web Project](#how-to-plan-a-web-project)
+      - [Project Planning](#project-planning)
+      - [Planning Mapty](#planning-mapty)
+        - [User Stories](#user-stories)
+        - [Features](#features)
+        - [Flowchart](#flowchart)
+        - [Architecture](#architecture)
   - [Author](#author)
 
 ## Lessons Learned
+
+### How to Plan a Web Project
+
+#### Project Planning
+
+- Step 01: User Stories
+  - A <ins>user story</ins> is basically a description of the application's functionality from the user's perspective.
+  - Then, all the user stories put together will clearly describe the functionality of the entire application.
+- Step 02: Features
+  - User stories are basically a high-level overview of the whole application, which will allow us developers to determine the exact <ins>features</ins> that we need to implement in order to make the user stories actually work as intended.
+- Step 03: Flow Chart
+  - To visualize the different actions that a user can take, and how the program react to these actions, we usually put all these features into a nice <ins>flow chart</ins>.
+  - Once we know exactly what we are going to build, it is time to think about how we are going to build it. This brings us to the project's architecture.
+- Step 04: Architecture
+  - In this context, <ins>architecture</ins> simply means how we will organize our code, and what JS features we will use.
+  - So, the project's architecture is essentially what holds all the code together.
+  - It gives us a structure in which we can then develop the application's functionality.
+- Step 05: Development
+  - Once we have thought about the project's architecture, we are finally done with the planning step, and are then ready to finally move on to the development step.
+  - So, this is where we implement the plan using JS code.
+
+#### Planning Mapty
+
+- Let's now plan the application that we are going to build in this section.
+
+##### User Stories
+
+- There are multiple formats in which we can write user stories, but the most common one is write sentences with this format:
+  - "As [type of user], I want [an action] so that [a benefit]"
+- This format of the user story answers the questions: who?, what? and why?
+- User stories for Mapty:
+  - As a user, I want to log my running workouts with location, distance, time, pace, and steps/minute, so I can keep a log of all my running.
+  - As a user, I want to log my cycling workouts with location, distance, time, speed, and elevation gain, so I can keep a log of all my cycling.
+  - As a user, I want to see all my workouts at a glance, so I can easily track my progress over time.
+  - As a user, I want to also see my workouts on a map, so I can easily check where I workout the most.
+  - As a user, I want to see all my workouts when I leave the app and come back later, so that I can keep using the app over time.
+- We could have written these stories in a different way, and certainly different people will come up with different user stories for the same application.
+- But what matters is that we can use user stories to describe exactly what the application will do.
+- In the real world, you will be building the app on your own therefore, you will really have to think as if you were the user and put yourself in the user's feet so that you can come up with these user stories and buld your features from there.
+
+##### Features
+
+| User Stories                                                                     | Features                                                                                                                                                                                                                                   |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Log my running workouts with location, distance, time, pace, and steps/minute    | <ul> <li>Map where user clicks to add new workout (best way to get location coordinates)</li> <li> Geolocation to display map at current location (more user friendly) </li><li> Form to input distance time, pace, steps/minute</li></ul> |
+| Log my cycling workouts with location, distance, time, speed, and elevation gain | <ul><li> Form to input distance, time, speed, elevation gain </li></ul>                                                                                                                                                                    |
+| See all my workouts at a glance                                                  | <ul><li>Display all workouts in a list</li></ul>                                                                                                                                                                                           |
+| See my workouts on a map                                                         | <ul><li>Display all workouts on the map</li></ul>                                                                                                                                                                                          |
+| See all my workouts when I leave the app and come back later                     | <ul><li>Store workout data in the browser using local storage API</li><li>On page load, read the saved data from local storage and display</li></ul>                                                                                       |
+
+##### Flowchart
+
+- The flowchart should of course contain the different features that we are going to implement, but it is also going to contain how the different parts of the app interact with each other, which event makes sense to implement, and also how data flows across the application.
+- Whenever we start to build a flowchart, it is a good idea to start with events.
+
+> [!NOTE]
+>
+> Async means that there is an operation that takes some time, and only after it is completed, then the rest of the operations that depend on it can be executed.
+
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/1b9e82f3-2420-495c-a407-649b9bb723e8)
+- Keep in mind that this flow chart itself has nothing to do with the implementation itself.
+- This is just how the program is going to work.
+- And we might very well implement in some other language, it doesn't have to be JS.
+- Essentially, this is only what our program should do, but not how it does it. That is more specific and that's actually for architecture.
+
+##### Architecture
+
+- Just like the flowchart, we don't always need to have the perfect final architecture figured out before implemetation.
+- We can first do some experiments, play around with the code, and only then, think about the architecture for the final project in case.
+- Of course we can do it right in the beginning, but it is not always necessary.
+- So, to start this project, we will actually simply start coding, and start to implement the features according to the flowchart that we developed.
+- Then as we start to need more organization, and ways to manage our data, we will come back to thinking about the architecture.
 
 ## Author
 
