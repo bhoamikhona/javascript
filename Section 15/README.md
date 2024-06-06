@@ -31,6 +31,7 @@
         - [Features](#features)
         - [Flowchart](#flowchart)
         - [Architecture](#architecture)
+    - [Using the Geolocation API](#using-the-geolocation-api)
   - [Author](#author)
 
 ## Lessons Learned
@@ -106,6 +107,22 @@
 - Of course we can do it right in the beginning, but it is not always necessary.
 - So, to start this project, we will actually simply start coding, and start to implement the features according to the flowchart that we developed.
 - Then as we start to need more organization, and ways to manage our data, we will come back to thinking about the architecture.
+
+### Using the Geolocation API
+
+- The Geolocation API is called an API because it is in fact, a browser API just like, for example, internationalization or timers, ro anything that browsers give us.
+- So, Geolocation is just another API but, it is also a very modern one.
+- There are many other modern APIs like that, for example, to access the user's camera or even to make a user's phone vibrate.
+- Geolocation is very easy to use, all you have to do is this: `navigator.geolocation.getCurrentPosition()`
+- `getCurrentPosition()`
+  - The `getCurrentPosition()` method of the `Geolocation` interface is used to get the current position of the device.
+  - Parameters:
+    - `success` - A callback function that takes a `GeolocationPosition` object as its sole input parameter.
+    - `error` (optional) - An optional callback function that takes a `GeolocationPositionError` object as its sole input parameter.
+    - `options` (optional) - An object including the following parameters:
+      - `maximumAge` (optional)
+      - `timeout` (optional)
+      - `enableHighAccuracy` (optional)
 
 ## Author
 
