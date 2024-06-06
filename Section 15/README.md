@@ -32,6 +32,7 @@
         - [Flowchart](#flowchart)
         - [Architecture](#architecture)
     - [Using the Geolocation API](#using-the-geolocation-api)
+    - [Displaying a Map using Leaflet Library](#displaying-a-map-using-leaflet-library)
   - [Author](#author)
 
 ## Lessons Learned
@@ -123,6 +124,86 @@
       - `maximumAge` (optional)
       - `timeout` (optional)
       - `enableHighAccuracy` (optional)
+
+### Displaying a Map using Leaflet Library
+
+- [Leaflet](https://leafletjs.com/) - A third party library for interactive maps.
+  - The `L` namespace
+  - `L.map().setView()`
+- Global Variables:
+  - Any variable that is a global variable in any script will be available to all the other scripts - as long as the they appear after that script.
+
+```javascript
+// getCurrentPosition() takes in two callback function - one is for success and the other is for error
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(
+    function (position) {
+      const { longitude, latitude } = position.coords;
+      console.log(longitude, latitude);
+      console.log(`https://www.google.com/maps/@${latitude},${longitude}`);
+
+      const coords = [latitude, longitude];
+      /**
+       * Here, L is a namespace that leaflet provides for - much like the
+       * Intl namespace we get internationalization.
+       *
+       * This namespace provides us with a function called map() which
+       * takes in one parameter - this parameter must be the id of the
+       * container in HTML, in which we want to display the map.
+       *
+       * In our case, the container's id is also `map` so, that works out.
+       *
+       * In the setView() function, we pass in an array with the values
+       * of latitude and longitude - in that order of the area we want to
+       * display in the map. The second parameter is a number which tells
+       * how zoomed-in or how zoomed-out should the map be rendered.
+       *
+       * NOTE that `L` is a global variable inside of the leaflet script
+       * so, we can access it directly in the console.
+       */
+      const map = L.map('map').setView(coords, 13);
+
+      /**
+       * The map that we see on the page is basically made up of small
+       * tiles and these tiles, they come from the url passed into the
+       * `tileLayer()` method.
+       *
+       * Open Street Map is basically an open source map that everyone
+       * can use for free.
+       *
+       * So, open street map is the one that we are going to use but,
+       * leaflet also works with all other kinds of maps as well, for
+       * example Google maps, if that is what you prefer.
+       *
+       * We can also use this url (the one that we pass into tileLayer())
+       * to change the appearance of our map. You can google around to see
+       * what other map styles are available.
+       *
+       * Default open street map style: https://tile.openstreetmap.org/{z}/{x}/{y}.png
+       */
+      L.tileLayer('https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+
+      /**
+       * This marker is for the for the pin on the map along with the
+       * popup.
+       *
+       * In the next lesson, we will talk about how to create our own
+       * markers and how display one when we click on the map.
+       */
+      L.marker(coords)
+        .addTo(map)
+        .bindPopup('A pretty CSS popup.<br> Easily customizable.')
+        .openPopup();
+    },
+    function () {
+      alert('Could not get your position');
+    }
+  );
+}
+```
 
 ## Author
 
