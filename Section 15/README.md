@@ -34,6 +34,7 @@
     - [Using the Geolocation API](#using-the-geolocation-api)
     - [Displaying a Map using Leaflet Library](#displaying-a-map-using-leaflet-library)
     - [Displaying a Map Marker](#displaying-a-map-marker)
+    - [Rendering Workout Input Form](#rendering-workout-input-form)
   - [Author](#author)
 
 ## Lessons Learned
@@ -304,6 +305,19 @@ if (navigator.geolocation) {
   );
 }
 ```
+
+### Rendering Workout Input Form
+
+- `focus()`
+  - The `HTMLElement.focus()` method sets focus on the specified element, if it can be focused. The focused element is the element that will receive keyboard and similar events by default.
+  - Parameters:
+    - `options` (optional) - An optional object for controlling aspects of the focusing process. This object may contain the following properties:
+      - `preventScroll` (optional)
+      - `focusVisible` (optional)
+  - Returns `undefined`
+- `addEventListener()` event types:
+  - `submit`
+  - `change`
 
 ## Author
 
