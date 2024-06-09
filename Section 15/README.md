@@ -35,6 +35,7 @@
     - [Displaying a Map using Leaflet Library](#displaying-a-map-using-leaflet-library)
     - [Displaying a Map Marker](#displaying-a-map-marker)
     - [Rendering Workout Input Form](#rendering-workout-input-form)
+    - [Project Architecture](#project-architecture)
   - [Author](#author)
 
 ## Lessons Learned
@@ -318,6 +319,76 @@ if (navigator.geolocation) {
 - `addEventListener()` event types:
   - `submit`
   - `change`
+
+### Project Architecture
+
+- Before we continue any further in our project, we should now think a little bit about our project architecture.
+- There are some quite advanced architecture patterns in JS, and we will talk a little bit about it by the end of the course.
+- But in this small project, we will simply use OOP with classes, just like we learned in the last section.
+- This way, we can then use these OOP concepts in a real project.
+- Remember that architecture is all about giving the project a structure.
+- In that structure, we can then develop the functionality.
+- So, in this project, the main structure will come from classes and objects.
+- Let's now dig a little bit deeper into this architecture that we are going to use.
+- To start, one of the most important aspects of any architecture is to decide where and how to store the data.
+- Because data is probably the most fundamental part of any application. Since without data, it doesn't even make sense to have an appliation in the first place.
+- What would the application be about, if not about some sort of data?
+- Now, in this case, the data that we need to store and to manage comes directly from the user stories.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/e3e2a0fd-36d4-415f-9360-28be02ab52a2)
+- Right in the first user story, we can already see that we will somehow need to store the location, distance, time, pace, and steps per minute.
+- And to fit the second user story, we will have to implement basically the same data. i.e. location, distance, time, and spped along with elevation gain instead of steps per minute.
+- So, we will design our classes, so that they can create objects that will hold this kind of data.
+- This is the best way of designing classe sot fit all user stories:
+- ![mapty-project-architecture](https://github.com/bhoamikhona/javascript/assets/50435319/e79caf63-8359-423e-bd77-63a173d3d006)
+- As you can see, we are going to have a big parent class, which will be called workout.
+- It will hold the distance, duration, and coordinates.
+- Then we will have a more specific class for running, which will hold the cadence and the pace.
+- The reason why the classes are designed like this is because the distance, duration, and coordinates are common to both types of activities viz running and cycling. Therefore, they are in the parent class.
+- The same will also be true for some methods - we will see that once we implement it.
+- Then, for each type of activity, we have one child class, so that each child class can hold the data and methods that are specific to the type of activity.
+- Hopefully that made sense.
+- This is the whole reason why inheritance actually exist - so that we can hav more specific classes that inherit behavior and common properties that are common to all the child classes.
+- So, the cadence and apce are specific for running and then the elevation gain and speed are specific to cycling.
+- In the parent class, you also see that we have other properties viz id and data but, we will see why, once we start implementing the code.
+- That's it for data.
+- This kind of diagram is something that you will commonly see when working in OOP.
+- So, usually each class is represented by a box where in the top part, you are going to have the properties and in the bottom part, you are going to have methods.
+- Of course, each class will have more than just the constructor method (that's why we have the three dots there).
+- So, for now, that's all we need to know about the architecture of our data.
+- But now, for the rest of the architecture, it is going to be more about structuring the code that we already have from the previous lessons.
+- The events that we already have are:
+  - loading of the page
+  - receiving a position from the Geolocation API
+    - This is not an event in the traditional sense i.e. we are not handling it with `addEventListener()` but, we can still classify it as an event.
+  - A click on the map
+  - changing the input from cycling to running and vice versa
+  - submitting the form
+- All we have to do now is to create different functions that will handle these different events.
+- Infact, what we are going to do is to create a bit class called App that will basically hold all of these functions as methods.
+- ![Mapty-architecture-part-1](https://github.com/bhoamikhona/javascript/assets/50435319/8c5a8483-564f-48f8-9173-62174ef370cc)
+- So from a quick look at this application class diagram, we can immediately see that loading the page will of course trigger the constructor of the object that we are going to create through the class.
+- So then right at the beginning, we want to get the current position of the user using the Geolocation API. That's why there is that arrow pointing from constructor to `_getPosition()` in app class.
+- Then as we receive that position, we want to load the map based on that position.
+- Therefore, we are going to have a method called `_loadMap(position)`.
+- Then as we click on the map, we want a method called `_showForm()`.
+- As we change the input, we want a method called `_toggleElevationField()`.
+- Then - probably the most important one is the event of submitting the form.
+- The `_newWorkout()` method will basically be the heart of the entire class, because this is the one that will create new running/cycling objects. Of course these objects will be built based on the data that's coming in from the form.
+- And as the user keeps adding running or cycling workouts, a new object will be created for each of the workouts - and each of them will then be stored in a workouts array, which will basically hold all of these objects.
+- So, this is going to be an important class property that all method of the class will then be able to use to work with the workouts.
+- So, with this structure, we have everything that is related to building the application itself, organized into one neat block of data and functionality.
+- And actually, having a class that contains all the data and methods about the application, like we have here is a pretty common thing that you will see in simple JavaScript applications like Mapty.
+- If the application was a bit more complex, then we could divide this architecture even further and create one class that would only be concerned with the user interface and one class for the so-called business logic - basically, the logic that works only with the underlying data.
+- But in this case, we can just keep it simple, like we have.
+- So, as mentioned before, this architecture will then allow us to have everything that is about the application in one nice, self-contained block.
+- Besides the application itself, we then also have the classes that are only concerned about the data.
+- Therefore, application and data will be nicely separated in a very logical way.
+- Now, what's also great about this is that we will be able to protect all of these methods, so that they are nicely encapsulated and not accessible from everywhere else in the code.
+- So, this will make the code a lot easier to work with because we will know for sure that no place else in the code is working with the data.
+- Anyway, this is the initial approach for architecture that we are now going to implement.
+- We will keep adding more methods and properties as we go but, this is already an excellent starting point.
+- Take a couple of minutes to study this diagram (above).
+- In the next lesson, we will refactor our code to fit this architecture.
 
 ## Author
 
