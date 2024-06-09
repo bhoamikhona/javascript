@@ -36,6 +36,7 @@
     - [Displaying a Map Marker](#displaying-a-map-marker)
     - [Rendering Workout Input Form](#rendering-workout-input-form)
     - [Project Architecture](#project-architecture)
+    - [Refactoring for Project Architecture](#refactoring-for-project-architecture)
   - [Author](#author)
 
 ## Lessons Learned
@@ -389,6 +390,10 @@ if (navigator.geolocation) {
 - We will keep adding more methods and properties as we go but, this is already an excellent starting point.
 - Take a couple of minutes to study this diagram (above).
 - In the next lesson, we will refactor our code to fit this architecture.
+
+### Refactoring for Project Architecture
+
+- If you are working with event listeners in classes, then you will have to often use `bind()` to set the value of `this` keyword. This is because when you have a callback function, the `this` keyword will point to the element on which the event listener is attached, and not to the class in which you are working. Keep that in mind.
 
 ## Author
 
