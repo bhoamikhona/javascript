@@ -37,6 +37,7 @@
     - [Rendering Workout Input Form](#rendering-workout-input-form)
     - [Project Architecture](#project-architecture)
     - [Refactoring for Project Architecture](#refactoring-for-project-architecture)
+    - [Managing Workout Data: Creating Classes](#managing-workout-data-creating-classes)
   - [Author](#author)
 
 ## Lessons Learned
@@ -394,6 +395,8 @@ if (navigator.geolocation) {
 ### Refactoring for Project Architecture
 
 - If you are working with event listeners in classes, then you will have to often use `bind()` to set the value of `this` keyword. This is because when you have a callback function, the `this` keyword will point to the element on which the event listener is attached, and not to the class in which you are working. Keep that in mind.
+
+### Managing Workout Data: Creating Classes
 
 ## Author
 
