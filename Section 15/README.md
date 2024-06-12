@@ -40,6 +40,7 @@
     - [Managing Workout Data: Creating Classes](#managing-workout-data-creating-classes)
     - [Creating a New Workout](#creating-a-new-workout)
     - [Rendering Workouts](#rendering-workouts)
+    - [Move to Marker On Click](#move-to-marker-on-click)
   - [Author](#author)
 
 ## Lessons Learned
@@ -411,6 +412,8 @@ if (navigator.geolocation) {
 ### Rendering Workouts
 
 - Remember that we use `data` properties usually to build a bridge between the user interface and the data that we have in our application.
+
+### Move to Marker On Click
 
 ## Author
 

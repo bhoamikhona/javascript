@@ -3,6 +3,8 @@
 class Workout {
   date = new Date();
   id = (Date.now() + '').slice(-10);
+  clicks = 0;
+
   constructor(coords, distance, duration) {
     this.coords = coords; // [lat, lng]
     this.distance = distance; // in km
@@ -16,6 +18,10 @@ class Workout {
     this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${
       months[this.date.getMonth()]
     } ${this.date.getDate()}`;
+  }
+
+  click() {
+    this.clicks++;
   }
 }
 
@@ -65,6 +71,7 @@ const inputElevation = document.querySelector('.form__input--elevation');
 
 class App {
   #map;
+  #mapZoomLevel = 13;
   #mapEvent;
   #workouts = [];
 
@@ -82,6 +89,8 @@ class App {
     form.addEventListener('submit', this._newWorkout.bind(this));
 
     inputType.addEventListener('change', this._toggleElevationField);
+
+    containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
   }
 
   _getPosition() {
@@ -114,7 +123,7 @@ class App {
      * This `L` namespace provides us with some methods e.g. `map()`,
      * `tileLayer()` and `marker()`.
      */
-    this.#map = L.map('map').setView(coords, 13); // setView() takes two parameters - the first one is an array with latitude and longitude value and the second parameter is a number which defines the zoom level of the map
+    this.#map = L.map('map').setView(coords, this.#mapZoomLevel); // setView() takes two parameters - the first one is an array with latitude and longitude value and the second parameter is a number which defines the zoom level of the map
     console.log(this.#map);
 
     // You can have a different map style here - google around for that
@@ -330,6 +339,41 @@ class App {
     }
 
     form.insertAdjacentHTML('afterend', html);
+  }
+
+  _moveToPopup(e) {
+    const workoutEl = e.target.closest('.workout');
+    console.log(workoutEl);
+
+    if (!workoutEl) return;
+
+    const workout = this.#workouts.find(
+      work => work.id === workoutEl.dataset.id
+    );
+    console.log(workout);
+
+    /**
+     * In leaflet, there is a method to move the map to specified
+     * coordinates. This method is called `setView()`. This method is
+     * available on all map objects.
+     *
+     * The first argument that the `setView()` method needs is a set of
+     * coordinatesm and the second argument is the zoom level.
+     *
+     * It also takes a third argument, which is options.
+     *
+     * You can read the leaflet documentation to understand what
+     * `animate`, `pan`, and `duration` mean.
+     */
+    this.#map.setView(workout.coords, this.#mapZoomLevel, {
+      animate: true,
+      pan: {
+        duration: 1,
+      },
+    });
+
+    // using the public interface
+    workout.click();
   }
 }
 
