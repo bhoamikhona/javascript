@@ -39,6 +39,7 @@
     - [Refactoring for Project Architecture](#refactoring-for-project-architecture)
     - [Managing Workout Data: Creating Classes](#managing-workout-data-creating-classes)
     - [Creating a New Workout](#creating-a-new-workout)
+    - [Rendering Workouts](#rendering-workouts)
   - [Author](#author)
 
 ## Lessons Learned
@@ -406,6 +407,10 @@ if (navigator.geolocation) {
   - The `Number.isFinite()` static method determines whether the passed value is a finite number -- that is, it checks that a given value is a number, and the number is neither positive `Infinity`, negative `Infinity`, nor `NaN`.
   - Parameter `value` - The value to be tested for finiteness.
   - It returns a boolean value. `true` if the given value is a finite number. Otherwise `false`.
+
+### Rendering Workouts
+
+- Remember that we use `data` properties usually to build a bridge between the user interface and the data that we have in our application.
 
 ## Author
 
