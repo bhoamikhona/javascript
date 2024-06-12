@@ -38,6 +38,7 @@
     - [Project Architecture](#project-architecture)
     - [Refactoring for Project Architecture](#refactoring-for-project-architecture)
     - [Managing Workout Data: Creating Classes](#managing-workout-data-creating-classes)
+    - [Creating a New Workout](#creating-a-new-workout)
   - [Author](#author)
 
 ## Lessons Learned
@@ -136,7 +137,7 @@
   - The `L` namespace
   - `L.map().setView()`
 - Global Variables:
-  - Any variable that is a global variable in any script will be available to all the other scripts - as long as the they appear after that script.
+  - Any variable that is a global variable in any script will be available to all the other scripts - as long as the they appear after the original script where it was first defined.
 
 ```javascript
 // getCurrentPosition() takes in two callback function - one is for success and the other is for error
@@ -397,6 +398,14 @@ if (navigator.geolocation) {
 - If you are working with event listeners in classes, then you will have to often use `bind()` to set the value of `this` keyword. This is because when you have a callback function, the `this` keyword will point to the element on which the event listener is attached, and not to the class in which you are working. Keep that in mind.
 
 ### Managing Workout Data: Creating Classes
+
+### Creating a New Workout
+
+- Guard Clause: It means that we will basically check for the opposite of what we are originally interested in and if that opposite is true, then we simply return the function immediately.
+- `Number.isFinite(value)`
+  - The `Number.isFinite()` static method determines whether the passed value is a finite number -- that is, it checks that a given value is a number, and the number is neither positive `Infinity`, negative `Infinity`, nor `NaN`.
+  - Parameter `value` - The value to be tested for finiteness.
+  - It returns a boolean value. `true` if the given value is a finite number. Otherwise `false`.
 
 ## Author
 
