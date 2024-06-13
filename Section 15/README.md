@@ -1,4 +1,4 @@
-# Mapty App: OOP, Geolocation, External Libraries, and More!
+# Section 15: Mapty App - OOP, Geolocation, External Libraries, and More!
 
 **About:** Welcome to our next project and this one is going to be the coolest, most real-world project thus far. We are going to apply everything that we have learned so far, including advanced concepts such as functions, arrays, and object oriented programming. We will also learn some new things like how to use geolocation and how to use third party libraries in our project. Even more importantly, you will actually learn how to plan a project, because building a project is not just writing some code, it is also about thinking and taking decisions and solving problems. It is important to learn that so that eventually, you can build projects on your own.
 
@@ -20,7 +20,7 @@
 
 ## Table of Content
 
-- [Mapty App: OOP, Geolocation, External Libraries, and More!](#mapty-app-oop-geolocation-external-libraries-and-more)
+- [Section 15: Mapty App - OOP, Geolocation, External Libraries, and More!](#section-15-mapty-app---oop-geolocation-external-libraries-and-more)
   - [Project Overview](#project-overview)
   - [Table of Content](#table-of-content)
   - [Lessons Learned](#lessons-learned)
