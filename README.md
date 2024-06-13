@@ -18,7 +18,8 @@
 - [Section 12](./Section%2012): Numbers, Dates, Intl, and Timers
 - [Section 13](./Section%2013): Advanced DOM and Events
 - [Section 14](./Section%2014): Object-Oriented Programming (OOP) With JavaScript
-- [Section 15](./Section%2015): Mapty App: OOP, Geolocation, External Libraries, and More!
+- [Section 15](./Section%2015): Mapty App - OOP, Geolocation, External Libraries, and More!
+- [Section 16](./Section%2016): Asynchronous JavaScript - Promises, Async/Await, and AJAX
 
 ## Projects
 
