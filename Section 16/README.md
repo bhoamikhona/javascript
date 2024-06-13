@@ -12,6 +12,7 @@
       - [Asynchronous Code](#asynchronous-code)
       - [What are AJAX calls?](#what-are-ajax-calls)
       - [What is an API?](#what-is-an-api)
+    - [Our First AJAX Call: XMLHttpRequest](#our-first-ajax-call-xmlhttprequest)
   - [Author](#author)
 
 ## Lessons Learned
@@ -165,6 +166,293 @@ p.style.width = '300px';
 - JSON is the most popular data format today because it is basically just a JavaScript object, but converted to a string.
 - Therefore, it is very easy to send across the web and also to use in JavaScript once the data arrives.
 - Now that we know what asynchronous JS is,a nd also what AJAX and APIs are, let's finally use all this in practice, and make our very first AJAX call in the next lesson.
+
+### Our First AJAX Call: XMLHttpRequest
+
+- Now that we know about AJAX and APIs, let's actually make our first API call.
+- In this lesson, we are going to build a nice UI component which contains data about a certain country.
+- This data about the country is going to come from a third party online API.
+- Let's get started.
+- In JavaScript, there are multiple ways of doing AJAX calls but, we are going to start with the most old school one - that's called the `XMLHttpRequest()` function.
+
+```javascript
+const request = new XMLHttpRequest();
+```
+
+- That's the first step of using the `XMLHttpRequest()` way of doing AJAX calls.
+- As mentioned before, this is the old school way of doing AJAX in JavaScript but, we are still learning about it for 2 reasons:
+  - First, know that `XMLHttpRequest()` exists because you might need it in the future.
+  - Second, to learn how AJAX calls used to be handled with events and callback functions. Only after that, we should move on to a more modern way of handling asynchronous JavaScript, which is going to be a feature called Promises.
+- Anyway, next we need the URL to which we will make the AJAX call.
+
+```javascript
+const request = new XMLHttpRequest();
+
+// first parameter is to mention the kind of request we want to make
+// second parameter is a string containing the URL to which the AJAX call should be made to
+request.open('GET', `https://restcountries.com/v3.1/name/india`);
+```
+
+- Now, we need to send this request.
+
+```javascript
+const request = new XMLHttpRequest();
+
+// first parameter is to mention the kind of request we want to make
+// second parameter is a string containing the URL to which the AJAX call should be made to
+request.open('GET', `https://restcountries.com/v3.1/name/india`);
+request.send();
+```
+
+- Now in order to get the result, we couldn't simply set a variable to `request.send()` i.e. we cannot simply do `const data = request.send()`.
+- The reason why we cannot do this is because the result is simply not there yet.
+- So, this AJAX call that we just sent is being done in the background while the rest of the code keeps running.
+- So, this is the asynchronous, non-blocking behavior that we talked about in the last lesson.
+- So, instead of setting `request.send()` to variable, what we need to do is to register a callback on the request object for the load event.
+
+```javascript
+const request = new XMLHttpRequest();
+
+// first parameter is to mention the kind of request we want to make
+// second parameter is a string containing the URL to which the AJAX call should be made to
+request.open('GET', `https://restcountries.com/v3.1/name/india`);
+
+/**
+ * Here we send the request.
+ *
+ * That request then fetches the data in the background and then, once
+ * that is done, it will emit the `load` event.
+ */
+request.send();
+
+/**
+ * Using the `addEventListener()` we are waiting for that `load` event
+ * to emit so, as soon as the data arrives, its callback function will be
+ * called.
+ */
+request.addEventListener('load', function () {
+  /**
+   * The `this` keyword inside the `addEventListener()` is the `request`.
+   * So, we could also log `request` but, let's stick with `this`.
+   *
+   * The response is in the property `responseText` - Again, this property
+   * is only set once the data has actually arrived.
+   */
+  console.log(this.responseText);
+});
+```
+
+- Now if you look in the console, we will have our first data - and as you can see, it kind of looks like a bunch of data about India indeed.
+- Now we just need to convert this result into an actualy JavaScript object because, what we have is JSON.
+- Remember that JSON is basically just a big string of text.
+- To convert it, we need to use `JSON.parse()` method.
+
+```javascript
+const request = new XMLHttpRequest();
+
+// first parameter is to mention the kind of request we want to make
+// second parameter is a string containing the URL to which the AJAX call should be made to
+request.open('GET', `https://restcountries.com/v3.1/name/india`);
+
+/**
+ * Here we send the request.
+ *
+ * That request then fetches the data in the background and then, once
+ * that is done, it will emit the `load` event.
+ */
+request.send();
+
+/**
+ * Using the `addEventListener()` we are waiting for that `load` event
+ * to emit so, as soon as the data arrives, its callback function will be
+ * called.
+ */
+request.addEventListener('load', function () {
+  /**
+   * The `this` keyword inside the `addEventListener()` is the `request`.
+   * So, we could also log `request` but, let's stick with `this`.
+   *
+   * The response is in the property `responseText` - Again, this property
+   * is only set once the data has actually arrived.
+   */
+  console.log(this.responseText);
+
+  // converting JSON to JS object and storing it in a variable
+  const data = JSON.parse(this.responseText);
+  console.log(data);
+});
+```
+
+- Now, we have an array of objects where the object has all the data about India.
+- Since, it is an array, we can take out the object that we want from it.
+
+```javascript
+const request = new XMLHttpRequest();
+
+// first parameter is to mention the kind of request we want to make
+// second parameter is a string containing the URL to which the AJAX call should be made to
+request.open('GET', `https://restcountries.com/v3.1/name/india`);
+
+/**
+ * Here we send the request.
+ *
+ * That request then fetches the data in the background and then, once
+ * that is done, it will emit the `load` event.
+ */
+request.send();
+
+/**
+ * Using the `addEventListener()` we are waiting for that `load` event
+ * to emit so, as soon as the data arrives, its callback function will be
+ * called.
+ */
+request.addEventListener('load', function () {
+  /**
+   * The `this` keyword inside the `addEventListener()` is the `request`.
+   * So, we could also log `request` but, let's stick with `this`.
+   *
+   * The response is in the property `responseText` - Again, this property
+   * is only set once the data has actually arrived.
+   */
+  console.log(this.responseText);
+
+  // converting JSON to JS object and storing it in a variable
+  const data = JSON.parse(this.responseText).pop();
+  console.log(data);
+});
+```
+
+- Now we can build the card component. To do that we can create a template literal with HTML code in it and add the data in it dynamically.
+- Then append the html element into HTML document.
+
+```javascript
+const request = new XMLHttpRequest();
+
+// first parameter is to mention the kind of request we want to make
+// second parameter is a string containing the URL to which the AJAX call should be made to
+request.open('GET', `https://restcountries.com/v3.1/name/india`);
+
+/**
+ * Here we send the request.
+ *
+ * That request then fetches the data in the background and then, once
+ * that is done, it will emit the `load` event.
+ */
+request.send();
+
+/**
+ * Using the `addEventListener()` we are waiting for that `load` event
+ * to emit so, as soon as the data arrives, its callback function will be
+ * called.
+ */
+request.addEventListener('load', function () {
+  /**
+   * The `this` keyword inside the `addEventListener()` is the `request`.
+   * So, we could also log `request` but, let's stick with `this`.
+   *
+   * The response is in the property `responseText` - Again, this property
+   * is only set once the data has actually arrived.
+   */
+  console.log(this.responseText);
+
+  // converting JSON to JS object and storing it in a variable
+  const data = JSON.parse(this.responseText).pop();
+  console.log(data);
+
+  const html = `
+    <article class="country">
+      <img class="country__img" src="${data.flags.svg}" />
+      <div class="country__data">
+        <h3 class="country__name">${data.name.common}</h3>
+        <h4 class="country__region">${data.region}</h4>
+        <p class="country__row"><span>👫</span>${(
+          +data.population / 1000000
+        ).toFixed(1)} people</p>
+        <p class="country__row"><span>🗣️</span>${data.languages.hin}</p>
+        <p class="country__row"><span>💰</span>${data.currencies.INR.name}</p>
+      </div>
+    </article>
+  `;
+
+  countriesContainer.insertAdjacentHTML('beforeend', html);
+  countriesContainer.style.opacity = 1;
+});
+```
+
+- And it works.
+- Now, let's re-use the same code to create an element like the one we already have for multiple countries.
+- To do that we can put what we have inside a function and then call that function for different countries.
+
+```javascript
+const getCountryData = function (country) {
+  const request = new XMLHttpRequest();
+
+  // first parameter is to mention the kind of request we want to make
+  // second parameter is a string containing the URL to which the AJAX call should be made to
+  request.open('GET', `https://restcountries.com/v3.1/name/${country}`);
+
+  /**
+   * Here we send the request.
+   *
+   * That request then fetches the data in the background and then, once
+   * that is done, it will emit the `load` event.
+   */
+  request.send();
+
+  /**
+   * Using the `addEventListener()` we are waiting for that `load` event
+   * to emit so, as soon as the data arrives, its callback function will be
+   * called.
+   */
+  request.addEventListener('load', function () {
+    /**
+     * The `this` keyword inside the `addEventListener()` is the `request`.
+     * So, we could also log `request` but, let's stick with `this`.
+     *
+     * The response is in the property `responseText` - Again, this property
+     * is only set once the data has actually arrived.
+     */
+    // console.log(this.responseText);
+
+    // converting JSON to JS object and storing it in a variable
+    const data = JSON.parse(this.responseText).pop();
+    console.log(data);
+
+    const html = `
+      <article class="country">
+        <img class="country__img" src="${data.flags.svg}" />
+        <div class="country__data">
+          <h3 class="country__name">${data.name.common}</h3>
+          <h4 class="country__region">${data.region}</h4>
+          <p class="country__row"><span>👫</span>${(
+            +data.population / 1000000
+          ).toFixed(1)} people</p>
+          <p class="country__row"><span>🗣️</span>${Object.values(
+            data.languages
+          ).join(', ')}</p>
+          <p class="country__row"><span>💰</span>${
+            Object.values(data.currencies)[0].name
+          }</p>
+        </div>
+      </article>
+    `;
+
+    countriesContainer.insertAdjacentHTML('beforeend', html);
+    countriesContainer.style.opacity = 1;
+  });
+};
+
+getCountryData('india');
+getCountryData('usa');
+```
+
+- By calling this functiont wice, we will basically have two AJAX calls happening at the same time.
+- And if we re-load the page a couple of times, the country cards might appear in different order.
+- The reason for that is basically that the data arrives at a slightly different time, each time that we are loading the page.
+- So in fact, this really shows the non-blocking behaviour in action.
+- Now, if we actually wanted these requests to be made in a specific, pre-defined order, then we would basically have to chain the requests.
+- Which means to make the second request only after the first request has finished.
+- That's what we are going to do in the next lesson so that we can learn about something that developers call <ins>callback hell</ins>.
 
 ## Author
 
