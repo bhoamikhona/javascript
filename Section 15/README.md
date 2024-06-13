@@ -41,6 +41,7 @@
     - [Creating a New Workout](#creating-a-new-workout)
     - [Rendering Workouts](#rendering-workouts)
     - [Move to Marker On Click](#move-to-marker-on-click)
+    - [Working with localStorage](#working-with-localstorage)
   - [Author](#author)
 
 ## Lessons Learned
@@ -414,6 +415,57 @@ if (navigator.geolocation) {
 - Remember that we use `data` properties usually to build a bridge between the user interface and the data that we have in our application.
 
 ### Move to Marker On Click
+
+### Working with localStorage
+
+- Local storage is basically a place in the browser, where we can store data that will stay there even after we close the page.
+- Basically, the data is linked to the URL on which we are using the application.
+- Local Storage is an API that browser provides for us which we can use.
+- `localStorage.setItem(keyName, keyValue)`
+  - The `setItem()` method os the `Storage` interface, when passed a key name and value, will add that key to the given `Storage` object, or update that key's value if it already exists.
+  - Parameters:
+    - `keyName` - A string containing the name of the key you want to create/update.
+    - `keyValue` - A string containing the value you want to give the key you are creating/updating.
+  - Returns `undefined`.
+- `JSON.stringify()`
+  - The `JSON.stringify()` static method converts a JavaScript value to a JSON string, optionally replacing values if a replacer function is specified or optionally including only the specified properties if a replacer array is specified.
+  - Parameters:
+    - `value` - The value to convert to a JSON string.
+    - `replacer` (optional) - A function that alters the behavior of the stringification process, or an array of strings and numbers that specifies properties of `value` to be included in the output.
+    - `space` (optional) - A string or number that is used to insert white space (including indentation, line break characters, etc) into the output JSON string for readability purposes.
+- Local storage is a very simple API. So, it is only advised to use for small amounts of data. This is because local storage is blocking , and we will learn what blocking is and why it is bad in the next section.
+- For now, all you need to know is that you shouldn't use local storage to store large amounts of data, because that will surely slow your application down.
+- `JSON.parse(text, reviver)`
+
+  - The `JSON.parse()` static method parses a JSON string, constructing the JavaScript value or object described by the string. An optional reviver function can be provided to perform a transformation on the resulting object before it is returned.
+  - Parameters:
+    - `text` - The string to parse as JSON.
+    - `reviver` (optional) - If a function, this presecribes how each value originally produced by parsing is transformed before being returned. Non-callable values are ignored. The function is called with the following arguments:
+      - `key` - The key associated with the value.
+      - `value` - The value produced by parsing.
+      - `context` (optional) - A context object that holds state relevant to the current expression being revived. It is a new object for each invocation of the reviver function. It is only passed when reviving primitive values, but not when `value` is an object or array. It contains the following property:
+        - `source` - The original JSON string representing this value.
+  - Returns: - The `Object`, `Array`, string, number, boolean, or `null` value corresponding to the given JSON `text`.
+
+> [!IMPORTANT]
+>
+> When we use local storage, we use `JSON.stringify()` and `JSON.parse()` so, in the process of converting an object to string and a string to object, we lose the prototype chain.
+>
+> The new objects recovered from the local storage are now just regular objects. They are no longer objects that were created by `Running` or `Cycling` class.
+>
+> So, in the end, they will not be able to inherit any of their methods.
+>
+> This can be a big problem when you work with local storage and object oriented programming.
+
+- `localStorage.removeItem()`
+  - The `removeItem()` method of the `Storage` interface, when passed a key name, will remove that key from the given `Storage` object if it exists. The `Storage` interface of the Web Storage API provides access to a particular domain's session or local storage.
+  - If there is no item associated with the given key, this method will do nothing.
+  - Parameters:
+    - `keyName` - A string containing the name of the key you want to remove.
+  - Returns `undefined`
+- `location` - It is a big object that contains a lot of mehtods and properties in the browsers.
+- `location.reload()`
+  - The `reload()` mehtod of the `Location` interface reloads the current URL, like the refresh button.
 
 ## Author
 
