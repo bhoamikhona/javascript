@@ -42,6 +42,7 @@
     - [Rendering Workouts](#rendering-workouts)
     - [Move to Marker On Click](#move-to-marker-on-click)
     - [Working with localStorage](#working-with-localstorage)
+    - [Final Considerations](#final-considerations)
   - [Author](#author)
 
 ## Lessons Learned
@@ -466,6 +467,20 @@ if (navigator.geolocation) {
 - `location` - It is a big object that contains a lot of mehtods and properties in the browsers.
 - `location.reload()`
   - The `reload()` mehtod of the `Location` interface reloads the current URL, like the refresh button.
+
+### Final Considerations
+
+- 10 Additional Feature Ideas: Challenges
+  - Ability to edit a workout
+  - Ability to delete a workout
+  - Ability to delete all workouts
+  - Ability to sort workouts by a certain field (e.g. distance)
+  - Re-build running and cylcing objects coming from local storage
+  - More realistic error and confirmation messages
+  - Ability to position the map to show all workouts
+  - Ability to draw lines and shapes instead of just points
+  - Geocode location from coordinates
+  - Display weather data for workout time and place
 
 ## Author
 
