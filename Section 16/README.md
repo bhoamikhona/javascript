@@ -13,6 +13,8 @@
       - [What are AJAX calls?](#what-are-ajax-calls)
       - [What is an API?](#what-is-an-api)
     - [Our First AJAX Call: XMLHttpRequest](#our-first-ajax-call-xmlhttprequest)
+    - [How the Web Works: Requests and Responses](#how-the-web-works-requests-and-responses)
+      - [What happens when we access a web server](#what-happens-when-we-access-a-web-server)
   - [Author](#author)
 
 ## Lessons Learned
@@ -453,6 +455,120 @@ getCountryData('usa');
 - Now, if we actually wanted these requests to be made in a specific, pre-defined order, then we would basically have to chain the requests.
 - Which means to make the second request only after the first request has finished.
 - That's what we are going to do in the next lesson so that we can learn about something that developers call <ins>callback hell</ins>.
+
+### How the Web Works: Requests and Responses
+
+- In this lesson, we are going to go over a very high-level overview of how the Web actually works behind the scenes in regards to requests and responses.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/c7a6b7e6-ad36-47d9-a7b9-360500e268be)
+- Above is the diagram that we saw when we first talked about AJAX calls.
+- To recap, whenever we try to access a web server, the browser, which is the client, sends a request to the server and the server will then send back a response and that response contains the data or the web page that we requested.
+- This process works the exact same way no matter if we are accessing an entire web page or just some data from a web API.
+- This whole process actually has a name, and it is called the <ins>request-response model</ins> or the <ins>client-server architecture</ins>.
+- Anyway, let's now dive a bit deeper into this.
+
+#### What happens when we access a web server
+
+- Let's use the example of the URL that we accessed in the last lesson to get our country data.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/c4aadebc-19d1-44d8-9cee-51e8b66f45ce)
+- Every URL gets an HTTP or HTTPS, which is for the protocol that will be used on this connection. We will talk about this a bit later, in this lesson.
+- Then we have the domain name, which is [restcountries.com](https://restcountries.com/) in this case, and also, after a slash, we have the so-called "resource" that we want to access.
+- In our case it is "v3.1/name/{name}"
+- Now this domain name, restcountries.com is actually not the real address of the server that we are trying to access.
+- It is really just a nice name that is easy for us to memorize.
+- But what this means is that we need a way of converting the domain name to the real address of the server.
+- That happens through a so-called <ins>DNS</ins> which stands for <ins>domain name server</ins>.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/5b8d8599-157e-4b96-98f5-f9ff137ac51f)
+- DNS are a special kind of server. They are basically like the phone books of the Internet.
+- The first step that happens when we access any web server is that the browser makes a request to a DNS and this special server will then simply match the web address of the URL to the server's real IP address.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/18655dae-8267-4f87-b100-3760b53969ac)
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/d52a6ebf-a02f-4c79-88fa-b3f831333421)
+- All of this happens through your internet service provider, but the complete details don't really matter here.
+- What you need to retain from this first part is that the domain is not the real address and that a DNS will convert the domain to the real IP address.
+- Then, after the real IP address has been sent back to the browser, we can finally call it.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/6584069d-3e9d-45a1-8c59-aadd8c03a217)
+- This is what the real address looks like: "https://104.27.142.889:443"
+- It still has the protocol, but then comes the IP address, and also the port that we access on the server.
+- This port number is really just to identify a specific service that's running on a server.
+- So, you can think of it like a sub-address.
+- This port number has nothing to do with the "/v3.1/name/{name}" that we want to access.
+- That resource will actually be sent over in the HTTP request, as we will see in a moment.
+- That wraps up the first step.
+- So, once we have the real IP address, a TCP socket connection is established between the browser and the server. So, they are now finally connected.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/db0c0dee-028f-4335-8bc6-692bafd3d439)
+- This connection is typically kept alive for the entire time that it takes to transfer all files of the website or all data.
+- What are TCP and IP?
+- TCP is the transmission control protocol, and IP is the internet protocol. Together they are communication protocols that define exactly how data travels across the web.
+- They are basically the internet's fundamental control system, because again, they are the ones who set the rules about how data moves on the internet.
+- Don't worry if that sounds confusing. We will learn a bit more about TCP/IP a bit later in this lesson.
+- Anyway, now it is time to finally make our request. The request that we make is an HTTP request where <ins>HTTP</ins> stands for <ins>**H**yper**T**ext **T**ransfer **P**rotocol</ins>.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/24a81fde-da9b-4152-b843-f997771f59e8)
+- So, after TCP/IP, HTTP is another communication protocol.
+- By the way, a communication protocol is simply a system of rules that allows two or more parties to communicate.
+- In the case of HTTP, it is just a protocol that allows clients and web servers to communicate. That works by sending requests and response messages from client to server and back.
+- A request message will look something like this:
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/a95a3e18-da1d-4e4c-bbf7-672ceb5c2cbd)
+- The beginning message is the most important part, called the <ins>start line</ins>.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/b9a72c49-37b8-46a3-b69b-9a6fdc182dcf)
+- And the one in our example contains the HTTP method that is used in the request, then the request target and the HTTP version.
+- About the HTTP methods, there are many available but, the most important ones are:
+  - GET - for simply requesting data
+  - POST - for sending data
+  - PUT and PATCH - to modify data
+- So, you see, an HTTP request to a server is not only for getting data, but we can also send data.
+- Now about the request target. This is where the server is told that we want to access the "rest/v2/alpha" (image example) resource.
+- We had it in the URL before and now it is simply sent as the target in the HTTP request. So then the server can figure out what to do with it.
+- Now, if the target was empty, so if it was just a slash, then we would be accessing the website's route, which is just "rescountries.eu" in the example image.
+- Then the next part of the request are the request headers, which is just some information that we sent about the request itself.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/1b1555a2-6208-4570-86ef-47c16d33c9f0)
+- There are tons of standard different headers, like what browser is used to make the request, at what time, the user's language, and many more.
+- Finally, in the case we are sending data to the server - there will also be a request body, and that body will contain the data that we are sending, for example, coming from an HTML form.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/79a93712-6745-43d3-a9a9-cc9b61b5267a)
+- So, that is the HTTP request, and hopefully all of that made sense.
+- Now, of course, it is not the developers who manually write these HTTP requests, but, it is still helpful and valuable that you understand what an HTTP request and also a response looks like.
+- There is also HTTPS.
+- The main difference between HTTP and HTTPS is that HTTPS is encrypted using TLS or SSL, which are yet some more protocols.
+- Besides that, the logic behind HTTP requests and responses still apply to HTTPS.
+- So, our request is formaed and now it hits the server, which will then be working on it until it has our data or web page ready to send back.
+- Once it is ready, it will send it back using an HTTP response.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/cbfbba66-cd13-465e-abfa-4e167e161cf6)
+- The HTTP response message actually looks quite similar to the request.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/bdddfce3-db1e-4d2f-8419-fceace46521d)
+- Now, in this case, the start line has a status code and a message besides the version.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/50baa110-460a-4e58-b2bb-6fef51898fbb)
+- These are used to let the client know whether the request has been successful or failed.
+- For example, 200 means OK; and the status code that everyone knows is 404, which means page not found. So, this where that 404 comes from.
+- Then the response headers are information about the response itself, just like before.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/64d6b3e7-d0a6-449c-ade2-9c2ddc201490)
+- There are a ton avialble and we can also make up our own actually.
+- Finally, the last part of the response is, again, the body - which is present in most reposnses.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/1b50251c-3277-499d-8e59-e6d62bb9dc36)
+- This body usually contains the JSON data coming back from an API or the HTML of the web page that we requested or something like that.
+- So, we talked in great detail about the most important parts here, which are the HTTP request and response.
+- But in our imaginary example, we only just did one request to restcountries.eu and got one response back.
+- That's how it is going to work when all we do is to access an API.
+- However, if it is a webpage that we are accessing, then there will be many more requests and responses.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/45118c27-5cd3-4d6e-85b7-165ab07750a7)
+- That's because when we do the first request, all we get back is just the initial HTML file.
+- That HTML file will then get scanned by the browser for all the assets that it needs in order to build the entire webpage like JS, CSS files, image files, or other assets.
+- Then for each different file, there will be a new HTTP request made to the server.
+- Basically, this entire back and forth between client and server happens for every single file that is included in the webpage.
+- However, there can be multiple requests and responses happening at the same time, but the amount is still limited because otherwise, the connection would start to slow down.
+- Anyway, when all the files have finally arrived, then the webpage can be rendered in the browser, according to the HTML, CSS, and JS specifications that you already know.
+- Now, as a final piece of the puzzle, let's talk about TCP/IP and figure out how this request and response data is actually sent across the web.
+- We mentioned before that TCP and IP are the communication protocols that define how data travels across the web.
+- We won't go into a lot of detail here but, here is what we need to know:
+  - First, the job of TCP is to break the requests and responses down into thousands of small chunks, called packets before they are sent.
+  - ![image](https://github.com/bhoamikhona/javascript/assets/50435319/5ab9701c-d14a-47f6-82be-6dace5d8accb)
+  - Once these small packets arrive at their final destination, TCP will re-assemble all the packets into the original request or response.
+  - This is necessary so that each packet can take a different route through the internet because this way the message arrives at the destination as quick as possible - which would not be possible if we sent the entire data simply as a big chunk.
+  - That would be like trying to go through dense traffic with the biggest bus that you can imagine - probably not a good idea.
+  - Second, the job of the IP protocol is to actually send and route these packets through the internet.
+  - ![tcpip-gif](https://github.com/bhoamikhona/javascript/assets/50435319/1377ef0d-db00-4d0b-9acd-30f658da63dd)
+  - So, it ensures that they arrive at the destination they should go, using the IP addresses on each packet.
+  - That's it.
+- That's a broad overview of what really happens behind the scenes of the web.
+- Hopefully, you found this information useful and interesting.
+- Anyway, now let's go back to our JavaScript AJAX calls.
 
 ## Author
 
