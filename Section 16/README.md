@@ -15,6 +15,7 @@
     - [Our First AJAX Call: XMLHttpRequest](#our-first-ajax-call-xmlhttprequest)
     - [How the Web Works: Requests and Responses](#how-the-web-works-requests-and-responses)
       - [What happens when we access a web server](#what-happens-when-we-access-a-web-server)
+    - [Welcome to Callback Hell](#welcome-to-callback-hell)
   - [Author](#author)
 
 ## Lessons Learned
@@ -569,6 +570,358 @@ getCountryData('usa');
 - That's a broad overview of what really happens behind the scenes of the web.
 - Hopefully, you found this information useful and interesting.
 - Anyway, now let's go back to our JavaScript AJAX calls.
+
+### Welcome to Callback Hell
+
+- In the last lesson, we did a simple AJAX call to fetch data from a country's API.
+- We created a function for that and as we call the function multiple times, multiple AJAX calls were made at the same time. Basically, the call were running in parallel and we could not control which one finished first.
+- However, in this lesson, let's create a sequence of AJAX calls so that the second one runs only after the first one has finished.
+- Here's what we are going to do:
+  - When we get a country's data, it has a property called `border` which holds an array with of strings. These strings are essentially codes that represent a country that are neighbours of the original country.
+  - So, what we will do now is after the first AJAX call is completed, we will get the `borders` of the original country and then based on it, we will also render the neighbouring country on our UI.
+  - So, in this case, the second AJAX call really depends on the first one, because the data about neighbouring countries is of course a result of the first call.
+  - Without the first call, we wouldn't even know which data to fetch in the second call.
+  - So, what we need to implement is a sequence of AJAX call.
+
+```javascript
+const getCountryData = function (country) {
+  const request = new XMLHttpRequest();
+  request.open('GET', `https://restcountries.com/v3.1/name/${country}`);
+  request.send();
+
+  request.addEventListener('load', function () {
+    const data = JSON.parse(this.responseText).pop();
+    console.log(data);
+
+    const html = `
+      <article class="country">
+        <img class="country__img" src="${data.flags.svg}" />
+        <div class="country__data">
+          <h3 class="country__name">${data.name.common}</h3>
+          <h4 class="country__region">${data.region}</h4>
+          <p class="country__row"><span>👫</span>${(
+            +data.population / 1000000
+          ).toFixed(1)} people</p>
+          <p class="country__row"><span>🗣️</span>${Object.values(
+            data.languages
+          ).join(', ')}</p>
+          <p class="country__row"><span>💰</span>${
+            Object.values(data.currencies)[0].name
+          }</p>
+        </div>
+      </article>
+    `;
+
+    countriesContainer.insertAdjacentHTML('beforeend', html);
+    countriesContainer.style.opacity = 1;
+  });
+};
+
+getCountryData('india');
+```
+
+- Here we have the code from the last lesson.
+- First, let's change the name of the function to `getCountryAndNeighbour()`.
+
+```javascript
+const getCountryAndNeighbour = function (country) {
+  const request = new XMLHttpRequest();
+  request.open('GET', `https://restcountries.com/v3.1/name/${country}`);
+  request.send();
+
+  request.addEventListener('load', function () {
+    const data = JSON.parse(this.responseText).pop();
+    console.log(data);
+
+    const html = `
+      <article class="country">
+        <img class="country__img" src="${data.flags.svg}" />
+        <div class="country__data">
+          <h3 class="country__name">${data.name.common}</h3>
+          <h4 class="country__region">${data.region}</h4>
+          <p class="country__row"><span>👫</span>${(
+            +data.population / 1000000
+          ).toFixed(1)} people</p>
+          <p class="country__row"><span>🗣️</span>${Object.values(
+            data.languages
+          ).join(', ')}</p>
+          <p class="country__row"><span>💰</span>${
+            Object.values(data.currencies)[0].name
+          }</p>
+        </div>
+      </article>
+    `;
+
+    countriesContainer.insertAdjacentHTML('beforeend', html);
+    countriesContainer.style.opacity = 1;
+  });
+};
+
+getCountryAndNeighbour('india');
+```
+
+- Again, we get country as an input and then we do our first AJAX call.
+- Once the load event is fired (when the data arrives), we then handle that data.
+- Now let's export the functionality of creating an html element and inserting it into the DOM in its own function. So, that we can call it not just for the original country but also, its neighbouring countries.
+
+```javascript
+const renderCountry = function (data) {
+  const html = `
+      <article class="country">
+        <img class="country__img" src="${data.flags.svg}" />
+        <div class="country__data">
+          <h3 class="country__name">${data.name.common}</h3>
+          <h4 class="country__region">${data.region}</h4>
+          <p class="country__row"><span>👫</span>${(
+            +data.population / 1000000
+          ).toFixed(1)} people</p>
+          <p class="country__row"><span>🗣️</span>${Object.values(
+            data.languages
+          ).join(', ')}</p>
+          <p class="country__row"><span>💰</span>${
+            Object.values(data.currencies)[0].name
+          }</p>
+        </div>
+      </article>
+    `;
+
+  countriesContainer.insertAdjacentHTML('beforeend', html);
+  countriesContainer.style.opacity = 1;
+};
+
+const getCountryAndNeighbour = function (country) {
+  const request = new XMLHttpRequest();
+  request.open('GET', `https://restcountries.com/v3.1/name/${country}`);
+  request.send();
+
+  request.addEventListener('load', function () {
+    const data = JSON.parse(this.responseText).pop();
+    console.log(data);
+    renderCountry(data);
+  });
+};
+
+getCountryAndNeighbour('india');
+```
+
+- The UI should look the same as before at this point.
+- Now let's get the neighbour country.
+
+```javascript
+const renderCountry = function (data) {
+  const html = `
+      <article class="country">
+        <img class="country__img" src="${data.flags.svg}" />
+        <div class="country__data">
+          <h3 class="country__name">${data.name.common}</h3>
+          <h4 class="country__region">${data.region}</h4>
+          <p class="country__row"><span>👫</span>${(
+            +data.population / 1000000
+          ).toFixed(1)} people</p>
+          <p class="country__row"><span>🗣️</span>${Object.values(
+            data.languages
+          ).join(', ')}</p>
+          <p class="country__row"><span>💰</span>${
+            Object.values(data.currencies)[0].name
+          }</p>
+        </div>
+      </article>
+    `;
+
+  countriesContainer.insertAdjacentHTML('beforeend', html);
+  countriesContainer.style.opacity = 1;
+};
+
+const getCountryAndNeighbour = function (country) {
+  // AJAX call country 1
+  const request = new XMLHttpRequest();
+  request.open('GET', `https://restcountries.com/v3.1/name/${country}`);
+  request.send();
+
+  request.addEventListener('load', function () {
+    const data = JSON.parse(this.responseText).pop();
+    console.log(data);
+
+    // Render country 1
+    renderCountry(data);
+
+    // Get neighbour country (2)
+    const neighbour = data?.borders?.[0];
+
+    // if there is no neighbouring country, return
+    if (!neighbour) return;
+
+    // AJAX call country 2
+    const request2 = new XMLHttpRequest();
+    request2.open('GET', `https://restcountries.com/v3.1/alpha/${neighbour}`);
+    request2.send();
+  });
+};
+
+getCountryAndNeighbour('india');
+```
+
+- Now just like beofore, we have to listen for the load event on request2.
+
+```javascript
+const renderCountry = function (data) {
+  const html = `
+      <article class="country">
+        <img class="country__img" src="${data.flags.svg}" />
+        <div class="country__data">
+          <h3 class="country__name">${data.name.common}</h3>
+          <h4 class="country__region">${data.region}</h4>
+          <p class="country__row"><span>👫</span>${(
+            +data.population / 1000000
+          ).toFixed(1)} people</p>
+          <p class="country__row"><span>🗣️</span>${Object.values(
+            data.languages
+          ).join(', ')}</p>
+          <p class="country__row"><span>💰</span>${
+            Object.values(data.currencies)[0].name
+          }</p>
+        </div>
+      </article>
+    `;
+
+  countriesContainer.insertAdjacentHTML('beforeend', html);
+  countriesContainer.style.opacity = 1;
+};
+
+const getCountryAndNeighbour = function (country) {
+  // AJAX call country 1
+  const request = new XMLHttpRequest();
+  request.open('GET', `https://restcountries.com/v3.1/name/${country}`);
+  request.send();
+
+  request.addEventListener('load', function () {
+    const data = JSON.parse(this.responseText).pop();
+    console.log(data);
+
+    // Render country 1
+    renderCountry(data);
+
+    // Get neighbour country (2)
+    const neighbour = data?.borders?.[0];
+
+    // if there is no neighbouring country, return
+    if (!neighbour) return;
+
+    // AJAX call country 2
+    const request2 = new XMLHttpRequest();
+    request2.open('GET', `https://restcountries.com/v3.1/alpha/${neighbour}`);
+    request2.send();
+
+    request2.addEventListener('load', function () {
+      console.log(this.responseText);
+    });
+  });
+};
+
+getCountryAndNeighbour('india');
+```
+
+- You are starting to see now that the second AJAX call, in the way we are setting it up here, is really dependent on the first one.
+- That's because we are firing up second AJAX call in the callback function of the first one.
+- Basically, inside of the callback function, we are now adding a new event listener for the new request.
+- Now if we look at the console, we indeed get the data about Bangladesh, a neighbouring country to India.
+- And now, no matter how many times we re-load the page, the data about Bangladesh will always appear after India, because there is no way that the second AJAX call can be made before the first one - in our example.
+- Now let's render the neighbouring country on our UI.
+
+```javascript
+const renderCountry = function (data, className = '') {
+  const html = `
+      <article class="country ${className}">
+        <img class="country__img" src="${data.flags.svg}" />
+        <div class="country__data">
+          <h3 class="country__name">${data.name.common}</h3>
+          <h4 class="country__region">${data.region}</h4>
+          <p class="country__row"><span>👫</span>${(
+            +data.population / 1000000
+          ).toFixed(1)} people</p>
+          <p class="country__row"><span>🗣️</span>${Object.values(
+            data.languages
+          ).join(', ')}</p>
+          <p class="country__row"><span>💰</span>${
+            Object.values(data.currencies)[0].name
+          }</p>
+        </div>
+      </article>
+    `;
+
+  countriesContainer.insertAdjacentHTML('beforeend', html);
+  countriesContainer.style.opacity = 1;
+};
+
+const getCountryAndNeighbour = function (country) {
+  // AJAX call country 1
+  const request = new XMLHttpRequest();
+  request.open('GET', `https://restcountries.com/v3.1/name/${country}`);
+  request.send();
+
+  request.addEventListener('load', function () {
+    const data = JSON.parse(this.responseText).pop();
+    console.log(data);
+
+    // Render country 1
+    renderCountry(data);
+
+    // Get neighbour country (2)
+    const neighbour = data?.borders?.[0];
+
+    // if there is no neighbouring country, return
+    if (!neighbour) return;
+
+    // AJAX call country 2
+    const request2 = new XMLHttpRequest();
+    request2.open('GET', `https://restcountries.com/v3.1/alpha/${neighbour}`);
+    request2.send();
+
+    request2.addEventListener('load', function () {
+      const data2 = JSON.parse(this.responseText).pop();
+      console.log(data2);
+      renderCountry(data2, 'neighbour');
+    });
+  });
+};
+
+getCountryAndNeighbour('india');
+```
+
+- Once again, the second AJAX call would not have been possible without the first one.
+- So, what we have here is one callback function inside of another one.
+- In other words, we have nested callbacks.
+- But now imagine that we wanted to do more in sequence, like the neighbour of the neighbour of the neighbour - 10 times over.
+- In that case, we would end up with 10 times over nested callback functions.
+- For that kind of structure/behavior, we have a special name, which is <ins>callback hell</ins>.
+- Basically, callback hell is when we have a lot of nested callbacks in order to execute asynchronous tasks in sequence.
+- In fact, this happens for all asynchronous tasks, which are handled by callbacks - and not just AJAX calls.
+- For example:
+
+```javascript
+// callback hell another example:
+setTimeout(() => {
+  console.log('1 second passed');
+  setTimeout(() => {
+    console.log('2 seconds passed');
+    setTimeout(() => {
+      console.log('3 seconds passed');
+      setTimeout(() => {
+        console.log('4 seconds passed');
+      }, 1000);
+    }, 1000);
+  }, 1000);
+}, 1000);
+```
+
+- Here too of course, we have callback hell.
+- In fact, callback hell is pretty easy to identify by the triangular shape that is formed, that you can see in the example above.
+- The problem with callback hell is that it makes our code look very messy. But even more important, it makes our code harder to maintain, very difficult to understand and to reason about.
+- This kind of code will have more bugs thereby making it worse code.
+- RULE: The code that is hard to understand, is basically bad code, because it will have more bugs. This is because the harder it is to understand code and to reason about, the more difficult it will be to add new features and to add more functionality to the application.
+- Given all these problems with callback hell, we of course need a way to solve callback hell.
+- Fortunately for us, since ES6, there is actually a way of escaping callback hell by using something called <ins>promises</ins>.
+- So, let's now take the next step in our journey of asynchronous JS, which is to learn about promises.
 
 ## Author
 
