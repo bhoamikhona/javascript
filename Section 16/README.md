@@ -19,6 +19,7 @@
     - [Promises and the Fetch API](#promises-and-the-fetch-api)
       - [What are promises?](#what-are-promises)
       - [The Promise Lifecycle](#the-promise-lifecycle)
+    - [Consuming Promises](#consuming-promises)
   - [Author](#author)
 
 ## Lessons Learned
@@ -1006,6 +1007,138 @@ console.log(request);
 - Most of the time, we will actually just consume promises, which is also the easier and more useful part. So, that's what we will do in the next couple of lessons.
 - But sometimes, we also need to build a promise and not just consume it. Of course we will learn how to do that, a bit later.
 - Let's start using promises in the next lesson.
+
+### Consuming Promises
+
+- In this lesson, we will learn how to consume a promise.
+- In this case, we will consume the promise that was returned by the `fetch()` function.
+- So, let's now implement the `getCountryData()` function from the very first lesson but, using a promise.
+
+```javascript
+const getCountryDataFetch = function (country) {
+  fetch(`https://restcountries.com/v3.1/name/${country}`);
+};
+```
+
+- As we already know, calling the `fetch()` function like this, will immediately return a promise.
+- In the beginning, the promise is of course, still pending because the asynchronous task of getting the data is still running in the background.
+- Of course, at certain point, the promise will then be settled in either a fulfilled or a rejected state.
+- But for now, let's assume success. So, assume that the promise will be fulfilled and that we have a value available to work with.
+- So, to handle this fulfilled state, we can use the `then()` method that is available on all promises.
+- In the `then()` method, we need to pass a callback function that we want to be executed as soon as the promise is actually fulfilled i.e. as soon as the result is available.
+- This callback function inside `then()` will recieve one argumnet once it is called by JS and that argument is the resulting value of the fulfilled promise. We can call this argument `response` because it is the response of an AJAX call in this case.
+
+```javascript
+const getCountryDataFetch = function (country) {
+  fetch(`https://restcountries.com/v3.1/name/${country}`).then(function (
+    response
+  ) {});
+};
+```
+
+- That's it, this is how we handle a fulfilled promise.
+- But now, let's do something with the response that we have received; and as always, let's start by logging it to the console.
+
+```javascript
+const getCountryDataFetch = function (country) {
+  // prettier-ignore
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(function(response) {
+      console.log(response);
+  });
+};
+
+getCountryDataFetch('india');
+```
+
+- We get the response, indeed, along with the type of the object which is actually called `Response`.
+- When we expand this response object, we will see a few things about the response itself, for example, status code and headers.
+- Anyway, what we are actually interested in is the data itself and that data is in the response body.
+- When we click on the `body`, we see that the body is `ReadableStream`. So, we cannot really look at the data just yet.
+- In order to be able to actually read this data from the body, we need to call the `json()` method on the response.
+- `json()` is a method that is available on all responses of the `fetch()` method.
+
+```javascript
+const getCountryDataFetch = function (country) {
+  // prettier-ignore
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(function(response) {
+      console.log(response);
+      response.json()
+  });
+};
+
+getCountryDataFetch('india');
+```
+
+- Again, the `json()` method is a method that is available on all the response objects coming from the `fetch()` function i.e. all of the resolved values; and indeed, the response in our case is in fact a resolved value.
+- Therefore, it does have the `json()` method attached to it.
+- The problem is that this `json()` function itself is also asynchronous function.
+- This means that it will also return a new promise and that's a bit confusing, but this is just how it works.
+- Anyway, now we need to return the promise that is coming from the `json()` method so that we can handle it.
+- To handle the promise coming from `json()`, we use another `then()` method, like so:
+
+```javascript
+const getCountryDataFetch = function (country) {
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(function (response) {
+      console.log(response);
+      return response.json();
+    })
+    .then(function (data) {
+      console.log(data);
+    });
+};
+
+getCountryDataFetch('india');
+```
+
+- Now if we look at the console, we are back to having the same data that we had when we used `XMLHttpRequest()` but this time, using a promise (two promises to be precise).
+- Let's recap what happened here.
+- The first part is pretty straight forward - which is the `fetch()` function returning a promise; and then we handle that promise using a `then()` method.
+- But then, to actually read the data from the response, we need to call the `json()` method on that response object. Now this itself, will also return a promise.
+- So, if we then return that promise from the `then()` method of the `fetch()` function then basically, the `then()` function called on `fetch()` becomes a new promise itself.
+- Since it is now a promise, we can call the `then()` method on that.
+- In this second `then()` method, we get a callback and access to the data because the resolved value of `response.json()` is going to be the data itself.
+- Now all we have to do is to render the country.
+
+```javascript
+const getCountryDataFetch = function (country) {
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(function (response) {
+      console.log(response);
+      return response.json();
+    })
+    .then(function (data) {
+      console.log(data);
+      renderCountry(data.pop());
+    });
+};
+
+getCountryDataFetch('india');
+```
+
+- So, we just did the same thing as before, but this time using promises.
+- And if don't have all the `console.log()` functions in there, then we can simplify it a lot.
+- After simplification, it will look like this:
+
+```javascript
+const getCountryDataFetchSimplified = function (country) {
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => response.json())
+    .then(data => renderCountry(data.pop()));
+};
+
+getCountryDataFetchSimplified('usa');
+```
+
+- Now if you compare the code that we wrote while using `XMLHttpRequest()` vs. `fetch()` then you'll have to agree that the code with `fetch()` is easier to read and to reason about.
+- So, it is very easy to understand that `fetch()` fetches something, which gives us a reponse and then `json()` transforms that response into json and then we take that data and reder it into a country card component on our UI.
+- So, it almost reads like English sentences and that's very helpful to understand the code now and also in the future.
+- Now, just to finish, you might be wondering that we are still using callbacks here.
+- That's true. Promises do not get rid of callbacks but, they do in fact get rid of callback hell.
+- So, even if it doesn't look like a big change for now, it will look like a change after we add the functionality of loading the neighbouring country.
+- So, let's do that in the next lesson.
 
 ## Author
 

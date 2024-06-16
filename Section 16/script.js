@@ -135,7 +135,7 @@ const getCountryAndNeighbour = function (country) {
 };
 
 // getCountryAndNeighbour('india');
-getCountryAndNeighbour('usa');
+// getCountryAndNeighbour('usa');
 
 // callback hell another example:
 setTimeout(() => {
@@ -166,3 +166,33 @@ request.send(); */
 // using fetch API
 const request = fetch(`https://restcountries.com/v3.1/name/india`);
 console.log(request);
+
+/************************************************************************/
+/************************** CONSUMING PROMISES **************************/
+/************************************************************************/
+console.log(
+  `/************************** CONSUMING PROMISES **************************/`
+);
+
+const getCountryDataFetch = function (country) {
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(function (response) {
+      console.log(response);
+      return response.json();
+    })
+    .then(function (data) {
+      console.log(data);
+      renderCountry(data.pop());
+    });
+};
+
+getCountryDataFetch('india');
+
+// simplified version of getCountryDataFetch()
+const getCountryDataFetchSimplified = function (country) {
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => response.json())
+    .then(data => renderCountry(data.pop()));
+};
+
+getCountryDataFetchSimplified('usa');
