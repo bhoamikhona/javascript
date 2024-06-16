@@ -150,3 +150,19 @@ setTimeout(() => {
     }, 1000);
   }, 1000);
 }, 1000);
+
+/************************************************************************/
+/********************** PROMISES AND THE FETCH API **********************/
+/************************************************************************/
+console.log(
+  `/********************** PROMISES AND THE FETCH API **********************/`
+);
+
+// using XMLHttpRequest()
+/* const request = new XMLHttpRequest();
+request.open('GET', `https://restcountries.com/v3.1/name/india`);
+request.send(); */
+
+// using fetch API
+const request = fetch(`https://restcountries.com/v3.1/name/india`);
+console.log(request);

@@ -16,6 +16,9 @@
     - [How the Web Works: Requests and Responses](#how-the-web-works-requests-and-responses)
       - [What happens when we access a web server](#what-happens-when-we-access-a-web-server)
     - [Welcome to Callback Hell](#welcome-to-callback-hell)
+    - [Promises and the Fetch API](#promises-and-the-fetch-api)
+      - [What are promises?](#what-are-promises)
+      - [The Promise Lifecycle](#the-promise-lifecycle)
   - [Author](#author)
 
 ## Lessons Learned
@@ -922,6 +925,87 @@ setTimeout(() => {
 - Given all these problems with callback hell, we of course need a way to solve callback hell.
 - Fortunately for us, since ES6, there is actually a way of escaping callback hell by using something called <ins>promises</ins>.
 - So, let's now take the next step in our journey of asynchronous JS, which is to learn about promises.
+
+### Promises and the Fetch API
+
+- In the last lesson we got a glimpse into callback hell and it was not pretty.
+- In this lesson, let's learn about a modern JavaScript feature called <ins>promises</ins>, so that we can escape callback hell.
+- However, before we learn about promises, we should actually see one.
+- So, let's now replace the old `XMLHttpRequest()` function with the modern way of making AJAX calls - and that is by using the Fetch API.
+- This is how we do it:
+
+```javascript
+// using XMLHttpRequest()
+const request = new XMLHttpRequest();
+request.open('GET', `https://restcountries.com/v3.1/name/india`);
+request.send();
+
+// using fetch API
+const request = fetch(`https://restcountries.com/v3.1/name/india`);
+console.log(request);
+```
+
+- Now there are some more options that we can specify in the `fetch()` function, if we'd like but, to make a simply request like the one we have above, all we really need is to pass in the URL, that's it.
+- So, for more complex AJAX calls, the `fetch()` function can take in an object of options as well, but for now, we don't need that.
+- Now, we check the console, after logging in the request, we see that the `fetch()` function immediately returned a promise.
+- So, as soon as we started the request, stored the result in `request` variable, and then logged it, we immediately got a promise in the console - and right next to it, in the angle brackets, it says pending.
+- If we expand it, then it says "fulfilled" and then we also have a promise value.
+- What matters here is that now we actually have a promise and it is stored in the `request` variable.
+- But, what exactly is a promise, and what can we do with it?
+
+#### What are promises?
+
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/3c2f6fb2-ae14-4881-9790-9641c9a9d6ae)
+- The formal definition of a promis is that it is an object that is used as a placeholder for the future result of an asynchronous operation.
+- If that sounds weird to you, we can also say that a promise is like a container for an asynchronously delivered value. OR a promise is a container for a future value.
+- A perfect example of a future value is the response coming from an AJAX call.
+- So, when we start an AJAX call, there is no value yet, but we know that there will be some value in the future. So, we can use a promise to handle this future value.
+- This will really make sense once we go back to code.
+- But to understand this concept even better, we can use the analogy of a lottery ticket.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/75f1eef0-4a43-4a16-9b12-18b94a5a4508)
+- A promise is just like a lottery ticket. When we buy a lottery ticket, we essentially buy a promise that we will receive some amount of money in the future if we guess the correct outcome.
+- So, we buy the ticket now with the prospect of winning money in the future and the lottery draw - which determines if we get the money or not happens asynchronously.
+- So, of course, we don't have to drop everything and keep waiting until the lottery draw happens.
+- Now, in case we did get the corret outcome, we will receive the lottery money because we have the lottery ticket which is a promise that we bought.
+- Now, what's the advantage of using promises?
+- There are two actually.
+- First, by using promises, we no longer have to rely on events and callback functions to handle asynchronous results.
+- Events and callback functions can sometimes cause unpredictable results so, it is a big win already.
+- But even better, with promises, we can chain promises for a sequence of asynchronous operations instead of nesting, like we did in the last lesson.
+- With this, we can finally escape callback hell, which was our initial goal, all along.
+- By the way, promises are an ES6 feature i.e. they became available in JS in 2015 so by now, they are widely used by everyone.
+
+#### The Promise Lifecycle
+
+- Since promises work with asynchronous oeprations, they are time sensitive.
+- So, they change over time.
+- So, promises can be in different state and this is what they call the cycle of a promise.
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/310a7464-0585-40b2-872f-6fb94213afdd)
+- In the very beginning, we say that a promise is pending. This is before any value resulting from the asynchronous task is available.
+- During this time, the asynchronous task is still doing its work in the background.
+- Then when the task finally finished, we say that the promise is settled.
+- There are two different types of settled promises:
+  - Fulfilled promises
+    - A fulfilled promise is a promise that has successfully resulted in a value, just as we expect it.
+    - For example, when we use the promise to fetch data from an API, a fulfilled promise successfully gets that data, and it is now available to being used.
+  - Rejected promises
+    - A rejected promise means that there has been an error during the asynchronous task.
+    - For example, in the case of fetching data from an API, an error would be for example, when the user is offline and cannot connect to the API server.
+- Going back to the analogy of the lottery ticket, the lottery draw is basically the asynchronous task, which determines the result.
+- Once the result is available, the ticket would be settled.
+- If we guessed the correct outcome, the lottery ticket will be fulfilled and we get our money.
+- However, if we guessed wrong, then the ticket basically gets rejected and all we did was waste our money.
+- These different states are very important to understand because when we use promises in our code, we will be able to handle these different states in order to do something as a result of either a successful promise or a rejected one.
+- Another important thing about promises is that a promise is only settled once so, from there, the state will remain unchanged forever.
+- So, the promise was either fulfilled or unchanged but, it's impossible to change that state.
+- These different states that we just observed are relevant and useful when we use a promise to get a result, which is called, <ins>to consume a promise</ins>.
+- We consume a promise when we already have a promise, for example, the promise that was returned from the `fetch()` function, right at the beginning of this lesson.
+- But in order for a promise to exist in the first place, it must first be built i.e. it must be created.
+- In the case of fetch API, it is the `fetch()` function that builds the promise and returns it for us to consume.
+- So, in this case, we don't have to build the promise ourselves in order to consume it.
+- Most of the time, we will actually just consume promises, which is also the easier and more useful part. So, that's what we will do in the next couple of lessons.
+- But sometimes, we also need to build a promise and not just consume it. Of course we will learn how to do that, a bit later.
+- Let's start using promises in the next lesson.
 
 ## Author
 
