@@ -46,7 +46,7 @@ const getCountryData = function (country) {
 
     const html = `
       <article class="country">
-        <img class="country__img" src="${data.flags.svg}" />
+        <img class="country__img" src="${data?.flags?.svg}" />
         <div class="country__data">
           <h3 class="country__name">${data.name.common}</h3>
           <h4 class="country__region">${data.region}</h4>
@@ -186,7 +186,7 @@ const getCountryDataFetch = function (country) {
     });
 };
 
-getCountryDataFetch('india');
+// getCountryDataFetch('india');
 
 // simplified version of getCountryDataFetch()
 const getCountryDataFetchSimplified = function (country) {
@@ -195,4 +195,31 @@ const getCountryDataFetchSimplified = function (country) {
     .then(data => renderCountry(data.pop()));
 };
 
-getCountryDataFetchSimplified('usa');
+// getCountryDataFetchSimplified('usa');
+
+/***********************************************************************/
+/************************** CHAINING PROMISES **************************/
+/***********************************************************************/
+console.log(
+  `/************************** CHAINING PROMISES **************************/`
+);
+
+const getCountryDataFetchChain = function (country) {
+  // Country 01
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => response.json())
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders?.[0];
+
+      if (!neighbour) return;
+
+      // Country 02
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    })
+    // here we are calling it response because it really is the response of the fetch() - we also call json() on it so that the string is converted to a JS object
+    .then(response => response.json())
+    .then(data => renderCountry(data.pop(), 'neighbour'));
+};
+
+getCountryDataFetchChain('usa');

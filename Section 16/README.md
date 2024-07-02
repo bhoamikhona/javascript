@@ -20,6 +20,7 @@
       - [What are promises?](#what-are-promises)
       - [The Promise Lifecycle](#the-promise-lifecycle)
     - [Consuming Promises](#consuming-promises)
+    - [Chaining Promises](#chaining-promises)
   - [Author](#author)
 
 ## Lessons Learned
@@ -906,6 +907,172 @@ getCountryDataFetchSimplified('usa');
 - That's true. Promises do not get rid of callbacks but, they do in fact get rid of callback hell.
 - So, even if it doesn't look like a big change for now, it will look like a change after we add the functionality of loading the neighbouring country.
 - So, let's do that in the next lesson.
+
+### Chaining Promises
+
+- Let's now learn how to chain promises in order to also render the neighbouring country, of the initial country that we give to the function.
+- In this lesson, we will now take chaining to a new level and actually chain together, two sequential AJAX calls.
+- So just like before, we first get the data about the country and then we also want to get the data about the neighbouring country.
+- So, the second AJAX call depends on the first AJAX call - so, they need to be done in sequence.
+- To do that, let's simply modify the code from the previous lesson.
+- The second AJAX call needs to happen inside the second `then()` method.
+- So, as soon as we get the data for the original country, we need to do the AJAX call for the neighbouring country.
+
+```javascript
+const getCountryDataFetchChain = function (country) {
+  // Country 01
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => response.json())
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders?.[0];
+
+      if (!neighbour) return;
+
+      // Country 02
+      fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    });
+};
+
+getCountryDataFetchChain('usa');
+```
+
+- For now, this is not going to do anything because what we need to do now is to actually return the new promise.
+- Because then, when we do that, we will be able to chain a new `then()` method on the result of the previous `then()` method.
+
+```javascript
+const getCountryDataFetchChain = function (country) {
+  // Country 01
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => response.json())
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders?.[0];
+
+      if (!neighbour) return;
+
+      // Country 02
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    });
+};
+
+getCountryDataFetchChain('usa');
+```
+
+- In the last lesson, we oversimplified things about how all of this works.
+- Actually, the `then()` method always returns a promise, no matter if we actually return anything or not.
+- But if we do return a value, then that value will become the fulfillment value of the return promise.
+- We can confirm that by returning a number instead of the data, like so:
+
+```javascript
+const getCountryDataFetchChain = function (country) {
+  // Country 01
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => response.json())
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders?.[0];
+
+      if (!neighbour) return;
+
+      // Country 02
+      // return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+      return 23;
+    })
+    .then(data => alert(data));
+};
+
+getCountryDataFetchChain('usa');
+```
+
+- Indeed, we get an alert window which says 23.
+- This happens because whatever we return from the promise in the second `then()` method, will become the fulfilled promise value in the third `then()` method.
+- The fullfilled value i.e. the success value of the promise will be the value that we return from the second `then()` method - which in our example above is 23.
+- Therefore, in the next `then()` method, the data will be 23.
+- Again, the data that we receive in the third `then()` method is the fullfilled value of the promise that we are handling.
+- Anyway, of course, the same is true for promises.
+- So by doing this:
+
+```javascript
+const getCountryDataFetchChain = function (country) {
+  // Country 01
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => response.json())
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders?.[0];
+
+      if (!neighbour) return;
+
+      // Country 02
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    })
+    .then(data => console.log(data));
+};
+
+getCountryDataFetchChain('usa');
+```
+
+- So by returning the `fetch()` promise from the second `then()` method, the fullfilled value of the third `then()` method will be the fullfilled value of the previous promise.
+- This might sound confusing but, what you need to understand is that the second `then()` method returns a promise and in the third `then()` method we need to handle the success value of that promise.
+
+```javascript
+const getCountryDataFetchChain = function (country) {
+  // Country 01
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => response.json())
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders?.[0];
+
+      if (!neighbour) return;
+
+      // Country 02
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    })
+    // here we are calling it response because it really is the response of the fetch() - we also call json() on it so that the string is converted to a JS object
+    .then(response => response.json())
+    .then(data => renderCountry(data.pop(), 'neighbour'));
+};
+
+getCountryDataFetchChain('usa');
+```
+
+- As we can see, it works.
+- So, as you see, promises really allow us to handle these complex asynchrnous operations with as many steps as we want.
+- So, right now we have 4 steps (i.e. 4 `then()` methods) but, we can extend it as much as we want.
+- Even if we want the neighbour of the neighbour of the neighbour (10 times over), we could easily do that by chaining all the promises one after another, and all without callback hell.
+- Here, instead of callback hell, we have flat chain of promises, and it is very easy to read and understand.
+- So, as a conclusion to this and the previous lesson, promises really are an incredibly powerful and elegant solution to handle asynchronous code.
+- Now, just to finish, let's look at a pretty common mistake that many beginners make, which is to chain the `then()` method directly onto a new nested promise.
+
+```javascript
+const getCountryDataFetchChain = function (country) {
+  // Country 01
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => response.json())
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders?.[0];
+
+      if (!neighbour) return;
+
+      // DON'T DO THIS
+      // Many beginners do this mistake, where instead of returning the fetch() promise, they chain the then() method on it
+      fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`)
+        .then(response => response.json())
+        .then(data => renderCountry(data.pop(), 'neighbour'));
+    });
+};
+
+getCountryDataFetchChain('usa');
+```
+
+- This still works but then, we are in fact back to callback hell.
+- Because now indeed, we have one callback hell function defined inside another one.
+- That's exactly what we are trying to avoid so, don't do this.
+- So, always return the promise and then handle it outside by simply continuing the chain.
+- Anyway, let's now move on and actually handle errors because that is also a pretty common scenario when we work with promises and especially with AJAX calls.
 
 ## Author
 
