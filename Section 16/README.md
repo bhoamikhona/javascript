@@ -22,6 +22,7 @@
     - [Consuming Promises](#consuming-promises)
     - [Chaining Promises](#chaining-promises)
     - [Handling Rejected Promises](#handling-rejected-promises)
+    - [Throwing Errors Manually](#throwing-errors-manually)
   - [Author](#author)
 
 ## Lessons Learned
@@ -1402,6 +1403,314 @@ getCountryDataFetchError('abc');
 - It does pick up on the other error which is "Cannot read property of 'flag' of undefined" but, that is not the one that we want to handle.
 - In this case, we really want to tell the user that no country was found with the name of "abc".
 - So, that's what we will do in the next lesson.
+
+### Throwing Errors Manually
+
+- In this lesson, we are going fix the request 404 error that we saw happening in the last lesson.
+- So, as we saw in the last lesson, the problem was that during the `fetch()`, there was a 404 error, which is because our API couldn't find any country with the name of "abc".
+- But, even though there was obviously a big problem with the request, the `fetch()` function still did not reject in this case.
+- Many people think that the promise should be rejected in this case, but it doesn't so, we will have to do it manually.
+- To check what is going on, we can log the response in the very first `then()` handler right after the `fetch()`.
+
+```javascript
+const getCountryWithErrorHandling = function (country) {
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => {
+      console.log('response', response);
+      return response.json();
+    })
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders?.[0];
+
+      if (!neighbour) return;
+
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    })
+    .then(response => response.json())
+    .then(data => renderCountry(data.pop(), 'neighbour'))
+
+    .catch(err => {
+      console.error(`${err} 💥💥💥`);
+      renderError(`Something went wrong 💥💥💥 ${err.message}. Try again!`);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
+};
+
+btn.addEventListener('click', function () {
+  getCountryWithErrorHandling('usa');
+});
+
+getCountryWithErrorHandling('abc');
+```
+
+- Again, for now, we are just taking a look at the response object.
+- In the response object, if you expand it, you will see that the "ok" property is set to false.
+- The reason for that is of course the status code 404.
+- When the request goes well, the "ok" is set to true and that's because the status code is 200.
+- So, 200 literally stands of OK.
+- So, we can now use the fact that this reponse has the "ok" property set to false to reject the promise ourselves, manually.
+- We can do that by creating a new error.
+
+```javascript
+const getCountryWithErrorHandling = function (country) {
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => {
+      console.log('response', response);
+
+      // this is the real error message that we want to see
+      if (!response.ok)
+        throw new Error(`Country not found (${response.status})`);
+
+      return response.json();
+    })
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders?.[0];
+
+      if (!neighbour) return;
+
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    })
+    .then(response => response.json())
+    .then(data => renderCountry(data.pop(), 'neighbour'))
+
+    .catch(err => {
+      console.error(`${err} 💥💥💥`);
+      renderError(`Something went wrong 💥💥💥 ${err.message}. Try again!`);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
+};
+
+btn.addEventListener('click', function () {
+  getCountryWithErrorHandling('usa');
+});
+
+getCountryWithErrorHandling('abc');
+```
+
+- This is something that we never did before, so let's analyze what happens here.
+- We create the new error by using the constructor function, and then we pass in a message, which is going to be the error message.
+- Then we use the `throw` keyword which will immediately terminate the current function, just like `return` does.
+- The effect of creating and throwing an error in any of these `then()` methods is that the promise will immediately reject.
+- Basically, the promise returned by the `then()` handler will be a rejected promise.
+- That rejection will then propagate all the way down to the `catch()` handler, which we already have set up.
+- So, now if we check our UI, the error message that is rendered is exactly the one that we passed in the `Error()` constructor function.
+- So, any error that happens in any of the callback functions i.e. `then()` methods, it will immediately terminate that `then()` handler and will propagate down to the `catch()` method.
+- In the `catch()` method, we then handle that error, which is why we see it in our UI.
+- In fact, the same is true for any other error.
+- So, before we added our own error, we had the "Cannot read property of 'flag' of undefined" and that's because somewhere in our `renderCountry()` function we are trying to read the 'flag' from the data that we received, but the data that we received for "abc" country does not contain a flag. Therefore, it created the error.
+- This error then caused rejection of the promise and it was handled in the `catch()` method.
+- So, any error will cause any promise to reject but, in the first `then()` after the `fetch()`, we are simply creating our own error to basically reject the promise on purpose so that we can then handle that error in the `catch()` down the chain.
+- Now you might be wondering, why should we even bother to handle all these errors? Isn't that just a bunch of work and a waste of time?
+- First, handling these errors is the only way in which we can actually display errors for our users, like we did in our example.
+- But even more important, it is really just a bad practice to leave these rejected promises, hanging around without handling them.
+- So, don't do that, always use `catch()` method; and if necessary, you can also use `finally()`.
+- Now, what if there was no error in the first `then()` method after the `fetch()` but, we have a problem in the second `fetch()` method (i.e. when fetching data for the neighbouring country)?
+
+```javascript
+const getCountryWithErrorHandling = function (country) {
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => {
+      console.log('response', response);
+
+      // this is the real error message that we want to see
+      if (!response.ok)
+        throw new Error(`Country not found (${response.status})`);
+
+      return response.json();
+    })
+    .then(data => {
+      renderCountry(data[0]);
+      // const neighbour = data[0].borders?.[0];
+      const neighbour = 'xyz'; // invalid neighbouring country
+
+      if (!neighbour) return;
+
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    })
+    .then(response => response.json())
+    .then(data => renderCountry(data.pop(), 'neighbour'))
+
+    .catch(err => {
+      console.error(`${err} 💥💥💥`);
+      renderError(`Something went wrong 💥💥💥 ${err.message}. Try again!`);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
+};
+
+btn.addEventListener('click', function () {
+  getCountryWithErrorHandling('usa');
+});
+
+getCountryWithErrorHandling('abc');
+```
+
+- So, now we get another error - which is a 400 error.
+- 400 status code means something else, but in any case, the error is not handled.
+- So, we now need to go ahead a handle that error over there as well.
+
+```javascript
+const getCountryWithErrorHandling = function (country) {
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => {
+      console.log('response', response);
+
+      // this is the real error message that we want to see
+      if (!response.ok)
+        throw new Error(`Country not found (${response.status})`);
+
+      return response.json();
+    })
+    .then(data => {
+      renderCountry(data[0]);
+      // const neighbour = data[0].borders?.[0];
+      const neighbour = 'xyz'; // invalid neighbouring country
+
+      if (!neighbour) return;
+
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    })
+    .then(response => {
+      if (!response.ok)
+        throw new Error(`Country not found (${response.status})`);
+      return response.json();
+    })
+    .then(data => renderCountry(data.pop(), 'neighbour'))
+
+    .catch(err => {
+      console.error(`${err} 💥💥💥`);
+      renderError(`Something went wrong 💥💥💥 ${err.message}. Try again!`);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
+};
+
+btn.addEventListener('click', function () {
+  getCountryWithErrorHandling('usa');
+});
+
+getCountryWithErrorHandling('abc');
+```
+
+- But now, of course, we have duplicate code here, which we shouldn't have.
+- So, to keep the code DRY, it might be a good idea to now create a helper function.
+- This helper function will wrap up the fetch, the error handling, and also the conversion to JSON, because it's a bit cumbersome to have all these steps all the time.
+- Instead, we will encapsulate it into a nice function.
+- So, let's do that, and we can call that function `getJSON()`
+
+```javascript
+const getJSON = function (url, errorMsg = 'Something went wrong') {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+
+    return response.json();
+  });
+};
+```
+
+- This `getJSON()` function will actually return a promise.
+- So, this is then just like any other promise that we can call in our chain.
+- So, let's refactor our code accordingly.
+
+```javascript
+const getJSON = function (url, errorMsg = 'Something went wrong') {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+
+    return response.json();
+  });
+};
+
+const getCountryWithErrorHandling = function (country) {
+  getJSON(`https://restcountries.com/v3.1/name/${country}`, `Country not found`)
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders?.[0];
+      if (!neighbour) return;
+      return getJSON(
+        `https://restcountries.com/v3.1/alpha/${neighbour}`,
+        `Country not found`
+      );
+    })
+    .then(data => renderCountry(data.pop(), 'neighbour'))
+
+    .catch(err => {
+      console.error(`${err} 💥💥💥`);
+      renderError(`Something went wrong 💥💥💥 ${err.message}. Try again!`);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
+};
+
+btn.addEventListener('click', function () {
+  getCountryWithErrorHandling('usa');
+});
+
+// getCountryWithErrorHandling('abc');
+```
+
+- So, that's working great but, now there is still one more thing that we need to do, which is to handle the fact that sometimes there might be no neighbour.
+- Right now, when there is no neighbouring country, we are simply returning the function.
+- But, that doesn't really do anything. So, let's fix that.
+
+```javascript
+const getJSON = function (url, errorMsg = 'Something went wrong') {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+
+    return response.json();
+  });
+};
+
+const getCountryWithErrorHandling = function (country) {
+  getJSON(`https://restcountries.com/v3.1/name/${country}`, `Country not found`)
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders?.[0];
+      if (!neighbour) throw new Error('No neighbour found!');
+      return getJSON(
+        `https://restcountries.com/v3.1/alpha/${neighbour}`,
+        `Country not found`
+      );
+    })
+    .then(data => renderCountry(data.pop(), 'neighbour'))
+
+    .catch(err => {
+      console.error(`${err} 💥💥💥`);
+      renderError(`Something went wrong 💥💥💥 ${err.message}. Try again!`);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
+};
+
+btn.addEventListener('click', function () {
+  getCountryWithErrorHandling('usa');
+});
+
+// getCountryWithErrorHandling('abc');
+getCountryWithErrorHandling('australia');
+```
+
+- So now, we get a real error message that actually makes sense to the user.
+- Of course, the UI can be a lot better, but this is just for demostration purposes.
+- But it does nicely demonstrate, how we can create a real error message that does actually make sense.
+- This is super important for any UI that you are building. This is because, in web applications like our example, errors will happen, that is gauranteed so, your application needs to be ready/prepared for it.
+- Recap:
+  - The big takeaway from this lesson is that whenever we want to create some error that we want to handle in the `catch()` method, all we need to do is to throw and create a new error, just like we did in our example.
+  - Of course, we can do that for multiple reasons.
+  - In this case, we did it simply because in this situation, no neighbour can be found. So, that is a good reason to display an error message on the UI. Since we display the error message in our `catch()` method, the best way of doing that is to indeed throw an error.
+  - Remember that this works because throwing an error inside a `then()` method will immediately reject the promise and rejected promises travel down the chain until it is eventually caught somewhere - in our case, it is the `catch()` method.
+  - So, when working with real applications in the real-world, make sure to keep this technique in mind, because it is really important.
 
 ## Author
 
