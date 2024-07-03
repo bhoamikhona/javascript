@@ -78,7 +78,7 @@ console.log(
   `/*********************** WELCOME TO CALLBACK HELL ***********************/`
 );
 
-const renderCountry = function (data, className = '') {
+let renderCountry = function (data, className = '') {
   const html = `
       <article class="country ${className}">
         <img class="country__img" src="${data.flags.svg}" />
@@ -222,4 +222,72 @@ const getCountryDataFetchChain = function (country) {
     .then(data => renderCountry(data.pop(), 'neighbour'));
 };
 
-getCountryDataFetchChain('usa');
+// getCountryDataFetchChain('usa');
+
+/************************************************************************/
+/********************** HANDLING REJECTED PROMISES **********************/
+/************************************************************************/
+console.log(
+  `/********************** HANDLING REJECTED PROMISES **********************/`
+);
+
+const renderError = function (msg) {
+  countriesContainer.insertAdjacentText('beforeend', msg);
+  // countriesContainer.style.opacity = 1;
+};
+
+renderCountry = function (data, className = '') {
+  const html = `
+      <article class="country ${className}">
+        <img class="country__img" src="${data.flags.svg}" />
+        <div class="country__data">
+          <h3 class="country__name">${data.name.common}</h3>
+          <h4 class="country__region">${data.region}</h4>
+          <p class="country__row"><span>👫</span>${(
+            +data.population / 1000000
+          ).toFixed(1)} people</p>
+          <p class="country__row"><span>🗣️</span>${Object.values(
+            data.languages
+          ).join(', ')}</p>
+          <p class="country__row"><span>💰</span>${
+            Object.values(data.currencies)[0].name
+          }</p>
+        </div>
+      </article>
+    `;
+
+  countriesContainer.insertAdjacentHTML('beforeend', html);
+  // countriesContainer.style.opacity = 1;
+};
+
+const getCountryDataFetchError = function (country) {
+  // Country 01
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => response.json())
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders?.[0];
+
+      if (!neighbour) return;
+
+      // Country 02
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    })
+    .then(response => response.json())
+    .then(data => renderCountry(data.pop(), 'neighbour'))
+    // here we can use the same callback function
+    // because the callback function here will also be called with the error object that occurred so, then we can handle it in some way
+    .catch(err => {
+      console.error(`${err} 💥💥💥`);
+      renderError(`Something went wrong 💥💥💥 ${err.message}. Try again!`);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
+};
+
+btn.addEventListener('click', function () {
+  getCountryDataFetchError('usa');
+});
+
+// getCountryDataFetchError('abc');

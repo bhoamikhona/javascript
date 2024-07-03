@@ -21,6 +21,7 @@
       - [The Promise Lifecycle](#the-promise-lifecycle)
     - [Consuming Promises](#consuming-promises)
     - [Chaining Promises](#chaining-promises)
+    - [Handling Rejected Promises](#handling-rejected-promises)
   - [Author](#author)
 
 ## Lessons Learned
@@ -1073,6 +1074,334 @@ getCountryDataFetchChain('usa');
 - That's exactly what we are trying to avoid so, don't do this.
 - So, always return the promise and then handle it outside by simply continuing the chain.
 - Anyway, let's now move on and actually handle errors because that is also a pretty common scenario when we work with promises and especially with AJAX calls.
+
+### Handling Rejected Promises
+
+- Until now, we have always assumed that everything went well with our AJAX calls, so we never handled any errors.
+- However, an important part of web development is to actually handle the errors because it is very common that errors happen in web applications.
+- Because it is very common that errors happen in web applications.
+- So, in this lesson, let's talk about how to handle errors in promises.
+- To start, remember that a promise in which an error happens is a rejected promise.
+- So in this lesson, we are going to learn how to handle promise rejections.
+- The only way in which the `fetch()` promise rejects is when the user loses his internet connection.
+- So, for now, that's going to be the only error that we will handle here.
+- To do that, we will simulate not having the internet using the Network tab on the chrome developer tools.
+- Assuming that you did the necessary changes in the network tab:
+- Now if we click the button, we get the internet disconnected error in the console.
+- So, at this point, for the first time, the promise that's returned from the `fetch()` function was rejected.
+- So, let's now handle that rejection.
+- There are two ways of handling rejections.
+- The first one is to pass a second callback function into the `then()` method.
+- So, the first callback function in the `then()` method is always going to be called for the fulfilled promise but, we can also pass in a second callback function, which will be called when the promise was rejected.
+- So, let's do that.
+- This second callback will be called with an argument which is basically the error itself.
+
+```javascript
+const getCountryDataFetchError = function (country) {
+  // Country 01
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    // second callback with error handling
+    .then(
+      response => response.json(),
+      err => alert(err)
+    )
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders?.[0];
+
+      if (!neighbour) return;
+
+      // Country 02
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    })
+    .then(response => response.json())
+    .then(data => renderCountry(data.pop(), 'neighbour'));
+};
+
+btn.addEventListener('click', function () {
+  getCountryDataFetchError('usa');
+});
+```
+
+- So now, we actually handled the error by displaying the alert window with error message in it - and the error that we saw previously in the console, is now gone.
+- So now, in fact, we no longer have the uncaught error in the console because we did actually catch the error in the `then()` method.
+- Handling the error is also called catching the error.
+- That's the reason why the erorr that we had in the console before, disappeared.
+- So with this, we are now handling the error that might occur in the promise from the `fetch()` function.
+- Now in this case, there are then no more errors because the chain stops there when it is handled.
+- But what if there was no error from the `fetch()` promise but then the `fetch()` promise for the neighbouring country was rejected?
+- Well then we would also have to catch an error there:
+
+```javascript
+const getCountryDataFetchError = function (country) {
+  // Country 01
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    // second callback with error handling
+    .then(
+      response => response.json(),
+      err => alert(err)
+    )
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders?.[0];
+
+      if (!neighbour) return;
+
+      // Country 02
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    })
+    .then(
+      response => response.json(),
+      err => alert(err)
+    )
+    .then(data => renderCountry(data.pop(), 'neighbour'));
+};
+
+btn.addEventListener('click', function () {
+  getCountryDataFetchError('usa');
+});
+```
+
+- However, that is a bit annoying and in fact, there is a better way of basically handling all these error globally i.e. just in one central place.
+- To do that, let's remove all of the second callbacks in the `then()` methods.
+- Instead, we can handle all the errors no matter where they appear in the chain, right at the end of the chain, by adding a `catch()` method.
+
+```javascript
+const getCountryDataFetchError = function (country) {
+  // Country 01
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => response.json())
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders?.[0];
+
+      if (!neighbour) return;
+
+      // Country 02
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    })
+    .then(response => response.json())
+    .then(data => renderCountry(data.pop(), 'neighbour'))
+    // here we can use the same callback function
+    // because the callback function here will also be called with the error object that occurred so, then we can handle it in some way
+    .catch(err => alert(err));
+};
+
+btn.addEventListener('click', function () {
+  getCountryDataFetchError('usa');
+});
+```
+
+- So, this `catch()` method at the end of the chain will basically catch any errors that occur in any place, in the whole chain - no matter where that is.
+- So, errors basically propagate down the chain until they are caught, and only if they are not caught anywhere then we get the uncaught error that we saw right in the beginning.
+- Now instead of having that annoying alert window, let's just log the error to the console and create a string to represent that error.
+
+```javascript
+const getCountryDataFetchError = function (country) {
+  // Country 01
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => response.json())
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders?.[0];
+
+      if (!neighbour) return;
+
+      // Country 02
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    })
+    .then(response => response.json())
+    .then(data => renderCountry(data.pop(), 'neighbour'))
+    // here we can use the same callback function
+    // because the callback function here will also be called with the error object that occurred so, then we can handle it in some way
+    .catch(err => console.error(`${err} 💥💥💥`));
+};
+
+btn.addEventListener('click', function () {
+  getCountryDataFetchError('usa');
+});
+```
+
+- Usually, simply logging the error to the console is not enough in a real application with a real user interface.
+- So, instead of just logging something to the console, let's also display an error message for the user to see.
+- So, that's then a more real use case for the catch block.
+- So, we still want to log the error to the console but besides that, let's actually now create a function that will also render some kind of error.
+
+```javascript
+const renderError = function (msg) {
+  countriesContainer.insertAdjacentText('beforeend', msg);
+  countriesContainer.style.opacity = 1;
+};
+
+const getCountryDataFetchError = function (country) {
+  // Country 01
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => response.json())
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders?.[0];
+
+      if (!neighbour) return;
+
+      // Country 02
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    })
+    .then(response => response.json())
+    .then(data => renderCountry(data.pop(), 'neighbour'))
+    // here we can use the same callback function
+    // because the callback function here will also be called with the error object that occurred so, then we can handle it in some way
+    .catch(err => {
+      console.error(`${err} 💥💥💥`);
+      renderError(`Something went wrong 💥💥💥 ${err}`);
+    });
+};
+
+btn.addEventListener('click', function () {
+  getCountryDataFetchError('usa');
+});
+```
+
+- NOTE that the error that is generated in the `catch()` method, is a real JS object.
+- So, we can create errors in JS with a constructor, for example, just like a map or a set.
+- And any error in JS that was created like that contains a message property.
+- So, we can use that in `renderError()` to basically only print the message of that error and not the whole object itself.
+- We will actually learn more about the built-in error object of JS in the next lesson.
+
+```javascript
+const renderError = function (msg) {
+  countriesContainer.insertAdjacentText('beforeend', msg);
+  countriesContainer.style.opacity = 1;
+};
+
+const getCountryDataFetchError = function (country) {
+  // Country 01
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => response.json())
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders?.[0];
+
+      if (!neighbour) return;
+
+      // Country 02
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    })
+    .then(response => response.json())
+    .then(data => renderCountry(data.pop(), 'neighbour'))
+    // here we can use the same callback function
+    // because the callback function here will also be called with the error object that occurred so, then we can handle it in some way
+    .catch(err => {
+      console.error(`${err} 💥💥💥`);
+      renderError(`Something went wrong 💥💥💥 ${err.message}. Try again!`);
+    });
+};
+
+btn.addEventListener('click', function () {
+  getCountryDataFetchError('usa');
+});
+```
+
+- Now if we try it, we indded get our custom error in the console, as well as on the UI.
+- It's not super pretty but, that's not the point here.
+- On the UI, it is just the message but, in the console, we get the entire error along with its stack trace i.e. it shows us exactly where the error is coming from.
+- So, that's how we handle errors happening in promises in any `then()` handler.
+- Basically, handling any promise rejection no matter where it happens in the chain.
+- Now just to finish, there is one more quick method that we need to see, and that is also available on all promises.
+- So, besides `then()` and `catch()`, there is also the `finally()` method.
+- The callback function in the `finally()` method, will always be called - whatever happens with the promise.
+- So, no matter if the promise is fulfilled or rejected, the callback function in the `finally()` method will always be called.
+- So, that's the difference between the other two:
+  - The `then()` method is only called when the promise is fulfilled
+  - The `catch()` method is only called when the promise is rejected
+  - `finally()` method is always called, no matter whether the promise is fulfilled or rejected.
+- Now, the `finally()` method is not always useful, but in certain cases it comes in really handy.
+- We use `finally()` method for something that always needs to happen no matter the result of the promise. A good example of that is to hide a loading spinner in web applications when you load some data.
+- So these applications show a spinner when an asynchronous operation starts and then hide it once the operations completes. And that happens no matter if the operation was successful or not.
+- So, for that, the `finally()` method is perfect.
+- In our case, what we need to do is to fade-in the container.
+- So, no matter whether we are rendering the country component or the error message, the `countriesContainer` should always become visible so, that's what we can put in the `finally()` method.
+
+```javascript
+const renderError = function (msg) {
+  countriesContainer.insertAdjacentText('beforeend', msg);
+  // countriesContainer.style.opacity = 1;
+};
+
+renderCountry = function (data, className = '') {
+  const html = `
+      <article class="country ${className}">
+        <img class="country__img" src="${data.flags.svg}" />
+        <div class="country__data">
+          <h3 class="country__name">${data.name.common}</h3>
+          <h4 class="country__region">${data.region}</h4>
+          <p class="country__row"><span>👫</span>${(
+            +data.population / 1000000
+          ).toFixed(1)} people</p>
+          <p class="country__row"><span>🗣️</span>${Object.values(
+            data.languages
+          ).join(', ')}</p>
+          <p class="country__row"><span>💰</span>${
+            Object.values(data.currencies)[0].name
+          }</p>
+        </div>
+      </article>
+    `;
+
+  countriesContainer.insertAdjacentHTML('beforeend', html);
+  // countriesContainer.style.opacity = 1;
+};
+
+const getCountryDataFetchError = function (country) {
+  // Country 01
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => response.json())
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders?.[0];
+
+      if (!neighbour) return;
+
+      // Country 02
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    })
+    .then(response => response.json())
+    .then(data => renderCountry(data.pop(), 'neighbour'))
+    // here we can use the same callback function
+    // because the callback function here will also be called with the error object that occurred so, then we can handle it in some way
+    .catch(err => {
+      console.error(`${err} 💥💥💥`);
+      renderError(`Something went wrong 💥💥💥 ${err.message}. Try again!`);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
+};
+
+btn.addEventListener('click', function () {
+  getCountryDataFetchError('usa');
+});
+```
+
+- Now if we check it, it works beautifully!
+- Just notice that this works because `catch()` itself returns a promise.
+- That's the only way `finally()` can work since it works only on promises.
+- Now, let's try to simulate another error so that we can know what to do next.
+- Let's say that we are trying to search for a country that simply doesn't exist.
+- So, our API is not going to find any result for that.
+
+```javascript
+getCountryDataFetchError('abc');
+```
+
+- Now we get a weird error that says "Cannot read property of 'flag' of undefined".
+- This error is weird and it doesn't really reflect the true error - which is simply that our API cannot find any country with the name "abc".
+- So, the true error is of course not that we cannot read "flag" of undefined but, it is in fact that our API cannot find any country.
+- That's reflected with the status code of 404 in the console.
+- However, as mentioned earlier, the `fetch()` promise only rejects when there is no internet connection, but with a 404 error like this, which is not a real error but, it kind of is... Anyway, with the 404 error, the `fetch()` promise still gets fulfilled.
+- So, there is no rejection and so our `catch()` handler cannot pick up on this error.
+- It does pick up on the other error which is "Cannot read property of 'flag' of undefined" but, that is not the one that we want to handle.
+- In this case, we really want to tell the user that no country was found with the name of "abc".
+- So, that's what we will do in the next lesson.
 
 ## Author
 
