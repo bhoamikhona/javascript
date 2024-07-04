@@ -329,9 +329,197 @@ const getCountryWithErrorHandling = function (country) {
     });
 };
 
-btn.addEventListener('click', function () {
-  getCountryWithErrorHandling('usa');
-});
+// btn.addEventListener('click', function () {
+// getCountryWithErrorHandling('usa');
+// });
 
 // getCountryWithErrorHandling('abc');
-getCountryWithErrorHandling('australia');
+// getCountryWithErrorHandling('australia');
+
+/***********************************************************************/
+/************************* CODING CHALLENGE 01 *************************/
+/***********************************************************************/
+console.log(
+  `/************************* CODING CHALLENGE 01 *************************/`
+);
+
+/**
+ * In this challenge you will build a function `whereAmI()` which renders
+ * a country only based on GPS coordinates. For that, you will use a
+ * second API to geocode coordinates. So in this challenge, you will use
+ * an API on your own for the first time 😁
+ *
+ * TEST DATA:
+ * Coordinates 01: 52.508, 13.381 (lat, lng)
+ * Coordinates 02: 19.037, 72.873 (lat, lng)
+ * Coordinates 03: -33.933, 18.474 (lat, lng)
+ */
+
+// PART 01
+
+/**
+ * TODO 01:
+ *
+ * Create a function `whereAmI()` which takes as inputs a latitude value
+ * (`lat`) and a longitude value (`lng`) (these are GPS coordinates,
+ * examples are in the test data above).
+ */
+
+let whereAmI = function (lat, lng) {};
+
+/**
+ * TODO 02:
+ *
+ * Do "reverse geocoding" of the provided coordinates. Reverse geocoding
+ * means to convert coordinates to a meaningful location, like a city and
+ * country name. Use this API to do the reverse geocoding:
+ * https://geocode.xyz/api
+ *
+ * The AJAX call will be done to a URL with this format:
+ * https://geocode.xyz/52.508,13.381?geoit=json
+ *
+ * Use the fetch API and promises to get the data. Do not use the
+ * `getJSON()` function we created, that is cheating 😉
+ *
+ * NOTE: geocode.xyz is no longer free so, we used nominatim.org with the
+ * url of "https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10"
+ */
+
+whereAmI = function (lat, lng) {
+  fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+  )
+    .then(res => res.json())
+    .then(data => console.log(data));
+};
+
+/**
+ * TODO 03
+ *
+ * Once you have the data, take a look at it in the console to see all the
+ * attributes that you received about the provided location. Then, using
+ * this data, log a message like this to the console: "You are in Berlin,
+ * Germany"
+ */
+
+whereAmI = function (lat, lng) {
+  fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+  )
+    .then(res => res.json())
+    .then(data =>
+      console.log(`You are in ${data.features?.[0]?.properties?.display_name}`)
+    );
+};
+/**
+ * TODO 04:
+ *
+ * Chain a `.catch()` method to the end of the promise chain and log
+ * errors to the console.
+ */
+
+whereAmI = function (lat, lng) {
+  fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+  )
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      console.log(`You are in ${data.features?.[0]?.properties?.display_name}`);
+    })
+    .catch(err => console.log(err));
+};
+
+/**
+ * TODO 05:
+ *
+ * This API allows you to make only 3 requests per second. If you reload
+ * fast, you will get this error with code 403. This is an error with the
+ * request. Remember, `fetch()` does not reject the promise in this case.
+ * So, create an error to reject the promise yourself, with a meaninful
+ * error message.
+ */
+whereAmI = function (lat, lng) {
+  fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+  )
+    .then(res => {
+      if (!res.ok) throw new Error(`Problem with geocoding ${res.status}`);
+      return res.json();
+    })
+    .then(data => {
+      console.log(data);
+      console.log(`You are in ${data.features?.[0]?.properties?.display_name}`);
+    })
+    .catch(err => console.error(`${err.message} 💥💥💥`));
+};
+
+// PART 02
+
+/**
+ * TODO 06:
+ *
+ * Now it's time to use the received data to render a country. So take the
+ * relevant attribute from the geocoding API result, and plug it into the
+ * countries API that we have been using.
+ */
+whereAmI = function (lat, lng) {
+  fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+  )
+    .then(res => {
+      if (!res.ok) throw new Error(`Problem with geocoding ${res.status}`);
+      return res.json();
+    })
+    .then(data => {
+      console.log(data);
+      console.log(`You are in ${data.features?.[0]?.properties?.display_name}`);
+      return fetch(
+        `https://restcountries.com/v3.1/name/${data?.features?.[0]?.properties?.address?.country}`
+      );
+    })
+    .then(res => {
+      if (!res.ok) throw new Error(`Country not found (${res.status})`);
+      return res.json();
+    })
+    .then(data => console.log(data))
+    .catch(err => console.error(`${err.message} 💥💥💥`));
+};
+
+/**
+ * TODO 07:
+ *
+ * Render the country and catch any errors, just like we have done in the
+ * last lesson (you can even copy this code, no need to type the same
+ * code).
+ */
+
+whereAmI = function (lat, lng) {
+  fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+  )
+    .then(res => {
+      if (!res.ok) throw new Error(`Problem with geocoding ${res.status}`);
+      return res.json();
+    })
+    .then(data => {
+      console.log(data);
+      console.log(`You are in ${data.features?.[0]?.properties?.display_name}`);
+      return fetch(
+        `https://restcountries.com/v3.1/name/${data?.features?.[0]?.properties?.address?.country}`
+      );
+    })
+    .then(res => {
+      if (!res.ok) throw new Error(`Country not found (${res.status})`);
+      return res.json();
+    })
+    .then(data => {
+      renderCountry(data.pop());
+      countriesContainer.style.opacity = 1;
+    })
+    .catch(err => console.error(`${err.message} 💥💥💥`));
+};
+
+whereAmI(52.508, 13.381);
+whereAmI(19.037, 72.873);
+whereAmI(-33.933, 18.474);
