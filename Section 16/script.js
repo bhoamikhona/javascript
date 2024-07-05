@@ -546,3 +546,94 @@ Promise.resolve('Resolved promise 2').then(res => {
 });
 
 console.log(`Test end`);
+
+/***********************************************************************/
+/********************** BUILDING A SIMPLE PROMISE **********************/
+/***********************************************************************/
+console.log(
+  `/********************** BUILDING A SIMPLE PROMISE **********************/`
+);
+
+// passing in an executor function inside the Promise() constructor
+const lotteryPromise = new Promise(function (resolve, reject) {
+  console.log(`Lottery draw is happening 🔮`);
+  setTimeout(function () {
+    /**
+     * Here we will generate a random number between 0 and 1. If the
+     * number is greater than 0.5 then we want to call the resolve()
+     * function that we pass into this function.
+     */
+    if (Math.random() >= 0.5) {
+      /**
+       * In this situation, we say that we win the lottery.
+       *
+       * This means a fulfilled promise.
+       *
+       * In order to set the promise as fulfilled, we use the resolve()
+       * function.
+       *
+       * Basically, calling the resolve() function like this, will make
+       * the promise as fulfilled.
+       *
+       * We can also call it a resolved promise, that's the reason why this
+       * method is called resolve.
+       */
+      resolve(`You WIN! 💰`);
+    } else {
+      reject(new Error(`You lost your money 💩`));
+    }
+  }, 2000);
+});
+
+// consuming the lotterPromise
+lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+
+/************************************/
+
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+
+wait(1)
+  .then(() => {
+    console.log('1 second passed');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('2 seconds passed');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('3 seconds passed');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('4 seconds passed');
+  });
+
+/** --------------- VS --------------- **/
+
+setTimeout(() => {
+  console.log('1 second passed');
+  setTimeout(() => {
+    console.log('2 seconds passed');
+    setTimeout(() => {
+      console.log('3 seconds passed');
+      setTimeout(() => {
+        console.log('4 seconds passed');
+      }, 1000);
+    }, 1000);
+  }, 1000);
+}, 1000);
+
+/************************************/
+
+// immediately resolved promise
+Promise.resolve('abc').then(x => console.log(x));
+
+// immediately rejected promise
+// here we didn't use then() because there will be no resolved value
+// anyway so, we directly use catch()
+Promise.reject(new Error('Problem!')).catch(x => console.error(x));

@@ -29,6 +29,7 @@
       - [Recap](#recap)
       - [Microtasks and Microtasks Queue](#microtasks-and-microtasks-queue)
     - [The Event Loop in Practice](#the-event-loop-in-practice)
+    - [Building a Simple Promise](#building-a-simple-promise)
   - [Author](#author)
 
 ## Lessons Learned
@@ -1979,6 +1980,441 @@ console.log(`Test end`);
 - This means that you cannot do high precision things using JS timers. Just keep that in mind, whenever you are working with promises.
 - That's it for this lesson.
 - Now we are ready to go back to some more practical aspects of asynchronous JS, and that will be to create promises from scratch in the next lesson.
+
+### Building a Simple Promise
+
+- At this point of the section, you know all about consuming promises but we have never actually built our own promise. So, let's do that in this lesson.
+- Let's go back to our lottery example from the [Promises and the Fetch API](#promises-and-the-fetch-api) lesson and basically simulate a lottery using a promise.
+- Remember that in that example, a fulfilled promise means to win the lottery while the rejected promise means to lose.
+- So, let's get to work and we create a new promise using the `Promise()` constructor, just like many other built-in objects.
+
+```javascript
+new Promise();
+```
+
+- This means that promises are essentially just a special kind of object in JS.
+- The promise constructor takes exactly one argument and that is the so-called <ins>executor function</ins>.
+
+```javascript
+// passing in an executor function inside the Promise() constructor
+new Promise(function () {});
+```
+
+- As soon as the promise constructor runs, it will automatically execute the executor function that we pass in.
+- As it executes the executor function, it will do so by passing in two other arguments.
+- Thos arguments are the resole and reject functions.
+
+```javascript
+// passing in an executor function inside the Promise() constructor
+new Promise(function (resolve, reject) {});
+```
+
+- We will use the `resolve()` and `reject()` functions in a second. For now, let's actually build the executor function.
+- Also, we should store the result of `new Promise()` in some variable.
+
+```javascript
+// passing in an executor function inside the Promise() constructor
+const lotteryPromise = new Promise(function (resolve, reject) {});
+```
+
+- So, all of this: `new Promise(function (resolve, reject) {})` will create a new promise that we are going to store into the variable `lotteryPromise`.
+- So, it is just the `fetch()` function, which also creates a new promise.
+- Now the executor function that we specified in the `Promise()` constructor function, is the function which will contain the asynchronous behavior that we are trying to handle with the promise.
+- So, this executor function should eventually produce a result value that is basically going to be the future value of the promise.
+- So, let's do exactly that, in the executor function - starting with a simplified version.
+- In our lottery example, let's say that we win in 50% of the cases and lose in the other 50%.
+
+```javascript
+// passing in an executor function inside the Promise() constructor
+const lotteryPromise = new Promise(function (resolve, reject) {
+  /**
+   * Here we will generate a random number between 0 and 1. If the
+   * number is greater than 0.5 then we want to call the resolve()
+   * function that we pass into this function.
+   */
+  if (Math.random() >= 0.5) {
+    /**
+     * In this situation, we say that we win the lottery.
+     *
+     * This means a fulfilled promise.
+     *
+     * In order to set the promise as fulfilled, we use the resolve()
+     * function.
+     *
+     * Basically, calling the resolve() function like this, will make
+     * the promise as fulfilled.
+     *
+     * We can also call it a resolved promise, that's the reason why this
+     * method is called resolve.
+     */
+    resolve();
+  }
+});
+```
+
+- In the `resolve()` function, we pass the fulfilled value of the promise so that it can later be consumed with the `then()` method.
+- So, of course, we are going to handle the result of this promise just like we handled any other promise with the `then()` method.
+- In this case, let's simply pass in a string.
+
+```javascript
+// passing in an executor function inside the Promise() constructor
+const lotteryPromise = new Promise(function (resolve, reject) {
+  /**
+   * Here we will generate a random number between 0 and 1. If the
+   * number is greater than 0.5 then we want to call the resolve()
+   * function that we pass into this function.
+   */
+  if (Math.random() >= 0.5) {
+    /**
+     * In this situation, we say that we win the lottery.
+     *
+     * This means a fulfilled promise.
+     *
+     * In order to set the promise as fulfilled, we use the resolve()
+     * function.
+     *
+     * Basically, calling the resolve() function like this, will make
+     * the promise as fulfilled.
+     *
+     * We can also call it a resolved promise, that's the reason why this
+     * method is called resolve.
+     */
+    resolve(`You WIN! 💰`);
+  }
+});
+```
+
+- Now let's handle the opposite case, where we basically want to make the promise as rejected.
+- As you can imagine, for that we can call the `reject()` function.
+- Then into the `reject()` function, we pass in the error message that we later want to be able to catch in the catch handler.
+
+```javascript
+// passing in an executor function inside the Promise() constructor
+const lotteryPromise = new Promise(function (resolve, reject) {
+  /**
+   * Here we will generate a random number between 0 and 1. If the
+   * number is greater than 0.5 then we want to call the resolve()
+   * function that we pass into this function.
+   */
+  if (Math.random() >= 0.5) {
+    /**
+     * In this situation, we say that we win the lottery.
+     *
+     * This means a fulfilled promise.
+     *
+     * In order to set the promise as fulfilled, we use the resolve()
+     * function.
+     *
+     * Basically, calling the resolve() function like this, will make
+     * the promise as fulfilled.
+     *
+     * We can also call it a resolved promise, that's the reason why this
+     * method is called resolve.
+     */
+    resolve(`You WIN! 💰`);
+  } else {
+    reject(`You lost your money 💩`);
+  }
+});
+```
+
+- So, you see, this promise is either going to be moved to the fulfilled state or the rejected state.
+- So, we always need to make sure that the promise ends up in one of the two states.
+- Now it is time to actually try it out by consuming the promise that we just built.
+- To consume the promise, the `lotteryPromise` is going to be a promise object so, we can always call the `then()` method on it, like so:
+
+```javascript
+// passing in an executor function inside the Promise() constructor
+const lotteryPromise = new Promise(function (resolve, reject) {
+  /**
+   * Here we will generate a random number between 0 and 1. If the
+   * number is greater than 0.5 then we want to call the resolve()
+   * function that we pass into this function.
+   */
+  if (Math.random() >= 0.5) {
+    /**
+     * In this situation, we say that we win the lottery.
+     *
+     * This means a fulfilled promise.
+     *
+     * In order to set the promise as fulfilled, we use the resolve()
+     * function.
+     *
+     * Basically, calling the resolve() function like this, will make
+     * the promise as fulfilled.
+     *
+     * We can also call it a resolved promise, that's the reason why this
+     * method is called resolve.
+     */
+    resolve(`You WIN! 💰`);
+  } else {
+    reject(`You lost your money 💩`);
+  }
+});
+
+// consuming the lotterPromise
+lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+```
+
+- That's it.
+- So now, if the promise is fulfilled, we will get the string "You WIN! 💰" and if it is rejected, we will get the string "You lost your money 💩" logged onto the console.
+- This is amazing. However, right now, this is not asynchronous.
+- So, let's actually simulate the lottery draw by adding a simple timer.
+- This timer will then simulate the time that is passed between buying the lottery ticket and actually getting the result.
+
+```javascript
+// passing in an executor function inside the Promise() constructor
+const lotteryPromise = new Promise(function (resolve, reject) {
+  console.log(`Lottery draw is happening 🔮`);
+  setTimeout(function () {
+    /**
+     * Here we will generate a random number between 0 and 1. If the
+     * number is greater than 0.5 then we want to call the resolve()
+     * function that we pass into this function.
+     */
+    if (Math.random() >= 0.5) {
+      /**
+       * In this situation, we say that we win the lottery.
+       *
+       * This means a fulfilled promise.
+       *
+       * In order to set the promise as fulfilled, we use the resolve()
+       * function.
+       *
+       * Basically, calling the resolve() function like this, will make
+       * the promise as fulfilled.
+       *
+       * We can also call it a resolved promise, that's the reason why this
+       * method is called resolve.
+       */
+      resolve(`You WIN! 💰`);
+    } else {
+      reject(`You lost your money 💩`);
+    }
+  }, 2000);
+});
+
+// consuming the lotterPromise
+lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+```
+
+- Another thing that we can do is to instead of passing just a string in the rejected promise, we can also create a new error object.
+- So basically creating a real error.
+
+```javascript
+// passing in an executor function inside the Promise() constructor
+const lotteryPromise = new Promise(function (resolve, reject) {
+  console.log(`Lottery draw is happening 🔮`);
+  setTimeout(function () {
+    /**
+     * Here we will generate a random number between 0 and 1. If the
+     * number is greater than 0.5 then we want to call the resolve()
+     * function that we pass into this function.
+     */
+    if (Math.random() >= 0.5) {
+      /**
+       * In this situation, we say that we win the lottery.
+       *
+       * This means a fulfilled promise.
+       *
+       * In order to set the promise as fulfilled, we use the resolve()
+       * function.
+       *
+       * Basically, calling the resolve() function like this, will make
+       * the promise as fulfilled.
+       *
+       * We can also call it a resolved promise, that's the reason why this
+       * method is called resolve.
+       */
+      resolve(`You WIN! 💰`);
+    } else {
+      reject(new Error(`You lost your money 💩`));
+    }
+  }, 2000);
+});
+
+// consuming the lotterPromise
+lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+```
+
+- With this we made the whole promise make a little bit more sense because now, by using the timer, we actually encapsulate some asynchronous behavior into this promise.
+- That's the whole point of promises in the first place.
+- Now if we look in the console, we immediately get the "lottery draw is happening" string logged, and then after 2 seconds, we either win the lottery or lose.
+- But if we now lose, we see that the simple string is now an actual error; and it also tells us where it is coming from.
+- So indeed, actually creating a new error object is a bit better.
+- So, this is how we encapsulate any asynchronous behavior into a promise.
+- In practice, most of the time, all we actually do is to consume promises; and we usually only build promises to basically wrap old callback based functions into promises.
+- This is a process that we call <ins>promisifying</ins>.
+- Basically, promisifying means to convert callback based asynchronous behavior to promise based.
+- Let's see that in action.
+- So, what we are going to do is to actually promisify the `setTimeout()` function and create a wait function.
+- So, let's create a function called `wait` and this function will take in a number of seconds.
+
+```javascript
+// promisifying setTimeout()
+const wait = function (seconds) {};
+```
+
+- Inside of this function we will actually create and return the promise - usually, that's what we do i.e. creating a function and then, from there returning a promise.
+- So, this will then encapsulate the asynchronous operation even further.
+- Essentially, that's also what the `fetch()` function does.
+- It is a function that returns a promise, and so that is exactly what we will do with this `wait()` function.
+- In a sense, this is a more real-world example.
+- As mentioned before, this `wait()` function will return a new promise.
+- This new promise will take an executor function. But in this case, we won't need the `reject()` function because it is actually impossible for the timer to fail.
+- Therefore, we will never mark this promise as rejected. Hence, we won't specify the `reject()` function in the executor function.
+
+```javascript
+// promisifying setTimeout()
+const wait = function (seconds) {
+  return new Promise(function (resolve) {});
+};
+```
+
+- All we have to do now is to call the `setTimeout()` in the executor function, and within the `setTimeout()`, we will pass the `resolve` function.
+- In this case, we are not even going to pass any resolved value into the `resolve()` function because that's not mandatory.
+- In the case of the timer, it is also not really necessary to wait for some value.
+- In this case, all we want to do is to make our code wait. So, no resolved values are needed.
+
+```javascript
+// promisifying setTimeout()
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+```
+
+- That's it.
+- Now, we could improve this even further or just make it smaller by using arrow functions. But for now, we will simply consume this promise.
+- To consume, let's call our wait function.
+
+```javascript
+// promisifying setTimeout()
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+
+wait(2);
+```
+
+- This will not wait for 2 seconds, and after 2 seconds, it will resolve.
+- Then, we can handle that resolved value with `then()` method.
+
+```javascript
+// promisifying setTimeout()
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+
+// since we are not going to get any resolved value, we can leave the parameters in the then() method empty.
+wait(2).then(() => {
+  // here in this callback, we can run any code that we want to be
+  // executed after 2 seconds.
+  console.log(`I waited for 2 seconds`);
+
+  // we have to return a new promise here, just like before
+  return wait(1);
+});
+```
+
+- So, this is exactly what we did before when we wanted to chain two sequential AJAX calls using the `fetch()` function.
+- So, in the result of the first `fetch()`, we would create a new `fetch()` and return it. So, that's what we are doing here.
+- Therefore, all of this returns a new promise, and then we can one more time handle that.
+
+```javascript
+// promisifying setTimeout()
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+
+// since we are not going to get any resolved value, we can leave the parameters in the then() method empty.
+wait(2).then(() => {
+  // here in this callback, we can run any code that we want to be
+  // executed after 2 seconds.
+  console.log(`I waited for 2 seconds`);
+
+  // we have to return a new promise here, just like before
+  return wait(1).then(() => console.log(`I waited for 1 second`));
+});
+```
+
+- With this, we once again have a nice chain of asynchronous behavior that happens nicely in a sequence and all without the callback hell.
+- To compare:
+
+```javascript
+setTimeout(() => {
+  console.log('1 second passed');
+  setTimeout(() => {
+    console.log('2 seconds passed');
+    setTimeout(() => {
+      console.log('3 seconds passed');
+      setTimeout(() => {
+        console.log('4 seconds passed');
+      }, 1000);
+    }, 1000);
+  }, 1000);
+}, 1000);
+
+/** ------------------------------ VS ------------------------------ **/
+
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+
+wait(1)
+  .then(() => {
+    console.log('1 second passed');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('2 seconds passed');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('3 seconds passed');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('4 seconds passed');
+  });
+```
+
+- As you can see, we not longer have an ugly and difficult to understand callback hell.
+- Instead, we have a nice sequence of asynchronous behavior.
+- Finally, there is also a way to very easily create a fulfilled or rejected promise immediately.
+
+```javascript
+// immediately resolved promise
+Promise.resolve();
+```
+
+- `Promise.resolve()` is a static method on the `Promise()` constructor.
+- We can then pass in the resolved value in it.
+
+```javascript
+// immediately resolved promise
+Promise.resolve('abc').then(x => console.log(x));
+```
+
+- To immediately reject the promise, we use `reject()`, like so:
+
+```javascript
+// immediately rejected promise
+// here we didn't use then() because there will be no resolved value
+// anyway so, we directly use catch()
+Promise.reject(new Error('Problem!')).catch(x => console.error(x));
+```
+
+- So, this is how we build our own promises and how we promisify a very simple callback based on asynchronous behavior function such as setTimeout.
 
 ## Author
 
