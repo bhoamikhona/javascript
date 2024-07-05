@@ -23,6 +23,11 @@
     - [Chaining Promises](#chaining-promises)
     - [Handling Rejected Promises](#handling-rejected-promises)
     - [Throwing Errors Manually](#throwing-errors-manually)
+    - [Asynchronous Behind the Scenes: The Event Loop](#asynchronous-behind-the-scenes-the-event-loop)
+      - [Review: JavaScript Runtime](#review-javascript-runtime)
+      - [How Asynchronous JavaScript Works Behind The Scenes](#how-asynchronous-javascript-works-behind-the-scenes)
+      - [Recap](#recap)
+      - [Microtasks and Microtasks Queue](#microtasks-and-microtasks-queue)
   - [Author](#author)
 
 ## Lessons Learned
@@ -1711,6 +1716,163 @@ getCountryWithErrorHandling('australia');
   - In this case, we did it simply because in this situation, no neighbour can be found. So, that is a good reason to display an error message on the UI. Since we display the error message in our `catch()` method, the best way of doing that is to indeed throw an error.
   - Remember that this works because throwing an error inside a `then()` method will immediately reject the promise and rejected promises travel down the chain until it is eventually caught somewhere - in our case, it is the `catch()` method.
   - So, when working with real applications in the real-world, make sure to keep this technique in mind, because it is really important.
+
+### Asynchronous Behind the Scenes: The Event Loop
+
+- We learned what AJAX and APIs are. We used a bunch of asynchronous code already and we learned all about promises.
+- But, what's missing is to finally understand how all of it really works behind the scenes of JavaScript. So, let's find that out.
+- To start, let's quickly review the JavaScript runtime that we talked about way back in the course, just to make sure that the rest of this lesson will make sense.
+
+#### Review: JavaScript Runtime
+
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/d6593478-3b23-46df-a331-9e247384922a)
+- A JavaScript runtime is basically a container which includes all the different pieces that are necessary to execute JavaScript code.
+- The heart of every JS runtime is the engine - this is where code is actually executed and where objects are stored in memory. So, these two things happen in the call stack and in the heap.
+- It is important to note here that JavaScript only has one thread of execution.
+- So, it can only do one thing at a time. There is absolutely no multi-tasking happening in JavaScript itself.
+- Now, other languages like Java can execute multiple pieces of code at the same time, but not JavaScript.
+- Next, we have the web APIs environment. These are some APIs provided to the engine, but they are not actually a part of the JavaScript language itself. These are things like the DOM, timers, fetch API, geolocation API, etc.
+- Next up, there is the callback queue. It is a data structure that holds all the ready to be executed callback functions that are attached to some event that has occurred.
+- Finally, whenever the call stack is empty, the event loop takes callbacks from the callback queue and puts them into the call stack so that they can be executed.
+- So, the event loop is the essential piece that makes asynchronous behavior possible in JavaScript. It is the reason why we can have a non-blocking concurrency model in JavaScript.
+
+> [!NOTE]
+>
+> A concurrency model is simply how a language handles multiple things happening at the same time.
+
+- But, how does this non-blocking concurrency actually work? and why is the event loop so important? Let's find out.
+
+#### How Asynchronous JavaScript Works Behind The Scenes
+
+- ![image](https://github.com/bhoamikhona/javascript/assets/50435319/bcd1e338-af0c-4406-8b4a-0107c5d27365)
+- Let's focus on the essential parts of the runtime here. That's the call stack, the event loop, the web APIs, and the callback queue.
+- So, as you know by now, a JavaScript engine is built around the idea of a single thread.
+- But if there is only one thread of execution in the engine then how can asynchronous code be executed in a non-blocking way?
+- That is the question to which we will answer in this lesson.
+- Essentially, you will learn how the JS concurrency model really works behind the scenes, using all the parts of the JavaScript runtime that you already know.
+- As always, we will do this by looking at a real code example.
+
+```javascript
+el = document.querySelector('img');
+el.src = 'dog.jpg';
+el.addEventListener('load', () => {
+  el.classList.add('fadeIn');
+});
+
+fetch('https://someurl.com/api').then(res => console.log(res));
+
+// More code...
+```
+
+- Let's go through the code line by line.
+- However, you already know how the call stack works so, it is best that you focus more on the code and on the web APIs and callback queue.
+- Let's start by selecting the image element and in the next line, we set the `src` attribute of that image to "dog.jpg".
+- And as we learned before, this will now start to load this image asynchronously in the background.
+- But this time, we can actually understand what that mysterious background actually is.
+- So, as you already know, everything related to the DOM is not really a part of JS, but of the web APIs.
+- So, it is in a web APIs environment where the asynchronous tasks related to the DOM will run.
+- In fact, the same is true for timers, AJAX calls, and really all other asynchronous tasks.
+- So, again, these asynchronous tasks will all run in the web API environment of the browser.
+- If the image would be loading in a synchronous way, it would be doing so right in the call stack blocking the execution of the rest of the code.
+- But, as we already learned, that would be terrible.
+- That's why loading images in JavaScript is asynchronous.
+- So, it does not happen in the call stack i.e. not in the main thread of the execution, but reall in the web APIs environment, as mentioned before.
+- If we want to do something after the image has finished loading, then we need to listen to the `load` event.
+- So, that's exactly what we do in the next line of code.
+- There we attach an event listener to the `load` event of that image and pass a callback function as always.
+- In practice, this means to register the callback in the web APIs environment, exactly where the image is loading.
+- ![gif](https://github.com/bhoamikhona/javascript/assets/50435319/84e96069-a3f0-4427-9f21-aa9eaa11fe9e)
+- And the callback will stay there until the `load` event is emitted.
+- So, we are handling asynchronous behavior in the web APIs environment with a callback, just as we learned before.
+- Anyway, let's go back to the code.
+- In the next line, we make an AJAX call using the fetch API.
+- And as always, the asynchronous fetch operation will happen in ther web APIs environment.
+- That's because, if we were do it in the call stack then we would be blocking the call stack and create a huge lag in our application.
+- Finally, we use the `then()` method on the promise returned by the `fetch()` function.
+- This will also register a callback in the web API environment so that we can react to the future resolved value of the promise.
+- So, this callback is associated with a promise that is fetching the data from the API, and that's going to be important later on.
+- With this, we have now executed all the top level code i.e. all the code that is not inside any callback function in a synchronous way.
+- We also have the image loading in the background and some data being fetched from an API.
+- So, now it is time for this to get really interesting.
+- Let's say the image has finished loading and therefore the `load` event is emitted on that image.
+- What happens next, is that the callback for this event is put into the callback queue.
+- The callback queue is basically an ordered list of all the callback functions that are in line to be executed.
+- You can think of this callback queue, as a todo list that you would write for yourself with all the tasks that you have to complete.
+- So, the callback queue is also a todo list of a kind, but with tasks that the call stack will eventually have to complete.
+- In this example, there are no other callbacks in the queue yet, but there could be, of course.
+- So, if there were already other callbacks waiting in line, then this new callback would of course go straight to the end of the queue, and there it would sit patiently for its turn to finally run. This actually has big implications.
+- So, imagine that you set a timers for 5 seconds.
+- So, after 5 seconds that timer's callback will be put on the callback queue.
+- Let's say that there were already other callbacks waiting, and that it took 1 second to run all of those callbacks.
+- Then, in that case, your timers callback would only run after 6 seconds and not 5.
+- So, these 6 seconds are the 5 seconds that passed for the timer, plus the one second that it took to run all the other callbacks that were already waiting in line in front of your timer.
+- This means that the timers duration that you define is not a guarantee.
+- The only guarantee is that the timers callback will not run before 5 seconds, but it might very well run after 5 seconds have passed.
+- So, it all depends on the state of the callback queue and also, another queue that we are going to learn about in a second.
+- Another thing that is important to mention here is that the callback queue also contains callbacks coming from DOM events like clicks or key presses, etc.
+- We learned before that DOM events are not really asynchronous behavior, but they still use the callback queue to run their attached callbacks.
+- So, if a click happens on a button with `addEventListener()` then the same thing will happen that we illustrated above for the asynchronous `load` event.
+- Anyway, now it is finally time to learn about the event loop.
+- So, here is what the event loop does:
+- It looks into the call stack and determines whether it is empty or not, except for the global context.
+- Then, if the stack is indeed empty, which means that there is currently no code being executed, then it will take the first callback from the callback queue and put it on the call stack to be executed.
+- This is called <ins>an event loop tick</ins>.
+- So, each time the event loop takes a callback from the callback queue, we say that there was an event loop tick.
+- So, as we can see here, the event loop has the extremely important task of doing coordination between the call stack and the callbacks in the callback queue.
+- So, the event loop is basically who decides exactly when each callback is executed.
+- We can also say that the event loops does the orchestration of the entire JS runtime.
+- Another thing that becomes clear from this whole explanation is tha the JS language itself has actually no sense of time.
+- That's because everything that is asynchronous does not happen in engine.
+- It's the runtime who manages all the asynchronous behavior and it is the event loop who decides which code will be executed next.
+- But the engine itself simply executes whatever code it has been given.
+- This is of course a lot to take in so, let's try to recap here.
+
+#### Recap
+
+- The image started loading asynchronously in the web APIs' environment and not in the call stack.
+- We then used an `addEventListener()` to attach a callback function to the `load` event for the image.
+- This callback is basically our asynchronous code. It is code that we deferred into the future because we only want to execute it once the image has loaded.
+- In the meantime, the rest of the code kept running.
+- Now, the `addEventListener()` did not put the callback directly in the callback queue.
+- It simply registered the callback, which then kept waiting in the web APIs' environment until the `load` event was fired off.
+- Only then the environment put the callback in the queue.
+- While in the queue, the callback kept waiting for the event loop to pick it up and put it in the call stack.
+- This happened as soon as the callback was first in line and the call stack was empty.
+- That's it.
+- All this happened so that the image did not have to load in the call stack, but in the background in a non-blcoking way.
+- In a nutshell, the web APIs' environment, the callback queue, and the event loop, all together make it possible that asynchronous code can be executed in a non-blocking way event with only one thread of execution in the engine.
+
+#### Microtasks and Microtasks Queue
+
+- That was already a lot to understand, but we are not done yet.
+- We still have the `fetch()` function getting data from the AJAX call in the background.
+- This is basically happening with a promise.
+- With promises, things work in a slightly different way, which is why we included the promise example as well.
+- Let's say that the data has finally arrived and the fetch is done.
+- Now, callbacks related to promises like the one in our example, actually do not go into the callback queue.
+- So, again, the callback in the `then()` method which is coming from a promise will not be moved into the callback queue.
+- Instead, callbacks of promises have a special queue for themselves, which is the so-called <ins>microtasks queue</ins>.
+- The special thing about the microtasks queue is that it basically has priority over the callback queue.
+- So, at the end of an event loop tick i.e. after a callback has been taken from the callback queue, the event loop will check if there are any callbacks in the microtasks queue.
+- If there are, it will run all of them before it will run any more callbacks from the regular callback queue.
+- By the way, we call these callbacks from promises, <ins>microtasks</ins>. Therefore the name microtasks queue.
+- There are actually other microtasks but, that's not relevant here.
+- Going back to our example, currently, we actually do have a microtask sitting in the microtasks queue, the call stack is also empty and therefore, the event loop will not take this callback and put it in the call stack just like it does with callbacks from the callback queue.
+- It doesn't matter if the callback queue is empty or not.
+- This would work the exact same way even if there were some callbacks in the callback queue.
+- Again, that's because microtasks always have priority.
+- In practice, this means that microtasks can basically cut in line before all other regular callbacks.
+- Now, if one microtask adds a new microtask then that new microtask is also executed before any callbacks from the callback queue.
+- This means that the microtask queue can essentiall starve the callback queue.
+- Because if we add more and more microtasks, then callbacks in the callback queue can never execute.
+- This is usually never a problem but, it is good to know since it is still a possibility. This could also be an interview question. If so, you now know the answer.
+- Anyway, as you can hopefully see - the idea of running asynchronous code with regular callbacks and with microtasks coming from promises is very similar.
+- The only difference is that they go into different queues and that the event loop gives microtasks priority over regular callbacks.
+- That's finally it. That's all you need to know about how asynchronous JavaScript really works behind the scenes.
+- This knowledge can be extremely helpful and valuable to you because you are going to be way more confident writing asynchronous code now.
+- Also, you will ace any job interview question about asynchronous JS.
+- Actually, a lot of JS developers don't know anything about this. So, this knowledge will put you in the top 10% or even top 5% of JS developers. That's just amazing on itself.
+- In the next lesson, we will see all of this in practice.
 
 ## Author
 
