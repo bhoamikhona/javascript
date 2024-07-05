@@ -138,7 +138,7 @@ const getCountryAndNeighbour = function (country) {
 // getCountryAndNeighbour('usa');
 
 // callback hell another example:
-setTimeout(() => {
+/* setTimeout(() => {
   console.log('1 second passed');
   setTimeout(() => {
     console.log('2 seconds passed');
@@ -149,7 +149,7 @@ setTimeout(() => {
       }, 1000);
     }, 1000);
   }, 1000);
-}, 1000);
+}, 1000); */
 
 /************************************************************************/
 /********************** PROMISES AND THE FETCH API **********************/
@@ -165,7 +165,7 @@ request.send(); */
 
 // using fetch API
 const request = fetch(`https://restcountries.com/v3.1/name/india`);
-console.log(request);
+// console.log(request);
 
 /************************************************************************/
 /************************** CONSUMING PROMISES **************************/
@@ -520,6 +520,29 @@ whereAmI = function (lat, lng) {
     .catch(err => console.error(`${err.message} 💥💥💥`));
 };
 
-whereAmI(52.508, 13.381);
-whereAmI(19.037, 72.873);
-whereAmI(-33.933, 18.474);
+// whereAmI(52.508, 13.381);
+// whereAmI(19.037, 72.873);
+// whereAmI(-33.933, 18.474);
+
+/************************************************************************/
+/************************ EVENT LOOP IN PRACTICE ************************/
+/************************************************************************/
+console.log(
+  `/************************ EVENT LOOP IN PRACTICE ************************/`
+);
+
+console.log('Test start');
+
+// this timer will be put on the callback queue afte 0 seconds
+setTimeout(() => console.log(`0 sec timer`), 0);
+
+// building a promise that will resolve immediately - will learn about this in detail in the next lesson
+Promise.resolve('Resolved promise 1').then(res => console.log(res));
+
+// long running task in the promise - to demonstrate that the timer really doesn't run after 0 seconds
+Promise.resolve('Resolved promise 2').then(res => {
+  // for (let i = 0; i < 10000000000; i++) {}
+  console.log(res);
+});
+
+console.log(`Test end`);

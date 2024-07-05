@@ -28,6 +28,7 @@
       - [How Asynchronous JavaScript Works Behind The Scenes](#how-asynchronous-javascript-works-behind-the-scenes)
       - [Recap](#recap)
       - [Microtasks and Microtasks Queue](#microtasks-and-microtasks-queue)
+    - [The Event Loop in Practice](#the-event-loop-in-practice)
   - [Author](#author)
 
 ## Lessons Learned
@@ -1873,6 +1874,111 @@ fetch('https://someurl.com/api').then(res => console.log(res));
 - Also, you will ace any job interview question about asynchronous JS.
 - Actually, a lot of JS developers don't know anything about this. So, this knowledge will put you in the top 10% or even top 5% of JS developers. That's just amazing on itself.
 - In the next lesson, we will see all of this in practice.
+
+### The Event Loop in Practice
+
+- Let's now see some of the things that we learned in the previous lesson, in practice.
+- Let's build an extremely simple example. We will start by logging a start string to the console.
+
+```javascript
+console.log('Test start');
+```
+
+- Then create a `setTimeout()` timer, which will again log something to the console after exactly 0 seconds.
+- Basically, it is a timer whose callback function should be called after exactly 0 seconds.
+
+```javascript
+console.log('Test start');
+
+// this timer will be put on the callback queue afte 0 seconds
+setTimeout(() => console.log(`0 sec timer`), 0);
+```
+
+- So, what this means is that after 0 seconds, the callback function of the `setTimeout()` will be put on the callback queue.
+- Next up, let's build a promise that will resolve immediately (this is something that we will learn in the next lesson, in detail). For now, just type the code.
+- `Promise.resolve()` allows us to create a promise that is immediately resolved. So, one that immediately has a success value.
+- So, its fulfilled/success value will be what we pass within `Promise.resolve()` function.
+- We can then handle that resolved promise using the `then()` method, where we will simply log the success value to the console.
+
+```javascript
+console.log('Test start');
+
+// this timer will be put on the callback queue afte 0 seconds
+setTimeout(() => console.log(`0 sec timer`), 0);
+
+// building a promise that will resolve immediately - will learn about this in detail in the next lesson
+Promise.resolve('Resolved promise 1').then(res => console.log(res));
+```
+
+- Now just to finish, let's just log another string.
+
+```javascript
+console.log('Test start');
+
+// this timer will be put on the callback queue afte 0 seconds
+setTimeout(() => console.log(`0 sec timer`), 0);
+
+// building a promise that will resolve immediately - will learn about this in detail in the next lesson
+Promise.resolve('Resolved promise 1').then(res => console.log(res));
+
+console.log(`Test end`);
+```
+
+- For now, that's it.
+- So in what order do you think that these 4 message that we have in our code, will be logged to the console?
+- Let's think about it before we check the result.
+- The first two message that are going to be printed on the console, should be pretty obvious, that's because we already know that any top level code i.e. code outside of any callback will run first.
+- So, of course, the first two logs will come from the synchronous `console.log()` i.e. "Test start" and "Test end".
+- But now, between the timer and the resolved promise, it might be a little bit trickier.
+- Both the timer and the promise will finish at the exact same time, which is right after 0 seconds.
+- The timer will finish in 0 seconds, because that's the amount of time we mentioned.
+- And the promise because we told it to immediately become resolved.
+- Therefore, they will both finish at the exact same time.
+- So, which one do you think will be handled first? or in other words, which of these two callbacks will be executed first?
+- Well, the timer appears first in the code and so it kind of finished first. So, its callback will be put in the callback queue first.
+- But, does that mean that the callback of the timer will be executed first?
+- No. This is because of the microtasks queue.
+- The callback of the resolved promise will be put on the microtasks queue; and this microtasks queue, as you learned previously, has priority over the callback queue.
+- So, after this whole code runs, we will have one callback in the callback queue and one in microtasks queue.
+- Therefore, the one from the microtasks queue should be executed first.
+- Therefore, the first message to appear between the timer and resolved promise 1 will be the one from the resolved promise 1.
+- So, the order in which they should appear is first the start string, then the end string, then the string from resolved promise, and finally the string from the timer.
+- So, now if we look at the console, the result is as expected.
+- This proves what we learned in the last lesson.
+- Now, remember that the implication of the fact that microtasks have priority over regular callbacks is that if one of the microtasks takes a long time to run, then the timer will actually be delayed and not run after the 0 seconds that we specified in the `setTimeout()` function.
+- Instead, it will run a little bit later just after the microtask is actually done with its work.
+- So, to finish this lesson, let's actually simulate what we just said.
+- To do that, let's create another promise that will immediately be resolved. Of course we want to print something to the console so that we know when it got executed. But before we log that, we actually want its callback function in the `then()` method to have a really heavy task, which should take a lot of time. To do that, let's take the help of a `for` loop by making it loop over a large number.
+
+```javascript
+console.log('Test start');
+
+// this timer will be put on the callback queue afte 0 seconds
+setTimeout(() => console.log(`0 sec timer`), 0);
+
+// building a promise that will resolve immediately - will learn about this in detail in the next lesson
+Promise.resolve('Resolved promise 1').then(res => console.log(res));
+
+// long running task in the promise - to demonstrate that the timer really doesn't run after 0 seconds
+Promise.resolve('Resolved promise 2').then(res => {
+  for (let i = 0; i < 10000000000; i++) {}
+  console.log(res);
+});
+
+console.log(`Test end`);
+```
+
+- So this line of code: `for (let i = 0; i < 10000000000; i++) {}` simulates that the callback function takes a really long time.
+- So, really just the microtask takes a long time.
+- It is not the asynchronous task itself.
+- The promise itself will be resolved immediately but then, the microtask that it contains i.e. the one that it puts on the microtasks queue - that's the one that will take a long time.
+- So, by doing that, we can see that the callbacks in the callback queue, just like our timer, will indeed be delayed and not run after 0 seconds.
+- So, now if we look in the console, we will see that "Resolved promise 2" took a long time to appear.
+- And only after the "Resolved promise 2" was logged, the 0 second timer was logged onto the console.
+- So, this is an actual proof that the 0 seconds that we have on the `setTimeout()` is not a guarantee. That is exactly what we wanted to see.
+- This means that you cannot do high precision things using JS timers. Just keep that in mind, whenever you are working with promises.
+- That's it for this lesson.
+- Now we are ready to go back to some more practical aspects of asynchronous JS, and that will be to create promises from scratch in the next lesson.
 
 ## Author
 
