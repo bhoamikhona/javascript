@@ -866,3 +866,33 @@ createImage('./img/img-1.jpg')
     currentImg.style.display = 'none';
   })
   .catch(err => console.error(err));
+
+/***********************************************************************/
+/***************** CONSUMING PROMISES WITH ASYNC/AWAIT *****************/
+/***********************************************************************/
+console.log(
+  `/***************** CONSUMING PROMISES WITH ASYNC/AWAIT *****************/`
+);
+
+const whereAmIAsync = async function () {
+  // getting position
+  const pos = await getPosition();
+  const { latitude: lat, longitude: lng } = pos.coords;
+
+  // reverse geocoding
+  const resGeo = await fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+  );
+  const dataGeo = await resGeo.json();
+
+  // fetching country
+  const res = await fetch(
+    `https://restcountries.com/v3.1/name/${dataGeo?.features?.[0]?.properties?.address?.country}`
+  );
+  const data = await res.json();
+  renderCountry(data.pop());
+  countriesContainer.style.opacity = 1;
+};
+
+whereAmIAsync();
+console.log('FIRST');

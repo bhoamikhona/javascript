@@ -31,6 +31,7 @@
     - [The Event Loop in Practice](#the-event-loop-in-practice)
     - [Building a Simple Promise](#building-a-simple-promise)
     - [Promisifying The Geolocation API](#promisifying-the-geolocation-api)
+    - [Consuming Promises with Async/Await](#consuming-promises-with-asyncawait)
   - [Author](#author)
 
 ## Lessons Learned
@@ -2640,6 +2641,185 @@ btn.addEventListener('click', whereAmI);
 - But with what we have here, it is a really nice flat chain of promises that's easy to handle and manage.
 - Anyway, with this, we saw that we can really promisify all kinds of asynchronous stuff in JS.
 - For example, we could also promisify the old XML HTTP request function that we used in the beginning to make AJAX calls, or also, we could promisify the image loading example that we have seen a couple of times in our slides - and that's what we are going to do in the next coding challenge.
+
+### Consuming Promises with Async/Await
+
+- Now that you are comfortable with consuming and building promises, let's turn our attention back to actually consuming promises.
+- That's because in ES 2017, there is now an even better and easier way to consume promises, which is called async/await.
+- Let's see how it works.
+- In this lesson we will basically be re-creating the `whereAmI()` function that we have been building but, this time using asyc/await.
+- We start by creating a special type of function, which is an async function. We do that by simply adding the keyword `async` before the keyword `function`, like so:
+
+```javascript
+const whereAmIAsync = async function (country) {};
+```
+
+- This function is now an async function. An async function meaning an asynchronous function. So, this function will basically keep running in the background while performing the code that is inside of it.
+- Then, when the function is done, it will automatically return a promise. More on that in the next lesson.
+- For now, what's important is that inside an async function, we can have one or more await statements.
+- `await` keyword is used before a promise.
+
+```javascript
+const whereAmIAsync = async function (country) {
+  // this will return a promise
+  await fetch(`https://restcountries.com/v3.1/name/${country}`);
+};
+```
+
+- In an `async` function, we can use the `await` keyword to basically wait for the result of the promise that is right next to it.
+- So basically, `await` will stop the code execution of the function at the line where it is mentioned, until the promise is fulfilled i.e. until the data is fetched.
+- Now you might think, isn't stopping the code, blocking the execution?
+- That's a really good question however, the answer is no.
+- Because stopping execution in an async function, which is what we have here, is actually not a problem.
+- This is because this function is running asynchronously in the background.
+- Therefore, it is not blocking the main thread of execution i.e. it is not blocking the call stack.
+- In fact, that's what's so special about a async/await.
+- So, it's the fact that it makes our code look like a regular synchronous code while behind the scenes, everything is in fact, asynchronous.
+- Anyway, as soon as the promise next to the `await` keyword is resolved, the value of the whole expression `await fetch(`https://restcountries.com/v3.1/name/${country}`);` is going to be resolved value of the promise. So, we can simply store it into a variable.
+
+```javascript
+const whereAmIAsync = async function (country) {
+  const res = await fetch(`https://restcountries.com/v3.1/name/${country}`);
+  console.log(res);
+};
+```
+
+- Just to see that this function is indeed asynchronous, let's log something to the console after we call it.
+
+```javascript
+const whereAmIAsync = async function (country) {
+  const res = await fetch(`https://restcountries.com/v3.1/name/${country}`);
+  console.log(res);
+};
+
+whereAmIAsync('india');
+console.log('FIRST');
+```
+
+- "FIRST" will be logged first because `whereAmIAsync()` is an async function.
+- So, once the async function is called, it is then loaded off to the background. So the `fetch()` function inside it will be running in the background, without blocking the main thread.
+- Now if the check the console, we indeed get "FIRST" printed first and then we get the response.
+- But this time, we got the response in a nice and elegant way.
+- So, you see, by using async/await or asynchronous function, our code really looks and feels like synchronous code.
+- We can simply "await" until the value of the promise is returned, and then assign that value to a variable - and that is something that is impossible before.
+- Before we had to mess with callback functions and that was true in callback hell but, also by consuming promises with the `then()` method.
+- But now, with async/await, that is just completely gone.
+- So, now this looks like a regular synchronous code where we simply assign values to a variable; and that makes it so much easier and clean.
+- Now, before you use async/await all over the place, you need to first understand that async/await is in fact, simply syntactic sugar over the `then()` method in promises.
+- So, behind the scenes we are still using promises.
+- We are simply using a different way of consuming them here, in this case.
+- So, what we have here is exactly the same as doing it with `then()` and `catch()`.
+- Now that we know how async/await works, it is time to actually recreate the, `whereAmI()` function.
+- First of all, we need to get the JSON out of the response that we get from the `fetch()` function. To do that, we will have to call `json()` on the response.
+
+```javascript
+const whereAmIAsync = async function (country) {
+  const res = await fetch(`https://restcountries.com/v3.1/name/${country}`);
+  res.json();
+};
+
+whereAmIAsync('india');
+console.log('FIRST');
+```
+
+- Remember that `json()` itself returns a new promise. So, previously, we would have returned that promise and then chained another `then()` handler.
+- But now, this becomes so much easier. All we have to do is use the keyword `await` before using `json()` and then store the result in a variable, like so:
+
+```javascript
+const whereAmIAsync = async function (country) {
+  const res = await fetch(`https://restcountries.com/v3.1/name/${country}`);
+  const data = await res.json();
+  console.log(data);
+};
+
+whereAmIAsync('india');
+console.log('FIRST');
+```
+
+- Now if we look in the console, we get the same data as before.
+- So, now all we have to do is to render it. We will render it using the `renderCountry()` function that we created in one of the previous lessons.
+
+```javascript
+const whereAmIAsync = async function (country) {
+  const res = await fetch(`https://restcountries.com/v3.1/name/${country}`);
+  const data = await res.json();
+  renderCountry(data.pop());
+};
+
+whereAmIAsync('india');
+console.log('FIRST');
+```
+
+- Now if we look at our UI, we will get the country card and all without the chaining of the promises like we had before.
+- This is very elegant to simply be able to store the fulfilled promise value immediately into a variable without having to mess with callback functions.
+- Now let's finish the function along with all the other functionality as well i.e. with geolocation and reverse geo-coding.
+- For that, we will use the `getPosition()` function that we built before.
+- Note that async/await is only about consuming promises. The way that we build them is not influenced in any way.
+
+```javascript
+const whereAmIAsync = async function (country) {
+  // getting position
+  const pos = await getPosition();
+  const { latitude: lat, longitude: lng } = pos.coords;
+
+  // reverse geocoding
+  const resGeo = await fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+  );
+  const dataGeo = await resGeo.json();
+
+  // fetching country
+  const res = await fetch(
+    `https://restcountries.com/v3.1/name/${dataGeo?.features?.[0]?.properties?.address?.country}`
+  );
+  const data = await res.json();
+  renderCountry(data.pop());
+  countriesContainer.style.opacity = 1;
+};
+
+whereAmIAsync('india');
+console.log('FIRST');
+```
+
+- Now we get the data of the country that we are currently situated in.
+- Of course we don't need to pass the name of the country any more so, let's get rid of that.
+
+```javascript
+const whereAmIAsync = async function () {
+  // getting position
+  const pos = await getPosition();
+  const { latitude: lat, longitude: lng } = pos.coords;
+
+  // reverse geocoding
+  const resGeo = await fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+  );
+  const dataGeo = await resGeo.json();
+
+  // fetching country
+  const res = await fetch(
+    `https://restcountries.com/v3.1/name/${dataGeo?.features?.[0]?.properties?.address?.country}`
+  );
+  const data = await res.json();
+  renderCountry(data.pop());
+  countriesContainer.style.opacity = 1;
+};
+
+whereAmIAsync();
+console.log('FIRST');
+```
+
+- So we now have all of this in one nice async function that runs behind the scenes until everything in it is finished.
+- We are awaiting 5 promises in our `whereAmIAsync()` function in a very easy way; and the code looks and feels a lot more normal, like synchronous code.
+- So, this async/await feature was a magnificient addition to the JS language.
+- Just keep in mind that async/await is basically a syntactic sugar over consuming promises.
+- So, it is a bit like classes in JS, which also hides the true nature of how things work behind the scenes.
+- But it is not a problem as long as you know how promises and asynchronous JS actually work behind the scenes.
+- Also async/await is actually used together with the more traditional `then()` method of consuming promises a lot, as we will see in the next lesson.
+- But as of right now, if we refresh our web page too fast, we get the 404 and 403 errors like ebfore.
+- That is where our code falls apart because we have a cascade of errors and nothing works anymore.
+- The reason for all of those errors is because right now we don't have any error handling in our async/await code.
+- So, let's fix that in the next lesson.
 
 ## Author
 
