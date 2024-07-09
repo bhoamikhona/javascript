@@ -30,6 +30,7 @@
       - [Microtasks and Microtasks Queue](#microtasks-and-microtasks-queue)
     - [The Event Loop in Practice](#the-event-loop-in-practice)
     - [Building a Simple Promise](#building-a-simple-promise)
+    - [Promisifying The Geolocation API](#promisifying-the-geolocation-api)
   - [Author](#author)
 
 ## Lessons Learned
@@ -2415,6 +2416,230 @@ Promise.reject(new Error('Problem!')).catch(x => console.error(x));
 ```
 
 - So, this is how we build our own promises and how we promisify a very simple callback based on asynchronous behavior function such as setTimeout.
+
+### Promisifying The Geolocation API
+
+- Let's now keep promisifying things and this time around, we are going to promisify the geolocation API.
+- This is going to be really cool because it will allow us to take the small app that we built in the last coding challenge to the next level.
+- We used the geolocation API before, and so, let's start by reviewing how it works.
+- Remember, we use `navigator.geolocation.getCurrentPosition()`, and then this function accepts 2 callbacks, where the first one is for success and the second one is for error.
+- The first callback function gets access to the `Position` object so, let's pass that as an argument to the first callback function and then simply log that to the console, like so:
+
+```javascript
+navigator.geolocation.getCurrentPosition(position => console.log(position));
+```
+
+- Now let's create the second callback with the error.
+
+```javascript
+navigator.geolocation.getCurrentPosition(
+  position => console.log(position),
+  err => console.error(err)
+);
+```
+
+- Now, just like we learned in the mapty app, JS will ask for permission to figure out our location.
+- When we allow, then at some point JS will figure out the location and then get the data back which we log onto the console.
+- This is actually asynchronous behavior in exactly the way that we have been talking about.
+- The code is not blocked, which we can check by logging something after `getCurrentPosition()`
+
+```javascript
+navigator.geolocation.getCurrentPosition(
+  position => console.log(position),
+  err => console.error(err)
+);
+
+console.log('Getting position');
+```
+
+- Now if we look at the console, the "Getting position" string is logged first and the actual data arrives a bit later - since that was offloaded to the background i.e. the web API environment.
+- So, this is very clearly a callback based API. We have to pass in different callbacks and so, this is another great opportunity to promisify a callback based API, to a promise based API.
+- So, let's do that, and it is actually pretty simple.
+- Let's create a function just like we did with the `wait()` function.
+- This function requires no inputs but, it will return a new promise which we can handle later.
+
+```javascript
+navigator.geolocation.getCurrentPosition(
+  position => console.log(position),
+  err => console.error(err)
+);
+
+console.log('Getting position');
+
+const getPosition = function () {
+  return new Promise();
+};
+```
+
+- This `Promise()` constructor function will take an executor function which gets access to resolve function and reject function that we can use to mark the promise as either rejected for fulfilled.
+- Within the executor function, we can grab the `getCurrentPosition()` function and put it inside, like so:
+
+```javascript
+console.log('Getting position');
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(
+      position => console.log(position),
+      err => console.error(err)
+    );
+  });
+};
+```
+
+- Now, we need to change what happens in each of the callback functions of `getCurrentPosition()`.
+- For the success callback function of the `getCurrentPosition()` function, we want to resolve the promise that we get i.e. we want to mark it as fulfilled.
+- Therefore, we call the `resolve()` function and pass in the position object, since that is the actual fulfilled value that we want to get from this promise.
+- That's the whole reason of using this `getPosition()` function in the first place i.e. to get access to the current position.
+
+```javascript
+console.log('Getting position');
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(
+      position => resolve(position),
+      err => console.error(err)
+    );
+  });
+};
+```
+
+- In the error callback, we do the same but this time we call `reject()` instead of `resolve()`.
+
+```javascript
+console.log('Getting position');
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(
+      position => resolve(position),
+      err => reject(err)
+    );
+  });
+};
+```
+
+- This is going to work just fine but, we can make it even simpler.
+- This is because if `getCurrentPosition()` automatically calls the success and error callback functions, and if it also automatically passes in the position then, we can simply do this:
+
+```javascript
+console.log('Getting position');
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+```
+
+- This is exactly the same as what we had before.
+- Before we manually specified the callback but, all we did was to take the position and pass it down into resolve().
+- But now, that happens automatically.
+- Now `resolve()` itself is the callback function, which will get called with the position. The same with `reject()`.
+- Now, let's call this function.
+
+```javascript
+console.log('Getting position');
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+
+getPosition().then(pos => console.log(pos));
+```
+
+- For now, we don't need the `catch()` block.
+- Now, if we check the console, it works as expected.
+- We successfully promisifies the geolocation API to a promise based API.
+- But now, let's take it to the next level.
+- In the last coding challenge, we built a function which received GPS coordinates as an input, and then rendered the corresponding country.
+- Now we got these coordinates via geolocation so, we don't even have to pass in any coordinates into that function.
+
+```javascript
+// getting country when received coordinates
+const whereAmI = function (lat, lng) {
+  fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+  )
+    .then(res => {
+      if (!res.ok) throw new Error(`Problem with geocoding ${res.status}`);
+      return res.json();
+    })
+    .then(data => {
+      console.log(data);
+      console.log(`You are in ${data.features?.[0]?.properties?.display_name}`);
+      return fetch(
+        `https://restcountries.com/v3.1/name/${data?.features?.[0]?.properties?.address?.country}`
+      );
+    })
+    .then(res => {
+      if (!res.ok) throw new Error(`Country not found (${res.status})`);
+      return res.json();
+    })
+    .then(data => {
+      renderCountry(data.pop());
+      countriesContainer.style.opacity = 1;
+    })
+    .catch(err => console.error(`${err.message} 💥💥💥`));
+};
+```
+
+- In this `whereAmI()` function, we pass in latitude and longitude, then we use reverse geocoding which gave us the country that those coordinates belong to and based on that country, we could get all the data about the country and then display it on our web page.
+- But now, since we have our `getPosition()` functiom, we actually no longer need to even pass in these coordinates and so, now we are going to be able to build a function that will tell us where we are in the world, simply based on the geolocation of our device.
+- So, in the `whereAmI()` function, we will now start by getting the position.
+
+```javascript
+console.log('Getting position');
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+
+const whereAmI = function () {
+  getPosition()
+    .then(pos => {
+      const { latitude: lat, longitude: lng } = pos.coords;
+
+      return fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+      );
+    })
+    .then(res => {
+      if (!res.ok) throw new Error(`Problem with geocoding ${res.status}`);
+      return res.json();
+    })
+    .then(data => {
+      console.log(`You are in ${data.features?.[0]?.properties?.display_name}`);
+      return fetch(
+        `https://restcountries.com/v3.1/name/${data?.features?.[0]?.properties?.address?.country}`
+      );
+    })
+    .then(res => {
+      if (!res.ok) throw new Error(`Country not found (${res.status})`);
+      return res.json();
+    })
+    .then(data => {
+      renderCountry(data.pop());
+      countriesContainer.style.opacity = 1;
+    })
+    .catch(err => console.error(`${err.message} 💥💥💥`));
+};
+
+btn.addEventListener('click', whereAmI);
+```
+
+- It works! I got the country that I am currently in, which is indeed India - and all of that was simply done using geolocation.
+- So, now we have the ability of basically displaying the flag of a country simply based on geolocation on any device.
+- Now, just imagine that you would have to use all of these asynchronous operations using callback functions - that would literally be hell.
+- Therefore the name, callback hell.
+- But with what we have here, it is a really nice flat chain of promises that's easy to handle and manage.
+- Anyway, with this, we saw that we can really promisify all kinds of asynchronous stuff in JS.
+- For example, we could also promisify the old XML HTTP request function that we used in the beginning to make AJAX calls, or also, we could promisify the image loading example that we have seen a couple of times in our slides - and that's what we are going to do in the next coding challenge.
 
 ## Author
 

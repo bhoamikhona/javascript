@@ -590,43 +590,43 @@ lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
 
 /************************************/
 
-const wait = function (seconds) {
-  return new Promise(function (resolve) {
-    setTimeout(resolve, seconds * 1000);
-  });
-};
+// const wait = function (seconds) {
+//   return new Promise(function (resolve) {
+//     setTimeout(resolve, seconds * 1000);
+//   });
+// };
 
-wait(1)
-  .then(() => {
-    console.log('1 second passed');
-    return wait(1);
-  })
-  .then(() => {
-    console.log('2 seconds passed');
-    return wait(1);
-  })
-  .then(() => {
-    console.log('3 seconds passed');
-    return wait(1);
-  })
-  .then(() => {
-    console.log('4 seconds passed');
-  });
+// wait(1)
+//   .then(() => {
+//     console.log('1 second passed');
+//     return wait(1);
+//   })
+//   .then(() => {
+//     console.log('2 seconds passed');
+//     return wait(1);
+//   })
+//   .then(() => {
+//     console.log('3 seconds passed');
+//     return wait(1);
+//   })
+//   .then(() => {
+//     console.log('4 seconds passed');
+//   });
 
 /** --------------- VS --------------- **/
 
-setTimeout(() => {
-  console.log('1 second passed');
-  setTimeout(() => {
-    console.log('2 seconds passed');
-    setTimeout(() => {
-      console.log('3 seconds passed');
-      setTimeout(() => {
-        console.log('4 seconds passed');
-      }, 1000);
-    }, 1000);
-  }, 1000);
-}, 1000);
+// setTimeout(() => {
+//   console.log('1 second passed');
+//   setTimeout(() => {
+//     console.log('2 seconds passed');
+//     setTimeout(() => {
+//       console.log('3 seconds passed');
+//       setTimeout(() => {
+//         console.log('4 seconds passed');
+//       }, 1000);
+//     }, 1000);
+//   }, 1000);
+// }, 1000);
 
 /************************************/
 
@@ -637,3 +637,50 @@ Promise.resolve('abc').then(x => console.log(x));
 // here we didn't use then() because there will be no resolved value
 // anyway so, we directly use catch()
 Promise.reject(new Error('Problem!')).catch(x => console.error(x));
+
+/************************************************************************/
+/******************* PROMISIFYING THE GEOLOCATION API *******************/
+/************************************************************************/
+console.log(
+  `/******************* PROMISIFYING THE GEOLOCATION API *******************/`
+);
+
+console.log('Getting position');
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+
+whereAmI = function () {
+  getPosition()
+    .then(pos => {
+      const { latitude: lat, longitude: lng } = pos.coords;
+
+      return fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+      );
+    })
+    .then(res => {
+      if (!res.ok) throw new Error(`Problem with geocoding ${res.status}`);
+      return res.json();
+    })
+    .then(data => {
+      console.log(`You are in ${data.features?.[0]?.properties?.display_name}`);
+      return fetch(
+        `https://restcountries.com/v3.1/name/${data?.features?.[0]?.properties?.address?.country}`
+      );
+    })
+    .then(res => {
+      if (!res.ok) throw new Error(`Country not found (${res.status})`);
+      return res.json();
+    })
+    .then(data => {
+      renderCountry(data.pop());
+      countriesContainer.style.opacity = 1;
+    })
+    .catch(err => console.error(`${err.message} 💥💥💥`));
+};
+
+btn.addEventListener('click', whereAmI);
