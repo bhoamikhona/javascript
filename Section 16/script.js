@@ -590,11 +590,11 @@ lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
 
 /************************************/
 
-// const wait = function (seconds) {
-//   return new Promise(function (resolve) {
-//     setTimeout(resolve, seconds * 1000);
-//   });
-// };
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
 
 // wait(1)
 //   .then(() => {
@@ -684,3 +684,185 @@ whereAmI = function () {
 };
 
 btn.addEventListener('click', whereAmI);
+
+/***********************************************************************/
+/************************* CODING CHALLENGE 02 *************************/
+/***********************************************************************/
+console.log(
+  `/************************* CODING CHALLENGE 02 *************************/`
+);
+
+/**
+ * For this challenge you will have to watch the lesson. Then, build the
+ * image loading functionality that was shown in it.
+ *
+ * The tasks are not super descriptive so, pretend that you are working
+ * on your own and figure some of the things out yourself.
+ *
+ * TEST DATA: Images in the img folder. Test the error handler by passing
+ * a wrong image path. Set the network speed to "Fast 3G" in the dev tools
+ * Network tab, otherwise images load too fast.
+ */
+
+// PART 01
+
+/**
+ * TODO 01:
+ *
+ * Create a function `createImage()` which receives `imgPath` as an input.
+ * This function returns a promise which creates a new image (use
+ * `document.createElement('img')`) and sets the `.src` attribute to the
+ * provided image path.
+ */
+let createImage = function (imgPath) {
+  return new Promise(function (resolve, reject) {
+    const img = document.createElement('img');
+    img.src = imgPath;
+  });
+};
+
+/**
+ * TODO 02:
+ *
+ * When the image is done loading, append it to the DOM element with the
+ * 'images' class, and resolve the promise. The fulfilled value should be
+ * the image element itself. In case there is an error loading the image
+ * (listen for the `error` event), reject the promise.
+ */
+const imgContainer = document.querySelector('.images');
+
+createImage = function (imgPath) {
+  return new Promise(function (resolve, reject) {
+    const img = document.createElement('img');
+    img.src = imgPath;
+
+    img.addEventListener('load', function () {
+      imgContainer.append(img);
+      resolve(img);
+    });
+
+    img.addEventListener('error', function () {
+      reject(new Error('Image not found'));
+    });
+  });
+};
+
+/**
+ * TODO 03:
+ *
+ * If this part is too tricky for you, just watch the first part of the
+ * solution.
+ */
+
+// PART 02
+
+/**
+ * TODO 04:
+ *
+ * Consume the promise using .then and also add an error handler.
+ */
+
+// createImage('./img/img-1.jpg')
+//   .then(img => console.log('Image 1 loaded'))
+//   .catch(err => console.error(err));
+
+/**
+ * TODO 05:
+ *
+ * After the image has loaded, pause execution for 2 seconds using the
+ * `wait` function we created earlier.
+ */
+
+// createImage('./img/img-1.jpg')
+//   .then(img => {
+//     console.log('Image 1 loaded');
+//     return wait(2);
+//   })
+//   .then(() => {
+//     console.log('wait 2 seconds');
+//   })
+//   .catch(err => console.error(err));
+
+/**
+ * TODO 06:
+ *
+ * After the 2 seconds have passed, hide the current image (set display
+ * CSS property to 'none'), and load a second image (Hint: Use the image
+ * element returned by the 'createImage' promise to hide the current
+ * image. You will need a global vairable for that 😉).
+ */
+
+let currentImg;
+
+// createImage('./img/img-1.jpg')
+//   .then(img => {
+//     currentImg = img;
+//     console.log('Image 1 loaded');
+//     return wait(2);
+//   })
+//   .then(() => {
+//     currentImg.style.display = 'none';
+//   })
+//   .catch(err => console.error(err));
+
+/**
+ * TODO 07:
+ *
+ * After the second image has loaded, pause execution for 2 seconds again.
+ */
+
+// createImage('./img/img-1.jpg')
+//   .then(img => {
+//     currentImg = img;
+//     console.log('Image 1 loaded');
+//     return wait(2);
+//   })
+//   .then(() => {
+//     currentImg.style.display = 'none';
+//     return createImage('./img/img-2.jpg');
+//   })
+//   .then(img => {
+//     currentImg = img;
+//     console.log('Image 2 loaded');
+//     currentImg.style.display = 'block';
+//     return wait(2);
+//   })
+//   .then(() => console.log('wait'))
+//   .catch(err => console.error(err));
+
+/**
+ * TODO 08:
+ *
+ * After the 2 seconds have passed, hide the current image.
+ */
+
+createImage('./img/img-1.jpg')
+  .then(img => {
+    currentImg = img;
+    console.log('Image 1 loaded');
+    return wait(2);
+  })
+  .then(() => {
+    currentImg.style.display = 'none';
+    return createImage('./img/img-2.jpg');
+  })
+  .then(img => {
+    currentImg = img;
+    console.log('Image 2 loaded');
+    currentImg.style.display = 'block';
+    return wait(2);
+  })
+  .then(() => {
+    currentImg.style.display = 'none';
+    return createImage('./img/img-3.jpg');
+  })
+  .then(img => {
+    currentImg = img;
+    console.log('Image 3 loaded');
+    currentImg.style.display = 'block';
+    return wait(2);
+  })
+  .then(() => {
+    currentImg.style.display = 'none';
+  })
+  .catch(err => console.error(err));
