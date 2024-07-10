@@ -531,7 +531,7 @@ console.log(
   `/************************ EVENT LOOP IN PRACTICE ************************/`
 );
 
-console.log('Test start');
+/* console.log('Test start');
 
 // this timer will be put on the callback queue afte 0 seconds
 setTimeout(() => console.log(`0 sec timer`), 0);
@@ -545,7 +545,7 @@ Promise.resolve('Resolved promise 2').then(res => {
   console.log(res);
 });
 
-console.log(`Test end`);
+console.log(`Test end`); */
 
 /***********************************************************************/
 /********************** BUILDING A SIMPLE PROMISE **********************/
@@ -554,47 +554,47 @@ console.log(
   `/********************** BUILDING A SIMPLE PROMISE **********************/`
 );
 
-// passing in an executor function inside the Promise() constructor
-const lotteryPromise = new Promise(function (resolve, reject) {
-  console.log(`Lottery draw is happening 🔮`);
-  setTimeout(function () {
-    /**
-     * Here we will generate a random number between 0 and 1. If the
-     * number is greater than 0.5 then we want to call the resolve()
-     * function that we pass into this function.
-     */
-    if (Math.random() >= 0.5) {
-      /**
-       * In this situation, we say that we win the lottery.
-       *
-       * This means a fulfilled promise.
-       *
-       * In order to set the promise as fulfilled, we use the resolve()
-       * function.
-       *
-       * Basically, calling the resolve() function like this, will make
-       * the promise as fulfilled.
-       *
-       * We can also call it a resolved promise, that's the reason why this
-       * method is called resolve.
-       */
-      resolve(`You WIN! 💰`);
-    } else {
-      reject(new Error(`You lost your money 💩`));
-    }
-  }, 2000);
-});
+// // passing in an executor function inside the Promise() constructor
+// const lotteryPromise = new Promise(function (resolve, reject) {
+//   console.log(`Lottery draw is happening 🔮`);
+//   setTimeout(function () {
+//     /**
+//      * Here we will generate a random number between 0 and 1. If the
+//      * number is greater than 0.5 then we want to call the resolve()
+//      * function that we pass into this function.
+//      */
+//     if (Math.random() >= 0.5) {
+//       /**
+//        * In this situation, we say that we win the lottery.
+//        *
+//        * This means a fulfilled promise.
+//        *
+//        * In order to set the promise as fulfilled, we use the resolve()
+//        * function.
+//        *
+//        * Basically, calling the resolve() function like this, will make
+//        * the promise as fulfilled.
+//        *
+//        * We can also call it a resolved promise, that's the reason why this
+//        * method is called resolve.
+//        */
+//       resolve(`You WIN! 💰`);
+//     } else {
+//       reject(new Error(`You lost your money 💩`));
+//     }
+//   }, 2000);
+// });
 
-// consuming the lotterPromise
-lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+// // consuming the lotterPromise
+// lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
 
 /************************************/
 
-const wait = function (seconds) {
-  return new Promise(function (resolve) {
-    setTimeout(resolve, seconds * 1000);
-  });
-};
+// const wait = function (seconds) {
+//   return new Promise(function (resolve) {
+//     setTimeout(resolve, seconds * 1000);
+//   });
+// };
 
 // wait(1)
 //   .then(() => {
@@ -629,7 +629,7 @@ const wait = function (seconds) {
 // }, 1000);
 
 /************************************/
-
+/* 
 // immediately resolved promise
 Promise.resolve('abc').then(x => console.log(x));
 
@@ -637,7 +637,7 @@ Promise.resolve('abc').then(x => console.log(x));
 // here we didn't use then() because there will be no resolved value
 // anyway so, we directly use catch()
 Promise.reject(new Error('Problem!')).catch(x => console.error(x));
-
+ */
 /************************************************************************/
 /******************* PROMISIFYING THE GEOLOCATION API *******************/
 /************************************************************************/
@@ -645,7 +645,7 @@ console.log(
   `/******************* PROMISIFYING THE GEOLOCATION API *******************/`
 );
 
-console.log('Getting position');
+// console.log('Getting position');
 
 const getPosition = function () {
   return new Promise(function (resolve, reject) {
@@ -895,7 +895,7 @@ const whereAmIAsync = async function () {
 };
 
 // whereAmIAsync();
-console.log('FIRST');
+// console.log('FIRST');
 
 /***********************************************************************/
 /******************* ERROR HANDLING WITH TRY...CATCH *******************/
@@ -922,7 +922,56 @@ console.log(
   console.error(err.message);
 } */
 
-const whereAmITry = async function () {
+let whereAmITry = async function () {
+  try {
+    // getting position
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
+
+    // reverse geocoding
+    const resGeo = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+    );
+
+    // checking if status is OK
+    if (!resGeo.ok) {
+      throw new Error(`Problem getting lcoation data`);
+    }
+
+    const dataGeo = await resGeo.json();
+    console.log(dataGeo);
+
+    // fetching country
+    const res = await fetch(
+      `https://restcountries.com/v3.1/name/${dataGeo?.features?.[0]?.properties?.address?.country}`
+    );
+
+    // checking if status is ok
+    if (!res.ok) {
+      throw new Error(`Problem getting the country`);
+    }
+
+    const data = await res.json();
+    console.log(data);
+    renderCountry(data.pop());
+    countriesContainer.style.opacity = 1;
+  } catch (err) {
+    console.log(`${err} 💥`);
+    // using our previously created renderError() function
+    renderError(`Something went wrong 💥 ${err.message}`);
+  }
+};
+
+// whereAmITry();
+
+/***********************************************************************/
+/**************** RETURNING VALUES FROM ASYNC FUNCTIONS ****************/
+/***********************************************************************/
+console.log(
+  `/**************** RETURNING VALUES FROM ASYNC FUNCTIONS ****************/`
+);
+
+whereAmITry = async function () {
   try {
     // getting position
     const pos = await getPosition();
@@ -943,7 +992,7 @@ const whereAmITry = async function () {
     // fetching country
     const res = await fetch(
       `https://restcountries.com/v3.1/name/${dataGeo?.features?.[0]?.properties?.address?.country}`
-    );
+    ); // this should create a 404 error
 
     // checking if status is ok
     if (!res.ok) {
@@ -953,18 +1002,27 @@ const whereAmITry = async function () {
     const data = await res.json();
     renderCountry(data.pop());
     countriesContainer.style.opacity = 1;
+
+    // returning a string
+    return `You are in ${dataGeo.features?.[0]?.properties?.display_name}`;
   } catch (err) {
-    console.log(`${err} 💥`);
+    console.error(`${err} 💥`);
     // using our previously created renderError() function
     renderError(`Something went wrong 💥 ${err.message}`);
+
+    // reject promise returned from the async function
+    throw err;
   }
 };
 
-whereAmITry();
+console.log(`1: Will get location`);
 
-/***********************************************************************/
-/**************** RETURNING VALUES FROM ASYNC FUNCTIONS ****************/
-/***********************************************************************/
-console.log(
-  `/**************** RETURNING VALUES FROM ASYNC FUNCTIONS ****************/`
-);
+(async function () {
+  try {
+    const city = await whereAmITry();
+    console.log(city);
+  } catch (error) {
+    console.error(`${error.message} 💥`);
+  }
+  console.log(`2: Finished getting location`);
+})();

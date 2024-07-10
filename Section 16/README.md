@@ -33,6 +33,7 @@
     - [Promisifying The Geolocation API](#promisifying-the-geolocation-api)
     - [Consuming Promises with Async/Await](#consuming-promises-with-asyncawait)
     - [Error Handling With try...catch](#error-handling-with-trycatch)
+    - [Returning Values from Async Functions](#returning-values-from-async-functions)
   - [Author](#author)
 
 ## Lessons Learned
@@ -3004,6 +3005,504 @@ whereAmITry();
 - Having said that, in the next lesson, we will dive even deeper into how async functions really work. So, let's get to it.
 
 ### Returning Values from Async Functions
+
+- At this point, we have a pretty good idea of how to work with async/await.
+- However, there is one important thing missing.
+- Right now, it might still be a little unclear what an `async` function actually is and how it works. So, let's fix that.
+- To understand what is happening, let's add some `console.log()` around calling the `WhereAmITry()` function.
+
+```javascript
+console.log(`1: Will get location`);
+whereAmITry();
+console.log(`2: Finished getting location`);
+```
+
+- If we check the result now, hopefully you will already know what the order of the logs will be.
+- Indeed, we get the first log then the second log and then we get all the logs coming from the `async` function.
+- That's because it is an async function which runs in the background.
+- So, JS immediately moves on to the next line.
+- If it was a regular function and there were `console.log()` in the regular function, then that would appear between the first log and the second long.
+- But in this case, it is an async function, therefore it runs in the background until the results arrive.
+- Now let's say that we wanted to return a string from the `whereAmITry()` function.
+
+```javascript
+whereAmITry = async function () {
+  try {
+    // getting position
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
+
+    // reverse geocoding
+    const resGeo = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+    );
+
+    // checking if status is OK
+    if (!resGeo.ok) {
+      throw new Error(`Problem getting lcoation data`);
+    }
+
+    const dataGeo = await resGeo.json();
+
+    // fetching country
+    const res = await fetch(
+      `https://restcountries.com/v3.1/name/${dataGeo?.features?.[0]?.properties?.address?.country}`
+    );
+
+    // checking if status is ok
+    if (!res.ok) {
+      throw new Error(`Problem getting the country`);
+    }
+
+    const data = await res.json();
+    renderCountry(data.pop());
+    countriesContainer.style.opacity = 1;
+
+    // returning a string
+    return `You are in ${dataGeo.features?.[0]?.properties?.display_name}`;
+  } catch (err) {
+    console.log(`${err} 💥`);
+    // using our previously created renderError() function
+    renderError(`Something went wrong 💥 ${err.message}`);
+  }
+};
+
+console.log(`1: Will get location`);
+whereAmITry();
+console.log(`2: Finished getting location`);
+```
+
+- Now, we want to access that string where we are calling the `whereAmITry()` function.
+- If it was a regular function, we would simple store the returning value into a variable (let's call it `city`) and log it to the console like so:
+
+```javascript
+whereAmITry = async function () {
+  try {
+    // getting position
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
+
+    // reverse geocoding
+    const resGeo = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+    );
+
+    // checking if status is OK
+    if (!resGeo.ok) {
+      throw new Error(`Problem getting lcoation data`);
+    }
+
+    const dataGeo = await resGeo.json();
+
+    // fetching country
+    const res = await fetch(
+      `https://restcountries.com/v3.1/name/${dataGeo?.features?.[0]?.properties?.address?.country}`
+    );
+
+    // checking if status is ok
+    if (!res.ok) {
+      throw new Error(`Problem getting the country`);
+    }
+
+    const data = await res.json();
+    renderCountry(data.pop());
+    countriesContainer.style.opacity = 1;
+
+    // returning a string
+    return `You are in ${dataGeo.features?.[0]?.properties?.display_name}`;
+  } catch (err) {
+    console.log(`${err} 💥`);
+    // using our previously created renderError() function
+    renderError(`Something went wrong 💥 ${err.message}`);
+  }
+};
+
+console.log(`1: Will get location`);
+const city = whereAmITry();
+console.log(city);
+console.log(`2: Finished getting location`);
+```
+
+- What do you think is going to happen in this case?
+- The `city` variable now holds the promise.
+- Remember that when we first started to work with async/await, we mentioned that an `async` function always returns a promise.
+- So, we just got the proof of that.
+- If we think about it, it actually makes sense that we get a promise instead of the value that we are manually trying to return from the function.
+- The reason for that is that, at the point of code where we are calling the function, JS has simply no way of knowing yet that there is a string that we want to return because the function is still runing, but it is also not blocking the code where we are calling it.
+- Therefore, at the point of code where we are calling the function, JS has no way of knowing what will be returned from the `whereAmITry()` function.
+- Therefore, all that this function returns is a promise.
+- Now the value that we return from an async function, i.e. the string in our case, will become the fulfilled value of the promise that is returned by the function.
+- So, that's important to understand.
+- Again, the promise that we see when we log the `city` variable to the console, its fulfilled value is going to be the string that we are returning from the `async` function, as long as there is no error in the function.
+- For now, let's assume success.
+- Since we know that `whereAmITry()` will return a promise, we also know how we can actually get the data that we want.
+- All we have to do is to use `then()` method to get the fulfilled value, like so:
+
+```javascript
+whereAmITry = async function () {
+  try {
+    // getting position
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
+
+    // reverse geocoding
+    const resGeo = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+    );
+
+    // checking if status is OK
+    if (!resGeo.ok) {
+      throw new Error(`Problem getting lcoation data`);
+    }
+
+    const dataGeo = await resGeo.json();
+
+    // fetching country
+    const res = await fetch(
+      `https://restcountries.com/v3.1/name/${dataGeo?.features?.[0]?.properties?.address?.country}`
+    );
+
+    // checking if status is ok
+    if (!res.ok) {
+      throw new Error(`Problem getting the country`);
+    }
+
+    const data = await res.json();
+    renderCountry(data.pop());
+    countriesContainer.style.opacity = 1;
+
+    // returning a string
+    return `You are in ${dataGeo.features?.[0]?.properties?.display_name}`;
+  } catch (err) {
+    console.log(`${err} 💥`);
+    // using our previously created renderError() function
+    renderError(`Something went wrong 💥 ${err.message}`);
+  }
+};
+
+console.log(`1: Will get location`);
+// const city = whereAmITry();
+// console.log(city);
+
+whereAmITry().then(city => console.log(city));
+console.log(`2: Finished getting location`);
+```
+
+- Now if we look at the console, we get the result that we wanted.
+- With this, we successfully returned a value from the async function.
+- We will be able to do a little bit better but for now, let's think about errors.
+- If any error occurs in the `try` block, then the `return` statement will never be reached because it will immediately jump to the `catch` block.
+- To see it in action, we can change the variable that we are passing into the rest countries fetch request like so:
+
+```javascript
+whereAmITry = async function () {
+  try {
+    // getting position
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
+
+    // reverse geocoding
+    const resGeo = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+    );
+
+    // checking if status is OK
+    if (!resGeo.ok) {
+      throw new Error(`Problem getting lcoation data`);
+    }
+
+    const dataGeo = await resGeo.json();
+
+    // fetching country
+    const res = await fetch(
+      `https://restcountries.com/v3.1/name/${dataGeo?.features?.[0]?.properties?.address?.countryyyyyyy}`
+    ); // this should create a 404 error
+
+    // checking if status is ok
+    if (!res.ok) {
+      throw new Error(`Problem getting the country`);
+    }
+
+    const data = await res.json();
+    renderCountry(data.pop());
+    countriesContainer.style.opacity = 1;
+
+    // returning a string
+    return `You are in ${dataGeo.features?.[0]?.properties?.display_name}`;
+  } catch (err) {
+    console.error(`${err} 💥`);
+    // using our previously created renderError() function
+    renderError(`Something went wrong 💥 ${err.message}`);
+  }
+};
+
+console.log(`1: Will get location`);
+// const city = whereAmITry();
+// console.log(city);
+
+whereAmITry().then(city => console.log(city));
+console.log(`2: Finished getting location`);
+```
+
+- Now we get a 404 error for country not being found.
+- Indeed, now nothing was returned from the function hence, we get `undefined` in the console.
+- What's interesting here is that the log still worked. The `console.log()` that logged `undefined` is still running.
+- This means that the `then()` method on `whereAmITry().then(city => console.log(city));` was still called, which in turn means that the promise returned by `whereAmITry()` was fulfilled and not rejected.
+- So, even though there was an error in the async function, the promise that the async function returns is still fulfilled and not rejected.
+- In fact if we add a `catch` handler to where we are calling the async function, let's see what happens.
+
+```javascript
+whereAmITry = async function () {
+  try {
+    // getting position
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
+
+    // reverse geocoding
+    const resGeo = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+    );
+
+    // checking if status is OK
+    if (!resGeo.ok) {
+      throw new Error(`Problem getting lcoation data`);
+    }
+
+    const dataGeo = await resGeo.json();
+
+    // fetching country
+    const res = await fetch(
+      `https://restcountries.com/v3.1/name/${dataGeo?.features?.[0]?.properties?.address?.countryyyyyyy}`
+    ); // this should create a 404 error
+
+    // checking if status is ok
+    if (!res.ok) {
+      throw new Error(`Problem getting the country`);
+    }
+
+    const data = await res.json();
+    renderCountry(data.pop());
+    countriesContainer.style.opacity = 1;
+
+    // returning a string
+    return `You are in ${dataGeo.features?.[0]?.properties?.display_name}`;
+  } catch (err) {
+    console.error(`${err} 💥`);
+    // using our previously created renderError() function
+    renderError(`Something went wrong 💥 ${err.message}`);
+  }
+};
+
+console.log(`1: Will get location`);
+// const city = whereAmITry();
+// console.log(city);
+
+countriesContainer.style.opacity = 1;
+whereAmITry()
+  .then(city => console.log(city))
+  .catch(err => console.error(`${err.message} 💥`));
+console.log(`2: Finished getting location`);
+```
+
+- We should still get the error on the UI because it is coming from our manually thrown error in the `try` block.
+- But notice that no error is coming from the `catch` block.
+- So again, this means that even though there was an error in the `async` function, the promise that it returns is still fulfilled.
+- Now, if we wanted to fix that i.e. if we want to be able to catch that error where we are calling the function as well, then we would have to re-throw that error in the `catch` block of that function.
+- Re-throwing the error mean to basically throwing the error again so that we can propagate it down.
+- With that, we will manually reject a promise that is returned from the async function.
+
+```javascript
+whereAmITry = async function () {
+  try {
+    // getting position
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
+
+    // reverse geocoding
+    const resGeo = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+    );
+
+    // checking if status is OK
+    if (!resGeo.ok) {
+      throw new Error(`Problem getting lcoation data`);
+    }
+
+    const dataGeo = await resGeo.json();
+
+    // fetching country
+    const res = await fetch(
+      `https://restcountries.com/v3.1/name/${dataGeo?.features?.[0]?.properties?.address?.countryyyyyyy}`
+    ); // this should create a 404 error
+
+    // checking if status is ok
+    if (!res.ok) {
+      throw new Error(`Problem getting the country`);
+    }
+
+    const data = await res.json();
+    renderCountry(data.pop());
+    countriesContainer.style.opacity = 1;
+
+    // returning a string
+    return `You are in ${dataGeo.features?.[0]?.properties?.display_name}`;
+  } catch (err) {
+    console.error(`${err} 💥`);
+    // using our previously created renderError() function
+    renderError(`Something went wrong 💥 ${err.message}`);
+
+    // reject promise returned from the async function
+    throw err;
+  }
+};
+
+console.log(`1: Will get location`);
+// const city = whereAmITry();
+// console.log(city);
+
+countriesContainer.style.opacity = 1;
+whereAmITry()
+  .then(city => console.log(city))
+  .catch(err => console.error(`${err.message} 💥`));
+console.log(`2: Finished getting location`);
+```
+
+- Now we get the same error out where we are calling the function as we had in the `try` block of our function.
+- So re-throwing an error is sometimes the correct solution to that problem.
+- Finally, if we wanted to fix the fact that second string is printed before the function call then how would we do that?
+- We can simply add `finally` block, since finally block will be executed no matter if the promise is fulfilled or rejected.
+
+```javascript
+whereAmITry = async function () {
+  try {
+    // getting position
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
+
+    // reverse geocoding
+    const resGeo = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+    );
+
+    // checking if status is OK
+    if (!resGeo.ok) {
+      throw new Error(`Problem getting lcoation data`);
+    }
+
+    const dataGeo = await resGeo.json();
+
+    // fetching country
+    const res = await fetch(
+      `https://restcountries.com/v3.1/name/${dataGeo?.features?.[0]?.properties?.address?.country}`
+    ); // this should create a 404 error
+
+    // checking if status is ok
+    if (!res.ok) {
+      throw new Error(`Problem getting the country`);
+    }
+
+    const data = await res.json();
+    renderCountry(data.pop());
+    countriesContainer.style.opacity = 1;
+
+    // returning a string
+    return `You are in ${dataGeo.features?.[0]?.properties?.display_name}`;
+  } catch (err) {
+    console.error(`${err} 💥`);
+    // using our previously created renderError() function
+    renderError(`Something went wrong 💥 ${err.message}`);
+
+    // reject promise returned from the async function
+    throw err;
+  }
+};
+
+console.log(`1: Will get location`);
+// const city = whereAmITry();
+// console.log(city);
+
+countriesContainer.style.opacity = 1;
+whereAmITry()
+  .then(city => console.log(city))
+  .catch(err => console.error(`${err.message} 💥`))
+  .finally(() => console.log(`2: Finished getting location`));
+```
+
+- Now we first get the first string logged, then the result from the function, and then the second string.
+- This might have been a little confusing but, hopefully you understood how all the pieces fit together.
+- This of course, works just fine but, there is still a problem here.
+- The problem is using the `then()` and `catch()` method along with `async`/`await`.
+- So, we are mixing the old and new way of working with promises, all in the same code.
+- It is preferable to only use `async` functions instead of having to mix them.
+- So, let's now convert the chain of `then()`, `catch()`, and `finally()` into `async`/`await`. We can of course do that because, when we call the `whereAmITry()` function, it returns a promise so, just like any other promise, we can handle it using async/await.
+- It would be great if we could simply use `await` without the `async` function, but that doesn't work, at least for now.
+- There is actually a proposal in the works to make it happen but, for now, `await` can only be used inside an `async` function.
+- However, we don't really want a new complete function here. Instead, we can use and IIFE.
+
+```javascript
+whereAmITry = async function () {
+  try {
+    // getting position
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
+
+    // reverse geocoding
+    const resGeo = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+    );
+
+    // checking if status is OK
+    if (!resGeo.ok) {
+      throw new Error(`Problem getting lcoation data`);
+    }
+
+    const dataGeo = await resGeo.json();
+
+    // fetching country
+    const res = await fetch(
+      `https://restcountries.com/v3.1/name/${dataGeo?.features?.[0]?.properties?.address?.country}`
+    ); // this should create a 404 error
+
+    // checking if status is ok
+    if (!res.ok) {
+      throw new Error(`Problem getting the country`);
+    }
+
+    const data = await res.json();
+    renderCountry(data.pop());
+    countriesContainer.style.opacity = 1;
+
+    // returning a string
+    return `You are in ${dataGeo.features?.[0]?.properties?.display_name}`;
+  } catch (err) {
+    console.error(`${err} 💥`);
+    // using our previously created renderError() function
+    renderError(`Something went wrong 💥 ${err.message}`);
+
+    // reject promise returned from the async function
+    throw err;
+  }
+};
+
+console.log(`1: Will get location`);
+
+(async function () {
+  try {
+    const city = await whereAmITry();
+    console.log(city);
+  } catch (error) {
+    console.error(`${error.message} 💥`);
+  }
+  console.log(`2: Finished getting location`);
+})();
+```
+
+- NOTE that this pattern for IIFE is one of the last remaining pattern for IIFEs.
+- Great! we managed to do the conversion and now everything is using async/await.
+- And now we know how to return data from an async function and how to properly receive and handle that returned data.
+- In real life, this is something that happens all the time.
+- It is pretty common that we have async function calling other async function and returning values between them.
+- That is why we are learning all of it, to make sure that you really correctly understand how async functions work behind the scenes.
 
 ## Author
 
