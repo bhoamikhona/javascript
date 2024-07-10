@@ -292,14 +292,14 @@ const getCountryDataFetchError = function (country) {
 
 // getCountryDataFetchError('abc');
 
-/************************************************************************/
-/*********************** THROWING ERRORS MANUALLY ***********************/
-/************************************************************************/
+/**********************************************************************/
+/********************** THROWING ERRORS MANUALLY **********************/
+/**********************************************************************/
 console.log(
   `/*********************** THROWING ERRORS MANUALLY ***********************/`
 );
 
-const getJSON = function (url, errorMsg = 'Something went wrong') {
+let getJSON = function (url, errorMsg = 'Something went wrong') {
   return fetch(url).then(response => {
     if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
 
@@ -1026,3 +1026,45 @@ console.log(`1: Will get location`);
   }
   console.log(`2: Finished getting location`);
 })();
+
+/**********************************************************************/
+/******************** RUNNING PROMISES IN PARALLEL ********************/
+/**********************************************************************/
+console.log(
+  `/******************** RUNNING PROMISES IN PARALLEL ********************/`
+);
+
+// this function was created in the "throwing errors manually" lesson
+// in this lesson, we are going to simply utilize it
+getJSON = function (url, errorMsg = 'Something went wrong') {
+  // this function takes in a url from which we want to fetch data
+  // it returns the JSON data if it is success or throws an error
+  // the error message can customized or the default one will be used
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+
+    return response.json();
+  });
+};
+
+const get3Countries = async function (c1, c2, c3) {
+  try {
+    // const [data1] = await getJSON(`https://restcountries.com/v3.1/name/${c1}`);
+    // const [data2] = await getJSON(`https://restcountries.com/v3.1/name/${c2}`);
+    // const [data3] = await getJSON(`https://restcountries.com/v3.1/name/${c3}`);
+
+    // console.log([data1.capital?.[0], data2.capital?.[0], data3.capital?.[0]]);
+
+    const data = await Promise.all([
+      getJSON(`https://restcountries.com/v3.1/name/${c1}`),
+      getJSON(`https://restcountries.com/v3.1/name/${c2}`),
+      getJSON(`https://restcountries.com/v3.1/name/${c3}`),
+    ]);
+
+    console.log(data.map(d => d[0]?.capital?.[0]));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+get3Countries('greece', 'france', 'italy');

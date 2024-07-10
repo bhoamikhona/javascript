@@ -34,6 +34,7 @@
     - [Consuming Promises with Async/Await](#consuming-promises-with-asyncawait)
     - [Error Handling With try...catch](#error-handling-with-trycatch)
     - [Returning Values from Async Functions](#returning-values-from-async-functions)
+    - [Running Promises in Parallel](#running-promises-in-parallel)
   - [Author](#author)
 
 ## Lessons Learned
@@ -3503,6 +3504,182 @@ console.log(`1: Will get location`);
 - In real life, this is something that happens all the time.
 - It is pretty common that we have async function calling other async function and returning values between them.
 - That is why we are learning all of it, to make sure that you really correctly understand how async functions work behind the scenes.
+
+### Running Promises in Parallel
+
+- Let's now imagine that we wanted to get some data about three countries at the same time, but in which the order that the data arrives does not matter at all.
+- So, let's now implement an async function, using everything that we know at this point.
+- This function will simple take in three countries and it will log the capital cities of these three countries as an array.
+- NOTE: In an async function we really always need to wrap our code into a try...catch block.
+
+```javascript
+// this function was created in the "throwing errors manually" lesson
+// in this lesson, we are going to simply utilize it
+getJSON = function (url, errorMsg = 'Something went wrong') {
+  // this function takes in a url from which we want to fetch data
+  // it returns the JSON data if it is success or throws an error
+  // the error message can customized or the default one will be used
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+
+    return response.json();
+  });
+};
+
+const get3Countries = async function (c1, c2, c3) {
+  try {
+    const [data1] = await getJSON(`https://restcountries.com/v3.1/name/${c1}`);
+    const [data2] = await getJSON(`https://restcountries.com/v3.1/name/${c2}`);
+    const [data3] = await getJSON(`https://restcountries.com/v3.1/name/${c3}`);
+
+    console.log([data1.capital?.[0], data2.capital?.[0], data3.capital?.[0]]);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+get3Countries('greece', 'france', 'italy');
+```
+
+- Great! This works just fine, and also at the first sight, this seems to make sense.
+- But we really think about it, it doesn't make so much sense because what we did here was to run all the 3 AJAX calls one after another, even though the result of the second one does not depend on the first one; and the result of the third one does not depend on any of the previous ones.
+- So actually, this doesn't make much sense. Why should the second AJAX call wait for the first one?
+- If we look at the network tab on the chrome developer tools, we will see that the AJAX call for our country 2 is made only after the data for country 1 has arrived. The same goes for country 3.
+- So, instead of running these promises in sequence, we can actually run them in parallel i.e. all at the same time.
+- Then we can save valuable loading time, making the 3 countries load at the same time.
+- Each of these countries take up half a second so, by running them parallel, we can basically save 1 second - which is a lot of time when loading a website.
+- So, let's do that. In order to do that, we use `Promise.all()` combinator function.
+- This if, once again, kind of a helper function on the `Promise` constructor. So, it is a static method.
+- This function will take in an array of promises and it will return a new promise, which will then run all the promises in th array at the same time.
+
+```javascript
+// this function was created in the "throwing errors manually" lesson
+// in this lesson, we are going to simply utilize it
+getJSON = function (url, errorMsg = 'Something went wrong') {
+  // this function takes in a url from which we want to fetch data
+  // it returns the JSON data if it is success or throws an error
+  // the error message can customized or the default one will be used
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+
+    return response.json();
+  });
+};
+
+const get3Countries = async function (c1, c2, c3) {
+  try {
+    const [data1] = await getJSON(`https://restcountries.com/v3.1/name/${c1}`);
+    const [data2] = await getJSON(`https://restcountries.com/v3.1/name/${c2}`);
+    const [data3] = await getJSON(`https://restcountries.com/v3.1/name/${c3}`);
+
+    Promise.all([
+      getJSON(`https://restcountries.com/v3.1/name/${c1}`),
+      getJSON(`https://restcountries.com/v3.1/name/${c2}`),
+      getJSON(`https://restcountries.com/v3.1/name/${c3}`),
+    ]);
+
+    console.log([data1.capital?.[0], data2.capital?.[0], data3.capital?.[0]]);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+get3Countries('greece', 'france', 'italy');
+```
+
+- Now if you see on the network tab, after the first 3 AJAX calls that we are making separately, when code comes to the line of `Promise.all()` function, all the 3 AJAX calls are made at the same time.
+- Now, as we mentioned earlier, `Promise.all()` will first run all the promises in the array that we pass into it at the same time then, it will return a new promise.
+- So now, we can handle that promise in the exact same way as before.
+
+```javascript
+// this function was created in the "throwing errors manually" lesson
+// in this lesson, we are going to simply utilize it
+getJSON = function (url, errorMsg = 'Something went wrong') {
+  // this function takes in a url from which we want to fetch data
+  // it returns the JSON data if it is success or throws an error
+  // the error message can customized or the default one will be used
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+
+    return response.json();
+  });
+};
+
+const get3Countries = async function (c1, c2, c3) {
+  try {
+    // const [data1] = await getJSON(`https://restcountries.com/v3.1/name/${c1}`);
+    // const [data2] = await getJSON(`https://restcountries.com/v3.1/name/${c2}`);
+    // const [data3] = await getJSON(`https://restcountries.com/v3.1/name/${c3}`);
+
+    // console.log([data1.capital?.[0], data2.capital?.[0], data3.capital?.[0]]);
+
+    const data = await Promise.all([
+      getJSON(`https://restcountries.com/v3.1/name/${c1}`),
+      getJSON(`https://restcountries.com/v3.1/name/${c2}`),
+      getJSON(`https://restcountries.com/v3.1/name/${c3}`),
+    ]);
+
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+get3Countries('greece', 'france', 'italy');
+```
+
+- Once again, if we now look at the network tab in the chrome developer tools, you will see that the 3 AJAX calls were made at the same time.
+- So, they are running in parallel, and no longer in sequence.
+- Now if we look the console, the data that we logged in, it is an array.
+- In this array, in this case, we get another array with an object inside it with the data that we are looking for.
+- So, `Promise.all()` receives and array and it also returns an array.
+- Now to create the same output as before, all we have to do is to loop over this data, and take out the part that we want.
+
+```javascript
+// this function was created in the "throwing errors manually" lesson
+// in this lesson, we are going to simply utilize it
+getJSON = function (url, errorMsg = 'Something went wrong') {
+  // this function takes in a url from which we want to fetch data
+  // it returns the JSON data if it is success or throws an error
+  // the error message can customized or the default one will be used
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+
+    return response.json();
+  });
+};
+
+const get3Countries = async function (c1, c2, c3) {
+  try {
+    // const [data1] = await getJSON(`https://restcountries.com/v3.1/name/${c1}`);
+    // const [data2] = await getJSON(`https://restcountries.com/v3.1/name/${c2}`);
+    // const [data3] = await getJSON(`https://restcountries.com/v3.1/name/${c3}`);
+
+    // console.log([data1.capital?.[0], data2.capital?.[0], data3.capital?.[0]]);
+
+    const data = await Promise.all([
+      getJSON(`https://restcountries.com/v3.1/name/${c1}`),
+      getJSON(`https://restcountries.com/v3.1/name/${c2}`),
+      getJSON(`https://restcountries.com/v3.1/name/${c3}`),
+    ]);
+
+    console.log(data.map(d => d[0]?.capital?.[0]));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+get3Countries('greece', 'france', 'italy');
+```
+
+- Now we get the exact same result as before.
+- One important thing to note here is that if one of the promises reject then the whole `Promise.all()` rejects as well.
+- So, we say that `Promise.all()` short-circuits when one promise rejects.
+- Great! So, whenever you have a situation in which you need to do multiple asynchronous operations at the same time, and operations that don't depend on one another, then you should always run them in parallel, just like we did here using `Promise.all()`.
+- This is actually more common than you might think so, please keep this technique in mind and your users will thank you for it.
+- Of course, in case you are not using async/await then you can take the result from individual calls and handle them using `then()`. It will work just the same.
+- That is the `Promise.all()` combinator. It is called combinator function because it allows us to combine multiple promises.
+- There are other combinator functions, and so let's take a look at them in the next lesson.
 
 ## Author
 
