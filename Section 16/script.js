@@ -714,12 +714,12 @@ console.log(
  * `document.createElement('img')`) and sets the `.src` attribute to the
  * provided image path.
  */
-let createImage = function (imgPath) {
-  return new Promise(function (resolve, reject) {
-    const img = document.createElement('img');
-    img.src = imgPath;
-  });
-};
+// let createImage = function (imgPath) {
+//   return new Promise(function (resolve, reject) {
+//     const img = document.createElement('img');
+//     img.src = imgPath;
+//   });
+// };
 
 /**
  * TODO 02:
@@ -729,23 +729,23 @@ let createImage = function (imgPath) {
  * the image element itself. In case there is an error loading the image
  * (listen for the `error` event), reject the promise.
  */
-const imgContainer = document.querySelector('.images');
+// const imgContainer = document.querySelector('.images');
 
-createImage = function (imgPath) {
-  return new Promise(function (resolve, reject) {
-    const img = document.createElement('img');
-    img.src = imgPath;
+// createImage = function (imgPath) {
+//   return new Promise(function (resolve, reject) {
+//     const img = document.createElement('img');
+//     img.src = imgPath;
 
-    img.addEventListener('load', function () {
-      imgContainer.append(img);
-      resolve(img);
-    });
+//     img.addEventListener('load', function () {
+//       imgContainer.append(img);
+//       resolve(img);
+//     });
 
-    img.addEventListener('error', function () {
-      reject(new Error('Image not found'));
-    });
-  });
-};
+//     img.addEventListener('error', function () {
+//       reject(new Error('Image not found'));
+//     });
+//   });
+// };
 
 /**
  * TODO 03:
@@ -836,36 +836,36 @@ let currentImg;
  * After the 2 seconds have passed, hide the current image.
  */
 
-createImage('./img/img-1.jpg')
-  .then(img => {
-    currentImg = img;
-    console.log('Image 1 loaded');
-    return wait(2);
-  })
-  .then(() => {
-    currentImg.style.display = 'none';
-    return createImage('./img/img-2.jpg');
-  })
-  .then(img => {
-    currentImg = img;
-    console.log('Image 2 loaded');
-    currentImg.style.display = 'block';
-    return wait(2);
-  })
-  .then(() => {
-    currentImg.style.display = 'none';
-    return createImage('./img/img-3.jpg');
-  })
-  .then(img => {
-    currentImg = img;
-    console.log('Image 3 loaded');
-    currentImg.style.display = 'block';
-    return wait(2);
-  })
-  .then(() => {
-    currentImg.style.display = 'none';
-  })
-  .catch(err => console.error(err));
+// createImage('./img/img-1.jpg')
+//   .then(img => {
+//     currentImg = img;
+//     console.log('Image 1 loaded');
+//     return wait(2);
+//   })
+//   .then(() => {
+//     currentImg.style.display = 'none';
+//     return createImage('./img/img-2.jpg');
+//   })
+//   .then(img => {
+//     currentImg = img;
+//     console.log('Image 2 loaded');
+//     currentImg.style.display = 'block';
+//     return wait(2);
+//   })
+//   .then(() => {
+//     currentImg.style.display = 'none';
+//     return createImage('./img/img-3.jpg');
+//   })
+//   .then(img => {
+//     currentImg = img;
+//     console.log('Image 3 loaded');
+//     currentImg.style.display = 'block';
+//     return wait(2);
+//   })
+//   .then(() => {
+//     currentImg.style.display = 'none';
+//   })
+//   .catch(err => console.error(err));
 
 /***********************************************************************/
 /***************** CONSUMING PROMISES WITH ASYNC/AWAIT *****************/
@@ -894,5 +894,70 @@ const whereAmIAsync = async function () {
   countriesContainer.style.opacity = 1;
 };
 
-whereAmIAsync();
+// whereAmIAsync();
 console.log('FIRST');
+
+/***********************************************************************/
+/******************* ERROR HANDLING WITH TRY...CATCH *******************/
+/***********************************************************************/
+console.log(
+  `/******************* ERROR HANDLING WITH TRY...CATCH *******************/`
+);
+
+// error from catch block since `const` variable re-assigned
+/* try {
+  let y = 1;
+  const x = 2;
+  x = 3;
+} catch (err) {
+  console.error(err.message);
+} */
+
+// no error since `let` variable re-assigned
+/* try {
+  let y = 1;
+  const x = 2;
+  y = 3;
+} catch (err) {
+  console.error(err.message);
+} */
+
+const whereAmITry = async function () {
+  try {
+    // getting position
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
+
+    // reverse geocoding
+    const resGeo = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+    );
+
+    // checking if status is OK
+    if (!resGeo.ok) {
+      throw new Error(`Problem getting lcoation data`);
+    }
+
+    const dataGeo = await resGeo.json();
+
+    // fetching country
+    const res = await fetch(
+      `https://restcountries.com/v3.1/name/${dataGeo?.features?.[0]?.properties?.address?.country}`
+    );
+
+    // checking if status is ok
+    if (!res.ok) {
+      throw new Error(`Problem getting the country`);
+    }
+
+    const data = await res.json();
+    renderCountry(data.pop());
+    countriesContainer.style.opacity = 1;
+  } catch (err) {
+    console.log(`${err} 💥`);
+    // using our previously created renderError() function
+    renderError(`Something went wrong 💥 ${err.message}`);
+  }
+};
+
+whereAmITry();

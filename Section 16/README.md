@@ -32,6 +32,7 @@
     - [Building a Simple Promise](#building-a-simple-promise)
     - [Promisifying The Geolocation API](#promisifying-the-geolocation-api)
     - [Consuming Promises with Async/Await](#consuming-promises-with-asyncawait)
+    - [Error Handling With try...catch](#error-handling-with-trycatch)
   - [Author](#author)
 
 ## Lessons Learned
@@ -2820,6 +2821,187 @@ console.log('FIRST');
 - That is where our code falls apart because we have a cascade of errors and nothing works anymore.
 - The reason for all of those errors is because right now we don't have any error handling in our async/await code.
 - So, let's fix that in the next lesson.
+
+### Error Handling With try...catch
+
+- In this lesson, we are going to learn how error handling works with async/await.
+- With async/await, we can't use the `catch()` method that we used before, because we can't really attach it anywhere.
+- Instead, we use something called a try...catch statement.
+- The try...catch statement is actually used in regular JS as well. So, it has been in the language since the beginning.
+- So, try...catch has nothing to do with async/await but, we can still use it to catch errors in async functions.
+- But, before we do that, let's look at a more simple example, just to see how try...catch works.
+- We can basically wrap all our code in a `try` block, and JS will try to execute this code just as a normal code.
+- To see how try...catch works, first lets create a `const` and a `let` variable and then "accidentally" try to re-assign the `const` variable when our goal really was to re-assign `let` variable.
+
+```javascript
+let y = 1;
+const x = 2;
+x = 3;
+```
+
+- This gives us an error since we are trying to re-assign the `const` variable.
+- Now let's create a try...catch statement and put the above code inside the `try` block.
+- NOTE that the `catch` block will have access to whatever error occured inside the `try` block. So, we can do something with this error.
+- For now, we can simply log the error message to the console.
+
+```javascript
+// error from catch block since `const` variable re-assigned
+try {
+  let y = 1;
+  const x = 2;
+  x = 3;
+} catch (err) {
+  console.error(err.message);
+}
+```
+
+- Now if we check the console, we get the error as expected but, if we expand it, it tells us which line that error is coming from and that line happens to be the one inside out `catch` block.
+- So, the script does no longer die in this case, instead we can simply catch the error in the `catch` block and handle it accordingly.
+- Of course if there was no error at all, i.e. we re-assigned the `let` variable as we wanted to, then there won't be an error coming from that `catch` block.
+
+```javascript
+// no error since `let` variable re-assigned
+try {
+  let y = 1;
+  const x = 2;
+  y = 3;
+} catch (err) {
+  console.error(err.message);
+}
+```
+
+- Anyway, this is just a stupid syntax error and we are not going to use try...catch to find mistakes that we make in our code.
+- So, let's now use try...catch for something more useful, which is to actually handle real errors in async functions.
+- Let's wrap all of our code from the `whereAmIAsync()` (renamed to `whereAmITry()`) function into a `try` block.
+- And in the catch block, we can simply log the error to the console for now.
+
+```javascript
+const whereAmITry = async function () {
+  try {
+    // getting position
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
+
+    // reverse geocoding
+    const resGeo = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+    );
+    const dataGeo = await resGeo.json();
+
+    // fetching country
+    const res = await fetch(
+      `https://restcountries.com/v3.1/name/${dataGeo?.features?.[0]?.properties?.address?.country}`
+    );
+    const data = await res.json();
+    renderCountry(data.pop());
+    countriesContainer.style.opacity = 1;
+  } catch (err) {
+    console.log(`${err} 💥`);
+    // using our previously created renderError() function
+    renderError(`Something went wrong 💥 ${err.message}`);
+  }
+};
+
+whereAmITry();
+```
+
+- So, now if you see, the code still works the same.
+- Now if we try to refresh the page very fast we will get the 404 error which is, the country cannot be found.
+- So, at this point, we do have some error handling i.e. we are able to add the error to the UI but, just like before, this error is not really meaningful, because the `fetch()` promise does not reject on a 404 or a 403 error, which was actually the original error that caused everything to collapse.
+- 403 error is because we are doing too many requests to the reverse geo-coding API.
+- But the solution is simple, because its exactly the same as before.
+- All we have to do is to manually create an error and so that error will then be caught in the `catch()` block.
+- To create the error, we can do that right after the `fetch()` request and use its `ok` property, just like before.
+
+```javascript
+const whereAmITry = async function () {
+  try {
+    // getting position
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
+
+    // reverse geocoding
+    const resGeo = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+    );
+
+    // checking if status is OK
+    if (!resGeo.ok) {
+      throw new Error(`Problem getting lcoation data`);
+    }
+
+    const dataGeo = await resGeo.json();
+
+    // fetching country
+    const res = await fetch(
+      `https://restcountries.com/v3.1/name/${dataGeo?.features?.[0]?.properties?.address?.country}`
+    );
+    const data = await res.json();
+    renderCountry(data.pop());
+    countriesContainer.style.opacity = 1;
+  } catch (err) {
+    console.log(`${err} 💥`);
+    // using our previously created renderError() function
+    renderError(`Something went wrong 💥 ${err.message}`);
+  }
+};
+
+whereAmITry();
+```
+
+- Now we can do the same thing for getting the country.
+
+```javascript
+const whereAmITry = async function () {
+  try {
+    // getting position
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
+
+    // reverse geocoding
+    const resGeo = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lng}&zoom=10`
+    );
+
+    // checking if status is OK
+    if (!resGeo.ok) {
+      throw new Error(`Problem getting lcoation data`);
+    }
+
+    const dataGeo = await resGeo.json();
+
+    // fetching country
+    const res = await fetch(
+      `https://restcountries.com/v3.1/name/${dataGeo?.features?.[0]?.properties?.address?.country}`
+    );
+
+    // checking if status is ok
+    if (!res.ok) {
+      throw new Error(`Problem getting the country`);
+    }
+
+    const data = await res.json();
+    renderCountry(data.pop());
+    countriesContainer.style.opacity = 1;
+  } catch (err) {
+    console.log(`${err} 💥`);
+    // using our previously created renderError() function
+    renderError(`Something went wrong 💥 ${err.message}`);
+  }
+};
+
+whereAmITry();
+```
+
+- Now, for the first promise i.e. getting coordinates from the geolocation API, we do not need to throw an error manually. That's because in the case that somethig goes wrong with the geolocation, we already built out promise in a way that it automatically rejects in that case.
+- So, in that case, we will then immediately get an error, which will get caught in the `catch` block.
+- But as we already know, the same is not true for the promise coming from `fetch()`.
+- So, that promise only gets rejected when the user has no internet connection.
+- But in the case of the 404 or 403 error, the `fetch()` promise does not reject. Therefore, we do that manually by throwing a new error which will get caught in the `catch` block.
+- That is the complete version now of the `async` function, complete witha pretty robust error handling strategy.
+- So, please never ignore handling errors, especially when it comes to asynchronous code like the one we have here.
+- There is always a lot of stuff that can go wrong, which is why our application needs to be ready to handle that.
+- Having said that, in the next lesson, we will dive even deeper into how async functions really work. So, let's get to it.
 
 ## Author
 
