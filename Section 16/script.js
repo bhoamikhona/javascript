@@ -961,3 +961,10 @@ const whereAmITry = async function () {
 };
 
 whereAmITry();
+
+/***********************************************************************/
+/**************** RETURNING VALUES FROM ASYNC FUNCTIONS ****************/
+/***********************************************************************/
+console.log(
+  `/**************** RETURNING VALUES FROM ASYNC FUNCTIONS ****************/`
+);

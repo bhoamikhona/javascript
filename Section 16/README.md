@@ -3003,6 +3003,8 @@ whereAmITry();
 - There is always a lot of stuff that can go wrong, which is why our application needs to be ready to handle that.
 - Having said that, in the next lesson, we will dive even deeper into how async functions really work. So, let's get to it.
 
+### Returning Values from Async Functions
+
 ## Author
 
 - [@bhoamikhona](https://github.com/bhoamikhona)
