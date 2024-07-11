@@ -590,11 +590,11 @@ console.log(
 
 /************************************/
 
-// const wait = function (seconds) {
-//   return new Promise(function (resolve) {
-//     setTimeout(resolve, seconds * 1000);
-//   });
-// };
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
 
 // wait(1)
 //   .then(() => {
@@ -700,8 +700,8 @@ console.log(
  * on your own and figure some of the things out yourself.
  *
  * TEST DATA: Images in the img folder. Test the error handler by passing
- * a wrong image path. Set the network speed to "Fast 3G" in the dev tools
- * Network tab, otherwise images load too fast.
+ * a wrong image path. Set the network speed to "Fast 3G" in the dev
+ * tools Network tab, otherwise images load too fast.
  */
 
 // PART 01
@@ -714,12 +714,12 @@ console.log(
  * `document.createElement('img')`) and sets the `.src` attribute to the
  * provided image path.
  */
-// let createImage = function (imgPath) {
-//   return new Promise(function (resolve, reject) {
-//     const img = document.createElement('img');
-//     img.src = imgPath;
-//   });
-// };
+let createImage = function (imgPath) {
+  return new Promise(function (resolve, reject) {
+    const img = document.createElement('img');
+    img.src = imgPath;
+  });
+};
 
 /**
  * TODO 02:
@@ -729,23 +729,23 @@ console.log(
  * the image element itself. In case there is an error loading the image
  * (listen for the `error` event), reject the promise.
  */
-// const imgContainer = document.querySelector('.images');
+const imgContainer = document.querySelector('.images');
 
-// createImage = function (imgPath) {
-//   return new Promise(function (resolve, reject) {
-//     const img = document.createElement('img');
-//     img.src = imgPath;
+createImage = function (imgPath) {
+  return new Promise(function (resolve, reject) {
+    const img = document.createElement('img');
+    img.src = imgPath;
 
-//     img.addEventListener('load', function () {
-//       imgContainer.append(img);
-//       resolve(img);
-//     });
+    img.addEventListener('load', function () {
+      imgContainer.append(img);
+      resolve(img);
+    });
 
-//     img.addEventListener('error', function () {
-//       reject(new Error('Image not found'));
-//     });
-//   });
-// };
+    img.addEventListener('error', function () {
+      reject(new Error('Image not found'));
+    });
+  });
+};
 
 /**
  * TODO 03:
@@ -1119,3 +1119,143 @@ Promise.any([
 ])
   .then(res => console.log(res))
   .catch(err => console.error(err));
+
+/***********************************************************************/
+/************************* CODING CHALLENGE 03 *************************/
+/***********************************************************************/
+console.log(
+  `/************************* CODING CHALLENGE 03 *************************/`
+);
+
+// PART 01
+
+/**
+ * TODO 01:
+ *
+ * Write an async function `loadnPause` that recreates Challenge 02,
+ * this time using async/await (only the part where the promise is
+ * consumed, reuse the `createImage` function from before).
+ */
+
+const loadNPause = async function () {
+  try {
+    let img = await createImage('img/img-1.jpg');
+    console.log('Image 1 loaded');
+    await wait(2);
+    img.style.display = 'none';
+
+    img = await createImage('img/img-2.jpg');
+    console.log('Image 2 loaded');
+    await wait(2);
+    img.style.display = 'none';
+
+    img = await createImage('img/img-3.jpg');
+    console.log('Image 3 loaded');
+    await wait(2);
+    img.style.display = 'none';
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// loadNPause();
+
+/**
+ * TODO 02:
+ *
+ * Compare the two versions, think about the big differences, and see
+ * which one you like more.
+ */
+
+// done
+
+/**
+ * TODO 03:
+ *
+ * Don't forget to test the error handler, and to set the network speed
+ * to "Fast 3G" in the dev tools Network tab.
+ */
+
+// done
+
+// PART 02
+
+/**
+ * TODO 04:
+ *
+ * Create an async function `loadAll` that receives an array of image
+ * paths `imgArr`.
+ */
+
+// const loadAll = async function (imgArr) {};
+
+/**
+ * TODO 05:
+ *
+ * Use `.map()` to loop over the array, to load all the images with the
+ * `createImage` function (call the resulting array 'imgs')
+ */
+
+// const loadAll = async function (imgArr) {
+//   try {
+//     const imgs = imgArr.map(async img => await createImage(img));
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
+
+/**
+ * TODO 06:
+ *
+ * Check out the 'imgs' array in the console! Is it like you expected?
+ */
+
+// const loadAll = async function (imgArr) {
+//   try {
+//     const imgs = imgArr.map(async img => await createImage(img));
+//     console.log(imgs);
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
+
+/**
+ * TODO 07:
+ *
+ * Use a promise combinator function to actually get the images from the
+ * array 😉
+ */
+
+// const loadAll = async function (imgArr) {
+//   try {
+//     const imgs = imgArr.map(async img => await createImage(img));
+//     console.log(imgs);
+
+//     const imgsEl = await Promise.all(imgs);
+//     console.log(imgsEl);
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
+
+/**
+ * TODO 08:
+ *
+ * Add the 'parallel' class to all the images (it has some CSS styles)
+ */
+
+const loadAll = async function (imgArr) {
+  try {
+    const imgs = imgArr.map(async img => await createImage(img));
+    console.log(imgs);
+
+    const imgsEl = await Promise.all(imgs);
+    console.log(imgsEl);
+
+    imgsEl.forEach(img => img.classList.add('parallel'));
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+loadAll(['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg']);
