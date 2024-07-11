@@ -35,6 +35,7 @@
     - [Error Handling With try...catch](#error-handling-with-trycatch)
     - [Returning Values from Async Functions](#returning-values-from-async-functions)
     - [Running Promises in Parallel](#running-promises-in-parallel)
+    - [Other Promise Combinators: race, allSettled, and any](#other-promise-combinators-race-allsettled-and-any)
   - [Author](#author)
 
 ## Lessons Learned
@@ -3680,6 +3681,148 @@ get3Countries('greece', 'france', 'italy');
 - Of course, in case you are not using async/await then you can take the result from individual calls and handle them using `then()`. It will work just the same.
 - That is the `Promise.all()` combinator. It is called combinator function because it allows us to combine multiple promises.
 - There are other combinator functions, and so let's take a look at them in the next lesson.
+
+### Other Promise Combinators: race, allSettled, and any
+
+- Let's now quickly talk about the three other Promise combinators, which are `race()`, `allSettled()`, and `any()`.
+- The first one that we are going to talk about is `Promise.race()`.
+- `Promise.race()`, just like all other combinators, receives an array of promises and it also returns a promise.
+- This promise returned by `Promise.race()` is settled as soon as one of the input promises settles.
+- Remember that settled simply means that a value is avaialble, but it doesn't matter if the promise got rejected or fulfilled.
+- So, in `Promise.race()`, basically the first settled promise wins the race.
+- Now, let's see it in action. We will use an IIFE here so that we can use async/await without having to create a whole new function with a name.
+
+```javascript
+(async function () {
+  const res = await Promise.race([
+    getJSON(`https://restcountries.com/v3.1/name/brazil`),
+    getJSON(`https://restcountries.com/v3.1/name/portugal`),
+    getJSON(`https://restcountries.com/v3.1/name/macau`),
+  ]);
+})();
+```
+
+- Now these three promises will basically race against each other, like in a real race.
+- Now, if the winning promise is a fulfilled promise, then the fulfillment value of this whole race promise is going to be the fulfillment value of the winning promise.
+- That's more obvious than it may sound.
+- Let's just see the result by logging it to the console.
+
+```javascript
+(async function () {
+  const res = await Promise.race([
+    getJSON(`https://restcountries.com/v3.1/name/brazil`),
+    getJSON(`https://restcountries.com/v3.1/name/portugal`),
+    getJSON(`https://restcountries.com/v3.1/name/macau`),
+  ]);
+  console.log(res[0]);
+})();
+```
+
+- Now if we look in the console, we might get data from one of the three countries we are requesting. But if we refresh, the data might be of another country from the ones we are requesting because at that point, another call might be faster.
+- We can even check it on the network tab of the chrome developer tools. We can see how long did each of those request took and which one was the fastest, and match it with the log in the console tab.
+- So, keep in mind, with `Promise.race()` we only get one result and not an array of the results of all the three.
+- Now a promise that gets rejected can also win the race.
+- So, we say that `Promise.race()` short-circuits whenever one of the promises get settled.
+- If we try a weird name for the country, we might get the rejected promise if it is settled first.
+
+```javascript
+(async function () {
+  const res = await Promise.race([
+    // getJSON(`https://restcountries.com/v3.1/name/brazilllll`),
+    getJSON(`https://restcountries.com/v3.1/name/brazil`),
+    getJSON(`https://restcountries.com/v3.1/name/portugal`),
+    getJSON(`https://restcountries.com/v3.1/name/macau`),
+  ]);
+  console.log(res[0]);
+})();
+```
+
+- Now let's see another example because in real world `Promise.race()` is actually very useful to prevent against never ending promises or also very long running promises.
+- For example, if your user has a very bad internet connection, then a `fetch()` request in your application might take way too long to actually be useful.
+- So, we can create a special time our promise, which automatically rejects after a certain time has passed.
+- So, let's do that. It will be very similar to the `wait()` function we created previously but, the difference is that this one is actually going to reject and not going to resolve.
+
+```javascript
+const timeout = function (seconds) {
+  // here we are using _ for resolve because this promise is always
+  // going to be rejected so, no use for resolve
+  return new Promise(function (_, reject) {
+    setTimeout(function () {
+      reject(new Error(`Request took too long!`));
+    }, seconds * 1000);
+  });
+};
+```
+
+- Now we can simply have the AJAX call that we were talking about earlier, race against the `timeout()`.
+
+```javascript
+Promise.race([
+  getJSON(`https://restcountries.com/v3.1/name/tanzania`),
+  timeout(1),
+]);
+```
+
+- Now, the `getJSON()` and `timeout()` will race against each other, and if the `timeout()` happens first then all of it will be rejected.
+- Basically, that will then abort the `fetch()` that happening in the `getJSON()` function.
+- So, we can use async/await here but, why not simply use the `then()` method here.
+
+```javascript
+Promise.race([
+  getJSON(`https://restcountries.com/v3.1/name/tanzania`),
+  timeout(1),
+])
+  .then(res => console.log(res[0]))
+  .catch(err => console.error(err));
+```
+
+- We got the details of Tanzania pretty fast so now, let's try 0.1 seconds to see the error.
+
+```javascript
+Promise.race([
+  getJSON(`https://restcountries.com/v3.1/name/tanzania`),
+  timeout(0.1),
+])
+  .then(res => console.log(res[0]))
+  .catch(err => console.error(err));
+```
+
+- Now we see the error "Request took too long!" so, the 0.1 seconds was not enough for the `getJSON()` request to finish.
+- You might have to try different values because it will depend on your internet connection.
+- So, this is pretty useful, and in the real-world, you will probably use larger number like 5 seconds.
+- That was `Promise.race()`.
+- In fact, `Promise.all()` and `Promise.race()` are by far the two most important promise combinators.
+- But now let's see the other two that we have.
+- The first one is `Promise.allSettled()`. This is a pretty new one which is from ES 2020 and it is actually a very simple one.
+- It takes in an array of promises and returns an array of all the settled promises. It doesn't matter if the promises are rejected or fulfilled.
+- So, it is similar to `Promise.all()` in regards that it also returns an array of all the results, but the difference is that `Promise.all()` will short-circuit as soon as one promise rejects but, `Promise.allSettled()` simply never short-circuits.
+
+```javascript
+Promise.allSettled([
+  Promise.resolve('Success'),
+  Promise.reject('ERROR'),
+  Promise.resolve('Anoter Success'),
+]).then(res => console.log(res));
+```
+
+- Indeed, we get 3 results even though one of them was rejected.
+- Now let's move on to `Promise.any()`.
+- `Promise.any()` is even more modern. It is ES2021.
+- `Promise.any()` takes in an array of multiple promises and it will return the first fulfilled promise and simply ignore rejected promises.
+- So, `Promise.any()` is very similar to `Promise.race()` with the difference that rejected promises are ignored.
+- Therefore, the result of `Promise.any()` is always going to be a fulfilled promise, unless of course all of them are rejected.
+
+```javascript
+Promise.any([
+  Promise.resolve('Success'),
+  Promise.reject('ERROR'),
+  Promise.resolve('Anoter Success'),
+])
+  .then(res => console.log(res))
+  .catch(err => console.error(err));
+```
+
+- The most important ones are `Promise.all()` and `Promise.race()` so, keep atleast these two in mind for your projects.
 
 ## Author
 

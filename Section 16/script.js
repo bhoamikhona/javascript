@@ -1068,3 +1068,54 @@ const get3Countries = async function (c1, c2, c3) {
 };
 
 get3Countries('greece', 'france', 'italy');
+
+/**********************************************************************/
+/******** OTHER PROMISE COMBINATORS: RACE, ALLSETTLED, AND ANY ********/
+/**********************************************************************/
+console.log(
+  `/******** OTHER PROMISE COMBINATORS: RACE, ALLSETTLED, AND ANY ********/`
+);
+
+/***** Prmomise.race() *****/
+(async function () {
+  const res = await Promise.race([
+    // getJSON(`https://restcountries.com/v3.1/name/brazilllll`),
+    getJSON(`https://restcountries.com/v3.1/name/brazil`),
+    getJSON(`https://restcountries.com/v3.1/name/portugal`),
+    getJSON(`https://restcountries.com/v3.1/name/macau`),
+  ]);
+  console.log(res[0]);
+})();
+
+const timeout = function (seconds) {
+  // here we are using _ for resolve because this promise is always
+  // going to be rejected so, no use for resolve
+  return new Promise(function (_, reject) {
+    setTimeout(function () {
+      reject(new Error(`Request took too long!`));
+    }, seconds * 1000);
+  });
+};
+
+Promise.race([
+  getJSON(`https://restcountries.com/v3.1/name/tanzania`),
+  timeout(0.1),
+])
+  .then(res => console.log(res[0]))
+  .catch(err => console.error(err));
+
+/***** Prmomise.allSettled() *****/
+Promise.allSettled([
+  Promise.resolve('Success'),
+  Promise.reject('ERROR'),
+  Promise.resolve('Anoter Success'),
+]).then(res => console.log(res));
+
+/***** Prmomise.any() *****/
+Promise.any([
+  Promise.resolve('Success'),
+  Promise.reject('ERROR'),
+  Promise.resolve('Anoter Success'),
+])
+  .then(res => console.log(res))
+  .catch(err => console.error(err));
