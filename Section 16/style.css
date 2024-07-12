@@ -14,6 +14,7 @@ body {
   color: #555;
   background-color: #f7f7f7;
   min-height: 100vh;
+  margin: 4rem auto;
 
   display: flex;
   align-items: center;
@@ -27,8 +28,11 @@ body {
 }
 
 .countries {
-  /* margin-bottom: 8rem; */
-  display: flex;
+  margin-bottom: 8rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  gap: 4rem;
 
   font-size: 2rem;
   opacity: 0;
