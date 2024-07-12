@@ -12,6 +12,7 @@
     - [An Overview of Modules in JavaScript](#an-overview-of-modules-in-javascript)
     - [Native JavaScript (ES) Modules](#native-javascript-es-modules)
       - [How ES6 Modules are Imported](#how-es6-modules-are-imported)
+    - [Exporting and Importing in ES6 Modules](#exporting-and-importing-in-es6-modules)
   - [Author](#author)
 
 ## Lessons Learned
@@ -178,6 +179,44 @@ showDice(dice);
 - Other module systems do not work like this, but JavaScript modules do. So, you need to keep that in mind.
 - Anyway, next up, the code in the importing modules is executed. And with this, the processing of importing modules is finally finished.
 - Now, let's move on to the next lesson and try all of this in actual code.
+
+### Exporting and Importing in ES6 Modules
+
+- HTML `<script>` tag, `type` attribute
+
+```html
+<script type="module" defer src="./script.js"></script>
+```
+
+- The `type` attribute indicates the type of script represented. The value of this attribute will be one of the following:
+  - default is an empty string or JS MIME type
+  - `importmap`
+  - `module`
+    - This value causes the code to be treated as JS module. the processing of the script contents is deferred. The `charset` and `defer` attributes have no effect. For information on using `module`, see [JavaScript modules guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules). Unline classic scripts, module scripts require the use of the CORS protocol for cross-origin fetching.
+  - `speculationrules`
+  - Any other value
+- `import`
+  - The static `import` declaration is used to import read-only live bindings which are exported by another module.
+  - The imported bindings are called live bindings because they are updated by the module that exported the binding, but cannot be re-assigned by the importing module.
+  - In order to use the `import` declaration in a source file, the file must be interpreted by the runtime as a module. In HTML, this is done by adding `type="module"` to the `<script>` tag.
+  - Modules are automatically interpreted in strict mode.
+  - There is also a function-like dynamic `import()`, which does not require scripts of `type="module"`.
+  - You can rename an export when importing it using the `as` keyword, in the current scope.
+    - Example: `import totalPrice as price from '.shoppingCart.js';
+- In ES Modules, there are two types of exports:
+  - Named exports
+    - Names exports is actually the simplest way of exporting something from a module, because all we have to do is to put `export` in front of anything that we might want to export.
+    - Of course, we can also export multiple things from a module using named exports. This is actually the main use case of the named exports.
+    - Note that when we are importing named exports, we wanna surround them with curly braces. Otherwise it will throw an error.
+    - You can re-name a name ot something that's not a valid identifier by using a string literal, when exporting something.
+      - Example: `export {totalQuantity as tq}`
+    - So, all of this is very flexible as you can see, and we can play around with it as we wish.
+  - Default exports
+    - Usually, we use default exports when we only want to export one thing per module, and so that's the reason why they are called default.
+    - To make a default export, we need to use the `default` keyword.
+- Keep in mind that exports need to happen always in the top-level code. If they were inside an if-block or a function, it wouldn't work.
+- We can import everything at once from a module using `*`.
+- As a rule of thumb, do not mix default exports and named exports. It is just a convention, not a rule.
 
 ## Author
 
