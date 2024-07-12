@@ -20,6 +20,7 @@
 - [Section 14](./Section%2014): Object-Oriented Programming (OOP) With JavaScript
 - [Section 15](./Section%2015): Mapty App - OOP, Geolocation, External Libraries, and More!
 - [Section 16](./Section%2016): Asynchronous JavaScript - Promises, Async/Await, and AJAX
+- [Section 17](//Section%2017): Modern JavaScript Development: Modules, Tooling, and Functional
 
 ## Projects
 
