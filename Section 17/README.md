@@ -14,6 +14,7 @@
       - [How ES6 Modules are Imported](#how-es6-modules-are-imported)
     - [Exporting and Importing in ES6 Modules](#exporting-and-importing-in-es6-modules)
     - [Top-Level Await (ES 2022)](#top-level-await-es-2022)
+    - [The Module Pattern](#the-module-pattern)
   - [Author](#author)
 
 ## Lessons Learned
@@ -1322,6 +1323,252 @@ export default function (product, quantity) {
 
 - This is how top-level await works.
 - So, let's now go straight to the next lesson.
+
+### The Module Pattern
+
+- Now that you know how ES6 modules work, let's quickly see the module pattern that we used to use before in order to implement modules in JS.
+- It is important to understand this module pattern because you will still see it around, and it is also a very good application of many of the stuff that we have been learning throughout the course.
+- of course, just like in regular modules that we just learned about, the main goal of the module pattern is to encapsulate functionality, to have private data, and to expose a public API.
+- The best way of achieving all that is by simply using functions, because functions give us private data by default and allows us to return values, which can become our public API.
+- So, let's see how the module pattern is implemented.
+- We start by writing a function and usually we write an IIFE, and the reason for that is because this way we don't have to call it separately and we can also ensure that it is only called once.
+
+```javascript
+// script.js
+
+(function () {})();
+```
+
+- So, it is very important that this function is only created once because the goal of this function i snot to re-use code by running it multiple times.
+- The only purpose of this function is to create a new scope and return data just once.
+- In this function, let's simply add the same variables that we had before in the shoppingCart.js module.
+
+```javascript
+// script.js
+
+(function () {
+  const cart = [];
+  const shippingCost = 10;
+  const totalPrice = 237;
+  const totalQuantity = 23;
+
+  const addToCart = function (product, quantity) {
+    cart.push({ product, quantity });
+    console.log(`${quantity} ${product} added to cart`);
+  };
+
+  const orderStock = function (product, quantity) {
+    console.log(`${quantity} ${product} ordered from supplier`);
+  };
+})();
+```
+
+- Right now, of course, all of this data is private because it is inside of the scope of the function.
+- So now, all we have to do is to return some of this stuff in order to basically return a public API.
+- To do that, we simply return an object, which contains the stuff that we want to make public.
+
+```javascript
+// script.js
+
+(function () {
+  const cart = [];
+  const shippingCost = 10;
+  const totalPrice = 237;
+  const totalQuantity = 23;
+
+  const addToCart = function (product, quantity) {
+    cart.push({ product, quantity });
+    console.log(`${quantity} ${product} added to cart`);
+  };
+
+  const orderStock = function (product, quantity) {
+    console.log(`${quantity} ${product} ordered from supplier`);
+  };
+
+  return {
+    addToCart,
+    cart,
+    totalPrice,
+    totalQuantity,
+  };
+})();
+```
+
+- We could have also defined all of these exports in an object as properties and methods but, it is little bit cleaner to define them outside and then to simply create an object which contains everything that we want to expose to the outside (like we did above).
+- However, right now we are not storing this object anywhere.
+- So, if we run this script right now, then this object kind of disappears into nothing.
+- However, that is easy to fix because, we can simply assign the result of running this IIFE to a new variable.
+
+```javascript
+// script.js
+
+const ShoppingCart2 = (function () {
+  const cart = [];
+  const shippingCost = 10;
+  const totalPrice = 237;
+  const totalQuantity = 23;
+
+  const addToCart = function (product, quantity) {
+    cart.push({ product, quantity });
+    console.log(`${quantity} ${product} added to cart`);
+  };
+
+  const orderStock = function (product, quantity) {
+    console.log(`${quantity} ${product} ordered from supplier`);
+  };
+
+  return {
+    addToCart,
+    cart,
+    totalPrice,
+    totalQuantity,
+  };
+})();
+```
+
+- Now, we can use the `ShoppingCart2` just like before.
+
+```javascript
+// script.js
+
+const ShoppingCart2 = (function () {
+  const cart = [];
+  const shippingCost = 10;
+  const totalPrice = 237;
+  const totalQuantity = 23;
+
+  const addToCart = function (product, quantity) {
+    cart.push({ product, quantity });
+    console.log(`${quantity} ${product} added to cart`);
+  };
+
+  const orderStock = function (product, quantity) {
+    console.log(`${quantity} ${product} ordered from supplier`);
+  };
+
+  return {
+    addToCart,
+    cart,
+    totalPrice,
+    totalQuantity,
+  };
+})();
+
+ShoppingCart2.addToCart('apples', 4);
+ShoppingCart2.addToCart('bananas', 3);
+
+console.log(ShoppingCart2.cart);
+```
+
+- Indeed, it works.
+
+> [!NOTE]
+>
+> We cannot access the module variables in the chrome developer console because everything inside a module is private to the module.
+>
+> The chrome developer console is basically the global scope so, it only has access to the variables defined in global scope.
+
+- On the other hand, the properties that we wanted to make private and not accessible. So, we cannot access `shippingCost` outside of the function.
+
+```javascript
+// script.js
+
+const ShoppingCart2 = (function () {
+  const cart = [];
+  const shippingCost = 10;
+  const totalPrice = 237;
+  const totalQuantity = 23;
+
+  const addToCart = function (product, quantity) {
+    cart.push({ product, quantity });
+    console.log(`${quantity} ${product} added to cart`);
+  };
+
+  const orderStock = function (product, quantity) {
+    console.log(`${quantity} ${product} ordered from supplier`);
+  };
+
+  return {
+    addToCart,
+    cart,
+    totalPrice,
+    totalQuantity,
+  };
+})();
+
+ShoppingCart2.addToCart('apples', 4);
+ShoppingCart2.addToCart('bananas', 3);
+
+console.log(ShoppingCart2.cart);
+console.log(ShoppingCart2.shippingCost); // undefined
+```
+
+- That's actually it.
+- That's the implementation of the module pattern.
+- Now, do you understand exactly how and why this works? Meaning, how do we, for example, have access to the `cart` variable outside the function and even able to manipulate it? How are we able to do that even if the IIFE has returned long ago?
+- So, this IIFE function was only executed once in the beginning and all it did was to return an object and assigned it to the variable `ShoppingCart2`.
+- But then we are able to use all of those variables and also manipulate the data that is inside of the IIFE function.
+- The answer to how all of this works like this is one more time, closures.
+- Remember that closures allow a function to have access to all the variables that were present at its birthplace.
+- So, the `addToCart()` function was created in the IIFE function. So the IIFE function is the birthplace of the `addToCart()` function.
+- Therefore, the `addToCart()` function never loses connection to its birthplace, which was the IIFE function.
+- This birthplace also contains the `cart`.
+- Therefore, `addToCart()` function outside of the IIFE, can still access the `cart` variable that was in the IIFE function.
+- So, the reason why this works is not because the `cart` variable is also in the returning object - that's irrelevant, because we are not using `this.cart` in the `addToCart()` function. We are simply using `cart`.
+- So, inside the `addToCart()` function, we could also log something that is private to the module i.e. IIFE function. So, something that will not be in the exported object.
+
+```javascript
+// script.js
+
+const ShoppingCart2 = (function () {
+  const cart = [];
+  const shippingCost = 10;
+  const totalPrice = 237;
+  const totalQuantity = 23;
+
+  const addToCart = function (product, quantity) {
+    cart.push({ product, quantity });
+    console.log(
+      `${quantity} ${product} added to cart (shipping cost is ${shippingCost})`
+    );
+  };
+
+  const orderStock = function (product, quantity) {
+    console.log(`${quantity} ${product} ordered from supplier`);
+  };
+
+  return {
+    addToCart,
+    cart,
+    totalPrice,
+    totalQuantity,
+  };
+})();
+
+ShoppingCart2.addToCart('apples', 4);
+ShoppingCart2.addToCart('bananas', 3);
+
+console.log(ShoppingCart2.cart);
+console.log(ShoppingCart2.shippingCost); // undefined
+```
+
+- So, in order to produce this string:
+
+```javascript
+console.log(
+  `${quantity} ${product} added to cart (shipping cost is ${shippingCost})`
+);
+```
+
+- The function will also have to use the `shippingCost` variable that was only present at its birthplace, but which no longer does exist besides that.
+- Indeed, that still works, so the function is still able to access that value of 10.
+- And for a deeper explanation of why this works, you can, of course, always go back and re-visit the lesson about closures.
+- In essence, this is how the module pattern works and it works very well.
+- It has been working for a long time for developers i.e. long before ES6 modules even existed in JS.
+- Now, the problem is that if we wanted one module per file - like we have with ES6 modules, then we would have to create different scripts and link all of them in the HTML file.
+- That then creates a couple of problems, like we have to be careful with the order in which we declare then in HTML, and we would have all of the variables living in the global scope, and finally, we also couldn't bundle them together using a module bundler.
+- So, as you learned at the beginning of this section, using a module bundler is very important in modern JS.
+- So the module pattern that we just learned about does indeed work quite good but, it has some limitations; and that's exactly the reason why native modules were added to the language in ES6.
 
 ## Author
 
