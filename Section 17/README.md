@@ -182,41 +182,887 @@ showDice(dice);
 
 ### Exporting and Importing in ES6 Modules
 
-- HTML `<script>` tag, `type` attribute
+- Let's now use modules in practice, to make sure that we really understand how they work, and to import and export values between them.
+- Let's start with the simplest scenario of all, which is to simply import a module, but without importing any value.
+- That's also possible so, let's use that as a starting point here.
+- As always, we start by creating with a script.js file, but, now as we want to create a new module, we simply have to create a new file.
+- Here we are going to use the example of a shopping cart so, we are going to have a module called shoppingCart.js
 
-```html
-<script type="module" defer src="./script.js"></script>
+> [!NOTE]
+>
+> In module names, it is also a convention to use camelCase names.
+
+- script.js will be the importing module & shoppingCart.js will be the exporting module.
+- To start, let's simply log to the console "Exporting Module" and "Importing Module" just so we can see that the module is actually being imported.
+
+```javascript
+// script.js
+console.log('Importing Module');
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
 ```
 
-- The `type` attribute indicates the type of script represented. The value of this attribute will be one of the following:
-  - default is an empty string or JS MIME type
-  - `importmap`
-  - `module`
-    - This value causes the code to be treated as JS module. the processing of the script contents is deferred. The `charset` and `defer` attributes have no effect. For information on using `module`, see [JavaScript modules guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules). Unline classic scripts, module scripts require the use of the CORS protocol for cross-origin fetching.
-  - `speculationrules`
-  - Any other value
-- `import`
-  - The static `import` declaration is used to import read-only live bindings which are exported by another module.
-  - The imported bindings are called live bindings because they are updated by the module that exported the binding, but cannot be re-assigned by the importing module.
-  - In order to use the `import` declaration in a source file, the file must be interpreted by the runtime as a module. In HTML, this is done by adding `type="module"` to the `<script>` tag.
-  - Modules are automatically interpreted in strict mode.
-  - There is also a function-like dynamic `import()`, which does not require scripts of `type="module"`.
-  - You can rename an export when importing it using the `as` keyword, in the current scope.
-    - Example: `import totalPrice as price from '.shoppingCart.js';
-- In ES Modules, there are two types of exports:
-  - Named exports
-    - Names exports is actually the simplest way of exporting something from a module, because all we have to do is to put `export` in front of anything that we might want to export.
-    - Of course, we can also export multiple things from a module using named exports. This is actually the main use case of the named exports.
-    - Note that when we are importing named exports, we wanna surround them with curly braces. Otherwise it will throw an error.
-    - You can re-name a name ot something that's not a valid identifier by using a string literal, when exporting something.
-      - Example: `export {totalQuantity as tq}`
-    - So, all of this is very flexible as you can see, and we can play around with it as we wish.
-  - Default exports
-    - Usually, we use default exports when we only want to export one thing per module, and so that's the reason why they are called default.
-    - To make a default export, we need to use the `default` keyword.
-- Keep in mind that exports need to happen always in the top-level code. If they were inside an if-block or a function, it wouldn't work.
-- We can import everything at once from a module using `*`.
-- As a rule of thumb, do not mix default exports and named exports. It is just a convention, not a rule.
+- Now, we also have to import the other module.
+
+```javascript
+// script.js
+
+// importing module
+import './shoppingCart.js';
+
+console.log('Importing Module');
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+```
+
+> [!NOTE]
+>
+> ES modules actually also work without the file extension but for now, let's leave the extension there, just to make it a bit more clear.
+
+- Let's start the live server and check the console.
+- Right now we will see an error, so, at this point, our code won't be working.
+- The error says "Cannot use import statement outside a module".
+- Why is this happening?
+- Remember from the last lesson, that when we want to connect a module to the HTML file, we actually need to specify the `type` attribute.
+- So, in HTML, we need to specify that, like so:
+
+```html
+<!-- index.html -->
+<script type="module" defer src="script.js"></script>
+```
+
+- Now the error will be gone, and our code should work.
+- Now in the console, we see that the first log is actually "Exporting Module" and only then the "Importing Module" is logged to the console.
+- So, this means that in fact, the shoppingCart.js is executed before script.js code i.e. the exporting module is executed before any importing module. Exactly what we learned in the last lesson.
+- So, the code in the script.js file is parsed and before it is executed, all the code in the module that it imports is executed first.
+- The same is true if we had the `console.log()` statement before importing the module, like so:
+
+```javascript
+// script.js
+console.log('Importing Module');
+
+// importing module
+import './shoppingCart.js';
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+```
+
+- So remember that all the importing statements are basically hoisted to the top.
+- Usually, we write all the importing statements to the top.
+
+```javascript
+// script.js
+
+// importing module
+import './shoppingCart.js';
+
+console.log('Importing Module');
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+```
+
+- Also note that we didn't use strict mode here and that's because as we learned in the last lesson, all the modules are executed in the strict mode by default.
+- But now let's go back to the the shoppingCart.js module and define some variables.
+
+```javascript
+// script.js
+
+// importing module
+import './shoppingCart.js';
+
+console.log('Importing Module');
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+
+const shippingCost = 10;
+const cart = [];
+```
+
+- Now variables that are declared inside a module like `shippingcost` and `cart` are actually scoped to this module.
+- Basically, inside a module, the module itself is like the top-level scope.
+- By default, this means that all top-level variables are private inside of this variable.
+- So, unline traditional scripts, which would put all of these variables in the global scope but again, not modules. So, that's why we cannot do this:
+
+```javascript
+// script.js
+
+// importing module
+import './shoppingCart.js';
+
+console.log('Importing Module');
+
+// console.log(x); // ERROR: x is not defined
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+
+const x = 0;
+const shippingCost = 10;
+const cart = [];
+```
+
+- So the `shippingCost` and `cart` variables are scoped to the current module, basically. So, we can only use them in the shoppingCart.js
+- If we wanted to use them in the script.js module, then we would have to use exports.
+- In ES modules, there are two types of exports v.i.z. named export and default exports.
+- Named exports is actually the simplest way of exporting something from a module, because all we have to do is to put `export` in front of anything, that we might want to export.
+- So, let's say that we want to create a function called `addToCart()` and it should be a function that takes a product, and the quantity; and then it basically pushes the new object to the cart array, and logs something to the console.
+
+```javascript
+// script.js
+
+// importing module
+import './shoppingCart.js';
+
+console.log('Importing Module');
+
+// console.log(x); // ERROR: x is not defined
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+
+const x = 0;
+const shippingCost = 10;
+const cart = [];
+
+const addToCart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+};
+```
+
+- Right now, this function is private inside of the shoppingCart.js module, but if we wanted to now export it, so that we can import it some other module, all we have to do is to write `export` in front of it, like so:
+
+```javascript
+// script.js
+
+// importing module
+import './shoppingCart.js';
+
+console.log('Importing Module');
+
+// console.log(x); // ERROR: x is not defined
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+
+const x = 0;
+const shippingCost = 10;
+const cart = [];
+
+export const addToCart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+};
+```
+
+- This then creates a named export from this module.
+- So now, we can import that function in the script.js - we just have to write it with the exact same name.
+
+```javascript
+// script.js
+
+// importing module
+// import './shoppingCart.js'; // simple import
+import { addToCart } from './shoppingCart.js'; // named import
+
+console.log('Importing Module');
+
+// console.log(x); // ERROR: x is not defined
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+
+const x = 0;
+const shippingCost = 10;
+const cart = [];
+
+export const addToCart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+};
+```
+
+- So, this is quite easy to understand. It reads almost like a regular English sentence.
+- "We want to import `addToCart` from `shoppingCart` module."
+- Again, `addToCart` the variable name in the importing module has to be exactly the same as the exporting module.
+
+> [!NOTE]
+>
+> When importing a named variable, we need to put inside a set of curly braces otherwise it will throw an error.
+>
+> So, with named imports, we have to give them the same name as the export variable and put them inside a set of curly braces.
+
+- Now we will be able to call the `addToCart` function inside the script.js module, as if it was defined inside the script.js file.
+
+```javascript
+// script.js
+
+// importing module
+// import './shoppingCart.js'; // simple import
+import { addToCart } from './shoppingCart.js'; // named import
+
+console.log('Importing Module');
+
+// console.log(x); // ERROR: x is not defined
+
+addToCart('bread', 5);
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+
+const x = 0;
+const shippingCost = 10;
+const cart = [];
+
+export const addToCart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+};
+```
+
+- Indeed it works.
+- Keep in mind that exports always need to happen in the top-level code. It wouldnt work if we put it inside an if-block or a function.
+
+```javascript
+// script.js
+
+// importing module
+// import './shoppingCart.js'; // simple import
+import { addToCart } from './shoppingCart.js'; // named import
+
+console.log('Importing Module');
+
+// console.log(x); // ERROR: x is not defined
+
+addToCart('bread', 5);
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+
+const x = 0;
+const shippingCost = 10;
+const cart = [];
+
+// This will not work.
+// Exports always need to be on the top level code
+if (true) {
+  export const addToCart = function (product, quantity) {
+    // SyntaxError: Unexpected token 'export'
+    cart.push({ product, quantity });
+    console.log(`${quantity} ${product} added to cart`);
+  };
+}
+```
+
+- Of course, we can also export multiple things from a module using named exports; and actually, that is the main use case of named exports.
+- One of the ways we can do it is like so:
+
+```javascript
+// script.js
+
+// importing module
+// import './shoppingCart.js'; // simple import
+import { addToCart } from './shoppingCart.js'; // named import
+
+console.log('Importing Module');
+
+// console.log(x); // ERROR: x is not defined
+
+addToCart('bread', 5);
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+
+const x = 0;
+const shippingCost = 10;
+const cart = [];
+
+export const addToCart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+};
+
+const totalPrice = 237;
+const totalQuantity = 23;
+
+export { totalPrice, totalQuantity };
+```
+
+- So, this is a little bit like exporting an object from the shippingCart.js module.
+- Now, just like before, we can import these variables in script.js using the exact same name. Again, we need to put those inside the curly braces because they are named exports.
+- Once imported, we can use thsoe variables in script.js module. In our case, we will simply log them to the console.
+
+```javascript
+// script.js
+
+// importing module
+// import './shoppingCart.js'; // simple import
+import { addToCart, totalPrice, totalQuantity } from './shoppingCart.js'; // named import
+
+console.log('Importing Module');
+
+// console.log(x); // ERROR: x is not defined
+
+addToCart('bread', 5);
+console.log(totalPrice, totalQuantity);
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+
+const x = 0;
+const shippingCost = 10;
+const cart = [];
+
+export const addToCart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+};
+
+const totalPrice = 237;
+const totalQuantity = 23;
+
+export { totalPrice, totalQuantity };
+```
+
+- Indeed, we get access to those values in script.js from shoppingCart.js
+- We can also change the name of the imports as well using the `as` keyword.
+- If we wanted to call `totalPrice` just `price` in script.js, then this is how we would do it:
+  - After doing this, it will no longer be called `totalPrice` in script.js, it will be called `price`.
+  - If we still use `totalPrice` after changing it to `price` it will throw an error.
+
+```javascript
+// script.js
+
+// Simple module import
+// import './shoppingCart.js';
+
+// Named Import
+// import { addToCart, totalPrice, totalQuantity } from './shoppingCart.js';
+
+// Renaming an import using `as` keyword
+import {
+  addToCart,
+  totalPrice as price,
+  totalQuantity,
+} from './shoppingCart.js';
+
+console.log('Importing Module');
+
+// console.log(x); // ERROR: x is not defined
+
+addToCart('bread', 5);
+console.log(price, totalQuantity);
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+
+const x = 0;
+const shippingCost = 10;
+const cart = [];
+
+export const addToCart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+};
+
+const totalPrice = 237;
+const totalQuantity = 23;
+
+export { totalPrice, totalQuantity };
+```
+
+- We can also change the name in the exports i.e. using the `as` keyword, like so:
+
+```javascript
+// script.js
+
+// Simple Module Import
+// import './shoppingCart.js';
+
+// Named Import
+// import { addToCart, totalPrice, totalQuantity } from './shoppingCart.js';
+
+// Renaming an import using `as` keyword
+import { addToCart, totalPrice as price, tq } from './shoppingCart.js';
+
+console.log('Importing Module');
+
+// console.log(x); // ERROR: x is not defined
+
+addToCart('bread', 5);
+console.log(price, tq);
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+
+const x = 0;
+const shippingCost = 10;
+const cart = [];
+
+export const addToCart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+};
+
+const totalPrice = 237;
+const totalQuantity = 23;
+
+export { totalPrice, totalQuantity as tq };
+```
+
+- After changing it at the exports, make sure to change the variable name to `tq` in script.js as well, because it will no longer be called `totalQuantity` in script.js - it will throw an error if we do that.
+- So, this is all very flexible as you can see, and we can play around with it as we wish.
+- And actually, we can take this importing even further, because we can also import all the exports of a module at the same time using `*`.
+- We will have to use the `as` keyword with `*` so that we can reference it while using it. We usually name it with a capital camel case - it is a convention when we import everything into an object like this:
+
+```javascript
+// script.js
+
+// Simple Module Import
+// import './shoppingCart.js';
+
+// Named Import
+// import { addToCart, totalPrice, totalQuantity } from './shoppingCart.js';
+
+// Renaming an import using `as` keyword
+// import { addToCart, totalPrice as price, tq } from './shoppingCart.js';
+
+// console.log(x); // ERROR: x is not defined
+
+// addToCart('bread', 5);
+// console.log(price, tq);
+
+console.log('Importing Module');
+
+// Importing everything using *
+import * as ShoppingCart from './shoppingCart.js';
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+
+const x = 0;
+const shippingCost = 10;
+const cart = [];
+
+export const addToCart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+};
+
+const totalPrice = 237;
+const totalQuantity = 23;
+
+export { totalPrice, totalQuantity as tq };
+```
+
+- Basically, `ShoppingCart` will create an object containing everything that is exported from the module that we will specify in the script.js
+- So, it will create a namespace for all of the value exported from that module.
+
+> [!NOTE]
+>
+> When using \* to import everything from a module, the file extension is important to mentioned when importing.
+>
+> Otherwise, it will throw an error.
+>
+> So, the extension is necessary, it is only not necessary in some other cases, that we will see later.
+
+- Now whenever we want to use something that was exported, we will have to take it from the `ShoppingCart` object, like so:
+
+```javascript
+// script.js
+
+// Simple Module Import
+// import './shoppingCart.js';
+
+// Named Import
+// import { addToCart, totalPrice, totalQuantity } from './shoppingCart.js';
+
+// Renaming an import using `as` keyword
+// import { addToCart, totalPrice as price, tq } from './shoppingCart.js';
+
+// console.log(x); // ERROR: x is not defined
+
+// addToCart('bread', 5);
+// console.log(price, tq);
+
+console.log('Importing Module');
+
+// Importing everything using *
+import * as ShoppingCart from './shoppingCart.js';
+
+ShoppingCart.addToCart('bread', 5);
+console.log(ShoppingCart.totalPrice);
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+
+const x = 0;
+const shippingCost = 10;
+const cart = [];
+
+export const addToCart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+};
+
+const totalPrice = 237;
+const totalQuantity = 23;
+
+export { totalPrice, totalQuantity as tq };
+```
+
+- So, we got it to work.
+- So, basically if we think about it, the shoppingCart.js module is now basically exporting a public API, just like a class.
+- So, it is as if the `ShoppingCart` object was an object created from a class, which now has these methods, and also for example, these properties like `ShoppingCart.totalPrice`.
+- Of course, we are not trying to replace classes with modules, we just want to turn your attention to the fact, that some things look pretty similar indeed.
+- And actually, we can that the module export is kind of like public API, because everything else of course stays private inside of the module.
+- Alright, that's basically how named imports and exports work; and also how we can export multiple values at once, and how we can change the name of the named exports, and also of the named import.
+- Then we learned how we can import everything at the same time i.e. all the named imports at once using `*`.
+- So, now it is time to think about default exports.
+- So, as mentioned earlier, there are two types of exports v.i.z. named exports and default exports. So, let's now talk about default exports.
+- Usually, we use default exports when we only want to export one thing per module, and so that's the reason why they are called default.
+- It works pretty similar to named exports but, we have to write the keyword `default` along with `export` when we simply want to export a default value.
+- For example, if we wanted to default export the `addToCart` function, we would simple export the value itself, not the variable, like so:
+
+```javascript
+// script.js
+
+// Simple Module Import
+// import './shoppingCart.js';
+
+// Named Import
+// import { addToCart, totalPrice, totalQuantity } from './shoppingCart.js';
+
+// Renaming an import using `as` keyword
+// import { addToCart, totalPrice as price, tq } from './shoppingCart.js';
+
+// console.log(x); // ERROR: x is not defined
+
+// addToCart('bread', 5);
+// console.log(price, tq);
+
+console.log('Importing Module');
+
+// Importing everything using *
+import * as ShoppingCart from './shoppingCart.js';
+
+ShoppingCart.addToCart('bread', 5);
+console.log(ShoppingCart.totalPrice);
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+
+const x = 0;
+const shippingCost = 10;
+const cart = [];
+
+export const addToCart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+};
+
+const totalPrice = 237;
+const totalQuantity = 23;
+
+export { totalPrice, totalQuantity as tq };
+
+export default function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+}
+```
+
+- Here you see that no name is involved at all.
+- We are simply exporting the function value.
+- So then, when we import it, we can basically give it any name we want.
+
+```javascript
+// script.js
+
+// Simple Module Import
+// import './shoppingCart.js';
+
+// Named Import
+// import { addToCart, totalPrice, totalQuantity } from './shoppingCart.js';
+
+// Renaming an import using `as` keyword
+// import { addToCart, totalPrice as price, tq } from './shoppingCart.js';
+
+// console.log(x); // ERROR: x is not defined
+
+// addToCart('bread', 5);
+// console.log(price, tq);
+
+console.log('Importing Module');
+
+// Importing everything using *
+import * as ShoppingCart from './shoppingCart.js';
+
+ShoppingCart.addToCart('bread', 5);
+console.log(ShoppingCart.totalPrice);
+
+// Importing default value from shoppingCart.js
+import add from './shoppingCart.js';
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+
+const x = 0;
+const shippingCost = 10;
+const cart = [];
+
+export const addToCart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+};
+
+const totalPrice = 237;
+const totalQuantity = 23;
+
+export { totalPrice, totalQuantity as tq };
+
+export default function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+}
+```
+
+- This will then import the default export, no matter what it is called.
+- Notice how we are importing the same module twice. That's not a problem, we can do it. However, usually we don't do that.
+- We don't get any error but, it is not advisable to do so.
+- So, let's comment out the previous part, and let's try to access the default value.
+
+```javascript
+// script.js
+
+// Simple Module Import
+// import './shoppingCart.js';
+
+// Named Import
+// import { addToCart, totalPrice, totalQuantity } from './shoppingCart.js';
+
+// Renaming an import using `as` keyword
+// import { addToCart, totalPrice as price, tq } from './shoppingCart.js';
+
+// console.log(x); // ERROR: x is not defined
+
+// addToCart('bread', 5);
+// console.log(price, tq);
+
+console.log('Importing Module');
+
+// Importing everything using *
+// import * as ShoppingCart from './shoppingCart.js';
+
+// ShoppingCart.addToCart('bread', 5);
+// console.log(ShoppingCart.totalPrice);
+
+// Importing default value from shoppingCart.js
+import add from './shoppingCart.js';
+
+add('pizza', 2);
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+
+const x = 0;
+const shippingCost = 10;
+const cart = [];
+
+export const addToCart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+};
+
+const totalPrice = 237;
+const totalQuantity = 23;
+
+export { totalPrice, totalQuantity as tq };
+
+export default function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+}
+```
+
+- We can also have a default import and named import mixed in one import statement, like so:
+
+```javascript
+// script.js
+
+// Simple Module Import
+// import './shoppingCart.js';
+
+// Named Import
+// import { addToCart, totalPrice, totalQuantity } from './shoppingCart.js';
+
+// Renaming an import using `as` keyword
+// import { addToCart, totalPrice as price, tq } from './shoppingCart.js';
+
+// console.log(x); // ERROR: x is not defined
+
+// addToCart('bread', 5);
+// console.log(price, tq);
+
+console.log('Importing Module');
+
+// Importing everything using *
+// import * as ShoppingCart from './shoppingCart.js';
+
+// ShoppingCart.addToCart('bread', 5);
+// console.log(ShoppingCart.totalPrice);
+
+// Importing default value from shoppingCart.js
+// import add from './shoppingCart.js';
+
+// Mixed named and default imports
+import add, { addToCart, totalPrice as price, tq } from './shoppingCart.js';
+
+add('pizza', 2);
+console.log(price);
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+
+const x = 0;
+const shippingCost = 10;
+const cart = [];
+
+export const addToCart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+};
+
+const totalPrice = 237;
+const totalQuantity = 23;
+
+export { totalPrice, totalQuantity as tq };
+
+export default function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+}
+```
+
+- However in practice, we usually never mix named and default exports in the same module.
+- So, it is not really desirable. But, here we are doing it for learning purposes.
+- So, the preferred style is actually to just use one default export per module and then import that, like we did previously.
+- In fact, that is the reason why it is easier to import default exports. Since with default exports, we don't have to use the curly braces - and the designers of the specification did that on purpose.
+- But of course, it is not a rigid rule so, we can dod whatever is best for any given situaton.
+- However, what you probably should not do is to mix default and named exports, like we have in our example above (we are just doing it here for learning purposes).
+- So, avoid that to reduce complexities.
+- But, besides that, you can use named exports or default exports, whatever works best in your situations.
+- Of course, we will use all of this in the real world, in our next big project. So by then, you will get a good feeling for how all of this works, a little bit better in the real world.
+- But with this, you now already have a pretty good idea of how importing and exporting value between modules actually work.
+- But before finishing this lesson, let's see the proof of the fact that imports are in fact, a live connection to exports. This is something that was mentioned by the end of last lesson and it is something that is really important to keep in mind, so let's take a look at it.
+- To see it, we will first export the cart array from the shoppingCart.js module and import it in the script.js module.
+- Then we will log it in the script.js module to see what it looks like.
+
+```javascript
+// script.js
+
+// Simple Module Import
+// import './shoppingCart.js';
+
+// Named Import
+// import { addToCart, totalPrice, totalQuantity } from './shoppingCart.js';
+
+// Renaming an import using `as` keyword
+// import { addToCart, totalPrice as price, tq } from './shoppingCart.js';
+
+// console.log(x); // ERROR: x is not defined
+
+// addToCart('bread', 5);
+// console.log(price, tq);
+
+console.log('Importing Module');
+
+// Importing everything using *
+// import * as ShoppingCart from './shoppingCart.js';
+
+// ShoppingCart.addToCart('bread', 5);
+// console.log(ShoppingCart.totalPrice);
+
+// Importing default value from shoppingCart.js
+// import add from './shoppingCart.js';
+
+// Mixed named and default imports
+import add, {
+  addToCart,
+  totalPrice as price,
+  tq,
+  cart,
+} from './shoppingCart.js';
+
+add('pizza', 2);
+add('apples', 5);
+console.log(price);
+console.log(cart);
+
+/************************************************************************/
+// shoppingCart.js
+console.log('Exporting Module');
+
+const x = 0;
+const shippingCost = 10;
+export const cart = [];
+
+export const addToCart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+};
+
+const totalPrice = 237;
+const totalQuantity = 23;
+
+export { totalPrice, totalQuantity as tq };
+
+export default function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+}
+```
+
+- Right now it looks as if we are exporting an empty array since, `cart` is an empty array in the shoppingCart.js module.
+- But when we log it to the console in script.js module, we see that there are items already in it.
+- This is because we used the `add()` function to add items to it.
+- This proves that the importing of the `cart` array is not simply a copy of that array that we exported from shoppingCart.js module.
+- Because if it was just a copy, then in the script.js module, we would simply just get the empty array - since that is what the `cart` variable looked like when we exported it.
+- But as mentioned in the previous lesson, it is not simply a copy, it is in fact a live connection, and as we call the `add()` function, we keep pushing objects to that array.
+- So, we are mutating that array in the script.js module.
+- So, as we log that cart in the console, we see that manipulated array.
+- So, they are in fact, the same object behind the scenes, basically.
+- Hence, imports are not copies of the exports.
+- This means that the `cart` array in the importing and exporting modules, i.e. in both places, points to the same place in the memory.
+- Keep this in mind when you write your own code, because it can lead to bugs if you don't know what you are doing or if you don't know how it works.
+- With that, we finished this lesson, which is a pretty important one as it is the foundation of how we organize a modern JS code base.
+- So, make sure to review this lesson thoroughly, and play around with it some more to get comfortable with it.
 
 ## Author
 
