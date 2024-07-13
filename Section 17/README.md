@@ -16,6 +16,7 @@
     - [Top-Level Await (ES 2022)](#top-level-await-es-2022)
     - [The Module Pattern](#the-module-pattern)
     - [CommonJS Modules](#commonjs-modules)
+    - [A Brief Introduction to the Command Line](#a-brief-introduction-to-the-command-line)
   - [Author](#author)
 
 ## Lessons Learned
@@ -1620,6 +1621,43 @@ const { addToCart } = require('./shoppingCart.js');
 - In the long run, ES6 modules will hopefully and probably replace all of these different module systems but it is still going to be a long way until you are there.
 - So, it is good that you atleast know what it is if you stumble upon it.
 - Now let's move on to the rest of the section where we will lean how to use third party packages from npm, how to bundle all modules together, and also how to transpile our code back to ES5 for old browsers.
+
+### A Brief Introduction to the Command Line
+
+- Before we can use a tool like parcel, we first need to learn a little bit about the command line.
+- All the build tools that are available on NPM only work in the command line.
+- So, now comes that time where you finally have to learn a little bit about the basics of the command line.
+- In this short lesson, we will get the foundation of the command line.
+- We will learn things like moving around in the file system, creating files and folders, copying files, etc.
+- This is because, as a web developer, it is really quite important that you know at least how do these basic things using a terminal or a command prompt.
+- You can either use the terminal in your computer or you can use the integrated terminal in VS code. There is also a third party software called [Hyper](https://hyper.is/) if you prefer that.
+- The first thing that you need to know about any command line is that you are always in a folder.
+- From the current position in the file system, you can move up and down using commands.
+- `ls` (on mac) and `dir` (on windows)
+  - This command will show you the contents of the current folder.
+- `cd`
+  - This command stands for change directory.
+  - With this, we can go up and down the file tree.
+  - To go up, we simply use `..`
+  - To go up two levels, use `../..`
+- When typing something, if you use the `tab` key, it will auto complete the rest of it.
+- `clear`
+  - This clears the console
+- `mkdir folderName`
+  - This command will create a new folder in the current directory with the name provided next to `mkdir`.
+- `touch fileName`
+  - This creates a new file with the name provided next to `touch`.
+  - We can create multiple files at once by using space.
+  - Example: `touch script.js bankist.js shoppingCart.js` It will create the three files all at once.
+- `rm fileName` (mac) or `del fileName` (windows)
+  - Deletes the file in folder.
+- To move a file, we can use `mv` command. After `mv` you need to mention which file to be moved, followed by the location to which it should be moved.
+  - Example: `mv script.js ../` - This will move the script.js file from current directory to its parent directory.
+- `rmdir folderName` - deletes a folder in the current directory.
+  - NOTE that is command only works for empty directories.
+- To delete a directory that is not empty, we use a flag `-R` which stands for recursive.
+  - Example `rm -R folderName` - This command will recursively delete all files in the folder mentioned along with the directory itself.
+- That's it for this lesson.
 
 ## Author
 
