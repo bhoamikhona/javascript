@@ -13,6 +13,7 @@
     - [Native JavaScript (ES) Modules](#native-javascript-es-modules)
       - [How ES6 Modules are Imported](#how-es6-modules-are-imported)
     - [Exporting and Importing in ES6 Modules](#exporting-and-importing-in-es6-modules)
+    - [Top-Level Await (ES 2022)](#top-level-await-es-2022)
   - [Author](#author)
 
 ## Lessons Learned
@@ -1063,6 +1064,264 @@ export default function (product, quantity) {
 - Keep this in mind when you write your own code, because it can lead to bugs if you don't know what you are doing or if you don't know how it works.
 - With that, we finished this lesson, which is a pretty important one as it is the foundation of how we organize a modern JS code base.
 - So, make sure to review this lesson thoroughly, and play around with it some more to get comfortable with it.
+
+### Top-Level Await (ES 2022)
+
+- Let's now shortly go back to asynchronous JavaScript, because there has been an important change in ES 2022 version.
+- We can now use the `await` keyword outside of the `async` functions, at least in modules. So, that's why this is here in the module section.
+- Again, as mentioned, because this is important, we can now basically use the `await` keyword outside of an async function, which we call <ins>top-level await</ins>.
+- Just remember that this only works in modules.
+- If we were going to try this in a normal script, like we have been using before this section, then top-level await would still fail.
+- But in the last lesson, we added the `type` attribute to our script file with its value set to `module` and that is what is really required to make top-level `await` actually work.
+- So, to see the top level `await`, let's simply do a simple `fetch()` request.
+
+```html
+<script type="module" defer src="script.js"></script>
+```
+
+```javascript
+// script.js
+
+const res = await fetch(`https://jsonplaceholder.typicode.com/posts`);
+const data = await res.json();
+console.log(data);
+```
+
+- Indeed, we get our data.
+- We have an array of 100 posts here, where each of them is an object.
+- So, that's how we use the top-level await. Indeed, the `await` keyword is now working outside of an `async` function.
+- What's really, really important to understand here is that while this is all great and very useful, it actually blocks the execution of the entire module now; and as we learned in the previous section, that is sometimes not exactly what we want.
+- We can see that it is indeed a synchronous code by logging something after the `fetch()` function.
+
+```javascript
+// script.js
+
+console.log('Start fetching');
+
+const res = await fetch(`https://jsonplaceholder.typicode.com/posts`);
+const data = await res.json();
+console.log(data);
+
+console.log('Something');
+```
+
+- To really see it, you can also maneuver the internet speed using the network tab in the chrome developer tools.
+- In console, you will see that "Something" is only printed after the data from the API has arrived.
+- So in fact, the `await` keyword - which is now outside of an async function, is blocking the entire execution of this module - which is something that we had never seen before.
+- So, this really wasn't possible before we got top-level `await` in JS.
+- Of course, this can be useful in some situations but, many times, it can also be harmful, and especially if it is a really long running task.
+- Long story short, make sure you use this new superpower with great caution.
+- This example illustrates exactly how the top-level `await` works, but it is a bit too simple. It is not really real-world enough.
+- So, let's get more real.
+- Many times, we have a situation where we do have an async function that want to return some data.
+
+```javascript
+// script.js
+
+console.log('Start fetching');
+
+const res = await fetch(`https://jsonplaceholder.typicode.com/posts`);
+const data = await res.json();
+console.log(data);
+
+console.log('Something');
+
+/**
+ * This function will basically do a fetch request to the same URL above,
+ * but it will only return the very last post.
+ */
+const getLastPost = async function () {
+  const res = await fetch(`https://jsonplaceholder.typicode.com/posts`);
+  const data = await res.json();
+  console.log(data);
+};
+
+getLastPost();
+```
+
+- Now we want to return something from the `getLastPost()` function. So, we want to simply return an object which contains the title and body of the post.
+
+```javascript
+// script.js
+
+console.log('Start fetching');
+
+const res = await fetch(`https://jsonplaceholder.typicode.com/posts`);
+const data = await res.json();
+console.log(data);
+
+console.log('Something');
+
+/**
+ * This function will basically do a fetch request to the same URL above,
+ * but it will only return the very last post.
+ */
+const getLastPost = async function () {
+  const res = await fetch(`https://jsonplaceholder.typicode.com/posts`);
+  const data = await res.json();
+  console.log(data);
+
+  return { title: data.at(-1).title, text: data.at(-1).body };
+};
+
+const lastPost = getLastPost();
+console.log(lastPost);
+```
+
+- Now if you have studied that last section, then you will remember that the returning value which is stored in `lastPost` is actually going to be a promise, and not the object that we were expecting.
+- The reason for that is that calling an `async` function will always return the actual data itself, because by the time we are running this line of code: `const lastPost = getLastPost()`, the data has not arrived yet.
+- So, we still have that pending promise.
+- And again, if you don't really remember the specifics here, you can always go back to the last section.
+- The workaround to get the actual data instead of promises is to simply use regular promises.
+- So, we can simply take the promise that is stored in the variable `lastPost` and on that, we can use the `then()` method.
+- In the `then()` method, we get access to the resolved value, which we can simply log to the console.
+
+```javascript
+// script.js
+
+console.log('Start fetching');
+
+const res = await fetch(`https://jsonplaceholder.typicode.com/posts`);
+const data = await res.json();
+console.log(data);
+
+console.log('Something');
+
+/**
+ * This function will basically do a fetch request to the same URL above,
+ * but it will only return the very last post.
+ */
+const getLastPost = async function () {
+  const res = await fetch(`https://jsonplaceholder.typicode.com/posts`);
+  const data = await res.json();
+  console.log(data);
+
+  return { title: data.at(-1).title, text: data.at(-1).body };
+};
+
+const lastPost = getLastPost();
+console.log(lastPost);
+
+lastPost.then(last => console.log(last));
+```
+
+- So, after some time, we get the object that we want.
+- However, doing this is not very clean, so what we can do now is to use top-level await for it.
+
+```javascript
+// script.js
+
+console.log('Start fetching');
+
+const res = await fetch(`https://jsonplaceholder.typicode.com/posts`);
+const data = await res.json();
+console.log(data);
+
+console.log('Something');
+
+/**
+ * This function will basically do a fetch request to the same URL above,
+ * but it will only return the very last post.
+ */
+const getLastPost = async function () {
+  const res = await fetch(`https://jsonplaceholder.typicode.com/posts`);
+  const data = await res.json();
+  console.log(data);
+
+  return { title: data.at(-1).title, text: data.at(-1).body };
+};
+
+const lastPost = getLastPost();
+console.log(lastPost);
+
+// not very clean
+// lastPost.then(last => console.log(last));
+
+const lastPost2 = await getLastPost();
+console.log(lastPost2);
+```
+
+- After some time, we get the result that we wanted.
+- So, it is situations like this where top-level `await` can actually get quite useful.
+- Now to finish, let's see one more important implication of using top-level `await` and that is the fact that if one module imports a module which has a top-level await, then the importing module will wait for the imported module to finish the blocking code.
+- That may sound a bit complicated than it actually is. So, let's just demostrate it with an example.
+- For demonstration, in the shoppingCart.js module, let's add some blocking code in the very beginning.
+
+```javascript
+// shoppingCart.js
+
+console.log('Exporting Module');
+
+// Adding a blocking code to see that the importing module will wait for
+// this to finish
+console.log('Start fetching users');
+await fetch('https://jsonplaceholder.typicode.com/users');
+console.log('Finish fetching users');
+
+const x = 0;
+const shippingCost = 10;
+export const cart = [];
+
+export const addToCart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+};
+
+const totalPrice = 237;
+const totalQuantity = 23;
+
+export { totalPrice, totalQuantity as tq };
+
+export default function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+}
+```
+
+- Note that you can change the speed of the internet using the network tab in chrome developer tools to see it in action.
+- Now if we go back to our script.js module, the first thing that is going to happen is that the shoppingCart.js is going to be imported.
+- Then we immediately start fetching the users.
+- Then, only after the fetch is completed, we get the second log of "Finish fetching users".
+- And only after that we get the code executed in the importing module.
+- So, the code in script.js actually has to wait for the code in shoppingCart.js to finish.
+- So, the top-level `await` in the shoppingCart.js module is in fact not only blocking the code in its own module but also, in the module that is importing it.
+- So, it is really important to remember that using the top-level `await` will block the entire module in a way that really could block code execution.
+- So, this is not only a really helpful tool, but also one that we need to use with great care.
+- So, let's comment out this code so it won't block when we build more in the same files, going into next lessons.
+
+```javascript
+// shoppingCart.js
+
+console.log('Exporting Module');
+
+// Adding a blocking code to see that the importing module will wait for
+// this to finish
+// console.log('Start fetching users');
+// await fetch('https://jsonplaceholder.typicode.com/users');
+// console.log('Finish fetching users');
+
+const x = 0;
+const shippingCost = 10;
+export const cart = [];
+
+export const addToCart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+};
+
+const totalPrice = 237;
+const totalQuantity = 23;
+
+export { totalPrice, totalQuantity as tq };
+
+export default function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+}
+```
+
+- This is how top-level await works.
+- So, let's now go straight to the next lesson.
 
 ## Author
 
