@@ -15,6 +15,7 @@
     - [Exporting and Importing in ES6 Modules](#exporting-and-importing-in-es6-modules)
     - [Top-Level Await (ES 2022)](#top-level-await-es-2022)
     - [The Module Pattern](#the-module-pattern)
+    - [CommonJS Modules](#commonjs-modules)
   - [Author](#author)
 
 ## Lessons Learned
@@ -1569,6 +1570,56 @@ console.log(
 - That then creates a couple of problems, like we have to be careful with the order in which we declare then in HTML, and we would have all of the variables living in the global scope, and finally, we also couldn't bundle them together using a module bundler.
 - So, as you learned at the beginning of this section, using a module bundler is very important in modern JS.
 - So the module pattern that we just learned about does indeed work quite good but, it has some limitations; and that's exactly the reason why native modules were added to the language in ES6.
+
+### CommonJS Modules
+
+- Besides native ES modules, and the module pattern, there are also other module systems that have been used by JS in the past.
+- But again, they were not native JS. So, they relied on some external implementations.
+- Two examples are:
+  - AMD Modules
+  - CommonJS Modules
+- In fact, CommonJS modules are worth taking a look at. So, let's do that now.
+- CommonJS modules are important for us, because they have been used in Node.js for almost all of its existence.
+- So only very recently ES modules have actually been implemented in Node.js.
+- Remember, Node.js is a way of running JS on a web server, outside of a browser.
+- The big consequence of this is that almost all the modules in the npm repository (that we talked about in the beginning of this section) so, all these modules that we can use in our own code, still use the CommonJS module system.
+- The reason for that is that npm was original only intended for node, which as mentioned before, uses commonJS.
+- Only later npm became the standard repository, for the whole JS world.
+- So now we are basically stuck with CommonJS.
+- Therefore, you will probably see a lot of CommonJS still around.
+- So, let's take a quick second to see what it looks like.
+- Let's pretend that we want to export `addToCard()` from a module.
+- So, just like ES6 modules, in CommonJS, one file is one module.
+- We export something from a module using `export.nameOfTheExport`. So, if we wanted to export a variable called `cart` then it would be `export.cart`.
+
+```javascript
+// Export from shoppingCart.js
+export.addToCart = function(product, quantity) {
+  cart.push({product, quantity})
+  console.log(`${quantity} ${product} added to cart`)
+}
+```
+
+- Of course this would not work in the browser but, it would work in Node.js
+- So, the `export` keyword here is basically an object that is not defined in our code, and also not in the browser.
+- But in Node.js it is an important object that is used.
+- Then, to import something, we would use `require()` function.
+
+```javascript
+// Import in script.js
+const { addToCart } = require('./shoppingCart.js');
+```
+
+- `require()` is not defined in our browser enviornment but, it is defiend in Node.js because it is a part of the CommonJS specification.
+
+> [!NOTE]
+>
+> This code won't work in regular JS, you will need Node.js to see it in action.
+
+- The point of this lesson was just to let you know that there are different module systems, and that CommonJS is particularly important in the world of JS.
+- In the long run, ES6 modules will hopefully and probably replace all of these different module systems but it is still going to be a long way until you are there.
+- So, it is good that you atleast know what it is if you stumble upon it.
+- Now let's move on to the rest of the section where we will lean how to use third party packages from npm, how to bundle all modules together, and also how to transpile our code back to ES5 for old browsers.
 
 ## Author
 

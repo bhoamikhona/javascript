@@ -110,3 +110,7 @@ ShoppingCart2.addToCart('bananas', 3);
 
 console.log(ShoppingCart2.cart);
 console.log(ShoppingCart2.shippingCost); // undefined
+
+/************************************************************************/
+/*************************** COMMONJS MODULES ***************************/
+/************************************************************************/
