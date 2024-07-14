@@ -17,6 +17,7 @@
     - [The Module Pattern](#the-module-pattern)
     - [CommonJS Modules](#commonjs-modules)
     - [A Brief Introduction to the Command Line](#a-brief-introduction-to-the-command-line)
+    - [Introduction to NPM](#introduction-to-npm)
   - [Author](#author)
 
 ## Lessons Learned
@@ -1658,6 +1659,162 @@ const { addToCart } = require('./shoppingCart.js');
 - To delete a directory that is not empty, we use a flag `-R` which stands for recursive.
   - Example `rm -R folderName` - This command will recursively delete all files in the folder mentioned along with the directory itself.
 - That's it for this lesson.
+
+### Introduction to NPM
+
+- Let's now finally use NPM for the first time, and remember that NPM stands for Node Package Manager, and it is both, a software on our computer and a package repository.
+- Before we jump straight into NPM, let's start by understanding why we actually need something like NPM i.e. why do we need a way of managing packages or dependencies in our project?
+- Back in the day, before we had NPM, we used to include external libraries right into our HTML using the `<script>` tag.
+- This would then expose a global variable that we could use, and that's what we did in our Mapty project as well. We simply included the script file in the index.html file for the leaflet library - before our own script so that, our own script could use the global variable that was exposed by the leaflet library.
+- This actually creates a couple of problems, at least in a big project.
+- It might not be a problem for a small project like Mapty but, in a big team and big project, it is just not manageable.
+- First, it doesn't make much sense having the HTML loading all of JavaScript, that is just really messy.
+- Also, many times we would actually download a library file to our computer directly, for example, a jQuery JS file.
+- But then, whenever a new version would come out, we would have to manually go to the site, download the new version, change the file in our file system manually and then include it again, maybe with some other name, with some other version number.
+- That was just a huge pain.
+- The third reason is that before NPM, there simply wasn't a single repository that contained all the packages that we might need.
+- So, this made it even worse and more difficult to manually download libraries and manage them on our computers.
+- In summary, this all used to be a huge pain and a huge mess.
+- Anyway, all of this is just to say that we really need a way to manage our dependencies in a better and more modern way; and NPM is exactly how we do that.
+- So, let's start by using the NPM software now.
+- We can check if we have NPM installed on our computer using the terminal with this command: `npm -v`
+  - This command will check for the version of the npm installed on your computer. If you get a verison above 6 then you are good to go, otherwise head over to the [Node.js Website](https://nodejs.org/en/download/package-manager/current) and download it from there.
+- In each project in which we want to use NPM, we need to start by initializing it.
+- Use the command `npm init` in the directory you want the project to be to initialize it - in terminal.
+- Once you go through the questions that you see after entering the `npm init` command, you will end up with a special file called package.json.
+- This file is created by NPM for our project.
+- It is what stores the entire configuration of our project.
+- To install any library using NPM, all you have to type in the terminal is this command: `npm install leaflet` (this will install the leaflet library) or `npm i leaflet` (for short).
+- Generic syntax: `npm install packageName` or `npm i packageName`
+- Once you hit enter, it will start downloading the package that you mentioned.
+- After downloading the package, two things happen. First, in our package.json file, a new field is created called `dependencies`. The dependency that we have is leaflet since that is what we downloaded. More about why this is important, later.
+- The second thing that happened is that a folder was created in our working directory and this folder is called node_modules.
+- It is in this folder where all of our downloaded package files are stored. You can explore them as you please.
+- Of course, the more packages that we install, they will all get stored into this node_modules folder.
+- So, we installed the leaftlet library now but, if we wanted to use it, that wouldn't be easy without a module bundler. That's because this library actually uses the CommonJS module system.
+- Therefore, we cannot directly import it onto our code. We could only do that if later we use a module bunlder, but for now, we are not doing that.
+- So, let's just not use leaflet for now. It was just to show you how to install it.
+- Instead, let's import one of the most popular JS libraries, which is [Lodash](https://lodash.com/).
+- Lodash is essentially a collection of a ton of useful functions for arrays, objects, functions, dates, and more.
+- So, it is a lot like functions that could or should be included in JS, but are not. So, people simply implemented them in Lodash and now we can use them.
+- In their documentation, it says that to install lodash, we can use the command `npm i lodash`.
+- However, that is just the normal version of Lodash and we are not looking for that because it also uses CommonJS.
+- So, without CommonJS or module bundler, we won't be able to use it.
+- The special version that we are looking for is called `lodash-es`. Here `es` stands for ES modules. To install that, we will simply enter the comman `npm i lodash-es`.
+- Once it is downloaded, we will be able to see it in dependencies in package.json and also in the node_modules folder.
+- If you explore this package, it is a considerably large one. It has one file for each of the methods available in Lodash.
+- The one that we wanna look at is the one for cloning objects called `cloneDeep()`. You can get its code in the node_modules folder -> lodash-es folder -> cloneDeep.js file
+- We can simply import it in our script file exactly like we used to do it with the `import` keyword.
+
+```javascript
+// script.js
+import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+```
+
+- Now, why did we include `cloneDeep` and not something else?
+- It is because we already mentioned lodash before when we talked about copying objects.
+- Remember that it is very hard to copy a nested object.
+- So, let's quickly create one here because it is very interesting.
+
+```javascript
+// script.js
+import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+
+const state = {
+  cart: [
+    { product: 'bread', quantity: 5 },
+    { product: 'pizza', quantity: 5 },
+  ],
+  user: { loggedIn: true },
+};
+```
+
+- So, this is a deeply nested object. Now let's see what happens when we try to copy it using JS.
+- Remember that we use `Objec.assing()` to create a copy of an object in pure JS.
+
+```javascript
+// script.js
+import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+
+const state = {
+  cart: [
+    { product: 'bread', quantity: 5 },
+    { product: 'pizza', quantity: 5 },
+  ],
+  user: { loggedIn: true },
+};
+
+const stateCopy = Object.assign({}, state);
+console.log(stateClone);
+```
+
+- As of right now, the `stateClone` looks exactly the same as the original object.
+- However, watch what happens when we change one of the nested objects in the original object.
+
+```javascript
+// script.js
+import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+
+const state = {
+  cart: [
+    { product: 'bread', quantity: 5 },
+    { product: 'pizza', quantity: 5 },
+  ],
+  user: { loggedIn: true },
+};
+
+const stateCopy = Object.assign({}, state);
+console.log(stateClone);
+
+state.user.loggedIn = false;
+console.log(stateClone);
+```
+
+- In the clone object, the `loggedIn` is also false. That's for all the reasons that we have already learned before. That's when we mentioned that using lodash might be a better idea instead of using `Object.assign()`.
+- Because if we wanted to manually create a deep copy or a deep clone, that would be a lot of work. So, instead we can simply use the `deepClone()` function that lodash provides us.
+- This function has been implemented by some other people and it is also battle tested.
+
+```javascript
+// script.js
+import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+
+const state = {
+  cart: [
+    { product: 'bread', quantity: 5 },
+    { product: 'pizza', quantity: 5 },
+  ],
+  user: { loggedIn: true },
+};
+
+const stateCopy = Object.assign({}, state);
+const stateDeepClone = cloneDeep(state);
+console.log('stateClone Before', stateClone);
+console.log('stateDeepClone Before', stateDeepClone);
+
+state.user.loggedIn = false;
+
+console.log('stateClone After', stateClone);
+console.log('stateDeepClone After', stateDeepClone);
+```
+
+- So the `loggedIn` in `stateDeepClone` is still set to true, even though we changed it in the original object.
+- So, this is a good solution for a deep clone that we just got from NPM.
+- So, we used a piece of an open source software to solve a problem that we have sometimes in JS, and that's just awesome!
+- You are now one step closer to working like a real JS developer because, this is just what everyone does all the time.
+- Of course you can have some fun and take a look at how people implemented the `deepClone()` function in the lodash library and you can get the access to that code from node_modules folder.
+- Now let's go back to the package.json file because it is actually very important.
+- Let's say that you want to move your project to another computer, or also share it with another developer or even check it into version control like Git.
+- In all of these scenarios, you should never ever include the node_modules folder. This is because in a real-world project this folder will be really, really huge from downloading all the different packages.
+- So, it doesn't make sense to pass around such large folder if they are all already available at NPM. You can always get those files back from there.
+- But now you might ask, if you copy the project without the node_modules folder i.e. without the dependencies, will you have to install all of them one by one?
+- What if you have 20 or 200 dependencies?
+- That's where this important file package.json comes into play.
+- In the case you don't have the node_modules folder and you can try deleting that folder to simulate this problem, there is fortunately a very easy way to get it all back.
+- The solution is to simply run the command `npm i` in the terminal in the directory you have the package.json file in (so make sure you have that file in the folder where you want to install those dependencies).
+- Then the NPM will go through the package.json file, read all the dependencies and install them back.
+- With this, you now have a basic and good understanding of how to work with NPM packages, how to download and include them in your code.
+- However, importing packages with the entire path like we did in our example above is not practical at all.
+- So, in the next lesson, it is time to finally use Parcel to fix it.
 
 ## Author
 

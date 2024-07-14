@@ -111,6 +111,26 @@ ShoppingCart2.addToCart('bananas', 3);
 console.log(ShoppingCart2.cart);
 console.log(ShoppingCart2.shippingCost); // undefined
 
-/************************************************************************/
-/*************************** COMMONJS MODULES ***************************/
-/************************************************************************/
+/***********************************************************************/
+/************************* INTRODUCTION TO NPM *************************/
+/***********************************************************************/
+
+import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+
+const state = {
+  cart: [
+    { product: 'bread', quantity: 5 },
+    { product: 'pizza', quantity: 5 },
+  ],
+  user: { loggedIn: true },
+};
+
+const stateClone = Object.assign({}, state);
+const stateDeepClone = cloneDeep(state);
+console.log('stateClone Before', stateClone);
+console.log('stateDeepClone Before', stateDeepClone);
+
+state.user.loggedIn = false;
+
+console.log('stateClone After', stateClone);
+console.log('stateDeepClone After', stateDeepClone);
