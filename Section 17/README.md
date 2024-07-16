@@ -20,6 +20,7 @@
     - [Introduction to NPM](#introduction-to-npm)
     - [Bundling With Parcel and NPM Scripts](#bundling-with-parcel-and-npm-scripts)
     - [Configuring Babel and Polyfilling](#configuring-babel-and-polyfilling)
+    - [Review: Writing Clean and Modern JavaScript](#review-writing-clean-and-modern-javascript)
   - [Author](#author)
 
 ## Lessons Learned
@@ -1887,6 +1888,11 @@ import 'core-js/stable/array/find;';
 // Polyfilling async functions
 import 'regenerator-runtime/runtime';
 ```
+
+### Review: Writing Clean and Modern JavaScript
+
+- ![image](https://github.com/user-attachments/assets/1d193594-6a4a-4fb8-a4d3-6dfc764c7f0f)
+- ![image](https://github.com/user-attachments/assets/9d6bce4d-f8e8-4dac-9617-6b538b58e72e)
 
 ## Author
 
