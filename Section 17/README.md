@@ -18,6 +18,7 @@
     - [CommonJS Modules](#commonjs-modules)
     - [A Brief Introduction to the Command Line](#a-brief-introduction-to-the-command-line)
     - [Introduction to NPM](#introduction-to-npm)
+    - [Bundling With Parcel and NPM Scripts](#bundling-with-parcel-and-npm-scripts)
   - [Author](#author)
 
 ## Lessons Learned
@@ -1815,6 +1816,37 @@ console.log('stateDeepClone After', stateDeepClone);
 - With this, you now have a basic and good understanding of how to work with NPM packages, how to download and include them in your code.
 - However, importing packages with the entire path like we did in our example above is not practical at all.
 - So, in the next lesson, it is time to finally use Parcel to fix it.
+
+### Bundling With Parcel and NPM Scripts
+
+- Installing and Using Parcel
+- Dev Dependencies and how to install them using `--save-dev`
+- Locally and Globally installed packages
+  - To install packages globally, all you have to do is to add `-g` flag when installing it.
+- `npx` and NPM scripts
+
+> [!WARN]
+> Parcel does not work with top-level `await` yet, so might want to comment that code out.
+
+> [!NOTE]
+> Parcel converts the script files to regular scripts even if you mentioned `type="module"` in it.
+
+- Hot module scripts:
+
+```javascript
+// Only parcel understands this code
+if (module.hot) {
+  module.hot.accept();
+}
+```
+
+- This code means that whenever we change one of the modules, it will thn trigger a reubuild.
+- But that new modified bundle will then automatically get injected into the browser without triggering a reload.
+- With Parcel you can now import modules like this: `import cloneDeep from 'lodash-es';` instead of having to write the entire file path down. It figures out the path on its own.
+
+> [!NOTE]
+>
+> Hot Modules maintain state of variables without reloading the page. So, the data is persisted.
 
 ## Author
 

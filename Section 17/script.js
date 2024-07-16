@@ -31,7 +31,7 @@ console.log('Importing Module');
 // import add from './shoppingCart.js';
 
 // Mixed named and default imports
-import add, {
+/* import add, {
   addToCart,
   totalPrice as price,
   tq,
@@ -41,25 +41,25 @@ import add, {
 add('pizza', 2);
 add('apples', 5);
 console.log(price);
-console.log(cart);
+console.log(cart); */
 
 /***********************************************************************/
 /********************** TOP-LEVEL AWAIT (ES 2022) **********************/
 /***********************************************************************/
 
-console.log('Start fetching');
+/* console.log('Start fetching');
 
 const res = await fetch(`https://jsonplaceholder.typicode.com/posts`);
 const data = await res.json();
 console.log(data);
 
-console.log('Something');
+console.log('Something'); */
 
 /**
  * This function will basically do a fetch request to the same URL above,
  * but it will only return the very last post.
  */
-const getLastPost = async function () {
+/* const getLastPost = async function () {
   const res = await fetch(`https://jsonplaceholder.typicode.com/posts`);
   const data = await res.json();
   console.log(data);
@@ -74,13 +74,13 @@ console.log(lastPost);
 // lastPost.then(last => console.log(last));
 
 const lastPost2 = await getLastPost();
-console.log(lastPost2);
+console.log(lastPost2); */
 
 /************************************************************************/
 /************************** THE MODULE PATTERN **************************/
 /************************************************************************/
 
-const ShoppingCart2 = (function () {
+/* const ShoppingCart2 = (function () {
   const cart = [];
   const shippingCost = 10;
   const totalPrice = 237;
@@ -109,13 +109,14 @@ ShoppingCart2.addToCart('apples', 4);
 ShoppingCart2.addToCart('bananas', 3);
 
 console.log(ShoppingCart2.cart);
-console.log(ShoppingCart2.shippingCost); // undefined
+console.log(ShoppingCart2.shippingCost); // undefined */
 
 /***********************************************************************/
 /************************* INTRODUCTION TO NPM *************************/
 /***********************************************************************/
 
-import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+// import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+import cloneDeep from 'lodash-es';
 
 const state = {
   cart: [
@@ -134,3 +135,11 @@ state.user.loggedIn = false;
 
 console.log('stateClone After', stateClone);
 console.log('stateDeepClone After', stateDeepClone);
+
+/************************************************************************/
+/***************** BUNDLING WITH PARCEL AND NPM SCRIPTS *****************/
+/************************************************************************/
+
+if (module.hot) {
+  module.hot.accept();
+}
