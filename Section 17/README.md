@@ -21,6 +21,8 @@
     - [Bundling With Parcel and NPM Scripts](#bundling-with-parcel-and-npm-scripts)
     - [Configuring Babel and Polyfilling](#configuring-babel-and-polyfilling)
     - [Review: Writing Clean and Modern JavaScript](#review-writing-clean-and-modern-javascript)
+    - [Let's Fix Some Bad Code: Part 01](#lets-fix-some-bad-code-part-01)
+    - [Declarative and Functional JavaScript Principles](#declarative-and-functional-javascript-principles)
   - [Author](#author)
 
 ## Lessons Learned
@@ -1893,6 +1895,111 @@ import 'regenerator-runtime/runtime';
 
 - ![image](https://github.com/user-attachments/assets/1d193594-6a4a-4fb8-a4d3-6dfc764c7f0f)
 - ![image](https://github.com/user-attachments/assets/9d6bce4d-f8e8-4dac-9617-6b538b58e72e)
+
+### Let's Fix Some Bad Code: Part 01
+
+- Using optional chaining with brackets notation
+
+```javascript
+// example
+const limit = spendingLimits?.[user];
+```
+
+- Emojis count as 2 characters.
+
+```javascript
+const string = 'Pizza 🍕';
+console.log(string.slice(-1)); // �
+console.log(string.slice(-2)); // 🍕
+```
+
+### Declarative and Functional JavaScript Principles
+
+- We just reviewed and also implemented some clean and modern JavaScript practices.
+- However, there is currently a major trend and shift to something called declarative code and functional programming in JavaScript.
+- So, let's now take some time to look at what declarative and functional programming actually are.
+- ![image](https://github.com/user-attachments/assets/b635cc59-a9e5-4af3-ad0d-944bbd3f955d)
+- There are two fundamentally different ways of writing code in programming, which we also call paradigms. These two paradigms are imperative code and declarative code.
+- Whenever we write imperative code, we basically need to explain to the computer how to do certain things.
+- Basically, we need to explain every single step that the computer needs to follow in order to achieve a certain result.
+- This might sound abstract so, let's try a real world example.
+- Let's say that we want someone to bake a cake for us.
+- If we were to do that in an imperative way, we would tell the person exactly the step by step recipe that they would have to follow in order to bake that cake.
+- It is basically telling every single step that the person has to follow in order to achieve a result.
+- Bringing that back to code:
+
+```javascript
+const arr = [2, 4, 6, 8];
+const doubled = [];
+
+for (let i = 0; i < arr.length; i++) {
+  doubled[i] = arr[i] * 2;
+}
+```
+
+- In this code example, we are trying to double the `arr` array.
+- So, the loop that we have here is a purely imperative way of writing that.
+- Here, we are telling the computer step by step, to create an empty array to create a counter that starts at 0, then to increase that counter until we reach the length of the original array, and then how exactly to store the new result in each new position of the array.
+- So, there are a lot of steps that we give the computer here, in order for us to achieve the result of doubling the `arr` array.
+- That's imperative programming, but on the other hand, we also have declarative programming, where the programmer tells the computer only what to do.
+- So, when we write declarative code, we simply describe the way that the computer should achieve a certain result. But the "how" it shoud do it i.e. the step by step instructions, those get abstracted away i.e. we don't care about them.
+- Going back to the cake example, the declarative way of instructing someone to bake the cake would be to simply describe that cake to the person, and then the person would have to come up with the step by step recipe on their own.
+- So, simply describing the task and the result that should be achieved is the declarative way of doing it.
+- Now coming back to the code example of doubling the values in an array, this is how we do it in the declarative way:
+
+```javascript
+const arr = [2, 4, 6, 8];
+const doubled = arr.map(n => n * 2);
+```
+
+- We have the `arr` array and then we simply tell JS to map the values in the `arr` array to a new array and each of these values should be multiplied by 2.
+- If you compare the two code examples then you will see that in the declarative way, all we are doing is describing the way that the computer should achieve the result that we are looking for.
+- We are simply telling it what to do, which in this case, is to simply map the original array onto a new array and doubling all the elements.
+- But all of the super detailed steps that we have in the imperative way i.e. creating an empty array and initializing a counter, all of these steps have been abstracted away, because we don't really care about them.
+- This is pretty important to understand because more and more, this is how modern JS code is actually written.
+- So, the difference between imperative and declarative is not just some theoretical difference.
+- The declarative paradigm is actually a really big and popular programming paradigm, which has given rise to a sub paradigm called, functional programming.
+- ![image](https://github.com/user-attachments/assets/78dec660-7fbc-4ab1-b3f2-79670317a1b7)
+- Functional programming is basically a declarative paradigm, which is based on the idea of writing software, simply by combining multiple so called <ins>pure functions</ins>, while avoiding side effects and mutating data.
+- And actually, functional programming and writing declarative code, has now basically become the modern way of writing code in the JS world.
+- So, you will declarative and functional code everywhere.
+- In fact, we have even been using it all along, but without really knowing that this style was called declarative, and functional.
+- But let's quickly go back to the definition of functional programming, and talk about what side effects and pure functions are.
+- A side effect is basically simply a modification of any data that's outside of a function.
+- For example, mutating any variable that is external to the function is causing a side effect. So, basically any variable that is outside of the scope of the function.
+- Now, data does not only refer to variables, for example, logging stuff to the console, or also changing something in the DOM, is also causing side effects.
+- Next up, a pure function is a function without causing side effects. Basically, a function that does not mutate any external variables,a nd that does also not depend on any external variables and that also does not depend on any external variables.
+- So basically, if we give the same inputs to a pure function, it will always return the same output - that's because it does not depend on any external variables, and it also does not manipulate them.
+- Finally, if we look again at our definition, we also see that functional programming is also about avoiding mutating data, and we do that by using something called <ins>immutability</ins>.
+- So, in functional programming, state aka data is never modified.
+- So, let's say that we have some application, and we have an object there to keep track of all the data that we need in an application (we usually call that state). So, in functional programming, that state is never modified.
+- Instead, what we will do is to copy that object i.e. state and then it is that copy that is mutated and can be returned but, the original state is never touched.
+- That's what it means for the state being immutable; and the big upside of immutability is that, it makes it so much easier to keep track of how the data flows through our entire application.
+- So ultimately, that will allow us to write better code with less bugs, and code that is also more readable, which overall, is the entire goal of using functional programming in the first place.
+- We are not learning this with the goal of turning you into a functional programming, because that would actually be a very hard task, because this is really just a very high level introduction to what functional programming is.
+- But behind the scenes, functional programming is a huge paradigm, which is really difficult to implement in practice.
+- But it is still very important that you know some of these principles, such as side effects, pure functions, and immutability, because many of the popular libraries such as React and Redux are actually built around all of these principles.
+- For example, in React, the state is also completely immutable, so if you ever want to learn something like React, you will need to know about these concepts in order to use it properly.
+- However, some principles such as pure functions or side effects can actually be a bit easier to implement into our own code.
+- So, what we are trying to say that we can actually mix imperative and declarative programming in our own codes. We don't have to go 100% declarative.
+- In other words, we don't have to go 100% in the direction of making our code completely functional.
+- So again, we can already start using some of the functional programming techniques in our own code base.
+- For example, you can try to avoid data mutations as often as possible.
+- Of course, this will not always be possible, but it is also not really necessary.
+- So, these are mainly just some suggestions that will still create more readable and overall better and cleaner code.
+- Another thing that you can do is to always prefer built-in methods or functions that do not product side effects over the ones that do, and this is really important for data transformations.
+- So, whenever you want to do that, you should use methods such as `map()`, `filter()`, and `reduce()`.
+- So, this is the functional and modern way of doing data transformations, and many times, this is actually the first contact that many people have, with functional programming.
+- So `map()`, `filter()`, and `reduce()` are actually present in all functional programming languages, and they are very important to implement a functional code into more declarative code in our code.
+- Finally, you can also try to avoid side effects into functions that you write yourself.
+- Of course, this is not always possible or necessary. We will never be able to avoid all side effects in applications because of course, at some point, the applications needs to do something that leads to side effects.
+- But you can still try to think about this, and start trying to avoid side effects in your own code.
+- To finish, let's come back to declarative syntax, because functional programming is only a part of using and writing declarative code.
+- So, in order to write code that is more declarative, you should use array and object destructuring whenever that's possible.
+- You should also use the spread operator, the ternary operator, and also template literals whenever possible.
+- This is because, if you think about it, then all of these four ways of writing code actually makes the code more declarative.
+- So, these operators are more about telling the code what to do and not exactly the steps that it should take.
+- Let's now continue fixing some bad code in our clean.js file in the next lesson by implementing some of the things that we learned in this lesson.
 
 ## Author
 
