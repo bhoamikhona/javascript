@@ -143,3 +143,31 @@ console.log('stateDeepClone After', stateDeepClone);
 if (module.hot) {
   module.hot.accept();
 }
+
+/***********************************************************************/
+/****************** CONFIGURING BABEL AND POLYFILLING ******************/
+/***********************************************************************/
+
+class Person {
+  #greeting = 'Hey';
+  constructor(name) {
+    this.name = name;
+    console.log(`${this.#greeting}, ${this.name}`);
+  }
+}
+
+const bhoami = new Person('Bhoami');
+
+console.log('Bhoami' ?? null);
+
+const cart = [
+  { product: 'bread', quantity: 3 },
+  { product: 'pizza', quantity: 1 },
+];
+
+console.log(cart.find(el => el.quantity >= 2));
+
+Promise.resolve('Test').then(x => console.log(x));
+
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';

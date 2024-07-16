@@ -19,6 +19,7 @@
     - [A Brief Introduction to the Command Line](#a-brief-introduction-to-the-command-line)
     - [Introduction to NPM](#introduction-to-npm)
     - [Bundling With Parcel and NPM Scripts](#bundling-with-parcel-and-npm-scripts)
+    - [Configuring Babel and Polyfilling](#configuring-babel-and-polyfilling)
   - [Author](#author)
 
 ## Lessons Learned
@@ -1847,6 +1848,45 @@ if (module.hot) {
 > [!NOTE]
 >
 > Hot Modules maintain state of variables without reloading the page. So, the data is persisted.
+
+### Configuring Babel and Polyfilling
+
+- Babel
+- Babel Plugins
+- Babel Presets
+
+> [!NOTE]
+>
+> Babel can only transplie ES6 syntax.
+>
+> Example: arrow functions, classes, `const`, or spread operator
+>
+> Basically things that have an equivalent way of writing them in ES5.
+>
+> If you try to transpile things like Promises, those won't be converted.
+
+- For things such as Promises or newer array methods like `find()`, we can polyfill them.
+- For polyfill, we use a library called `core-js` and in that library, we specifically use `core-js/stable`
+- Polyfilling basically re-creates defined function and make it available in our bungle so that the code can use it.
+
+> [!NOTE]
+>
+> Polyfilling is going to polyfill everything even if you are not using it. So, you can cherry pick what you need to polyfill.
+>
+> Cherry picking that is of course a lot of work but, it will also greatly reduce the size of your bundle therefore, it might be worth it.
+
+- This how you can cherry pick:
+
+```javascript
+import 'core-js/stable/array/find;';
+```
+
+- Finally, there is still one feature that is not polyfilled by `core-js` so, we always need to install one more package for that. This package is called `regenerator-runtime`.
+
+```javascript
+// Polyfilling async functions
+import 'regenerator-runtime/runtime';
+```
 
 ## Author
 
