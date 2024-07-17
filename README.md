@@ -31,7 +31,7 @@
 - [Bankist Web App](https://bhoamikhona.github.io/javascript/Section%2012/index.html)
 - [Bankist Marketing Website](https://bhoamikhona.github.io/javascript/Section%2013/index.html)
 - [Mapty](https://bhoamikhona.github.io/javascript/Section%2015/index.html)
-- [Mapty](https://bhoamikhona.github.io/javascript/Section%2018/index.html)
+- [Forkify](https://bhoamikhona.github.io/javascript/Section%2018/index.html)
 
 ## Author
 
