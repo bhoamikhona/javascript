@@ -20,7 +20,8 @@
 - [Section 14](./Section%2014): Object-Oriented Programming (OOP) With JavaScript
 - [Section 15](./Section%2015): Mapty App - OOP, Geolocation, External Libraries, and More!
 - [Section 16](./Section%2016): Asynchronous JavaScript - Promises, Async/Await, and AJAX
-- [Section 17](//Section%2017): Modern JavaScript Development: Modules, Tooling, and Functional
+- [Section 17](./Section%2017): Modern JavaScript Development: Modules, Tooling, and Functional
+- [Section 18](./Section%2018): Forkify App - Building a Modern Application
 
 ## Projects
 
@@ -30,6 +31,7 @@
 - [Bankist Web App](https://bhoamikhona.github.io/javascript/Section%2012/index.html)
 - [Bankist Marketing Website](https://bhoamikhona.github.io/javascript/Section%2013/index.html)
 - [Mapty](https://bhoamikhona.github.io/javascript/Section%2015/index.html)
+- [Mapty](https://bhoamikhona.github.io/javascript/Section%2018/index.html)
 
 ## Author
 
