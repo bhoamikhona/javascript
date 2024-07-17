@@ -11,6 +11,7 @@
       - [Project Overview](#project-overview)
       - [Project Planning](#project-planning)
       - [Flowchart - Part 01](#flowchart---part-01)
+    - [Loading a Recipe from API](#loading-a-recipe-from-api)
   - [Author](#author)
 
 ## Lessons Learned
@@ -95,6 +96,12 @@
 - We will start implementing this project only with the recipe displaying i.e. feature number 03.
 - This will allow us to start implementing some functionality and also play around with the application a little bit but still without thinking about the architecture i.e. without a rigid structure that might be imposed by architecture.
 - With this, we have the first part of this application planned so, let's get to work.
+
+### Loading a Recipe from API
+
+- In this project we are using Sass instead of CSS.
+- Sass is basically a better way of writing CSS. It has some nice additional features, which makes writing CSS in a large scale application a lot easier.
+- Browsers don't actually understand Sass so, it has to be converted to CSS. Parcel will do that for us.
 
 ## Author
 
