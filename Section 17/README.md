@@ -23,6 +23,7 @@
     - [Review: Writing Clean and Modern JavaScript](#review-writing-clean-and-modern-javascript)
     - [Let's Fix Some Bad Code: Part 01](#lets-fix-some-bad-code-part-01)
     - [Declarative and Functional JavaScript Principles](#declarative-and-functional-javascript-principles)
+    - [Let's Fix Some Bad Code: Part 02](#lets-fix-some-bad-code-part-02)
   - [Author](#author)
 
 ## Lessons Learned
@@ -2000,6 +2001,33 @@ const doubled = arr.map(n => n * 2);
 - This is because, if you think about it, then all of these four ways of writing code actually makes the code more declarative.
 - So, these operators are more about telling the code what to do and not exactly the steps that it should take.
 - Let's now continue fixing some bad code in our clean.js file in the next lesson by implementing some of the things that we learned in this lesson.
+
+### Let's Fix Some Bad Code: Part 02
+
+- `Object.freeze()`
+  - This static method freezes an object. Freezing an object prevents extensions and makes existing porperties non-writable and non-configurable.
+  - A frozen object can no longer be changed:
+    - New properties cannot be added
+    - Existing properties cannot be removed
+    - Their enimerability, configurability, writability, or value cannot be changed
+    - Object's prototype cannot be re-assigned.
+  - It returns the same object that was passed in.
+  - Freezing an object is the highest integrity level that JS provides.
+  - Syntax: `Object.freeze(obj)`
+
+> [!NOTE]
+>
+> `Object.freeze()` only freezes the first level of the object. So, it is not a deep freeze.
+>
+> Therefore, you can still change objects inside of the object.
+>
+> There are third-party libraries that provide functions for deep-freeze, you can look it up online.
+
+> [!TIP]
+>
+> `Object.freeze()` also works with arrays since array are a type of object in JS.
+
+- A function that has or produces side-effects is called an <ins>impure function</ins>.
 
 ## Author
 
