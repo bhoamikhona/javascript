@@ -12,6 +12,7 @@
       - [Project Planning](#project-planning)
       - [Flowchart - Part 01](#flowchart---part-01)
     - [Loading a Recipe from API](#loading-a-recipe-from-api)
+    - [Rendering the Recipe](#rendering-the-recipe)
   - [Author](#author)
 
 ## Lessons Learned
@@ -102,6 +103,10 @@
 - In this project we are using Sass instead of CSS.
 - Sass is basically a better way of writing CSS. It has some nice additional features, which makes writing CSS in a large scale application a lot easier.
 - Browsers don't actually understand Sass so, it has to be converted to CSS. Parcel will do that for us.
+
+### Rendering the Recipe
+
+- How to work with statics files along with Parcel
 
 ## Author
 
