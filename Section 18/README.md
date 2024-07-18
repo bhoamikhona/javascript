@@ -13,6 +13,7 @@
       - [Flowchart - Part 01](#flowchart---part-01)
     - [Loading a Recipe from API](#loading-a-recipe-from-api)
     - [Rendering the Recipe](#rendering-the-recipe)
+    - [Listening for load and hashchange Events](#listening-for-load-and-hashchange-events)
   - [Author](#author)
 
 ## Lessons Learned
@@ -107,6 +108,12 @@
 ### Rendering the Recipe
 
 - How to work with statics files along with Parcel
+
+### Listening for load and hashchange Events
+
+- Hashes in URL
+- `hashchange` event
+- Getting the current hash in the URL: `window.location.hash`
 
 ## Author
 
