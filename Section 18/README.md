@@ -14,6 +14,8 @@
     - [Loading a Recipe from API](#loading-a-recipe-from-api)
     - [Rendering the Recipe](#rendering-the-recipe)
     - [Listening for load and hashchange Events](#listening-for-load-and-hashchange-events)
+    - [The MVC Architecture](#the-mvc-architecture)
+      - [The Model-View-Controller (MVC) Architecture](#the-model-view-controller-mvc-architecture)
   - [Author](#author)
 
 ## Lessons Learned
@@ -114,6 +116,141 @@
 - Hashes in URL
 - `hashchange` event
 - Getting the current hash in the URL: `window.location.hash`
+
+### The MVC Architecture
+
+- We already implemented a part of the Forkify application but at this point, it has not structure whatsoever.
+- So now, it is time to talk about the project architecture, but also about software architecture more in general.
+- We touched on this already in the Mapty application a little bit earlier but in this lesson, let's go a little bit deeper.
+- First of all, why do we even need an architecture when we build software?
+- ![image](https://github.com/user-attachments/assets/fd90a175-0346-4af4-92ec-473681166928)
+- There are actually multiple reasons.
+- Structure
+  - First, the architecture will give our project the structure in which we can then write the code.
+  - So just like a house, software also needs a structure.
+  - In software, structure basically means how we organize and divide code into different modules, classes, and functions.
+  - All these will basically hold our code together and give it structure.
+- Maintainability
+  - The next reason is maintainability.
+  - When we build a project, we always need to think about the future and keep in mind that the project is never really done.
+  - It is never finished.
+  - We will always need to change things in the future and we will need to maintain the project.
+  - And that only works if the project is nicely structured.
+  - Plus, we might even want to add new features to the project, which brings us to expandability.
+- Expandability
+  - Expandability is basically the ability to easily add new features in the future.
+  - Once again, that is only possible with good structure, and a good overall architecture.
+- So, the perfect architecture is basically one that allows for all these three aspects of structure, maintainability, and expandability.
+- Now, in order to achieve that perfect architecture, we can of course create our own architecture from scratch.
+- That's exactly what we did in the Mapty project.
+- However, that only works with a really small project like the Mapty project.
+- But when the project grows more complex, then it is going to be very hard to achieve a good architecture completely on our own.
+- So instead, we can opt for a well established architecture pattern that developers have been using for years, or even for decades.
+- Examples:
+  - Model View Controller (MVC)
+  - Model View Presenter (MVP)
+  - Flux
+  - etc.
+- That is actually what we are going to do in the forkify project, because it is bit more complex than the Mapty project.
+- These days in modern web development, many developers actually use a framework like React, Angular, Vue, or Svelte to take care of the architecture for them.
+- So in this case, developers don't have to think a lot about architectures on their own.
+- And probably this is actually a good idea at a certain point, especially for large scale applications.
+- However, (and this is key) as mentioned many times before, it is very important that you really know JavaScript, before switching to some of these frameworks.
+- That includes knowing how to implement an architecture by yourself.
+- That's what we will learn in this project among many other things.
+- This will make learning React, Vue, etc. learning so much easier, later down the road.
+- Regardless of where the architecture comes from and who develops it, there are some components that any architecture must have; and that is business logic, state, an HTTP library, application logic, and presentation logic.
+  - ![image](https://github.com/user-attachments/assets/9ac8d489-34ba-4788-8b60-1450d5ce9e4f)
+  - Business Logic
+    - Business logic is basically all the code that solves the actual business problem i.e. that's the code that is directly related to what the business does and what it needs.
+    - If your business is What's App then your business logic will include sending messages.
+    - If your business is a bank, then one of the many parts of business logic will be to store transactions.
+    - If your business is a budget manager, then your business will certainly include calculating taxes.
+    - Essentially, business logic is the logic that is really related to solve the problem that the business set out to solve in the first place.
+  - State
+    - Next is state which is one of the most important aspects of any web application.
+    - So, the application state is essentially what stores all the data about the application that is running in the browser.
+    - The data about application's frontend basically.
+    - The state should store any data that you might fetch from an API or data that the user inputs, or what page the user is currently viewing and so on.
+    - This data should be the so called <ins>single source of truth</ins>, which should be kept in sync with the user interface.
+    - This means that if some data changes in the state, then the user interface should reflect that.
+    - The same is true the other way around.
+    - So, if something changes in the UI, the state should also change.
+    - Storing and displaying data and keeping everything in sync is one of the most difficult tasks when building web applications.
+    - That's why there are many state management libraries like Redux or MobX.
+    - But in this project, we will keep things very simple and use a simple object to store our entire state.
+  - HTTP Library
+    - Next, the HTTP library is simply responsible for making an receiving AJAX requests.
+    - We have been doing that using the `fetch()` function and so that's what we will keep doing here.
+    - Most real world applications need some interaction with the web. So, that's why this is an aspect to keep in mind.
+  - Application Logic (Router)
+    - About the application logic, this is the code that is only concerned about the implementation of the application itself.
+    - So, it's more the technical aspects of the application, which are not directly related to the underlying business problem.
+    - For example, application logic includes handling of UI events and navigation on the page.
+    - That's the reason why this component is many times also called a router; basically, mapping actions to the users' navigation.
+  - Presentation Logic (UI Layer)
+    - Finally, the presentation logic, which is also called the UI layer, is of course all about the visible part of the application.
+    - Essentially, we can say that the presentation logic is responsible for displaying the application state on the user interface, in order to keep everything in sync.
+- Any good architecture has a way of separating all these components, instead of mixing everything together in one big file, in one big mess.
+- So, let's now take a look at a well established architecture pattern that we are going to use in this project.
+- That is the Model View Controller (MVC) architecture.
+
+#### The Model-View-Controller (MVC) Architecture
+
+- ![image](https://github.com/user-attachments/assets/ac1a0926-4f13-4b68-ace1-67868f5b66bb)
+- This architecture contains three big parts viz model, view, and controller.
+- The view is of course, for the presentation logic. So, it is the part of the application that is interacting with the user.
+- The model is all about the applications data. So, that's why it usually contains the state and also the business logic that manipulates the state.
+- So, these two should be kept closely together.
+- The model is also what contains the HTTP library that might get some data from the web, for example, from an API or backend.
+- This is of course, also about the data. So, it also goes into the model.
+- Finally, the controller is what contains the application logic; and it kind of sits between the model and the view.
+- So, it basically creates a bridge between the model and the view, which in fact, should know nothing about each other.
+- Again, the model and the view will exist completely independent from one another, and not even knowing that the other one exsits.
+- In fact, one of the big goals of the MVC pattern is to actually separate business logic from application logic, which makes developing the application so much easier.
+- But as a consequence, we then need something to connect these two parts - which is the controller.
+- Now let's look at a typical flow of actions and of data as soon as some event happens on the user interface, for example a click.
+- To start, it is going to be the controller who will handle that event, because handling an event is doing something in the application; and that is clearly part of the application logic.
+- Now, this handling might involve updating the user interface and also ask the model for some data.
+- So, we can say that the controller dispatches tasks to model and to the view.
+- In other words, it controls and orchestrates this entire action; in fact, the whole application itself.
+- Asking the model for some data might, of course involve doing an AJAX request to the web. So, that's exactly what the model does.
+- Then when the data arrives, the controller takes the data and sends it to the view.
+- Finally, to finish, the view will render that data to the user interface, and finish this whole cycle.
+- In the diagram above, you see two types of arrows.
+- The dotted arrows represent data flow between different parts, while the solid arrows represent actual function calls and module imports.
+- So analyzing this, we can see that it is only the controller who imports and calls functions from the model, and from the view, but never the other way around.
+- So, as we mentioned before, the model and the view are in fact completely standalone and completely isolated i.e. they don't import each other, and they don't even import the controller.
+- In fact, they don't even know that the controller exists.
+- All they do is to basically just sit there waiting to get some instructions from the controller.
+- This part is pretty important to understand so, take some time to really analyze this.
+- There are actually different ways of implementing the MVC pattern, where some are more complex than others.
+- But this one is a the most popular way of doing it because, it makes the most sense.
+- Anyway, let's now see this MVC architecture applied to the part of the Forkify application that we already implemented.
+- ![image](https://github.com/user-attachments/assets/6e508d2b-5378-4f4a-8cfb-58a3f3b3ae86)
+- This is a flowchart of loading and rendering a recipe, that we already implemented.
+- Below that, there is also a reminder of the MVC diagram that we just analyzed.
+- So, in this flowchart, handling these events is associated to the controller.
+- Then loading the recipe happens in the model i.e. the controller basically calls some function that is in the mode.
+- Then the model asynchronously gets the recipe data from the API.
+- Once that data has arrived, the controller asks for that data, receives it, sends it to the view, which will then ultimately render the recipe on the screen.
+- That's it.
+- That's what every step of the flowchart is associated to in the MVC architecture.
+- But this is still quite abstract because, the flowchart is simply what we will implement, and not how we will do that.
+- So, let's go even deeper, and actually take a look at a detailed implementation diagram of our MVC architecture. Again, this is only about loading and rendering a recipe.
+- ![image](https://github.com/user-attachments/assets/f1d0c2e2-24a0-48c8-90b4-1beec009fd71)
+- Let's start by noticing how both the model and controller are implemented in a module, while the recipe view is actually a class.
+- We will explore the reasons for this when we actually write the code.
+- But now, ;et's just analyze the same data and actions flow, but this time, in this real implementation.
+- When the user clicks on a search result, there is `controlRecipes()` function in the controller and this is the one that will handle that event.
+- How exactly that happens doesn't matter for now. We will come back to it later.
+- What matters is that this controller will instruct the recipe view to render a loading spinner while the UI waits for the data to arrive.
+- In the meantime, the controller also called the `loadRecipe()` function in the model to fetch the recipe data from the Forkify API.
+- The model also contains a big state object that we export from the model.
+- This state will contain all sorts of data, like the current recipe, search results, bookmarks, etc.
+- Anyway, as the data arrives, it will be stored in the state object; and the controller then reaches into the state object, grabs the recipe data, and finally calls the render method on the recipe view with that data in order to finally render the recipe to the user interface.
+- Basically, the exact same steps as before, but this time actually implemented in our code (atleast in theory).
+- Next up, let's actually go from theory to practice and implement this architecture in our code.
 
 ## Author
 
