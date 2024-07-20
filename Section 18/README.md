@@ -19,6 +19,7 @@
     - [Refactoring for MVC](#refactoring-for-mvc)
     - [Helpers and Configuration Files](#helpers-and-configuration-files)
     - [Event Handlers in MVC: Publisher-Subscriber Pattern](#event-handlers-in-mvc-publisher-subscriber-pattern)
+    - [Implementing Error and Success Messages](#implementing-error-and-success-messages)
   - [Author](#author)
 
 ## Lessons Learned
@@ -360,6 +361,8 @@ controlRecipes();
 - So it simply has to execute whatever function it receives.
 - If you want, reflect a little bit on that and see that this is exactly what the Publisher-Subscriber Pattern in actually all about.
 - Anyway, leaving that theory aside, let's go back to the code and implement what we just learned.
+
+### Implementing Error and Success Messages
 
 ## Author
 
