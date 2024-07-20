@@ -20,6 +20,7 @@
     - [Helpers and Configuration Files](#helpers-and-configuration-files)
     - [Event Handlers in MVC: Publisher-Subscriber Pattern](#event-handlers-in-mvc-publisher-subscriber-pattern)
     - [Implementing Error and Success Messages](#implementing-error-and-success-messages)
+    - [Implementing Search Results - Part 01](#implementing-search-results---part-01)
   - [Author](#author)
 
 ## Lessons Learned
@@ -363,6 +364,8 @@ controlRecipes();
 - Anyway, leaving that theory aside, let's go back to the code and implement what we just learned.
 
 ### Implementing Error and Success Messages
+
+### Implementing Search Results - Part 01
 
 ## Author
 
