@@ -17,6 +17,7 @@
     - [The MVC Architecture](#the-mvc-architecture)
       - [The Model-View-Controller (MVC) Architecture](#the-model-view-controller-mvc-architecture)
     - [Refactoring for MVC](#refactoring-for-mvc)
+    - [Helpers and Configuration Files](#helpers-and-configuration-files)
   - [Author](#author)
 
 ## Lessons Learned
@@ -254,6 +255,8 @@
 - Next up, let's actually go from theory to practice and implement this architecture in our code.
 
 ### Refactoring for MVC
+
+### Helpers and Configuration Files
 
 ## Author
 
