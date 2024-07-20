@@ -16,6 +16,7 @@
     - [Listening for load and hashchange Events](#listening-for-load-and-hashchange-events)
     - [The MVC Architecture](#the-mvc-architecture)
       - [The Model-View-Controller (MVC) Architecture](#the-model-view-controller-mvc-architecture)
+    - [Refactoring for MVC](#refactoring-for-mvc)
   - [Author](#author)
 
 ## Lessons Learned
@@ -251,6 +252,8 @@
 - Anyway, as the data arrives, it will be stored in the state object; and the controller then reaches into the state object, grabs the recipe data, and finally calls the render method on the recipe view with that data in order to finally render the recipe to the user interface.
 - Basically, the exact same steps as before, but this time actually implemented in our code (atleast in theory).
 - Next up, let's actually go from theory to practice and implement this architecture in our code.
+
+### Refactoring for MVC
 
 ## Author
 
