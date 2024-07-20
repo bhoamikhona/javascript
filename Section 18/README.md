@@ -18,6 +18,7 @@
       - [The Model-View-Controller (MVC) Architecture](#the-model-view-controller-mvc-architecture)
     - [Refactoring for MVC](#refactoring-for-mvc)
     - [Helpers and Configuration Files](#helpers-and-configuration-files)
+    - [Event Handlers in MVC: Publisher-Subscriber Pattern](#event-handlers-in-mvc-publisher-subscriber-pattern)
   - [Author](#author)
 
 ## Lessons Learned
@@ -257,6 +258,108 @@
 ### Refactoring for MVC
 
 ### Helpers and Configuration Files
+
+### Event Handlers in MVC: Publisher-Subscriber Pattern
+
+- Let's now learn how we can listen for events and also handle events in our MVC architecture by using something called the <ins>Published-Subscriber Pattern</ins>.
+- Let's start by analyzing the code that we already have.
+
+```javascript
+/***** controller.js *****/
+
+// event controller
+const controlRecipes = async function () {
+  try {
+    const id = window.location.hash.slice(1);
+    console.log(id);
+
+    if (!id) return;
+    recipeView.renderSpinner();
+
+    // 1) Loading recipe
+    await model.loadRecipe(id);
+
+    // 2) Rendering recipe
+    recipeView.render(model.state.recipe);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+controlRecipes();
+
+// event listener
+['hashchange', 'load'].forEach(ev =>
+  window.addEventListener(ev, controlRecipes)
+);
+```
+
+- Right now we are listening for the `hashchange` and `load` event in the controller.
+- However, that doesn't make a lot of sense.
+- This is because everything that is related to the DOM i.e. the view, should really be inside of a view.
+- Maybe the two events `hashchange` and `view` don't really look like they belong to a view but, imagine that we were handling a `click` event on a button instead.
+- So, listening for that event for sure should go into the view.
+- Therefore, we can say the same about the `hashchange` and `load` events.
+- In this end, it has more to do with DOM manipulation or with the DOM itself than with the controller.
+- Therefore, we need a way of putting this logic in the recipe view:
+
+```javascript
+// event listener
+['hashchange', 'load'].forEach(ev =>
+  window.addEventListener(ev, controlRecipes)
+);
+```
+
+- However, the handler function that we use to handle the `hashchange` and `load` events is actually the controller `controlRecipes()`
+- So, it is the function that is sitting inside the controller.js module.
+- Therefore, we have a problem.
+- We don't want the event listeners to be in the controller - we want them to be in the view.
+- But the event controllers that we use for those event listeners are in the controller - and we want that function to stay there.
+- So, let's now think about how we could solve this problem.
+- ![image](https://github.com/user-attachments/assets/ab7c5420-265c-44ab-8450-880c941e7c60)
+- To re-cap, we want to handle events in the controller because otherwise, we would have the application logic in the view and we don't want that.
+- But on the other hand, we want to listen for events in the view, because otherwise, we would have DOM elements in the controller i.e. we would have presentation logic in a controller which would be wrong in our MVC implementation.
+- Essnetially, event listeners should be attached to DOM elements in the view, but the events should then be handled by controller functions that live in the controller module.
+- So, if you take a look at the diagram in the image above, that is just a part of the architecture diagram that we saw before.
+- In the diagram we have the `controlRecipes()` function in the controller, and we have a special method in the view, which is called `addHandlerRender()`.
+- We might think that it is very easy to connect these two functions because, why not simple call the `controlRecipes()` function right fromt he view whenever an event occurs?
+- That's actually not possible because in the way we set up the architecture, the view does not know anything about the controller.
+- So, it doesn't import the controller, and so we cannot call any of the functions that are in the controller from the view.
+- So, it only works the other way around and therefore it is more complex than this.
+- Fortunately, there is a good solution and this solution is called the Publisher-Subscriber Design Pattern.
+
+> [!NOTE]
+>
+> Design Patterns in Programming are basically just standard solutions to certain kinds of problems.
+
+- In the publisher subscriber pattern we have a publisher which is some code that know when to react.
+- In this case, that's going to be the `addHandlerRender()` function because it will contain the `addEventListener()` method.
+- Therefore, it will know when to react to the event.
+- On the other hand, we have a subscriber which is code that actually wants to react.
+- So, this is the code that should actually be executed when the event happens.
+- In this case, that is the `controlRecipes()` function that we already have in our controller.
+- Remember that the publisher does not know yet that the subscriber even exists because that subscriber is in the controller that the view cannot access.
+- Finally, now comes the solution.
+- The solution is that we can now subscribe to the publisher by passing into subscriber function as an argument.
+- In practice, this means that as soon as the program loads, the `init()` function in controller.js is called which in turn immediately calls the `addHandlerRender()` function from the view.
+- This is possible because the controller does in fact import both the view and the model.
+- As we call `addHanlderRender()` function, we pass in our `controlRecipes()` function as an argument.
+- Essentially, we subscribe `controlRecipes()` to `addHandlerRender()`.
+- So, at this point, the two functions are basically finally connected.
+- Now the `addHandlerRender()` listens for events using the `addEventListener()` method as always.
+- Then, as soon as the event actually happens, the `controlRecipes()` function will be called as the callback function of `addEventListener()`.
+- In other words, as soon as the publisher publishes an event, the subscribe will get called.
+- This is how we implement event listeners and event handlers in the MVC architecture.
+- This will allow us to keep the handler in the controller and the listener in the view.
+- By that, keeping everything nicely separated.
+- In summary, the handler subscribes to the publisher, which is the listener in this case, and then the publisher publishes an event, the subscriber is executed.
+- If you want to think even deeper about this and are really interested in this, then notice how there is actually a profound difference between a certain arbitrary like function A simply calling function B directly & function A receiving function B as an input in order to then call the input function.
+- So, this is all about control..
+- In the first scenario, function A is in control.
+- However, in the second scenario function A has no control.
+- So it simply has to execute whatever function it receives.
+- If you want, reflect a little bit on that and see that this is exactly what the Publisher-Subscriber Pattern in actually all about.
+- Anyway, leaving that theory aside, let's go back to the code and implement what we just learned.
 
 ## Author
 
