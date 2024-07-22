@@ -24,6 +24,8 @@
     - [Implementing Error and Success Messages](#implementing-error-and-success-messages)
     - [Implementing Search Results - Part 01](#implementing-search-results---part-01)
     - [Implementing Search Results - Part 02](#implementing-search-results---part-02)
+    - [Implementing Pagination - Part 01](#implementing-pagination---part-01)
+    - [Implementing Pagination - Part 02](#implementing-pagination---part-02)
   - [Author](#author)
 
 ## Lessons Learned
@@ -393,6 +395,10 @@ controlRecipes();
 ### Implementing Search Results - Part 01
 
 ### Implementing Search Results - Part 02
+
+### Implementing Pagination - Part 01
+
+### Implementing Pagination - Part 02
 
 ## Author
 
