@@ -18,9 +18,12 @@
       - [The Model-View-Controller (MVC) Architecture](#the-model-view-controller-mvc-architecture)
     - [Refactoring for MVC](#refactoring-for-mvc)
     - [Helpers and Configuration Files](#helpers-and-configuration-files)
+      - [Configuration File](#configuration-file)
+      - [Helper File](#helper-file)
     - [Event Handlers in MVC: Publisher-Subscriber Pattern](#event-handlers-in-mvc-publisher-subscriber-pattern)
     - [Implementing Error and Success Messages](#implementing-error-and-success-messages)
     - [Implementing Search Results - Part 01](#implementing-search-results---part-01)
+    - [Implementing Search Results - Part 02](#implementing-search-results---part-02)
   - [Author](#author)
 
 ## Lessons Learned
@@ -261,6 +264,28 @@
 
 ### Helpers and Configuration Files
 
+- Many real world applications have two special modules that are completely independent of the rest of the architecture.
+- These are a module for the project configuration and also a module for some general helper functions that are going to be useful across the entire project.
+- So, let's now implement these modules in our own project.
+
+#### Configuration File
+
+- Let's start with the configuration module i.e. `config.js`.
+- In `config.js` module, we will basically put all the variables that should be constants and should be re-used across the project.
+- The goal of having this file with all these variables is that it will allow us to easily configure our project by simply changing some of the data that is in the config file, hence the name config.
+- Of course, we will not want to put all the variables in this file. The only variables that we do want in the config file are the ones that are responsible for kind of defining some important data about the application itself.
+- One example of that is the API URL.
+- Since we are fetching data from an API, we will use its URL in multiple paces across the project.
+- But then imagine that at some point, the URL needs to change because there were some changes made to the API and it went from version 2 to version 3.
+- So, as always, we don't want to change it everywhere and simply have a variable which contains the base URL which we can re-use.
+
+#### Helper File
+
+- It is usually called `helpers.js`.
+- The goal of this file/module is to contain a couple of functions that we re-use over and over in our project.
+- So then, in this module, we then have a central place for all of them.
+- One great candidate to be in this module is to create a `getJSON()` function. Basicall, a function which will get JSON.
+
 ### Event Handlers in MVC: Publisher-Subscriber Pattern
 
 - Let's now learn how we can listen for events and also handle events in our MVC architecture by using something called the <ins>Published-Subscriber Pattern</ins>.
@@ -366,6 +391,8 @@ controlRecipes();
 ### Implementing Error and Success Messages
 
 ### Implementing Search Results - Part 01
+
+### Implementing Search Results - Part 02
 
 ## Author
 
