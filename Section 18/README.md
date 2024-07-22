@@ -26,6 +26,7 @@
     - [Implementing Search Results - Part 02](#implementing-search-results---part-02)
     - [Implementing Pagination - Part 01](#implementing-pagination---part-01)
     - [Implementing Pagination - Part 02](#implementing-pagination---part-02)
+    - [Project Planning - Part 02](#project-planning---part-02)
   - [Author](#author)
 
 ## Lessons Learned
@@ -399,6 +400,33 @@ controlRecipes();
 ### Implementing Pagination - Part 01
 
 ### Implementing Pagination - Part 02
+
+### Project Planning - Part 02
+
+- We have been making a lot of progress in building our application.
+- We can actually say already that the core functionality of the app is in fact already working.
+- So now, let's take a breath and think a little bit about our next step in this short lesson.
+- These are our core functionalities:
+  - Search functionality - API search request
+  - Results with pagination
+  - Display recipe
+- All of these we already have working at this point.
+- But now let's take it to the next level and think a little bit about how we will implement our next features.
+- ![24d0273b-81d6-4714-b58a-867ed46ec8db](https://github.com/user-attachments/assets/b2e80737-8f2e-48e3-995c-ab514c450160)
+- Based on the user stories that we outlines in the beginning of this project, our next feature was a functionality for changing the servings of the displayed recipe.
+- That's going to be quite easy.
+- All we have to do is to listen and handle events on the change servings buttons and then basically update the recipe and render it again.
+- Then, the next feature is the bookmarking functionality.
+- This is going to be yet another one that will be a little bit complex to implement.
+- Starting the the event, whenever the user bookmarks a certain recipe then we want to render that bookmark in the special bookmark in the special bookmarks panel, and we also want to update the button in the recipe.
+- Basically, we will then re-render the recipe.
+- Then whenever the user clicks on one of the bookmarks, then we want to render exactly the that recipe, on which the user clicked.
+- So here we will need two events and by the time we reach this functionality, we will see in more details - how it is going to work.
+- Next up, we want to be able to store this personalized bookmark data in the browser and also read it back when the page is loaded for the next time.
+- So whenever there is a new bookmark, we basically store all the bookmarks to local storage; and then when the page loads, we load all the bookmarks back from the local storage and render them.
+- That's it. That's what we will do over the next couple of lessons.
+- Once we are done with that, the application will actually be almost finished.
+- Let's now go back to code and implement the functionality of changing the servings right in the next lesson.
 
 ## Author
 
