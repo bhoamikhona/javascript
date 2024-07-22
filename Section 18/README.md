@@ -27,6 +27,7 @@
     - [Implementing Pagination - Part 01](#implementing-pagination---part-01)
     - [Implementing Pagination - Part 02](#implementing-pagination---part-02)
     - [Project Planning - Part 02](#project-planning---part-02)
+    - [Updating Recipe Servings](#updating-recipe-servings)
   - [Author](#author)
 
 ## Lessons Learned
@@ -427,6 +428,8 @@ controlRecipes();
 - That's it. That's what we will do over the next couple of lessons.
 - Once we are done with that, the application will actually be almost finished.
 - Let's now go back to code and implement the functionality of changing the servings right in the next lesson.
+
+### Updating Recipe Servings
 
 ## Author
 
