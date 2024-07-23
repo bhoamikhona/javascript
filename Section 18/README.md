@@ -28,6 +28,7 @@
     - [Implementing Pagination - Part 02](#implementing-pagination---part-02)
     - [Project Planning - Part 02](#project-planning---part-02)
     - [Updating Recipe Servings](#updating-recipe-servings)
+    - [Developing a DOM Updating Algorithm](#developing-a-dom-updating-algorithm)
   - [Author](#author)
 
 ## Lessons Learned
@@ -430,6 +431,33 @@ controlRecipes();
 - Let's now go back to code and implement the functionality of changing the servings right in the next lesson.
 
 ### Updating Recipe Servings
+
+### Developing a DOM Updating Algorithm
+
+- `createRange()`
+  - The `Document.createRange()` method returns a new `Range` object. It takes no parameters.
+- `createContextualFragment()`
+  - The `Range.createContextualFragment()` method returns a `DocumentFragment` by invoking the HTML fragment parsing algorithm or the XML fragment parsing algorithm with the start of the range (the parent of the selected node) as the context node. The HTML fragment parsing algorithm is used if the range belongs to a `Document` whose HTMLness bit is set. In the HTML case, if the context node would be `html`, for historical reasons the fragment parsing algorithm is invoked with `body` as the context instead.
+  - Parameters
+    - `tagString`
+      - Text that contains text and tags to be converted to a document fragment.
+  - Return Value
+    - A `DocumentFragment` object.
+- `isEqualNode()`
+  - The `isEqualNode()` method of the `Node` interface tests whether two nodes are equal. Two nodes are equal when they have the same type, defining characteristics (for elements, this would be their ID, number of children, and so forth), its attributes match, and so on. The specific set of data points that must match varies depending on the types of the nodes.
+  - Parameters
+    - `otherNode`
+      - The `Node` to compare equality with.
+  - Return Value
+    - A boolean value that is `true` if the two nodes are equals, or `false` if not.
+    - If `otherNode` is `null`, `isEqualNode()` always returns `false`.
+- `nodeValue` property
+  - The `nodeValue` property of the `Node` interface returns or sets the value of the current node.
+  - A string containing the value of the currentNode, if any. For the document itself, `nodeValue` returns `null`. For text, comment, and CDATA nodes, `nodeValue` returns the content of the node. For attribute nodes, the value of the attribute is returned.
+- `attributes` property
+  - The `Element.attributes` property returns a live collection of all attribute nodes registered to the specified node.
+  - It is a `NamedNodeMap`, not an `Array`, so it has no `Array` methods and the `Attr` nodes' indexes may differ among browsers.
+  - To be more specific, `attributes` is a kye/value pair of strings that represents any information regarding that attribute.
 
 ## Author
 
