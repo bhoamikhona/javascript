@@ -30,6 +30,7 @@
     - [Updating Recipe Servings](#updating-recipe-servings)
     - [Developing a DOM Updating Algorithm](#developing-a-dom-updating-algorithm)
     - [Implementing Bookmarks - Part 01](#implementing-bookmarks---part-01)
+    - [Implementing Bookmarks - Part 02](#implementing-bookmarks---part-02)
   - [Author](#author)
 
 ## Lessons Learned
@@ -461,6 +462,8 @@ controlRecipes();
   - To be more specific, `attributes` is a kye/value pair of strings that represents any information regarding that attribute.
 
 ### Implementing Bookmarks - Part 01
+
+### Implementing Bookmarks - Part 02
 
 ## Author
 
