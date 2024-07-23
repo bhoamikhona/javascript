@@ -32,6 +32,7 @@
     - [Implementing Bookmarks - Part 01](#implementing-bookmarks---part-01)
     - [Implementing Bookmarks - Part 02](#implementing-bookmarks---part-02)
     - [Storing Bookmarks with Local Storage](#storing-bookmarks-with-local-storage)
+    - [Project Planning - Part 03](#project-planning---part-03)
   - [Author](#author)
 
 ## Lessons Learned
@@ -467,6 +468,17 @@ controlRecipes();
 ### Implementing Bookmarks - Part 02
 
 ### Storing Bookmarks with Local Storage
+
+### Project Planning - Part 03
+
+- Let's now take a breath and take a minute to discuss our next step in implementing this project.
+- ![abd828c9-f5c1-468a-9579-f0dc113602d0](https://github.com/user-attachments/assets/5c61fb64-9660-4cb5-9461-b0e490850455)
+- At this point, we have implemented all the features from 1 to 7, and now all that is left to do is steps 8, 9, and 10 - which are all about the user being able to upload their own recipes.
+- So, whenever the user clicks the add recipe button in the menu bar, we want to display a recipe editor.
+- This recipe editor is like a modal window which will pop up and it contains a form.
+- On that form we will have to bind an event handler so that when the user submits that form i.e. creates a new recipe then we want to asynchronously upload that recipe to the API, render that recipe and also add it the user's bookmarks.
+- Finally, all this is going to be set up in a way that only the user that uploaded the recipe will be able to see that recipe; and as mentioned before, we are going to implement this by using an API developer key.
+- These are the last steps that we need to take in order to finish our application. So, let's start by doing that in the next lesson - starting with the simple functionality of displaying the window, when the user clicks add recipe button.
 
 ## Author
 
