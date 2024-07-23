@@ -31,6 +31,7 @@
     - [Developing a DOM Updating Algorithm](#developing-a-dom-updating-algorithm)
     - [Implementing Bookmarks - Part 01](#implementing-bookmarks---part-01)
     - [Implementing Bookmarks - Part 02](#implementing-bookmarks---part-02)
+    - [Storing Bookmarks with Local Storage](#storing-bookmarks-with-local-storage)
   - [Author](#author)
 
 ## Lessons Learned
@@ -464,6 +465,8 @@ controlRecipes();
 ### Implementing Bookmarks - Part 01
 
 ### Implementing Bookmarks - Part 02
+
+### Storing Bookmarks with Local Storage
 
 ## Author
 
