@@ -29,6 +29,7 @@
     - [Project Planning - Part 02](#project-planning---part-02)
     - [Updating Recipe Servings](#updating-recipe-servings)
     - [Developing a DOM Updating Algorithm](#developing-a-dom-updating-algorithm)
+    - [Implementing Bookmarks - Part 01](#implementing-bookmarks---part-01)
   - [Author](#author)
 
 ## Lessons Learned
@@ -458,6 +459,8 @@ controlRecipes();
   - The `Element.attributes` property returns a live collection of all attribute nodes registered to the specified node.
   - It is a `NamedNodeMap`, not an `Array`, so it has no `Array` methods and the `Attr` nodes' indexes may differ among browsers.
   - To be more specific, `attributes` is a kye/value pair of strings that represents any information regarding that attribute.
+
+### Implementing Bookmarks - Part 01
 
 ## Author
 
