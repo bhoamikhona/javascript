@@ -33,6 +33,7 @@
     - [Implementing Bookmarks - Part 02](#implementing-bookmarks---part-02)
     - [Storing Bookmarks with Local Storage](#storing-bookmarks-with-local-storage)
     - [Project Planning - Part 03](#project-planning---part-03)
+    - [Uploading a New Recipe - Part 01](#uploading-a-new-recipe---part-01)
   - [Author](#author)
 
 ## Lessons Learned
@@ -479,6 +480,25 @@ controlRecipes();
 - On that form we will have to bind an event handler so that when the user submits that form i.e. creates a new recipe then we want to asynchronously upload that recipe to the API, render that recipe and also add it the user's bookmarks.
 - Finally, all this is going to be set up in a way that only the user that uploaded the recipe will be able to see that recipe; and as mentioned before, we are going to implement this by using an API developer key.
 - These are the last steps that we need to take in order to finish our application. So, let's start by doing that in the next lesson - starting with the simple functionality of displaying the window, when the user clicks add recipe button.
+
+### Uploading a New Recipe - Part 01
+
+- `FormData`
+  - The `FormData` interface provides a way to construct a set of key/value pairs representing form fields and their values, which can be sent using the `fetch()`, `XMLHttpRequest.send()`, or `navigator.sendBeacon()` methods.
+  - It uses the same format a form would if the encoding type were set to `"multipart/form-data"`.
+  - You can also pass it directly to the `URLSearchParams` constructor if you want to generate query parameters in the way a `<form>` would do it if it were using simple `GET` submission.
+  - An object implementin `FormData` can directly be used in a `for...of` structure, instead of `entries()`.
+  - `FormData()` creates a new `FormData` object.
+- `Object.fromEntries()`
+  - This static method transforms a list of key-value pairs into an object.
+  - Parameters:
+    - `iterable`
+      - An iterable, such as an Array or Map, containing a lsit of objects. Each object should have two properties:
+        - A string or symbol representing the property key
+        - The property value
+      - Typically, this object is implemented as a two-element array, with the first element being the property key and the second element being the property value.
+  - Return value:
+    - A new object whose properties are given by the entries of the iterable.
 
 ## Author
 
