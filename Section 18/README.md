@@ -34,6 +34,7 @@
     - [Storing Bookmarks with Local Storage](#storing-bookmarks-with-local-storage)
     - [Project Planning - Part 03](#project-planning---part-03)
     - [Uploading a New Recipe - Part 01](#uploading-a-new-recipe---part-01)
+    - [Uploading a New Recipe - Part 02](#uploading-a-new-recipe---part-02)
   - [Author](#author)
 
 ## Lessons Learned
@@ -499,6 +500,8 @@ controlRecipes();
       - Typically, this object is implemented as a two-element array, with the first element being the property key and the second element being the property value.
   - Return value:
     - A new object whose properties are given by the entries of the iterable.
+
+### Uploading a New Recipe - Part 02
 
 ## Author
 
