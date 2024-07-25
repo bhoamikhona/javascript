@@ -35,6 +35,7 @@
     - [Project Planning - Part 03](#project-planning---part-03)
     - [Uploading a New Recipe - Part 01](#uploading-a-new-recipe---part-01)
     - [Uploading a New Recipe - Part 02](#uploading-a-new-recipe---part-02)
+    - [Uploading a New Recipe - Part 03](#uploading-a-new-recipe---part-03)
   - [Author](#author)
 
 ## Lessons Learned
@@ -502,6 +503,35 @@ controlRecipes();
     - A new object whose properties are given by the entries of the iterable.
 
 ### Uploading a New Recipe - Part 02
+
+### Uploading a New Recipe - Part 03
+
+- `window.history` property
+  - This read-only property returns a reference to the `History` object, which provides an interface for manipulating the browser session history (pages visited in tha tab or frame that the current page is loaded in).
+- `pushState()`
+  - This method of the `History` interface adds an entry to the browser's session history stack.
+  - Syntax: `pushState(state, unused, url)`
+  - Parameters:
+    - `state`
+      - The `state` object is a JS object which is associated with the new history entry created by `pushState()`.
+      - Whenever the user navigates to the new `state`, a `popstate` event is fired, and the `state` property of the event contains a copy of the history entry's `state` object.
+      - The `state` object can be anything that can be serialized.
+    - `unused`
+      - This parameter exists for historical reasons, and cannot be omitted; passing an empty string is safe against future changes to the method.
+    - `url` (optional)
+      - The new history entry's URL.
+      - Note that the borwser won't attempty to load this URL after a call to `pushState()`, but it may attempt to load the URL later, for instance, after the user restarts the browser.
+      - The new URL does not need to be absolute; if it is relative, it is resolved relative to the current URL.
+      - The new URL must be of the same origin as the current URL; otherwise `pushState()` will throw an exception.
+      - If this parameter isn't specified, it is set to the document's current URL.
+  - Returning Value
+    - None
+- `back()`
+  - The `back()` method of the `History` interface causes the browser to move back one page in the session history.
+  - It has the same effect as calling `history.go(-1)`. If there is no previous page, this method call does nothing.
+  - It is asynchronous. Add a listener for the `popstate` event in order to determine when the navigation has completed.
+  - No parameters
+  - No return values
 
 ## Author
 
