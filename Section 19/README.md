@@ -10,6 +10,7 @@
     - [Simple Deployment with Netlify](#simple-deployment-with-netlify)
     - [Setting Up Git and GitHub](#setting-up-git-and-github)
     - [Git Fundamentals](#git-fundamentals)
+    - [Pushing to GitHub](#pushing-to-github)
   - [Author](#author)
 
 ## Lessons Learned
@@ -80,6 +81,16 @@
 > Use the Git Cheat Sheet. You can find it right here:
 >
 > [git-cheat-sheet.pdf](https://github.com/user-attachments/files/16383761/git-cheat-sheet.pdf)
+
+### Pushing to GitHub
+
+- Creating a new repo on GitHub
+- Connecting local repo with the one on GitHub
+- `git push origin branchName`
+- README.md file
+- `touch fileName`
+- Markdown
+-
 
 ## Author
 
