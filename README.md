@@ -22,6 +22,7 @@
 - [Section 16](./Section%2016): Asynchronous JavaScript - Promises, Async/Await, and AJAX
 - [Section 17](./Section%2017): Modern JavaScript Development: Modules, Tooling, and Functional
 - [Section 18](./Section%2018): Forkify App - Building a Modern Application
+- [Section 19](./Section%2019): Setting Up Git and Deployment
 
 ## Projects
 
