@@ -8,6 +8,7 @@
   - [Table of Content](#table-of-content)
   - [Lessons Learned](#lessons-learned)
     - [Simple Deployment with Netlify](#simple-deployment-with-netlify)
+    - [Setting Up Git and GitHub](#setting-up-git-and-github)
   - [Author](#author)
 
 ## Lessons Learned
@@ -24,6 +25,18 @@
 - So, netlify is really an amazing service. It is extremely easy to set up and to use. It has a very generous free plan and it contains a lot of great features that you can also use for free.
 - One of these features is called continuous integration with git, which we will use a bit later in the section.
 - Deploying the web app by uploading files on Netlify.
+
+### Setting Up Git and GitHub
+
+- [Git](https://git-scm.com/)
+  - It is a version constrol system i.e. it is a software that runs on your computer and you can basically use Git to save snapshots of your code overtime.
+  - Then if you need, you can go back to an older version of your code if you need to recover some mistake, for example.
+  - This is really just a tip of the iceberg of everything that you can do with Git.
+  - Downloading and Installing Git
+- Repository (Repo)
+- [GitHub](https://github.com/bhoamikhona)
+  - Creating an account and setting it up
+- Configuring Git and GitHub
 
 ## Author
 
