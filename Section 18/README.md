@@ -36,6 +36,9 @@
     - [Uploading a New Recipe - Part 01](#uploading-a-new-recipe---part-01)
     - [Uploading a New Recipe - Part 02](#uploading-a-new-recipe---part-02)
     - [Uploading a New Recipe - Part 03](#uploading-a-new-recipe---part-03)
+    - [Wrapping Up: Final Considerations](#wrapping-up-final-considerations)
+      - [Documentation in JavaScript](#documentation-in-javascript)
+      - [Improvement and Feature Ideas: Challenges](#improvement-and-feature-ideas-challenges)
   - [Author](#author)
 
 ## Lessons Learned
@@ -532,6 +535,49 @@ controlRecipes();
   - It is asynchronous. Add a listener for the `popstate` event in order to determine when the navigation has completed.
   - No parameters
   - No return values
+
+### Wrapping Up: Final Considerations
+
+#### Documentation in JavaScript
+
+- There is a standard way of writing documentations for JavaScript functions and that is called <ins>JSDocs</ins>.
+- To know more about it, you can visit [jsdoc.app](https://jsdoc.app/)
+- What is the advantage of using JSDocs?
+  - The most obvious one is that if you are working with someone else on your project, they can now more easily understand what exactly your function is doing.
+  - This is because it is the standard way of writing it, everyone understands it.
+  - Or at least everyone is familiar with the JSDoc format.
+  - Because, if everyone describes their function in the same way, using this standard, then that becomes really easy for everyone to understand the documentation of each other.
+  - What's also great about this is that JS or VS Code will take this data and then when we hover over the function, it will take that data and give us a nice overview of the function.
+  - The same happens whenever we use the function in some other file and hover over it.
+  - Example:
+
+```javascript
+   /**
+   * Render the received object to the DOM
+   * @param {Object | Object[]} data The data to be rendered (e.g. recipe)
+   * @param {boolean} [render=true] If false, create markup string instead of rendering to the DOM
+   * @returns  {undefined | string} A markup string is returned if render=false
+   * @this {Object} View instance
+   * @author Bhoami K Khona
+   * @todo Finish implementation
+   */
+  render(data, render = true) {
+    if (!data || (Array.isArray(data) && data.length === 0))
+      return this.renderError();
+
+    this._data = data;
+    const markup = this._generateMarkup();
+
+    if (!render) return markup;
+
+    this._clear();
+    this._parentElement.insertAdjacentHTML('afterbegin', markup);
+  }
+```
+
+#### Improvement and Feature Ideas: Challenges
+
+- ![image](https://github.com/user-attachments/assets/c46851d9-133c-434b-bafd-714c0b484085)
 
 ## Author
 
