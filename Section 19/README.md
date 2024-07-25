@@ -11,6 +11,7 @@
     - [Setting Up Git and GitHub](#setting-up-git-and-github)
     - [Git Fundamentals](#git-fundamentals)
     - [Pushing to GitHub](#pushing-to-github)
+    - [Setting Up Continuous Integration with Netlify](#setting-up-continuous-integration-with-netlify)
   - [Author](#author)
 
 ## Lessons Learned
@@ -90,7 +91,8 @@
 - README.md file
 - `touch fileName`
 - Markdown
--
+
+### Setting Up Continuous Integration with Netlify
 
 ## Author
 
