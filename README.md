@@ -2,6 +2,15 @@
 
 **About:** This course will take you from knowing about JavaScript to an expert JavaScript developer. Learning JavaScript (JS) is a great choice, not only because it is the post popular programming language in the world but also, because it powers the entire moderm web. This course contains about 20 sections with over 60 hours of video content.
 
+## Table of Content
+
+- [JavaScript](#javascript)
+  - [Table of Content](#table-of-content)
+  - [Sections](#sections)
+  - [Projects](#projects)
+  - [Certificate of Completion](#certificate-of-completion)
+  - [Author](#author)
+
 ## Sections
 
 - [Section 01](./Section%2001): Introduction
@@ -33,6 +42,10 @@
 - [Bankist Marketing Website](https://bhoamikhona.github.io/javascript/Section%2013/index.html)
 - [Mapty](https://bhoamikhona.github.io/javascript/Section%2015/index.html)
 - [Forkify](https://forkify-bhoami.netlify.app/)
+
+## Certificate of Completion
+
+![UC-0df49bc0-c0c0-433e-a8e2-1a54ea4f308e](https://github.com/user-attachments/assets/3295b7e6-56a6-45c0-9ca0-1cb5adf78e00)
 
 ## Author
 
