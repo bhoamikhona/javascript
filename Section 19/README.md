@@ -9,6 +9,7 @@
   - [Lessons Learned](#lessons-learned)
     - [Simple Deployment with Netlify](#simple-deployment-with-netlify)
     - [Setting Up Git and GitHub](#setting-up-git-and-github)
+    - [Git Fundamentals](#git-fundamentals)
   - [Author](#author)
 
 ## Lessons Learned
@@ -37,6 +38,48 @@
 - [GitHub](https://github.com/bhoamikhona)
   - Creating an account and setting it up
 - Configuring Git and GitHub
+
+### Git Fundamentals
+
+- `.gitignore` file
+- `git status`
+- `git add -A`
+- `git commit -m "message"`
+- `git reset --hard HEAD`
+  - It goes back to the previous commit before you commit the code that you want to reverse.
+- `git log`
+  - To view all the previous commits
+  - You will see all the commits with their IDs. Copy the ID of the commit you want to reset the code to.
+  - To get out of the git log, type Q for quit. NOTE: ctrl + c will not work here.
+- `git reset --hard commitID`
+  - This will reset the code back to the commit you passed the ID of.
+  - However, moving between commits like this is a little bit dangerous. So instead, when we plan on doing a lot of changes, we usually simply create a new branch.
+- `git branch`
+  - This will simply list all the branches that we currently have.
+  - To close it, you need to write a `Q`.
+- `git branch branchName`
+  - This creates a new branch with the name that is provided.
+  - This new branch is basically going to be a copy of the current master branch, in which we can develop new codes and add new features without affecting the code that is in the master branch.
+  - So, it is basically a parallel track in which we can develop a new code, but without affecting the original code that we had before, and which we knew was already working.
+  - So, this is a great way of preventing bugs in our main code base.
+- `git checkout branchName`
+  - This will switch the current branch to the one that we passed the name of.
+- `git merge branchName`
+  - This will merge the current working branch with the branch whose name is provided in the command.
+
+> [!NOTE]
+>
+> Usually, we never work in the master branch.
+>
+> We simply add new features in a different branch and once we are don, we merge these two branches together.
+>
+> If there is an error or something is not working, we can always go back to what it was before.
+
+> [!TIP]
+>
+> Use the Git Cheat Sheet. You can find it right here:
+>
+> [git-cheat-sheet.pdf](https://github.com/user-attachments/files/16383761/git-cheat-sheet.pdf)
 
 ## Author
 
